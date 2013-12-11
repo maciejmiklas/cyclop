@@ -77,10 +77,4 @@ The created war can connect only to one Cassandra cluster, in order to serve mul
 Initial release
 
 <code>git clone https://github.com/maciejmiklas/cyclop/releases/tag/v1.0.0</code>
-### v1.1.0 
-* Cql text-editor can be resized
-* Query result can be exported to CSV file
-* Queries can be bookmarked 
- 
-<code>git clone https://github.com/maciejmiklas/cyclop/releases/tag/v1.1.0</code>
 
