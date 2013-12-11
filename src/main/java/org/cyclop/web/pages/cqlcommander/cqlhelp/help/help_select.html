@@ -1,0 +1,54 @@
+<link rel="stylesheet" type="text/css" href="../../../parent/custom/css/cqlweb.css" media="screen" />
+
+<i>Syntax:</i>
+<pre class="cq-helpCqlSyntax">&lt;select-stmt&gt; ::= <span class="cq-hintCqlKeyword">SELECT</span> &lt;select-clause&gt;
+                  <span class="cq-hintCqlKeyword">FROM</span> &lt;<span class="cq-hintCqlTable">tablename</span>&gt;
+                  ( <span class="cq-hintCqlKeyword">WHERE</span> &lt;where-clause&gt; )?
+                  ( <span class="cq-hintCqlKeyword">ORDER BY</span> &lt;order-by&gt; )?
+                  ( <span class="cq-hintCqlKeyword">LIMIT</span> &lt;integer&gt; )?
+                  ( <span class="cq-hintCqlKeyword">ALLOW FILTERING</span> )?
+
+&lt;select-clause&gt; ::= <span class="cq-hintCqlKeyword">DISTINCT</span>? &lt;selection-list&gt;
+                  | <span class="cq-hintCqlKeyword">COUNT</span> '(' ( '*' | '1' ) ')' ( <span
+            class="cq-hintCqlKeyword">AS</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt;)?
+
+&lt;selection-list&gt; ::= &lt;selector&gt; ( <span class="cq-hintCqlKeyword">AS</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt;)? ( ',' &lt;selector&gt; ( <span
+            class="cq-hintCqlKeyword">AS</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt;)? )*
+                   | '*'
+
+&lt;selector&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt;
+             | <span class="cq-hintCqlKeyword">WRITETIME</span> '(' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ')'
+             | <span class="cq-hintCqlKeyword">TTL</span> '(' &lt;identifier&gt; ')'
+             | &lt;function&gt; '(' (&lt;selector&gt; (',' &lt;selector&gt;)*)? ')'
+
+&lt;where-clause&gt; ::= &lt;relation&gt; ( <span class="cq-hintCqlKeyword">AND</span> &lt;relation&gt; )*
+
+&lt;relation&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ('=' | '&lt;' | '&gt;' | '&lt;=' | '&gt;=') &lt;term&gt;
+             | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; IN '(' ( &lt;term&gt; ( ',' &lt;term&gt;)* )? ')'
+             | <span class="cq-hintCqlKeyword">TOKEN</span> '(' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ')' ('=' | '&lt;' | '&gt;' | '&lt;=' | '&gt;=') (&lt;term&gt; | TOKEN '(' &lt;term&gt; ')' )
+
+&lt;order-by&gt; ::= &lt;ordering&gt; ( ',' &lt;odering&gt; )*
+&lt;ordering&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ( <span class="cq-hintCqlKeyword">ASC</span> | <span
+            class="cq-hintCqlKeyword">DESC</span> )?
+</pre>
+<i>Sample:</i>
+<pre class="cq-helpCqlSample"><span class="cq-hintCqlKeyword">SELECT</span> <span class="cq-hintCqlColumn">name</span>, <span
+        class="cq-hintCqlColumn">occupation</span> <span class="cq-hintCqlKeyword">FROM</span> users <span
+        class="cq-hintCqlKeyword">WHERE</span> userid <span class="cq-hintCqlKeyword">IN</span> (199, 200, 207);
+
+<span class="cq-hintCqlKeyword">SELECT</span> <span class="cq-hintCqlColumn">name</span> <span class="cq-hintCqlKeyword">AS</span> <span class="cq-hintCqlColumn">user_name</span>, <span
+            class="cq-hintCqlColumn">occupation</span> <span class="cq-hintCqlKeyword">AS</span> user_occupation <span
+            class="cq-hintCqlKeyword">FROM</span> <span class="cq-hintCqlTable">users</span>;
+
+<span class="cq-hintCqlKeyword">SELECT</span> <span class="cq-hintCqlColumn">time</span>, <span
+            class="cq-hintCqlColumn">value</span>
+  <span class="cq-hintCqlKeyword">FROM</span> <span class="cq-hintCqlType">events</span>
+<span class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">event_type</span> = 'myEvent'
+  <span class="cq-hintCqlKeyword">AND</span> <span class="cq-hintCqlColumn">time</span> &gt; '2011-02-03'
+  <span class="cq-hintCqlKeyword">AND</span> <span class="cq-hintCqlColumn">time</span> &lt;= '2012-01-01'
+
+<span class="cq-hintCqlKeyword">SELECT COUNT(*) FROM</span> <span class="cq-hintCqlTable">users</span>;
+
+<span class="cq-hintCqlKeyword">SELECT COUNT(*) AS</span> user_count <span class="cq-hintCqlKeyword">FROM</span> <span
+            class="cq-hintCqlTable">users</span>;
+</pre>

@@ -1,0 +1,23 @@
+<link rel="stylesheet" type="text/css" href="../../../parent/custom/css/cqlweb.css" media="screen"/>
+
+<i>Syntax:</i>
+<pre class="cq-helpCqlSyntax">
+&lt;delete-stmt&gt; ::= <span class="cq-hintCqlKeyword">DELETE</span> ( &lt;selection&gt; ( ',' &lt;selection&gt; )* )?
+                  <span class="cq-hintCqlKeyword">FROM</span> &lt;<span class="cq-hintCqlTable">tablename&gt</span>;
+                  ( <span class="cq-hintCqlKeyword">USING TIMESTAMP</span> &lt;integer&gt;)?
+                  <span class="cq-hintCqlKeyword">WHERE</span> &lt;where-clause&gt;
+
+&lt;selection&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ( '[' &lt;term&gt; ']' )?
+
+&lt;where-clause&gt; ::= &lt;relation&gt; ( <span class="cq-hintCqlKeyword">AND</span> &lt;relation&gt; )*
+
+&lt;relation&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt;
+             | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">IN</span> '(' ( &lt;term&gt; ( ',' &lt;term&gt; )* )? ')'
+             | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">IN</span> '?'
+</pre>
+<i>Sample:</i>
+<pre class="cq-helpCqlSample">
+<span class="cq-hintCqlKeyword">DELETE FROM</span> <span class="cq-hintCqlTable">NerdMovies</span> <span class="cq-hintCqlKeyword">USING TIMESTAMP</span> 1240003134 <span class="cq-hintCqlKeyword">WHERE</span> movie = 'Serenity';
+
+<span class="cq-hintCqlKeyword">DELETE</span> <span class="cq-hintCqlColumn">phone</span> <span class="cq-hintCqlKeyword">FROM</span> <span class="cq-hintCqlTable">Users</span> <span class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">userid</span> <span class="cq-hintCqlKeyword">IN</span> (C73DE1D3-AF08-40F3-B124-3FF3E5109F22, B70DE1D0-9908-4AE3-BE34-5573E5B09F14);
+</pre>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+
+<body>
+<wicket:panel>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <a href="#" wicket:id="execCql" class="btn btn-sm btn-success cq-clqExecuteButton"
+               title="Execute Query [CTRL+ENTER]"><span
+                    class="glyphicon glyphicon-play"></span></a>
+            &nbsp;&nbsp;&nbsp;
+
+            <a href="#" wicket:id="exportCqlResult" class="btn btn-sm btn-info" title="Export Last Query"><span
+                    class="glyphicon glyphicon-floppy-save"></span></a>
+            <a href="#" class="btn btn-sm btn-info cq-clqBookmark" title="Bookmark Query"><span
+                    class="glyphicon glyphicon-star"></span></a>
+
+            &nbsp;&nbsp;&nbsp;
+
+            <!-- initButtons() in buttons.js searches for clqHelpExpandSupportLink and registers click() function -->
+            <button type="button" class="btn btn-sm btn-primary cq-clqHelpExpandSupportLink AC"
+                    title="Cql Help"><span class="glyphicon glyphicon-comment"></span></button>
+
+            <a href="#" wicket:id="disableCompletion" class="btn btn-sm btn-primary" title="Completion Hint"><span
+                    class="glyphicon glyphicon-film"></span></a>
+
+            <div class="cq-btns-right">
+                <a href="#" wicket:id="logOut" class="btn btn-sm btn-success" title="Log out"><span
+                        class="glyphicon glyphicon-off"></span></a>
+            </div>
+        </div>
+    </div>
+
+
+</wicket:panel>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<link rel="stylesheet" type="text/css" href="../../../parent/custom/css/cqlweb.css" media="screen" />
+
+<i>Syntax:</i>
+<pre class="cq-helpCqlSyntax">
+&lt;create-table-stmt&gt; ::= <span class="cq-hintCqlKeyword">CREATE</span> ( <span
+        class="cq-hintCqlKeyword">TABLE</span> | <span class="cq-hintCqlKeyword">COLUMNFAMILY</span> ) ( <span
+        class="cq-hintCqlKeyword">IF NOT EXISTS</span> )? &lt;<span class="cq-hintCqlTable">tablename</span>&gt;
+                          '(' &lt;definition&gt; ( ',' &lt;definition&gt; )* ')'
+                          ( <span class="cq-hintCqlKeyword">WITH</span> &lt;option&gt; ( <span class="cq-hintCqlKeyword">AND</span> &lt;option&gt;)* )?
+
+&lt;column-definition&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; &lt;<span class="cq-hintCqlType">type</span>&gt; ( <span
+        class="cq-hintCqlKeyword">PRIMARY KEY</span> )?
+                      | <span class="cq-hintCqlKeyword">PRIMARY KEY</span> '(' &lt;<span class="cq-hintCqlColumn">partition-key</span>&gt; ( ',' &lt;<span
+        class="cq-hintCqlColumn">identifier</span>&gt; )* ')'
+
+&lt;partition-key&gt; ::= &lt;<span class="cq-hintCqlColumn">partition-key</span>&gt;
+                  | '(' &lt;<span class="cq-hintCqlColumn">partition-key</span>&gt; ( ',' &lt;<span
+        class="cq-hintCqlColumn">identifier</span>&gt; )* ')'
+
+&lt;partition-key&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt;
+                  | '(' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; (',' &lt;<span
+        class="cq-hintCqlColumn">identifier</span>&gt; )* ')'
+
+&lt;option&gt; ::= &lt;property&gt;
+           | <span class="cq-hintCqlKeyword">COMPACT STORAGE</span>
+           | <span class="cq-hintCqlKeyword">CLUSTERING ORDER</span>
+</pre>
+<i>Sample:</i>
+<pre class="cq-helpCqlSample">
+<span class="cq-hintCqlKeyword">CREATE TABLE</span> <span class="cq-hintCqlTable">monkeySpecies</span> (
+    <span class="cq-hintCqlColumn">species</span> <span class="cq-hintCqlType">text</span> <span
+        class="cq-hintCqlKeyword">PRIMARY KEY</span>,
+    <span class="cq-hintCqlColumn">common_name</span> <span class="cq-hintCqlType">text</span>,
+    <span class="cq-hintCqlColumn">population</span> <span class="cq-hintCqlType">varint</span>,
+    <span class="cq-hintCqlColumn">average_size</span> <span class="cq-hintCqlType">int</span>
+) <span class="cq-hintCqlKeyword">WITH</span> <span class="cq-hintCqlColumn">comment</span>='Important biological records'
+   <span class="cq-hintCqlKeyword">AND</span> <span class="cq-hintCqlColumn">read_repair_chance</span> = 1.0;
+
+<span class="cq-hintCqlKeyword">CREATE TABLE</span> <span class="cq-hintCqlTable">timeline</span> (
+    <span class="cq-hintCqlColumn">userid</span> <span class="cq-hintCqlType">uuid</span>,
+    <span class="cq-hintCqlColumn">posted_month</span> <span class="cq-hintCqlType">int</span>,
+    <span class="cq-hintCqlColumn">posted_time</span> <span class="cq-hintCqlType">uuid</span>,
+    <span class="cq-hintCqlColumn">body</span> <span class="cq-hintCqlType">text</span>,
+    <span class="cq-hintCqlColumn">posted_by</span> <span class="cq-hintCqlType">text</span>,
+    <span class="cq-hintCqlKeyword">PRIMARY KEY</span> (<span class="cq-hintCqlColumn">userid</span>, <span
+        class="cq-hintCqlColumn">posted_month</span>, <span class="cq-hintCqlColumn">posted_time</span>)
+) <span class="cq-hintCqlKeyword">WITH</span> <span class="cq-hintCqlColumn">compaction</span> = { 'class' : 'LeveledCompactionStrategy' };
+</pre>
+
+
+

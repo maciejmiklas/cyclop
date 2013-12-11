@@ -1,0 +1,164 @@
+package org.cyclop.web.pages.cqlcommander;
+
+import javax.inject.Inject;
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.authroles.authorization.strategies.role.Roles;
+import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
+import org.cyclop.service.converter.CsvQueryResultExporter;
+import org.cyclop.service.model.ContextCqlCompletion;
+import org.cyclop.service.model.CqlQuery;
+import org.cyclop.service.model.CqlSelectResult;
+import org.cyclop.web.pages.cqlcommander.buttons.ButtonListener;
+import org.cyclop.web.pages.cqlcommander.buttons.ButtonsPanel;
+import org.cyclop.web.pages.cqlcommander.completionhint.CompletionHintPanel;
+import org.cyclop.web.pages.cqlcommander.cqlhelp.CqlHelpPanel;
+import org.cyclop.web.pages.cqlcommander.editor.CompletionChangeListener;
+import org.cyclop.web.pages.cqlcommander.editor.QueryEditorPanel;
+import org.cyclop.web.pages.cqlcommander.export.QueryResultExport;
+import org.cyclop.web.pages.cqlcommander.verticalresult.QueryResultVerticalPanel;
+import org.cyclop.web.pages.parent.ParentPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * @author Maciej Miklas
+ */
+@AuthorizeInstantiation(Roles.ADMIN)
+public class CqlCommanderPage extends ParentPage {
+
+    private final CqlHelpPanel cqlHelpPanel;
+
+    private final CompletionHintPanel cqlCompletionHintPanel;
+
+    private QueryResultVerticalPanel queryResultVerticalPanel;
+
+    private boolean queryRunning = false;
+
+    private final static Logger LOG = LoggerFactory.getLogger(CqlCommanderPage.class);
+
+    private CqlSelectResult lastQueryResult;
+    private CqlQuery lastQuery;
+
+    private QueryResultExport queryResultExport;
+
+    @Inject
+    private CsvQueryResultExporter exporter;
+
+
+    public CqlCommanderPage(PageParameters params) {
+        cqlHelpPanel = new CqlHelpPanel("cqlHelp");
+        add(cqlHelpPanel);
+
+        cqlCompletionHintPanel = new CompletionHintPanel("cqlInfoHint", "Completion Hint");
+        add(cqlCompletionHintPanel);
+
+        queryResultVerticalPanel = initQueryResultPanel();
+        QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
+
+        initButtons(queryEditorPanel, queryResultVerticalPanel);
+
+        queryResultExport = new QueryResultExport(this, exporter);
+    }
+
+    private QueryResultVerticalPanel initQueryResultPanel() {
+        QueryResultVerticalPanel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResultVerticalPanel");
+        add(queryResultVerticalPanel);
+        return queryResultVerticalPanel;
+    }
+
+    private QueryEditorPanel initQueryEditorPanel(PageParameters params) {
+
+        StringValue editorContentVal = params.get("cql");
+        String editorContent = editorContentVal == null ? null :editorContentVal.toString();
+
+        QueryEditorPanel queryEditorPanel = new QueryEditorPanel("queryEditorPanel", editorContent);
+        add(queryEditorPanel);
+        queryEditorPanel.setOutputMarkupPlaceholderTag(true);
+        queryEditorPanel.setOutputMarkupId(true);
+
+        queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHelp());
+        queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHint());
+        return queryEditorPanel;
+    }
+
+    private ButtonsPanel initButtons(final QueryEditorPanel queryEditorPanel,
+                                     final QueryResultVerticalPanel queryResultVerticalPanel) {
+        ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", new ButtonListener() {
+
+            @Override
+            public void onClickQueryResultExport(AjaxRequestTarget target) {
+                queryResultExport.initiateDownload(target, lastQuery, lastQueryResult);
+            }
+
+            @Override
+            public void onClickExecCql(AjaxRequestTarget target) {
+
+                // this cannot happen, because java script disables execute button - it's DOS prevention
+                if (queryRunning) {
+                    LOG.warn("Query still running - cannot execute second one");
+                    return;
+                }
+
+                queryResultVerticalPanel.setVisible(true);
+                target.add(queryResultVerticalPanel);
+                CqlQuery query = queryEditorPanel.getEditorContent();
+                if (query == null) {
+                    return;
+                }
+                queryRunning = true;
+                try {
+                    CqlSelectResult queryResult = queryResultVerticalPanel.executeQuery(query, target);
+                    if (queryResult != null) {
+                        lastQueryResult = queryResult;
+                        lastQuery = query;
+                    }
+                } finally {
+                    queryRunning = false;
+                }
+            }
+
+            @Override
+            public void onClickDisableCompletion(AjaxRequestTarget target, boolean pressed) {
+                cqlCompletionHintPanel.setVisible(pressed);
+                target.add(cqlCompletionHintPanel);
+            }
+
+            @Override
+            public void onClickLogOut() {
+                getSession().invalidate();
+            }
+        });
+        add(buttonsPanel);
+        return buttonsPanel;
+    }
+
+    private final class CompletionChangeHelp implements CompletionChangeListener {
+
+        @Override
+        public void onCompletionChange(ContextCqlCompletion currentCompletion) {
+            cqlHelpPanel.changeCompletion(currentCompletion);
+        }
+
+        @Override
+        public Component getReferencesForRefresh() {
+            return cqlHelpPanel;
+        }
+    }
+
+    private final class CompletionChangeHint implements CompletionChangeListener {
+
+        @Override
+        public void onCompletionChange(ContextCqlCompletion currentCompletion) {
+            cqlCompletionHintPanel.changeCompletion(currentCompletion);
+        }
+
+        @Override
+        public Component getReferencesForRefresh() {
+            return cqlCompletionHintPanel;
+        }
+    }
+
+}
