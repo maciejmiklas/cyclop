@@ -76,10 +76,10 @@ The created war can connect only to one Cassandra cluster, in order to serve mul
 ### v1.0.0
 Initial release
 
-<codehttps://github.com/maciejmiklas/cyclop/releases/tag/v1.0.0</code>
+<code>https://github.com/maciejmiklas/cyclop/releases/tag/v1.0.0</code>
 
 ### v1.0.1
 * fixed index.html
 
-<codehttps://github.com/maciejmiklas/cyclop/releases/tag/v1.0.1</code>
+<code>https://github.com/maciejmiklas/cyclop/releases/tag/v1.0.1</code>
 
