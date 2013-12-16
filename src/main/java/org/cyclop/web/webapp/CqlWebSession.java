@@ -19,26 +19,34 @@ public class CqlWebSession extends AuthenticatedWebSession {
     @Inject
     private CassandraSession cassandraSession;
 
+    private boolean authenticated = false;
+
+    private String lastLoginError = null;
+
     public CqlWebSession(Request request) {
         super(request);
         Injector.get().inject(this);
     }
-
-    boolean authenticated = false;
 
     @Override
     public boolean authenticate(String username, String password) {
         try {
             cassandraSession.authenticate(username, password);
             authenticated = true;
+            lastLoginError = null;
         } catch (Exception e) {
+            lastLoginError = e.getMessage();
+            authenticated = false;
+
             LOG.info("Sing-in failed:" + e.getMessage(), e);
             LOG.debug(e.getMessage(), e);
-
-            authenticated = false;
         }
 
         return authenticated;
+    }
+
+    public String getLastLoginError() {
+        return lastLoginError;
     }
 
     @Override

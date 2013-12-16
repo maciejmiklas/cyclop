@@ -164,5 +164,8 @@ ul.cq-cqlCollectionList {
     left: 70%;
 }
 
+.feedbackPanelERROR {
+    color: red;
+}
 
 
