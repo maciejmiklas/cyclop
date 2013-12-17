@@ -56,7 +56,7 @@ User name and password are used to create Cassandra session,  which is bind to a
 
 
 # Installation
-1. Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/tag/v1.x.x</code>
+1. Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/latest</code>
 2. Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for Cassandra
 ``` properties
 cassandra.hosts: localhost
