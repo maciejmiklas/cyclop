@@ -56,7 +56,7 @@ User name and password are used to create Cassandra session,  which is bind to a
 
 
 # Installation
-1. Clone last release: <code>git clone https://github.com/maciejmiklas/cyclop/releases/tag/v1.0.0</code>
+1. Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/tag/v1.x.x</code>
 2. Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for Cassandra
 ``` properties
 cassandra.hosts: localhost
@@ -72,14 +72,4 @@ You can also overwrite each property from <code>cyclop.properties</code> by sett
 
 The created war can connect only to one Cassandra cluster, in order to serve multiple clusters from one Tomcat you have to deploy few cyclop war archives, each one with different  <code>cassandra.hosts</code> value
 
-# Change Log
-### v1.0.0
-Initial release
-
-<code>https://github.com/maciejmiklas/cyclop/releases/tag/v1.0.0</code>
-
-### v1.0.1
-* fixed index.html
-
-<code>https://github.com/maciejmiklas/cyclop/releases/tag/v1.0.1</code>
 
