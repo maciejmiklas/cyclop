@@ -31,7 +31,8 @@ public class CsvQueryResultExporter {
     @Inject
     private DataConverter converter;
 
-    private final AppConfig.CqlExport conf = AppConfig.get().cqlExport;
+    @Inject
+    private AppConfig.CqlExport conf;
 
     public String createCsv(CqlQuery query, CqlSelectResult result) {
         StringBuilder buf = new StringBuilder();
