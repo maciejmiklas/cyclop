@@ -2,11 +2,13 @@ package org.cyclop.service.completion.parser.decisionlist.util;
 
 import com.datastax.driver.core.DataType;
 import com.google.common.collect.ImmutableSortedSet;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.cyclop.common.QueryHelper;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.model.CqlColumnName;
@@ -41,9 +43,17 @@ public final class DecisionHelper {
         return newElements;
     }
 
-    public CqlCompletion computeTableNameCompletionWithKeyspaceInQuery(String kw, CqlQuery query) {
+    public CqlCompletion computeTableNameCompletion(String kw, CqlQuery query) {
+        CqlCompletion completion = computeTableNameCompletionWithKeyspaceInQuery(kw, query);
+        if (completion == null) {
+            completion = computeTableNameCompletionWithoutKeyspaceInQuery();
+        }
+        return completion;
+    }
+
+    private CqlCompletion computeTableNameCompletionWithKeyspaceInQuery(String kw, CqlQuery query) {
         CqlKeySpace keySpace = QueryHelper.extractKeyspace(kw, query);
-        if (keySpace == null ) {
+        if (keySpace == null) {
             return null;
         }
         ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(keySpace);
@@ -65,7 +75,7 @@ public final class DecisionHelper {
         return cmp;
     }
 
-    public CqlCompletion computeTableNameCompletionWithoutKeyspaceInQuery() {
+    private CqlCompletion computeTableNameCompletionWithoutKeyspaceInQuery() {
         ImmutableSortedSet.Builder<CqlPart> minCompletionBuild = ImmutableSortedSet.naturalOrder();
         ImmutableSortedSet.Builder<CqlPart> fullCompletionBuild = ImmutableSortedSet.naturalOrder();
 

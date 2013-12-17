@@ -2,6 +2,7 @@ package org.cyclop.service.completion.parser.decisionlist.select;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import org.cyclop.common.QueryHelper;
 import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionStatic;
 import org.cyclop.service.completion.parser.decisionlist.util.DecisionHelper;
@@ -23,11 +24,8 @@ public class FromClausePartCompletion implements CqlPartCompletionStatic {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = decisionHelper.computeTableNameCompletionWithKeyspaceInQuery(QueryHelper
+        CqlCompletion completion = decisionHelper.computeTableNameCompletion(QueryHelper
                 .KW_SELECT, query);
-        if (completion == null) {
-            completion = decisionHelper.computeTableNameCompletionWithoutKeyspaceInQuery();
-        }
         return completion;
     }
 

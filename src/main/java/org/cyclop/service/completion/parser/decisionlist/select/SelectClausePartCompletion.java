@@ -51,7 +51,7 @@ public class SelectClausePartCompletion implements CqlPartCompletionStatic {
         ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
         completionBuild.addAll(staticPart);
 
-        SortedSet<CqlColumnName> columnNames = null;
+        SortedSet<CqlColumnName> columnNames;
         CqlTable table = extractTableName(KW_SELECT, query);
         if (queryService.checkTableExists(table)) {
             columnNames = queryService.findColumnNames(table);

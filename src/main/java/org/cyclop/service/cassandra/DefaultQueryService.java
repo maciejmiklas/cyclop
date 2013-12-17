@@ -121,8 +121,6 @@ class DefaultQueryService implements QueryService {
     public CqlSelectResult execute(CqlQuery query) {
         LOG.debug("Executing CQL: {}", query);
 
-        execute(query.cql);
-
         if (query.type == CqlQueryType.USE) {
             setSpace(query);
         }

@@ -9,8 +9,6 @@ import org.cyclop.service.model.CqlKeyword;
 import org.cyclop.service.model.CqlNotSupported;
 import org.cyclop.service.model.CqlQueryType;
 
-// TODO html help
-
 /**
  * @author Maciej Miklas
  */

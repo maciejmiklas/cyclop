@@ -12,6 +12,8 @@ public class QueryHelper {
 
     public final static String KW_SELECT = "from ";
 
+    public final static String KW_DROP = "drop table ";
+
     public final static String KW_INSERT = "insert into ";
 
     public static CqlKeySpace extractSpace(CqlQuery query) {
