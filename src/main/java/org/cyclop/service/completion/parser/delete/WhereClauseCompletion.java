@@ -21,7 +21,7 @@ import static org.cyclop.model.CqlKeywords.FROM;
 @Named("delete.WhereClauseCompletion")
 public class WhereClauseCompletion implements CqlPartCompletionStatic {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("where")};
+    private final static CqlPart SM = new CqlKeyword("where");
 
     @Inject
     private QueryService queryService;
@@ -58,8 +58,8 @@ public class WhereClauseCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

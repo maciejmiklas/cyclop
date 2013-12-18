@@ -21,7 +21,7 @@ import static org.cyclop.model.CqlKeywords.UPDATE;
 @Named("update.WhereCompletion")
 public class WhereCompletion implements CqlPartCompletionStatic {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("where")};
+    private final CqlPart SM = new CqlKeyword("where");
 
     @Inject
     private QueryService queryService;
@@ -54,8 +54,8 @@ public class WhereCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

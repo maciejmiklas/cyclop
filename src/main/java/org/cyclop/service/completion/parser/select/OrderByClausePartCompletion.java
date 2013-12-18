@@ -21,7 +21,7 @@ import static org.cyclop.model.CqlKeywords.FROM;
 @Named("select.OrderByClausePartCompletion")
 public class OrderByClausePartCompletion implements CqlPartCompletionStatic {
 
-    private final CqlPart startMarker = new CqlKeyword("order by");
+    private final static CqlPart SM = new CqlKeyword("order by");
 
     @Inject
     private QueryService queryService;
@@ -53,8 +53,8 @@ public class OrderByClausePartCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return new CqlPart[]{startMarker};
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

@@ -24,7 +24,7 @@ public class UpdateDecisionListSupport implements DecisionListSupport {
     private ColumnsCompletion columnsCompletion;
 
     @Inject
-    private AfterUpdateCCompletion afterUpdateCCompletion;
+    private AfterUpdateCompletion afterUpdateCompletion;
 
     @Inject
     private WhereCompletion whereCompletion;
@@ -33,7 +33,7 @@ public class UpdateDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[] { tableNameCompletion, afterUpdateCCompletion, columnsCompletion,
+        decisionList = new CqlPartCompletion[] { tableNameCompletion, afterUpdateCompletion, columnsCompletion,
                 whereCompletion};
     }
 

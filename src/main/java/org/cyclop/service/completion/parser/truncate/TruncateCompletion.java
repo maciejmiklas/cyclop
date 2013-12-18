@@ -11,11 +11,11 @@ import javax.inject.Named;
 @Named("truncate.TruncateCompletion")
 public class TruncateCompletion extends NotSupportedCompletion {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlPart("truncate")};
+    private final static CqlPart SM = new CqlPart("truncate");
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
     @Override

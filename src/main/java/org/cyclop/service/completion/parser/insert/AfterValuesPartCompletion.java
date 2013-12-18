@@ -16,7 +16,7 @@ import javax.inject.Named;
 @Named("insert.AfterValuesPartCompletion")
 public class AfterValuesPartCompletion implements CqlPartCompletionStatic {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlPart(")")};
+    private final CqlPart SM = new CqlPart(")");
 
     private CqlCompletion cmpMinMax = null;
 
@@ -37,8 +37,8 @@ public class AfterValuesPartCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

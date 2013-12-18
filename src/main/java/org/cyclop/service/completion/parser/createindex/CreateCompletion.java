@@ -12,11 +12,11 @@ import javax.inject.Named;
 @Named("createindex.CreateCompletion")
 public class CreateCompletion extends NotSupportedCompletion {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlNotSupported("create")};
+    private final static CqlPart SM = new CqlNotSupported("create");
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
     @Override

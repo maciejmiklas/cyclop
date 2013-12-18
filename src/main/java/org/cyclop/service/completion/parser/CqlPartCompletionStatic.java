@@ -7,5 +7,5 @@ import org.cyclop.model.CqlPart;
  */
 public interface CqlPartCompletionStatic extends CqlPartCompletion {
 
-    CqlPart[] startMarkers();
+    CqlPart startMarker();
 }

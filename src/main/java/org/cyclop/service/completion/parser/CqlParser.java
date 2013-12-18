@@ -85,7 +85,7 @@ public class CqlParser {
             int completionStartMarker = -1;
             if (partCompletion instanceof CqlPartCompletionStatic) {
                 CqlPartCompletionStatic partStatic = (CqlPartCompletionStatic) partCompletion;
-                String startMarker = partStatic.startMarkers()[0].partLc;
+                String startMarker = partStatic.startMarker().partLc;
                 completionStartMarker = cqlLc.indexOf(startMarker, offset);
 
             } else if (partCompletion instanceof CqlPartCompletionDynamic) {

@@ -19,8 +19,6 @@ public abstract class ColumnNameCompletionTemplate implements CqlPartCompletionS
     @Inject
     private QueryService queryService;
 
-    private final CqlPart[] startMarker;
-
     private final List<CqlPart> staticPart;
 
     @Inject
@@ -28,9 +26,8 @@ public abstract class ColumnNameCompletionTemplate implements CqlPartCompletionS
 
     private CqlKeywords cqlKeywords;
 
-    public ColumnNameCompletionTemplate(List<CqlPart> staticPart, CqlPart[] startMarker, CqlKeywords cqlKeywords) {
+    public ColumnNameCompletionTemplate(List<CqlPart> staticPart,  CqlKeywords cqlKeywords) {
         this.staticPart = staticPart;
-        this.startMarker = startMarker;
         this.cqlKeywords = cqlKeywords;
     }
 
@@ -56,9 +53,5 @@ public abstract class ColumnNameCompletionTemplate implements CqlPartCompletionS
         return cmp;
     }
 
-    @Override
-    public final CqlPart[] startMarkers() {
-        return startMarker;
-    }
 
 }

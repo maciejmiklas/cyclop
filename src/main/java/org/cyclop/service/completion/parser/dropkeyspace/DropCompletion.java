@@ -12,11 +12,11 @@ import javax.inject.Named;
 @Named("dropkeyspace.DropCompletion")
 public class DropCompletion extends NotSupportedCompletion {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("drop")};
+    private final static CqlPart SM = new CqlKeyword("drop");
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
     @Override

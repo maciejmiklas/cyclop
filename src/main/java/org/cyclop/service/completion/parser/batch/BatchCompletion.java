@@ -12,11 +12,11 @@ import javax.inject.Named;
 @Named("batch.BatchCompletion")
 public class BatchCompletion extends NotSupportedCompletion {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlNotSupported("batch")};
+    private final static CqlPart SM = new CqlNotSupported("batch");
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
     @Override

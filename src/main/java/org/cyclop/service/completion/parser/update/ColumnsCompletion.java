@@ -18,7 +18,7 @@ import static org.cyclop.model.CqlKeywords.UPDATE;
 @Named("update.ColumnsCompletion")
 public class ColumnsCompletion implements CqlPartCompletionStatic {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlPart("set")};
+    private final static CqlPart SM = new CqlPart("set");
 
     private ImmutableSortedSet<CqlPart> staticPart;
 
@@ -48,8 +48,8 @@ public class ColumnsCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

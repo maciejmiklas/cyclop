@@ -14,7 +14,7 @@ import javax.inject.Named;
 @Named("use.UsePartCompletion")
 public class UseCompletion implements CqlPartCompletionStatic {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("use")};
+    private final static CqlPart SM = new CqlKeyword("use");
 
     @Inject
     private QueryService queryService;
@@ -27,7 +27,7 @@ public class UseCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 }

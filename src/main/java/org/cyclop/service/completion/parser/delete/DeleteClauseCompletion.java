@@ -24,7 +24,7 @@ public class DeleteClauseCompletion implements CqlPartCompletionStatic {
     @Inject
     private QueryService queryService;
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("delete")};
+    private final static CqlPart SM = new CqlKeyword("delete");
 
     private final List<CqlPart> staticPart = new ArrayList<>();
 
@@ -55,8 +55,8 @@ public class DeleteClauseCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

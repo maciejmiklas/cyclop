@@ -18,14 +18,14 @@ import static org.cyclop.model.CqlKeywords.DROP;
 @Named("droptable.DropCompletion")
 public class DropCompletion implements CqlPartCompletionStatic {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("drop")};
+    private final CqlPart SM = new CqlKeyword("drop");
 
     @Inject
     private DecisionHelper decisionHelper;
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
     @Override

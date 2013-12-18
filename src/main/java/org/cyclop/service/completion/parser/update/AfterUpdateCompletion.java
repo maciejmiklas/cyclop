@@ -5,6 +5,7 @@ import org.cyclop.common.QueryHelper;
 import org.cyclop.model.*;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.parser.CqlPartCompletionDynamic;
+import org.cyclop.service.completion.parser.template.AfterTableNameCompletionTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -15,13 +16,17 @@ import static org.cyclop.model.CqlKeywords.UPDATE;
 /**
  * @author Maciej Miklas
  */
-@Named("update.AfterUpdateClauseCompletion")
-public class AfterUpdateCCompletion implements CqlPartCompletionDynamic {
+@Named("update.AfterUpdateCompletion")
+public class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
 
     private CqlCompletion completion;
 
     @Inject
     private QueryService queryService;
+
+    public AfterUpdateCompletion() {
+        super(UPDATE);
+    }
 
     @PostConstruct
     public void init() {
@@ -38,18 +43,4 @@ public class AfterUpdateCCompletion implements CqlPartCompletionDynamic {
         return completion;
     }
 
-    @Override
-    public int canApply(CqlQuery query, int queryPosition) {
-
-        CqlTable table = QueryHelper.extractTableName(UPDATE, query);
-        if (table == null) {
-            return -1;
-        }
-
-        int index = -1;
-        if (queryService.checkTableExists(table)) {
-            index = query.cqlLc.indexOf(table.partLc) + table.partLc.length();
-        }
-        return index;
-    }
 }

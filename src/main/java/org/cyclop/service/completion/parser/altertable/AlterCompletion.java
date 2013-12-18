@@ -12,11 +12,11 @@ import javax.inject.Named;
 @Named("altertable.AlterCompletion")
 public class AlterCompletion extends NotSupportedCompletion {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlNotSupported("alter")};
+    private final static CqlPart SM = new CqlNotSupported("alter");
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
     @Override

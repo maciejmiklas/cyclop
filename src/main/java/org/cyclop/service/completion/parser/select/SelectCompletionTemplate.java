@@ -22,7 +22,7 @@ public class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
     @Inject
     private QueryService queryService;
 
-    private static final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("select")};
+    private static final CqlPart SM = new CqlKeyword("select");
 
     private final static List<CqlPart> staticPart = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
     private CassandraSession session;
 
     public SelectCompletionTemplate() {
-        super(staticPart, startMarker, FROM);
+        super(staticPart, FROM);
     }
 
     static {
@@ -41,4 +41,8 @@ public class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
         staticPart.add(new CqlKeyword("from"));
     }
 
+    @Override
+    public CqlPart startMarker() {
+        return SM;
+    }
 }

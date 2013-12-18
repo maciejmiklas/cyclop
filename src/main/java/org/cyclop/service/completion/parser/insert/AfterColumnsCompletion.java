@@ -19,7 +19,7 @@ public class AfterColumnsCompletion implements CqlPartCompletionStatic {
 
     private CqlCompletion cmpMinMax;
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlPart(")")};
+    private final static CqlPart SM = new CqlPart(")");
 
 
     @PostConstruct
@@ -36,8 +36,8 @@ public class AfterColumnsCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

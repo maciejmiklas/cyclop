@@ -21,7 +21,7 @@ public class TableNameCompletion implements CqlPartCompletionStatic {
     @Inject
     private DecisionHelper decisionHelper;
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("insert into")};
+    private final static CqlPart SM = new CqlKeyword("insert into");
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
@@ -30,8 +30,8 @@ public class TableNameCompletion implements CqlPartCompletionStatic {
     }
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }

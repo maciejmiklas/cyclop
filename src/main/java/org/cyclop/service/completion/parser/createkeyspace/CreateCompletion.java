@@ -12,11 +12,11 @@ import javax.inject.Named;
 @Named("createkeyspace.CreateCompletion")
 public class CreateCompletion extends NotSupportedCompletion {
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlNotSupported("create")};
+    private final CqlPart SM = new CqlNotSupported("create");
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
     @Override

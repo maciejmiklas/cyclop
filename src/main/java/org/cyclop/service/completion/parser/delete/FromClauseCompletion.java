@@ -21,7 +21,7 @@ public class FromClauseCompletion implements CqlPartCompletionStatic {
     @Inject
     private DecisionHelper decisionHelper;
 
-    private final CqlPart[] startMarker = new CqlPart[]{new CqlKeyword("from")};
+    private final static CqlPart SM = new CqlKeyword("from");
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
@@ -31,8 +31,8 @@ public class FromClauseCompletion implements CqlPartCompletionStatic {
 
 
     @Override
-    public CqlPart[] startMarkers() {
-        return startMarker;
+    public CqlPart startMarker() {
+        return SM;
     }
 
 }
