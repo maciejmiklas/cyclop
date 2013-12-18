@@ -1,10 +1,7 @@
 package org.cyclop.web.pages.cqlcommander.verticalresult;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
+import com.datastax.driver.core.DataType;
+import com.google.common.collect.ImmutableList;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -17,18 +14,14 @@ import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.cyclop.common.AppConfig;
+import org.cyclop.model.*;
 import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.model.CqlColumnType;
-import org.cyclop.service.model.CqlExtendedColumnName;
-import org.cyclop.service.model.CqlPartitionKey;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlRow;
-import org.cyclop.service.model.CqlSelectResult;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.pages.cqlcommander.column.WidgetFactory;
 
-import com.datastax.driver.core.DataType;
-import com.google.common.collect.ImmutableList;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Maciej Miklas
@@ -124,7 +117,7 @@ public class QueryResultVerticalPanel extends Panel {
                     protected void populateItem(ListItem<CqlRow> item) {
                         CqlRow row = item.getModelObject();
 
-                        Component component = widgetFactory.createForColumn(row.orginal, partitionKey, columnName,
+                        Component component = widgetFactory.createForColumn(row.original, partitionKey, columnName,
                                 "columnValue");
                         item.add(component);
                         component.setRenderBodyOnly(true);
@@ -159,7 +152,7 @@ public class QueryResultVerticalPanel extends Panel {
 
                 Component component;
                 if (partitionKey != null) {
-                    component = widgetFactory.createForColumn(row.orginal, partitionKey, partitionKey, "rowName");
+                    component = widgetFactory.createForColumn(row.original, partitionKey, partitionKey, "rowName");
                 } else {
                     component = new Label("rowName", displayedRows.size());
                 }

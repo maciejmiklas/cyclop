@@ -1,11 +1,12 @@
 package org.cyclop.common;
 
 import com.google.common.base.Objects;
-import java.io.UnsupportedEncodingException;
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.springframework.beans.factory.annotation.Value;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Maciej Miklas

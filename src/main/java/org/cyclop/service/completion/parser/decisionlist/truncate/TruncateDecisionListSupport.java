@@ -1,15 +1,14 @@
 package org.cyclop.service.completion.parser.decisionlist.truncate;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlNotSupported;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlNotSupported;
-import org.cyclop.service.model.CqlQueryType;
-
-// TODO html help
 
 /**
  * @author Maciej Miklas
@@ -22,11 +21,11 @@ public class TruncateDecisionListSupport implements DecisionListSupport {
     private CqlPartCompletion[] decisionList;
 
     @Inject
-    TruncatePartCompletion truncatePartCompletion;
+    TruncateCompletion truncateCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{truncatePartCompletion};
+        decisionList = new CqlPartCompletion[]{truncateCompletion};
     }
 
     @Override

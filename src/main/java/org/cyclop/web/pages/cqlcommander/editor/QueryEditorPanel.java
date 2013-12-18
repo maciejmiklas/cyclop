@@ -1,10 +1,5 @@
 package org.cyclop.web.pages.cqlcommander.editor;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.SortedSet;
-import javax.inject.Inject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -18,11 +13,17 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.cyclop.model.ContextCqlCompletion;
+import org.cyclop.model.CqlPart;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.CqlCompletionService;
-import org.cyclop.service.model.ContextCqlCompletion;
-import org.cyclop.service.model.CqlPart;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlQueryType;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.SortedSet;
 
 import static org.cyclop.web.common.JsUtils.escapeParam;
 import static org.cyclop.web.pages.parent.ScriptsRef.SUGGEST;

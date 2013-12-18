@@ -1,14 +1,11 @@
 package org.cyclop.service.cassandra;
 
 import com.google.common.collect.ImmutableSortedSet;
+import org.cyclop.model.*;
+import org.springframework.context.annotation.Primary;
+
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.model.CqlColumnName;
-import org.cyclop.service.model.CqlKeySpace;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlSelectResult;
-import org.cyclop.service.model.CqlTable;
-import org.springframework.context.annotation.Primary;
 
 /**
  * @author Maciej Miklas

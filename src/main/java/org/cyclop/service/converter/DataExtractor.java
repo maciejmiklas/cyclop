@@ -4,16 +4,17 @@ import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.cyclop.model.CqlColumnValue;
+import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlPartitionKey;
+import org.cyclop.model.CqlPartitionKeyValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Named;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import javax.inject.Named;
-import org.cyclop.service.model.CqlColumnValue;
-import org.cyclop.service.model.CqlExtendedColumnName;
-import org.cyclop.service.model.CqlPartitionKey;
-import org.cyclop.service.model.CqlPartitionKeyValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Maciej Miklas

@@ -37,7 +37,7 @@ User name and password are used to create Cassandra session,  which is bind to a
 ![CQL Completion Colors](/doc/img/completion_colors.png)
 
 # Requirements
-* java v7
+* java 7
 * cassandra v1.2 or above (tested with 1.2 and 2.0)
 * supports only schema created with CQL 3
 * CLI schamas are NOT supported

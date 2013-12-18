@@ -1,23 +1,19 @@
 package org.cyclop.service.completion.parser.decisionlist.select;
 
 import com.google.common.collect.ImmutableSortedSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
+import org.cyclop.model.*;
+import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionStatic;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionStatic;
-import org.cyclop.service.model.CqlColumnName;
-import org.cyclop.service.model.CqlCompletion;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlPart;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlTable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
 
-import static org.cyclop.common.QueryHelper.KW_SELECT;
 import static org.cyclop.common.QueryHelper.extractTableName;
+import static org.cyclop.model.CqlKeywords.FROM;
 
 /**
  * @author Maciej Miklas
@@ -45,7 +41,7 @@ public class OrderByClausePartCompletion implements CqlPartCompletionStatic {
     public CqlCompletion getCompletion(CqlQuery query) {
         ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
 
-        CqlTable table = extractTableName(KW_SELECT, query);
+        CqlTable table = extractTableName(FROM, query);
         SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
         completionBuild.addAll(columnNames);
 

@@ -1,8 +1,9 @@
 package org.cyclop.web.components.pagination;
 
-import java.io.Serializable;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.model.IModel;
+
+import java.io.Serializable;
 
 /**
  * @author Maciej Miklas

@@ -1,12 +1,13 @@
 package org.cyclop.service.completion;
 
+import org.cyclop.model.ContextCqlCompletion;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.CqlParser;
+
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.CqlParser;
-import org.cyclop.service.model.ContextCqlCompletion;
-import org.cyclop.service.model.CqlCompletion;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlQueryType;
 
 /**
  * @author Maciej Miklas

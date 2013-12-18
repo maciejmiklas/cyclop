@@ -6,8 +6,8 @@ import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.cyclop.service.model.CqlColumnValue;
-import org.cyclop.service.model.CqlPartitionKeyValue;
+import org.cyclop.model.CqlColumnValue;
+import org.cyclop.model.CqlPartitionKeyValue;
 
 /**
  * @author Maciej Miklas
@@ -30,7 +30,6 @@ class CollectionViewPanel extends Panel {
         add(cqlCollectionListEntry);
     }
 
-    // TODO do we need it ?
     @Override
     protected void onComponentTag(ComponentTag tag) {
         if ("a".equalsIgnoreCase(tag.getName())) {

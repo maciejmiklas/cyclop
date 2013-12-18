@@ -1,13 +1,14 @@
 package org.cyclop.service.completion.parser.decisionlist.insert;
 
 import com.google.common.collect.ImmutableSortedSet;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlPart;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionStatic;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionStatic;
-import org.cyclop.service.model.CqlCompletion;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlPart;
-import org.cyclop.service.model.CqlQuery;
 
 /**
  * @author Maciej Miklas

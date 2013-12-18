@@ -1,12 +1,13 @@
 package org.cyclop.service.completion.parser.decisionlist.select;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlQueryType;
 
 /**
  * @author Maciej Miklas
@@ -19,24 +20,24 @@ public class SelectDecisionListSupport implements DecisionListSupport {
     private final CqlKeyword supports = new CqlKeyword("select");
 
     @Inject
-    private SelectClausePartCompletion selectClausePartCompletion;
+    private SelectCompletion selectCompletion;
 
     @Inject
-    private FromClausePartCompletion fromClausePartCompletion;
+    private FromCompletion fromCompletion;
 
     @Inject
-    private AfterFromClausePartCompletion afterFromClausePartCompletion;
+    private AfterFromCompletion afterFromCompletion;
 
     @Inject
-    private WhereClausePartCompletion whereClausePartCompletion;
+    private WhereCompletion whereCompletion;
 
     @Inject
     private OrderByClausePartCompletion orderByClausePartCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{selectClausePartCompletion, fromClausePartCompletion,
-                afterFromClausePartCompletion, whereClausePartCompletion, orderByClausePartCompletion};
+        decisionList = new CqlPartCompletion[]{selectCompletion, fromCompletion,
+                afterFromCompletion, whereCompletion, orderByClausePartCompletion};
     }
 
     @Override

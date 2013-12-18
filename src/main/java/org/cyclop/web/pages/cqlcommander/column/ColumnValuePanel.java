@@ -1,6 +1,5 @@
 package org.cyclop.web.pages.cqlcommander.column;
 
-import javax.inject.Inject;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -11,11 +10,13 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.cyclop.service.model.CqlColumnValue;
-import org.cyclop.service.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlColumnValue;
+import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlPartitionKeyValue;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.web.components.infodialog.InfoDialog;
-import org.cyclop.service.model.CqlPartitionKeyValue;
+
+import javax.inject.Inject;
 
 /**
  * @author Maciej Miklas

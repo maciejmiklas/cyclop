@@ -1,16 +1,15 @@
 package org.cyclop.web.pages.cqlcommander;
 
-import javax.inject.Inject;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
+import org.cyclop.model.ContextCqlCompletion;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlSelectResult;
 import org.cyclop.service.converter.CsvQueryResultExporter;
-import org.cyclop.service.model.ContextCqlCompletion;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlSelectResult;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonListener;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonsPanel;
 import org.cyclop.web.pages.cqlcommander.completionhint.CompletionHintPanel;
@@ -22,6 +21,8 @@ import org.cyclop.web.pages.cqlcommander.verticalresult.QueryResultVerticalPanel
 import org.cyclop.web.pages.parent.ParentPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 /**
  * @author Maciej Miklas

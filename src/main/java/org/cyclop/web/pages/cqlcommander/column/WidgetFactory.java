@@ -4,19 +4,16 @@ import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
-import org.cyclop.service.model.CqlColumnValue;
-import org.cyclop.service.model.CqlExtendedColumnName;
-import org.cyclop.service.model.CqlColumnType;
-import org.cyclop.service.model.CqlPartitionKey;
+import org.cyclop.model.*;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.converter.DataExtractor;
-import org.cyclop.service.model.CqlPartitionKeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @author Maciej Miklas

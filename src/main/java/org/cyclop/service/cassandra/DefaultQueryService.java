@@ -8,29 +8,20 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.common.AppConfig;
-import org.cyclop.service.model.CqlColumnName;
-import org.cyclop.service.model.CqlColumnType;
-import org.cyclop.service.model.CqlExtendedColumnName;
-import org.cyclop.service.model.CqlKeySpace;
-import org.cyclop.service.model.CqlPartitionKey;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlQueryType;
-import org.cyclop.service.model.CqlRow;
-import org.cyclop.service.model.CqlSelectResult;
-import org.cyclop.service.model.CqlTable;
-import org.cyclop.service.model.QueryException;
+import org.cyclop.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.cyclop.common.QueryHelper.KW_SELECT;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import static org.cyclop.common.QueryHelper.extractSpace;
 import static org.cyclop.common.QueryHelper.extractTableName;
+import static org.cyclop.model.CqlKeywords.FROM;
 
 /**
  * @author Maciej Miklas
@@ -204,7 +195,7 @@ class DefaultQueryService implements QueryService {
 
     protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
 
-        CqlTable table = extractTableName(KW_SELECT, query);
+        CqlTable table = extractTableName(FROM, query);
         if (table == null) {
             LOG.warn("Could not extract table name from: {}. Column type information is not available.");
             return ImmutableMap.of();

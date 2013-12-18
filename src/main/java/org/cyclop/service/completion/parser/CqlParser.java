@@ -1,20 +1,16 @@
 package org.cyclop.service.completion.parser;
 
 import com.google.common.collect.ImmutableSortedSet;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
+import org.cyclop.model.*;
 import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
 import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionDynamic;
 import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionStatic;
 import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.ContextCqlCompletion;
-import org.cyclop.service.model.CqlCompletion;
-import org.cyclop.service.model.CqlPart;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlQueryType;
-import org.cyclop.service.model.ServiceException;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.List;
 
 /**
  * LL(1) like cql parser

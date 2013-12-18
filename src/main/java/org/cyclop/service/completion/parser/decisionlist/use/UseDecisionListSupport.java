@@ -1,12 +1,13 @@
 package org.cyclop.service.completion.parser.decisionlist.use;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlQueryType;
 
 /**
  * @author Maciej Miklas
@@ -19,11 +20,11 @@ public class UseDecisionListSupport implements DecisionListSupport {
     private CqlPartCompletion[] decisionList;
 
     @Inject
-    UsePartCompletion usePartCompletion;
+    UseCompletion useCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{usePartCompletion};
+        decisionList = new CqlPartCompletion[]{useCompletion};
     }
 
     @Override

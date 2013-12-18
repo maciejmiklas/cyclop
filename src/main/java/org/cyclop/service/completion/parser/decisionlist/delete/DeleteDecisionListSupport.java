@@ -1,15 +1,13 @@
 package org.cyclop.service.completion.parser.decisionlist.delete;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlNotSupported;
-import org.cyclop.service.model.CqlQueryType;
-
-// TODO html help
 
 /**
  * @author Maciej Miklas
@@ -17,16 +15,29 @@ import org.cyclop.service.model.CqlQueryType;
 @Named
 public class DeleteDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlNotSupported("delete");
+    private final CqlKeyword supports = new CqlKeyword("delete");
 
     private CqlPartCompletion[] decisionList;
 
     @Inject
-    DeletePartCompletion deletePartCompletion;
+    private DeleteClauseCompletion deleteClauseCompletion;
+
+    @Inject
+    private FromClauseCompletion fromClauseCompletion;
+
+    @Inject
+    private AfterFromCompletion afterFromCompletion;
+
+    @Inject
+    private WhereClauseCompletion whereClauseCompletion;
+
+    @Inject
+    private OrderByCompletion orderByCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{deletePartCompletion};
+        decisionList = new CqlPartCompletion[]{deleteClauseCompletion, fromClauseCompletion,
+                afterFromCompletion, whereClauseCompletion, orderByCompletion};
     }
 
     @Override

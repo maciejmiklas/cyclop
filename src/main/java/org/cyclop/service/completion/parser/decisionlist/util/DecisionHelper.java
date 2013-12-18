@@ -2,21 +2,15 @@ package org.cyclop.service.completion.parser.decisionlist.util;
 
 import com.datastax.driver.core.DataType;
 import com.google.common.collect.ImmutableSortedSet;
+import org.cyclop.common.QueryHelper;
+import org.cyclop.model.*;
+import org.cyclop.service.cassandra.QueryService;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.cyclop.common.QueryHelper;
-import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.model.CqlColumnName;
-import org.cyclop.service.model.CqlCompletion;
-import org.cyclop.service.model.CqlKeySpace;
-import org.cyclop.service.model.CqlPart;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlTable;
 
 /**
  * @author Maciej Miklas
@@ -43,7 +37,7 @@ public final class DecisionHelper {
         return newElements;
     }
 
-    public CqlCompletion computeTableNameCompletion(String kw, CqlQuery query) {
+    public CqlCompletion computeTableNameCompletion(CqlKeywords kw, CqlQuery query) {
         CqlCompletion completion = computeTableNameCompletionWithKeyspaceInQuery(kw, query);
         if (completion == null) {
             completion = computeTableNameCompletionWithoutKeyspaceInQuery();
@@ -51,7 +45,7 @@ public final class DecisionHelper {
         return completion;
     }
 
-    private CqlCompletion computeTableNameCompletionWithKeyspaceInQuery(String kw, CqlQuery query) {
+    private CqlCompletion computeTableNameCompletionWithKeyspaceInQuery(CqlKeywords kw, CqlQuery query) {
         CqlKeySpace keySpace = QueryHelper.extractKeyspace(kw, query);
         if (keySpace == null) {
             return null;

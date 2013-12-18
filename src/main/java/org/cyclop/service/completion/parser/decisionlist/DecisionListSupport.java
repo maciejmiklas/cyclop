@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.parser.decisionlist;
 
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlQueryType;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryType;
 
 /**
  * @author Maciej Miklas

@@ -3,15 +3,16 @@ package org.cyclop.service.cassandra;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.cyclop.common.AppConfig;
-import org.cyclop.service.model.CqlKeySpace;
-import org.cyclop.service.model.ServiceException;
+import org.cyclop.model.CqlKeySpace;
+import org.cyclop.model.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * @author Maciej Miklas

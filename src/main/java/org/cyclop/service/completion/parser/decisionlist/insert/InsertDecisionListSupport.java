@@ -1,12 +1,13 @@
 package org.cyclop.service.completion.parser.decisionlist.insert;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlQueryType;
 
 /**
  * @author Maciej Miklas
@@ -17,13 +18,13 @@ public class InsertDecisionListSupport implements DecisionListSupport {
     private final CqlKeyword supports = new CqlKeyword("insert into");
 
     @Inject
-    private TableNamePartCompletion tableNamePartCompletion;
+    private TableNameCompletion tableNameCompletion;
 
     @Inject
-    private ColumnsPartCompletion columnsPartCompletion;
+    private ColumnsCompletion columnsCompletion;
 
     @Inject
-    private AfterColumnsPartCompletion afterColumnsPartCompletion;
+    private AfterColumnsCompletion afterColumnsCompletion;
 
     @Inject
     private AfterValuesPartCompletion afterValuesPartCompletion;
@@ -32,8 +33,8 @@ public class InsertDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{tableNamePartCompletion, columnsPartCompletion,
-                afterColumnsPartCompletion, afterValuesPartCompletion};
+        decisionList = new CqlPartCompletion[]{tableNameCompletion, columnsCompletion,
+                afterColumnsCompletion, afterValuesPartCompletion};
     }
 
     @Override

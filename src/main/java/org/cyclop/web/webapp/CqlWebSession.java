@@ -1,7 +1,5 @@
 package org.cyclop.web.webapp;
 
-import javax.inject.Inject;
-
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
@@ -9,6 +7,8 @@ import org.apache.wicket.request.Request;
 import org.cyclop.service.cassandra.CassandraSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 /**
  * @author Maciej Miklas

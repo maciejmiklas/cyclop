@@ -1,7 +1,7 @@
 package org.cyclop.service.completion;
 
-import org.cyclop.service.model.ContextCqlCompletion;
-import org.cyclop.service.model.CqlQuery;
+import org.cyclop.model.ContextCqlCompletion;
+import org.cyclop.model.CqlQuery;
 
 /**
  * @author Maciej Miklas

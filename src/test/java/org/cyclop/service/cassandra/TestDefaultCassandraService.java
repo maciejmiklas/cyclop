@@ -2,11 +2,11 @@ package org.cyclop.service.cassandra;
 
 import javax.inject.Inject;
 import org.cyclop.TestProps;
-import org.cyclop.service.model.CqlColumnName;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlQueryType;
-import org.cyclop.service.model.CqlSelectResult;
-import org.cyclop.service.model.CqlTable;
+import org.cyclop.model.CqlColumnName;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlTable;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

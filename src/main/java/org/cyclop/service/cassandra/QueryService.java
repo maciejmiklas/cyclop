@@ -1,11 +1,7 @@
 package org.cyclop.service.cassandra;
 
 import com.google.common.collect.ImmutableSortedSet;
-import org.cyclop.service.model.CqlColumnName;
-import org.cyclop.service.model.CqlKeySpace;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlSelectResult;
-import org.cyclop.service.model.CqlTable;
+import org.cyclop.model.*;
 
 /**
  * @author Maciej Miklas

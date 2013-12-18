@@ -1,7 +1,8 @@
 package org.cyclop.web.webapp;
 
-import javax.servlet.annotation.WebListener;
 import org.springframework.web.context.ContextLoaderListener;
+
+import javax.servlet.annotation.WebListener;
 
 /**
  * @author Maciej Miklas

@@ -1,15 +1,14 @@
 package org.cyclop.service.completion.parser.decisionlist.batch;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlNotSupported;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlNotSupported;
-import org.cyclop.service.model.CqlQueryType;
-
-// TODO html help
 
 /**
  * @author Maciej Miklas
@@ -22,11 +21,11 @@ public class BatchDecisionListSupport implements DecisionListSupport {
     private CqlPartCompletion[] decisionList;
 
     @Inject
-    BatchPartCompletion batchPartCompletion;
+    BatchCompletion batchCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{batchPartCompletion};
+        decisionList = new CqlPartCompletion[]{batchCompletion};
     }
 
     @Override

@@ -1,13 +1,14 @@
 package org.cyclop.service.completion.parser.decisionlist.altertable;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlNotSupported;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlNotSupported;
-import org.cyclop.service.model.CqlQueryType;
 
 /**
  * @author Maciej Miklas
@@ -20,11 +21,11 @@ public class AlterTableDecisionListSupport implements DecisionListSupport {
     private CqlPartCompletion[] decisionList;
 
     @Inject
-    AlterPartCompletion alterPartCompletion;
+    AlterCompletion alterCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{alterPartCompletion};
+        decisionList = new CqlPartCompletion[]{alterCompletion};
     }
 
     @Override

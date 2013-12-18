@@ -1,8 +1,9 @@
 package org.cyclop.web.pages.cqlcommander.editor;
 
-import java.io.Serializable;
 import org.apache.wicket.Component;
-import org.cyclop.service.model.ContextCqlCompletion;
+import org.cyclop.model.ContextCqlCompletion;
+
+import java.io.Serializable;
 
 /**
  * @author Maciej Miklas

@@ -1,8 +1,9 @@
 package org.cyclop.web.webapp;
 
+import org.apache.wicket.protocol.http.WicketFilter;
+
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.annotation.WebInitParam;
-import org.apache.wicket.protocol.http.WicketFilter;
 
 /**
  * @author Maciej Miklas

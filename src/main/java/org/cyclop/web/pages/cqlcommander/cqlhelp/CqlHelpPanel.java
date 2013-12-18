@@ -2,13 +2,14 @@ package org.cyclop.web.pages.cqlcommander.cqlhelp;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import java.io.IOException;
-import java.io.Serializable;
-import java.net.URL;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.cyclop.service.model.ContextCqlCompletion;
+import org.cyclop.model.ContextCqlCompletion;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.net.URL;
 
 /**
  * @author Maciej Miklas

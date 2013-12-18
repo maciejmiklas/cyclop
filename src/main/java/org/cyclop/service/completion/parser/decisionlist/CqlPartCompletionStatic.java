@@ -1,6 +1,6 @@
 package org.cyclop.service.completion.parser.decisionlist;
 
-import org.cyclop.service.model.CqlPart;
+import org.cyclop.model.CqlPart;
 
 /**
  * @author Maciej Miklas

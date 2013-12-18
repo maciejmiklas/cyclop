@@ -1,16 +1,17 @@
 package org.cyclop.service.converter;
 
+import org.cyclop.common.AppConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-import javax.inject.Inject;
-import javax.inject.Named;
-import org.cyclop.common.AppConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Maciej Miklas

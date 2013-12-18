@@ -1,15 +1,13 @@
 package org.cyclop.service.completion.parser.decisionlist.update;
 
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
+import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
-import org.cyclop.service.model.CqlKeyword;
-import org.cyclop.service.model.CqlNotSupported;
-import org.cyclop.service.model.CqlQueryType;
-
-// TODO html help
 
 /**
  * @author Maciej Miklas
@@ -17,16 +15,26 @@ import org.cyclop.service.model.CqlQueryType;
 @Named
 public class UpdateDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlNotSupported("update");
+    private final CqlKeyword supports = new CqlKeyword("update");
+
+    @Inject
+    private TableNameCompletion tableNameCompletion;
+
+    @Inject
+    private ColumnsCompletion columnsCompletion;
+
+    @Inject
+    private AfterUpdateCCompletion afterUpdateCCompletion;
+
+    @Inject
+    private WhereCompletion whereCompletion;
 
     private CqlPartCompletion[] decisionList;
 
-    @Inject
-    UpdatePartCompletion updatePartCompletion;
-
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{updatePartCompletion};
+        decisionList = new CqlPartCompletion[] { tableNameCompletion, afterUpdateCCompletion, columnsCompletion,
+                whereCompletion};
     }
 
     @Override

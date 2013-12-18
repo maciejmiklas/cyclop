@@ -1,11 +1,12 @@
 package org.cyclop.web.webapp;
 
-import java.io.Serializable;
 import org.apache.wicket.Application;
 import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.page.IManageablePage;
 import org.apache.wicket.pageStore.IDataStore;
 import org.apache.wicket.pageStore.IPageStore;
+
+import java.io.Serializable;
 
 /**
  * @author Maciej Miklas

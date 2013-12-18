@@ -4,10 +4,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebPage;
 
-import static org.cyclop.web.pages.parent.ScriptsRef.BOOTSTRAP;
-import static org.cyclop.web.pages.parent.ScriptsRef.JQUERY_TOOLS;
-import static org.cyclop.web.pages.parent.ScriptsRef.JQUERY_UI;
-import static org.cyclop.web.pages.parent.ScriptsRef.NOTIFY;
+import static org.cyclop.web.pages.parent.ScriptsRef.*;
 
 /**
  * @author Maciej Miklas

@@ -1,20 +1,15 @@
 package org.cyclop.common;
 
 import org.apache.commons.lang.StringUtils;
-import org.cyclop.service.model.CqlKeySpace;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlTable;
+import org.cyclop.model.CqlKeySpace;
+import org.cyclop.model.CqlKeywords;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlTable;
 
 /**
  * @author Maciej Miklas
  */
 public class QueryHelper {
-
-    public final static String KW_SELECT = "from ";
-
-    public final static String KW_DROP = "drop table ";
-
-    public final static String KW_INSERT = "insert into ";
 
     public static CqlKeySpace extractSpace(CqlQuery query) {
         String cqlLc = query.cqlLc.replaceAll("[;]", "");
@@ -24,23 +19,19 @@ public class QueryHelper {
 
         String space = cqlLc.substring(3, cqlLc.length()).trim();
         space = StringUtils.trimToNull(space);
-        if(space == null){
+        if (space == null) {
             return null;
         }
         return new CqlKeySpace(space);
     }
 
-    /**
-     * @param kw
-     *         {@value #KW_SELECT} or {@value #KW_INSERT}
-     */
-    public static CqlTable extractTableName(String kw, CqlQuery query) {
+    public static CqlTable extractTableName(CqlKeywords cqlKeywords, CqlQuery query) {
         String cqlLc = query.cqlLc;
-        int kwStart = cqlLc.indexOf(kw);
+        int kwStart = cqlLc.indexOf(cqlKeywords.valueSp);
         if (kwStart == -1) {
             return null;
         }
-        kwStart += kw.length();
+        kwStart += cqlKeywords.valueSp.length();
 
         int end = cqlLc.indexOf(" ", kwStart + 1);
         if (end == -1) {
@@ -75,21 +66,17 @@ public class QueryHelper {
         return result;
     }
 
-    /**
-     * @param kw
-     *         {@value #KW_SELECT} or {@value #KW_INSERT}
-     */
-    public static CqlKeySpace extractKeyspace(String kw, CqlQuery query) {
+    public static CqlKeySpace extractKeyspace(CqlKeywords cqlKeywords, CqlQuery query) {
         String cqlLc = query.cqlLc;
-        int kwStart = cqlLc.indexOf(kw);
+        int kwStart = cqlLc.indexOf(cqlKeywords.valueSp);
         if (kwStart == -1) {
             return null;
         }
-        kwStart += kw.length();
+        kwStart += cqlKeywords.valueSp.length();
 
         int end = cqlLc.indexOf(".", kwStart + 1);
         if (end == -1) {
-           return null;
+            return null;
         }
 
         String candidate = cqlLc.substring(kwStart, end);

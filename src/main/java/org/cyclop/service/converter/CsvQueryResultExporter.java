@@ -1,23 +1,17 @@
 package org.cyclop.service.converter;
 
+import com.datastax.driver.core.DataType;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import org.cyclop.common.AppConfig;
+import org.cyclop.model.*;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.cyclop.common.AppConfig;
-import org.cyclop.service.model.CqlColumnValue;
-import org.cyclop.service.model.CqlExtendedColumnName;
-import org.cyclop.service.model.CqlQuery;
-import org.cyclop.service.model.CqlRow;
-import org.cyclop.service.model.CqlSelectResult;
-
-import com.datastax.driver.core.DataType;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 /**
  * @author Maciej Miklas
@@ -78,7 +72,7 @@ public class CsvQueryResultExporter {
     }
 
     private void appendMap(StringBuilder buf, CqlRow row, CqlExtendedColumnName column) {
-        ImmutableSet<Map.Entry<CqlColumnValue, CqlColumnValue>> displayMap = extractor.extractMap(row.orginal,
+        ImmutableSet<Map.Entry<CqlColumnValue, CqlColumnValue>> displayMap = extractor.extractMap(row.original,
                 column).entrySet();
         Iterator<Map.Entry<CqlColumnValue, CqlColumnValue>> it = displayMap.iterator();
 
@@ -105,7 +99,7 @@ public class CsvQueryResultExporter {
     }
 
     private void appendCollection(StringBuilder buf, CqlRow row, CqlExtendedColumnName column) {
-        ImmutableList<CqlColumnValue> content = extractor.extractCollection(row.orginal, column);
+        ImmutableList<CqlColumnValue> content = extractor.extractCollection(row.original, column);
         Iterator<CqlColumnValue> contentIt = content.iterator();
         StringBuilder listBuild = new StringBuilder();
         while (contentIt.hasNext()) {
@@ -120,7 +114,7 @@ public class CsvQueryResultExporter {
     }
 
     private void appendSingleValue(StringBuilder buf, CqlRow row, CqlExtendedColumnName column) {
-        CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row.orginal, column);
+        CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row.original, column);
         String valText = esc(converter.convert(cqlColumnValue.value));
         buf.append(valText);
     }
