@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import static org.cyclop.model.CqlKeywords.FROM;
+import static org.cyclop.model.CqlKeywords.INSERT;
 
 /**
  * @author Maciej Miklas
@@ -25,7 +26,7 @@ public class TableNameCompletion implements CqlPartCompletionStatic {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = decisionHelper.computeTableNameCompletion(FROM, query);
+        CqlCompletion completion = decisionHelper.computeTableNameCompletion(INSERT, query);
         return completion;
     }
 

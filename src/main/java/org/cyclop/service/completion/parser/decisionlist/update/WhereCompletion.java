@@ -14,6 +14,7 @@ import java.util.SortedSet;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
 import static org.cyclop.model.CqlKeywords.FROM;
+import static org.cyclop.model.CqlKeywords.UPDATE;
 
 /**
  * @author Maciej Miklas
@@ -31,28 +32,14 @@ public class WhereCompletion implements CqlPartCompletionStatic {
 
     @PostConstruct
     public void init() {
-        CqlKeyword limit = new CqlKeyword("limit");
-        staticPartFull.add(limit);
-        staticPartMin.add(limit);
-
-        CqlKeyword allow = new CqlKeyword("allow filtering");
-        staticPartFull.add(allow);
-        staticPartMin.add(allow);
-
         CqlKeyword and = new CqlKeyword("and");
         staticPartFull.add(and);
         staticPartMin.add(and);
-
-        staticPartFull.add(new CqlKeyword("in ("));
-        staticPartMin.add(new CqlKeyword("in"));
-
-        staticPartFull.add(new CqlKeyword("order by ("));
-        staticPartMin.add(new CqlKeyword("order by"));
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlTable table = extractTableName(FROM, query);
+        CqlTable table = extractTableName(UPDATE, query);
         SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 
         ImmutableSortedSet.Builder<CqlPart> completionFullBuild = ImmutableSortedSet.naturalOrder();

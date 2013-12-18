@@ -11,6 +11,7 @@ import javax.inject.Named;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
 import static org.cyclop.model.CqlKeywords.FROM;
+import static org.cyclop.model.CqlKeywords.INSERT;
 
 /**
  * @author Maciej Miklas
@@ -28,7 +29,7 @@ public class ColumnsCompletion implements CqlPartCompletionStatic {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlTable table = extractTableName(FROM, query);
+        CqlTable table = extractTableName(INSERT, query);
         ImmutableSortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 
         ImmutableSortedSet.Builder<CqlColumnName> fullCmp = ImmutableSortedSet.naturalOrder();

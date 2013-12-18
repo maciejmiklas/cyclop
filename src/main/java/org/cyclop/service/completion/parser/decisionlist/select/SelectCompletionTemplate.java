@@ -4,7 +4,7 @@ import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPart;
 import org.cyclop.service.cassandra.CassandraSession;
 import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.completion.parser.decisionlist.common.TableNameCompletion;
+import org.cyclop.service.completion.parser.decisionlist.common.ColumnNameCompletionTemplate;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,8 +16,8 @@ import static org.cyclop.model.CqlKeywords.FROM;
 /**
  * @author Maciej Miklas
  */
-@Named("select.SelectCompletion")
-public class SelectCompletion extends TableNameCompletion {
+@Named("select.SelectCompletionTemplate")
+public class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
 
     @Inject
     private QueryService queryService;
@@ -29,7 +29,7 @@ public class SelectCompletion extends TableNameCompletion {
     @Inject
     private CassandraSession session;
 
-    public SelectCompletion() {
+    public SelectCompletionTemplate() {
         super(staticPart, startMarker, FROM);
     }
 

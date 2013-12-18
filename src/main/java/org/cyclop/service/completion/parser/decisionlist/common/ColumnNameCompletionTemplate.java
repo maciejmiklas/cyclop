@@ -14,7 +14,7 @@ import java.util.SortedSet;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 @Named
-public abstract class TableNameCompletion implements CqlPartCompletionStatic {
+public abstract class ColumnNameCompletionTemplate implements CqlPartCompletionStatic {
 
     @Inject
     private QueryService queryService;
@@ -28,7 +28,7 @@ public abstract class TableNameCompletion implements CqlPartCompletionStatic {
 
     private CqlKeywords cqlKeywords;
 
-    public TableNameCompletion(List<CqlPart> staticPart, CqlPart[] startMarker, CqlKeywords cqlKeywords) {
+    public ColumnNameCompletionTemplate(List<CqlPart> staticPart, CqlPart[] startMarker, CqlKeywords cqlKeywords) {
         this.staticPart = staticPart;
         this.startMarker = startMarker;
         this.cqlKeywords = cqlKeywords;

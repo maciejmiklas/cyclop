@@ -20,7 +20,7 @@ public class SelectDecisionListSupport implements DecisionListSupport {
     private final CqlKeyword supports = new CqlKeyword("select");
 
     @Inject
-    private SelectCompletion selectCompletion;
+    private SelectCompletionTemplate selectCompletion;
 
     @Inject
     private FromCompletion fromCompletion;
