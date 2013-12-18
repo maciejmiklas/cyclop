@@ -26,29 +26,23 @@ public class OrderByClausePartCompletion implements CqlPartCompletionStatic {
     @Inject
     private QueryService queryService;
 
-    private final List<CqlPart> staticPart = new ArrayList<>();
+    private CqlCompletion.BuilderTemplate builderTemplate;
 
     @PostConstruct
     public void init() {
-        staticPart.add(new CqlKeyword("asc"));
-        staticPart.add(new CqlKeyword("desc"));
-        staticPart.add(new CqlKeyword("limit"));
-        staticPart.add(new CqlKeyword("allow filtering"));
-        staticPart.add(new CqlKeyword("token"));
+        builderTemplate = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("asc")).all(new CqlKeyword("desc")).
+                all(new CqlKeyword("limit")).all(new CqlKeyword("allow filtering")).all(new CqlKeyword("token")).template();
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
+        CqlCompletion.Builder builder = builderTemplate.naturalOrder();
 
         CqlTable table = extractTableName(FROM, query);
         SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
-        completionBuild.addAll(columnNames);
+        builder.all(columnNames);
 
-        completionBuild.addAll(staticPart);
-
-        ImmutableSortedSet<CqlPart> completion = completionBuild.build();
-        CqlCompletion cmp = new CqlCompletion(completion, completion);
+        CqlCompletion cmp = builder.build();
         return cmp;
     }
 

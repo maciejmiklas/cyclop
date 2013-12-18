@@ -20,7 +20,6 @@ public class ColumnsCompletion implements CqlPartCompletionStatic {
 
     private final static CqlPart SM = new CqlPart("(");
 
-
     @Inject
     private DecisionHelper decisionHelper;
 
@@ -29,15 +28,12 @@ public class ColumnsCompletion implements CqlPartCompletionStatic {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
+
         CqlTable table = extractTableName(INSERT, query);
         ImmutableSortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 
-        ImmutableSortedSet.Builder<CqlColumnName> fullCmp = ImmutableSortedSet.naturalOrder();
-        fullCmp.addAll(decisionHelper.prependToCqlColumnName(columnNames, "("));
-        fullCmp.addAll(decisionHelper.prependToCqlColumnName(columnNames, ","));
-        fullCmp.addAll(columnNames);
-
-        CqlCompletion cmp = new CqlCompletion(fullCmp.build(), columnNames);
+        CqlCompletion cmp = CqlCompletion.Builder.naturalOrder().full(decisionHelper.prependToCqlColumnName(columnNames, "(")).
+                full(decisionHelper.prependToCqlColumnName(columnNames, ",")).full(columnNames).min(columnNames).build();
         return cmp;
     }
 

@@ -1,6 +1,5 @@
 package org.cyclop.service.completion.parser;
 
-import com.google.common.collect.ImmutableSortedSet;
 import org.cyclop.model.*;
 
 import javax.annotation.PostConstruct;
@@ -25,12 +24,11 @@ public class CqlParser {
     @PostConstruct
     public void init() {
 
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
+        CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
         for (DecisionListSupport cf : decisionListFactoryList) {
-            completionBuild.add(cf.supports());
+            cb.all(cf.supports());
         }
-        ImmutableSortedSet<CqlPart> completion = completionBuild.build();
-        initialCqlCompletion = new CqlCompletion(completion, completion);
+        initialCqlCompletion = cb.build();
     }
 
     private DecisionListSupport findCompletionDecisionList(CqlQuery query) {

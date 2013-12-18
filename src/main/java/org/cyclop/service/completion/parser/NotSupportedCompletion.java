@@ -19,10 +19,7 @@ public abstract class NotSupportedCompletion implements CqlPartCompletionStatic 
 
     @PostConstruct
     public void init() {
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
-        completionBuild.add(new CqlNotSupported("'" + getNotSupportedText() + "' is not supported yet....."));
-        ImmutableSortedSet<CqlPart> staticPart = completionBuild.build();
-        completion = new CqlCompletion(staticPart, staticPart);
+        completion = CqlCompletion.Builder.naturalOrder().all(new CqlNotSupported("'" + getNotSupportedText() + "' is not supported yet.....")).build();
     }
 
     @Override

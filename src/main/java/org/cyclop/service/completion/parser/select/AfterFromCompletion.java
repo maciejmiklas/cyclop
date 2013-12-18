@@ -30,13 +30,8 @@ public class AfterFromCompletion extends AfterTableNameCompletionTemplate {
 
     @PostConstruct
     public void init() {
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
-        completionBuild.add(new CqlKeyword("where"));
-        completionBuild.add(new CqlKeyword("order by"));
-        completionBuild.add(new CqlKeyword("limit"));
-        completionBuild.add(new CqlKeyword("allow filtering"));
-        ImmutableSortedSet<CqlPart> staticPart = completionBuild.build();
-        completion = new CqlCompletion(staticPart, staticPart);
+        completion = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("where")).all(new CqlKeyword("order by")).
+                all(new CqlKeyword("limit")).all(new CqlKeyword("allow filtering")).build();
     }
 
     @Override

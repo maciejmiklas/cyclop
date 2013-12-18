@@ -16,23 +16,19 @@ import javax.inject.Named;
 @Named("insert.AfterColumnsCompletion")
 public class AfterColumnsCompletion implements CqlPartCompletionStatic {
 
-
-    private CqlCompletion cmpMinMax;
+    private CqlCompletion completion;
 
     private final static CqlPart SM = new CqlPart(")");
 
 
     @PostConstruct
     public void init() {
-        ImmutableSortedSet.Builder<CqlPart> comContentBuild = ImmutableSortedSet.naturalOrder();
-        comContentBuild.add(new CqlKeyword("values"));
-        ImmutableSortedSet<CqlPart> comContent = comContentBuild.build();
-        cmpMinMax = new CqlCompletion(comContent, comContent);
+        completion = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("values")).build();
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        return cmpMinMax;
+        return completion;
     }
 
     @Override

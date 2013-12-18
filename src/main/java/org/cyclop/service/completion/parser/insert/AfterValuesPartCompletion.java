@@ -18,22 +18,17 @@ public class AfterValuesPartCompletion implements CqlPartCompletionStatic {
 
     private final CqlPart SM = new CqlPart(")");
 
-    private CqlCompletion cmpMinMax = null;
+    private CqlCompletion completion = null;
 
     @PostConstruct
     public void init() {
-
-        ImmutableSortedSet.Builder<CqlPart> comContentBuild = ImmutableSortedSet.naturalOrder();
-        comContentBuild.add(new CqlKeyword("using ttl"));
-        comContentBuild.add(new CqlKeyword("using timestamp"));
-        comContentBuild.add(new CqlKeyword("and"));
-        ImmutableSortedSet<CqlPart> compContent = comContentBuild.build();
-        cmpMinMax = new CqlCompletion(compContent, compContent);
+        completion = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("using ttl")).
+                all(new CqlKeyword("using timestamp")).all(new CqlKeyword("and")).build();
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        return cmpMinMax;
+        return completion;
     }
 
     @Override

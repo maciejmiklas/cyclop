@@ -1,6 +1,5 @@
 package org.cyclop.service.completion.parser.template;
 
-import com.google.common.collect.ImmutableSortedSet;
 import org.cyclop.model.*;
 import org.cyclop.service.cassandra.CassandraSession;
 import org.cyclop.service.cassandra.QueryService;
@@ -8,7 +7,7 @@ import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
+import java.util.Collection;
 import java.util.SortedSet;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
@@ -19,24 +18,22 @@ public abstract class ColumnNameCompletionTemplate implements CqlPartCompletionS
     @Inject
     private QueryService queryService;
 
-    private final List<CqlPart> staticPart;
+    private final CqlCompletion.BuilderTemplate builderTemplate;
 
     @Inject
     private CassandraSession session;
 
     private CqlKeywords cqlKeywords;
 
-    public ColumnNameCompletionTemplate(List<CqlPart> staticPart,  CqlKeywords cqlKeywords) {
-        this.staticPart = staticPart;
+    public ColumnNameCompletionTemplate(Collection<? extends CqlPart> staticPartAll, CqlKeywords cqlKeywords) {
+        this.builderTemplate = CqlCompletion.Builder.naturalOrder().all(staticPartAll).template();
         this.cqlKeywords = cqlKeywords;
     }
 
 
     @Override
     public final CqlCompletion getCompletion(CqlQuery query) {
-
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
-        completionBuild.addAll(staticPart);
+        CqlCompletion.Builder builder = builderTemplate.naturalOrder();
 
         SortedSet<CqlColumnName> columnNames;
         CqlTable table = extractTableName(cqlKeywords, query);
@@ -46,10 +43,9 @@ public abstract class ColumnNameCompletionTemplate implements CqlPartCompletionS
             columnNames = queryService.findAllColumnNames();
         }
 
-        completionBuild.addAll(columnNames);
+        builder.all(columnNames);
 
-        ImmutableSortedSet<CqlPart> completion = completionBuild.build();
-        CqlCompletion cmp = new CqlCompletion(completion, completion);
+        CqlCompletion cmp = builder.build();
         return cmp;
     }
 

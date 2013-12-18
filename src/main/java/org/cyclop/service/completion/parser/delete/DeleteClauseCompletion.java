@@ -1,15 +1,11 @@
 package org.cyclop.service.completion.parser.delete;
 
-import com.google.common.collect.ImmutableSortedSet;
 import org.cyclop.model.*;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedSet;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
@@ -26,18 +22,11 @@ public class DeleteClauseCompletion implements CqlPartCompletionStatic {
 
     private final static CqlPart SM = new CqlKeyword("delete");
 
-    private final List<CqlPart> staticPart = new ArrayList<>();
-
-    @PostConstruct
-    public void init() {
-        staticPart.add(new CqlKeyword("from"));
-    }
-
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
 
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
-        completionBuild.addAll(staticPart);
+        CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
+        cb.all(new CqlKeyword("from"));
 
         SortedSet<CqlColumnName> columnNames;
         CqlTable table = extractTableName(FROM, query);
@@ -47,11 +36,9 @@ public class DeleteClauseCompletion implements CqlPartCompletionStatic {
             columnNames = queryService.findAllColumnNames();
         }
 
-        completionBuild.addAll(columnNames);
+        cb.all(columnNames);
 
-        ImmutableSortedSet<CqlPart> completion = completionBuild.build();
-        CqlCompletion cmp = new CqlCompletion(completion, completion);
-        return cmp;
+        return cb.build();
     }
 
     @Override

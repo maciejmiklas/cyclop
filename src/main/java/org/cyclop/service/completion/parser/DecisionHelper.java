@@ -55,35 +55,30 @@ public final class DecisionHelper {
             return null;
         }
 
-        ImmutableSortedSet.Builder<CqlPart> minCompletionBuild = ImmutableSortedSet.naturalOrder();
-        ImmutableSortedSet.Builder<CqlPart> fullCompletionBuild = ImmutableSortedSet.naturalOrder();
-
-        minCompletionBuild.addAll(tables);
-        fullCompletionBuild.addAll(tables);
+        CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
+        builder.all(tables);
 
         for (CqlTable ta : tables) {
-            fullCompletionBuild.add(new CqlKeySpace(keySpace.partLc + "." + ta.partLc));
+            builder.full(new CqlKeySpace(keySpace.partLc + "." + ta.partLc));
         }
 
-        CqlCompletion cmp = new CqlCompletion(fullCompletionBuild.build(), minCompletionBuild.build());
+        CqlCompletion cmp = builder.build();
         return cmp;
     }
 
     private CqlCompletion computeTableNameCompletionWithoutKeyspaceInQuery() {
-        ImmutableSortedSet.Builder<CqlPart> minCompletionBuild = ImmutableSortedSet.naturalOrder();
-        ImmutableSortedSet.Builder<CqlPart> fullCompletionBuild = ImmutableSortedSet.naturalOrder();
+        CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
 
         ImmutableSortedSet<CqlTable> tables = queryService.findTableNamesForActiveKeySpace();
-        minCompletionBuild.addAll(tables);
-        fullCompletionBuild.addAll(tables);
+        builder.all(tables);
 
         ImmutableSortedSet<CqlKeySpace> keyspaces = queryService.findAllKeySpaces();
         for (CqlKeySpace ks : keyspaces) {
-            minCompletionBuild.add(ks);
-            fullCompletionBuild.add(new CqlKeySpace(ks.partLc + "."));
+            builder.min(ks);
+            builder.full(new CqlKeySpace(ks.partLc + "."));
         }
 
-        CqlCompletion cmp = new CqlCompletion(fullCompletionBuild.build(), minCompletionBuild.build());
+        CqlCompletion cmp = builder.build();
         return cmp;
     }
 

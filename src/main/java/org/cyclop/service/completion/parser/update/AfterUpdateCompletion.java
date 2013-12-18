@@ -1,10 +1,9 @@
 package org.cyclop.service.completion.parser.update;
 
-import com.google.common.collect.ImmutableSortedSet;
-import org.cyclop.common.QueryHelper;
-import org.cyclop.model.*;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
 import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.completion.parser.CqlPartCompletionDynamic;
 import org.cyclop.service.completion.parser.template.AfterTableNameCompletionTemplate;
 
 import javax.annotation.PostConstruct;
@@ -30,12 +29,8 @@ public class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
 
     @PostConstruct
     public void init() {
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
-        completionBuild.add(new CqlKeyword("using ttl"));
-        completionBuild.add(new CqlKeyword("using timestamp"));
-        completionBuild.add(new CqlKeyword("set"));
-        ImmutableSortedSet<CqlPart> staticPart = completionBuild.build();
-        completion = new CqlCompletion(staticPart, staticPart);
+        completion = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("using ttl")).all(new CqlKeyword("using timestamp")).
+                all(new CqlKeyword("set")).build();
     }
 
     @Override

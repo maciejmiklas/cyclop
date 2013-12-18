@@ -27,7 +27,7 @@ public class DefaultCqlCompletionService implements CqlCompletionService {
     public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
         ContextCqlCompletion comp = parser.findCompletion(cqlQuery, cursorPosition);
         if (comp == null) {
-            comp = new ContextCqlCompletion(CqlQueryType.UNKNOWN, new CqlCompletion());
+            comp = new ContextCqlCompletion(CqlQueryType.UNKNOWN, CqlCompletion.Builder.naturalOrder().build());
         }
 
         return comp;

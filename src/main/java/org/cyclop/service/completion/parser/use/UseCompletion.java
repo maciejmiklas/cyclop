@@ -22,8 +22,7 @@ public class UseCompletion implements CqlPartCompletionStatic {
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
         ImmutableSortedSet<CqlKeySpace> keySpaces = queryService.findAllKeySpaces();
-        CqlCompletion completion = new CqlCompletion(keySpaces, keySpaces);
-        return completion;
+        return CqlCompletion.Builder.naturalOrder().all(keySpaces).build();
     }
 
     @Override

@@ -20,30 +20,25 @@ public class ColumnsCompletion implements CqlPartCompletionStatic {
 
     private final static CqlPart SM = new CqlPart("set");
 
-    private ImmutableSortedSet<CqlPart> staticPart;
+    private CqlCompletion.BuilderTemplate builderTemplate;
 
     @Inject
     private QueryService queryService;
 
     @PostConstruct
     public void init() {
-        ImmutableSortedSet.Builder<CqlPart> completionBuild = ImmutableSortedSet.naturalOrder();
-        completionBuild.add(new CqlKeyword("where"));
-        staticPart = completionBuild.build();
+        builderTemplate = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("where")).template();
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
+        CqlCompletion.Builder builder = builderTemplate.naturalOrder();
 
         CqlTable table = extractTableName(UPDATE, query);
         ImmutableSortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
+        builder.all(columnNames);
 
-        ImmutableSortedSet.Builder<CqlPart> completionFullBuild = ImmutableSortedSet.naturalOrder();
-        completionFullBuild.addAll(columnNames);
-        completionFullBuild.addAll(staticPart);
-
-        ImmutableSortedSet<CqlPart> completion = completionFullBuild.build();
-        CqlCompletion cmp = new CqlCompletion(completion, completion);
+        CqlCompletion cmp = builder.build();
         return cmp;
     }
 

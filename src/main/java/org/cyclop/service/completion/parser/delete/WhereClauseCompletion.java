@@ -26,34 +26,23 @@ public class WhereClauseCompletion implements CqlPartCompletionStatic {
     @Inject
     private QueryService queryService;
 
-    private final List<CqlPart> staticPartFull = new ArrayList<>();
-    private final List<CqlPart> staticPartMin = new ArrayList<>();
+    private CqlCompletion.BuilderTemplate builderTemplate;
 
     @PostConstruct
     public void init() {
-        CqlKeyword and = new CqlKeyword("and");
-        staticPartFull.add(and);
-        staticPartMin.add(and);
-
-        staticPartFull.add(new CqlKeyword("in ("));
-        staticPartMin.add(new CqlKeyword("in"));
-
+        builderTemplate =  CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("and")).full(new CqlKeyword("in ("))
+                .min(new CqlKeyword("in")).template();
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
+        CqlCompletion.Builder builder = builderTemplate.naturalOrder();
+
         CqlTable table = extractTableName(FROM, query);
         SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
+        builder.all(columnNames);
 
-        ImmutableSortedSet.Builder<CqlPart> completionFullBuild = ImmutableSortedSet.naturalOrder();
-        completionFullBuild.addAll(columnNames);
-        completionFullBuild.addAll(staticPartFull);
-
-        ImmutableSortedSet.Builder<CqlPart> completionMinBuild = ImmutableSortedSet.naturalOrder();
-        completionMinBuild.addAll(columnNames);
-        completionMinBuild.addAll(staticPartMin);
-
-        CqlCompletion cmp = new CqlCompletion(completionFullBuild.build(), completionMinBuild.build());
+        CqlCompletion cmp = builder.build();
         return cmp;
     }
 
