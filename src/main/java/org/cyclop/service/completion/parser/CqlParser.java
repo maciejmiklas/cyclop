@@ -2,10 +2,6 @@ package org.cyclop.service.completion.parser;
 
 import com.google.common.collect.ImmutableSortedSet;
 import org.cyclop.model.*;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletion;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionDynamic;
-import org.cyclop.service.completion.parser.decisionlist.CqlPartCompletionStatic;
-import org.cyclop.service.completion.parser.decisionlist.DecisionListSupport;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;

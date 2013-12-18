@@ -12694,7 +12694,7 @@ $.widget( "ui.tooltip", {
 
 		// close open tooltips
 		$.each( this.tooltips, function( id, element ) {
-			// Delegate to close method to handle common cleanup
+			// Delegate to close method to handle template cleanup
 			var event = $.Event( "blur" );
 			event.target = event.currentTarget = element[0];
 			that.close( event, true );
@@ -13619,7 +13619,7 @@ $.extend( $.effects, {
 				// http://bugs.jquery.com/ticket/9917
 				// jQuery 1.6.2 incorrectly returns undefined for any falsy value.
 				// We can't differentiate between "" and 0 here, so we just assume
-				// empty string since it's likely to be a more common value...
+				// empty string since it's likely to be a more template value...
 				if ( val === undefined ) {
 					val = "";
 				}
