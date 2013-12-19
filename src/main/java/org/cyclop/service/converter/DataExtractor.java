@@ -49,7 +49,6 @@ public class DataExtractor {
         return collection;
     }
 
-
     public ImmutableMap<CqlColumnValue, CqlColumnValue> extractMap(Row row, CqlExtendedColumnName column) {
         String partLc = column.partLc;
         DataType dataType = column.dataType;

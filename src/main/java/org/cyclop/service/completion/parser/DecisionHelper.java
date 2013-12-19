@@ -37,7 +37,7 @@ public final class DecisionHelper {
         return newElements;
     }
 
-    public CqlCompletion computeTableNameCompletion(CqlKeywords kw, CqlQuery query) {
+    public CqlCompletion computeTableNameCompletion(CqlKeyword kw, CqlQuery query) {
         CqlCompletion completion = computeTableNameCompletionWithKeyspaceInQuery(kw, query);
         if (completion == null) {
             completion = computeTableNameCompletionWithoutKeyspaceInQuery();
@@ -45,7 +45,7 @@ public final class DecisionHelper {
         return completion;
     }
 
-    private CqlCompletion computeTableNameCompletionWithKeyspaceInQuery(CqlKeywords kw, CqlQuery query) {
+    private CqlCompletion computeTableNameCompletionWithKeyspaceInQuery(CqlKeyword kw, CqlQuery query) {
         CqlKeySpace keySpace = QueryHelper.extractKeyspace(kw, query);
         if (keySpace == null) {
             return null;

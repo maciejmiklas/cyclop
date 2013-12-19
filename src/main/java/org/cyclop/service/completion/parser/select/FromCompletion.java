@@ -1,38 +1,30 @@
 package org.cyclop.service.completion.parser.select;
 
-import org.cyclop.model.CqlCompletion;
-import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlPart;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
-import org.cyclop.service.completion.parser.DecisionHelper;
-
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import static org.cyclop.model.CqlKeywords.FROM;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.service.completion.parser.DecisionHelper;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 /**
  * @author Maciej Miklas
  */
 @Named("select.FromCompletion")
-public class FromCompletion implements CqlPartCompletionStatic {
+public class FromCompletion extends MarkerBasedCompletion {
 
     @Inject
     private DecisionHelper decisionHelper;
 
-    private final static CqlPart SM = new CqlKeyword("from");
+    public FromCompletion() {
+        super(CqlKeyword.Def.FROM.value);
+    }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = decisionHelper.computeTableNameCompletion(FROM, query);
+        CqlCompletion completion = decisionHelper.computeTableNameCompletion(CqlKeyword.Def.FROM.value, query);
         return completion;
-    }
-
-
-    @Override
-    public CqlPart startMarker() {
-        return SM;
     }
 
 }

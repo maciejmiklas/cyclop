@@ -1,10 +1,8 @@
 package org.cyclop.service.completion.parser.batch;
 
-import org.cyclop.model.CqlNotSupported;
-import org.cyclop.model.CqlPart;
-import org.cyclop.service.completion.parser.NotSupportedCompletion;
-
 import javax.inject.Named;
+import org.cyclop.model.CqlNotSupported;
+import org.cyclop.service.completion.parser.NotSupportedCompletion;
 
 /**
  * @author Maciej Miklas
@@ -12,11 +10,8 @@ import javax.inject.Named;
 @Named("batch.BatchCompletion")
 public class BatchCompletion extends NotSupportedCompletion {
 
-    private final static CqlPart SM = new CqlNotSupported("batch");
-
-    @Override
-    public CqlPart startMarker() {
-        return SM;
+    public BatchCompletion() {
+        super(new CqlNotSupported("batch"));
     }
 
     @Override

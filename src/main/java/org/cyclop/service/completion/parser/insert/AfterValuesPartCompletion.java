@@ -1,29 +1,29 @@
 package org.cyclop.service.completion.parser.insert;
 
-import com.google.common.collect.ImmutableSortedSet;
+import javax.annotation.PostConstruct;
+import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Named;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 /**
  * @author Maciej Miklas
  */
 @Named("insert.AfterValuesPartCompletion")
-public class AfterValuesPartCompletion implements CqlPartCompletionStatic {
-
-    private final CqlPart SM = new CqlPart(")");
+public class AfterValuesPartCompletion extends MarkerBasedCompletion {
 
     private CqlCompletion completion = null;
 
+    public AfterValuesPartCompletion() {
+        super(new CqlPart(")"));
+    }
+
     @PostConstruct
     public void init() {
-        completion = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("using ttl")).
-                all(new CqlKeyword("using timestamp")).all(new CqlKeyword("and")).build();
+        completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value)
+                .all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.AND.value).build();
     }
 
     @Override
@@ -31,10 +31,4 @@ public class AfterValuesPartCompletion implements CqlPartCompletionStatic {
         return completion;
     }
 
-    @Override
-    public CqlPart startMarker() {
-        return SM;
-    }
-
 }
-

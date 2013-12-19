@@ -1,37 +1,30 @@
 package org.cyclop.service.completion.parser.insert;
 
-import org.cyclop.model.CqlCompletion;
-import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlPart;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
-import org.cyclop.service.completion.parser.DecisionHelper;
-
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import static org.cyclop.model.CqlKeywords.INSERT;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.service.completion.parser.DecisionHelper;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 /**
  * @author Maciej Miklas
  */
 @Named("insert.TableNameCompletion")
-public class TableNameCompletion implements CqlPartCompletionStatic {
+public class TableNameCompletion extends MarkerBasedCompletion {
 
     @Inject
     private DecisionHelper decisionHelper;
 
-    private final static CqlPart SM = new CqlKeyword("insert into");
-
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = decisionHelper.computeTableNameCompletion(INSERT, query);
-        return completion;
+    public TableNameCompletion() {
+        super(CqlKeyword.Def.INSERT_INTO.value);
     }
 
     @Override
-    public CqlPart startMarker() {
-        return SM;
+    public CqlCompletion getCompletion(CqlQuery query) {
+        CqlCompletion completion = decisionHelper.computeTableNameCompletion(CqlKeyword.Def.INSERT_INTO.value, query);
+        return completion;
     }
 
 }

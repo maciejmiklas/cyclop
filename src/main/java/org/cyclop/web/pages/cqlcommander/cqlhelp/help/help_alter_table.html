@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="../../../parent/custom/css/cqlweb.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="../../../parent/custom/css/cqlweb.css" media="screen"/>
 
 <i>Syntax:</i>
 <pre class="cq-helpCqlSyntax">
@@ -6,8 +6,11 @@
 &lt;alter-table-stmt&gt; ::= <span class="cq-hintCqlKeyword">ALTER</span> (<span class="cq-hintCqlKeyword">TABLE</span> | <span
         class="cq-hintCqlKeyword">COLUMNFAMILY</span>) &lt;<span class="cq-hintCqlTable">tablename</span>&gt; &lt;instruction&gt;
 
-&lt;instruction&gt; ::= <span class="cq-hintCqlKeyword">ALTER</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">TYPE</span> &lt;<span class="cq-hintCqlType">type</span>&gt;
-                | <span class="cq-hintCqlKeyword">ADD</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; &lt;<span class="cq-hintCqlType">type</span>&gt;
+&lt;instruction&gt; ::= <span class="cq-hintCqlKeyword">ALTER</span> &lt;<span
+        class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">TYPE</span> &lt;<span
+        class="cq-hintCqlType">type</span>&gt;
+                | <span class="cq-hintCqlKeyword">ADD</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; &lt;<span
+        class="cq-hintCqlType">type</span>&gt;
                 | <span class="cq-hintCqlKeyword">DROP</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt;
                 | <span class="cq-hintCqlKeyword">WITH</span> &lt;option&gt; ( <span
         class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )*

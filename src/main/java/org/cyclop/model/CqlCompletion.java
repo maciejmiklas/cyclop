@@ -21,8 +21,8 @@ public class CqlCompletion implements Serializable {
      */
     public final ImmutableSortedSet<? extends CqlPart> minCompletion;
 
-
-    private CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion, ImmutableSortedSet<? extends CqlPart> minCompletion) {
+    private CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion, ImmutableSortedSet<? extends CqlPart>
+            minCompletion) {
         if (minCompletion == null) {
             throw new IllegalArgumentException("Null minCompletion");
         }
@@ -64,6 +64,7 @@ public class CqlCompletion implements Serializable {
     public static class Builder {
 
         private ImmutableSortedSet.Builder<CqlPart> full = ImmutableSortedSet.naturalOrder();
+
         private ImmutableSortedSet.Builder<CqlPart> min = ImmutableSortedSet.naturalOrder();
 
         public static Builder naturalOrder() {
@@ -114,6 +115,7 @@ public class CqlCompletion implements Serializable {
 
     public final static class BuilderTemplate {
         private ImmutableSortedSet<CqlPart> full;
+
         private ImmutableSortedSet<CqlPart> min;
 
         public BuilderTemplate(ImmutableSortedSet<CqlPart> min, ImmutableSortedSet<CqlPart> full) {
@@ -127,10 +129,7 @@ public class CqlCompletion implements Serializable {
 
         @Override
         public String toString() {
-            return "BuilderTemplate{" +
-                    "full=" + full +
-                    ", min=" + min +
-                    '}';
+            return "BuilderTemplate{" + "full=" + full + ", min=" + min + '}';
         }
     }
 }

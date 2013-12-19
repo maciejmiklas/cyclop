@@ -2,7 +2,7 @@ package org.cyclop.common;
 
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.model.CqlKeySpace;
-import org.cyclop.model.CqlKeywords;
+import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
 
@@ -25,13 +25,13 @@ public class QueryHelper {
         return new CqlKeySpace(space);
     }
 
-    public static CqlTable extractTableName(CqlKeywords cqlKeywords, CqlQuery query) {
+    public static CqlTable extractTableName(CqlKeyword cqlKeyword, CqlQuery query) {
         String cqlLc = query.cqlLc;
-        int kwStart = cqlLc.indexOf(cqlKeywords.valueSp);
+        int kwStart = cqlLc.indexOf(cqlKeyword.valueSp);
         if (kwStart == -1) {
             return null;
         }
-        kwStart += cqlKeywords.valueSp.length();
+        kwStart += cqlKeyword.valueSp.length();
 
         int end = cqlLc.indexOf(" ", kwStart + 1);
         if (end == -1) {
@@ -66,13 +66,13 @@ public class QueryHelper {
         return result;
     }
 
-    public static CqlKeySpace extractKeyspace(CqlKeywords cqlKeywords, CqlQuery query) {
+    public static CqlKeySpace extractKeyspace(CqlKeyword cqlKeyword, CqlQuery query) {
         String cqlLc = query.cqlLc;
-        int kwStart = cqlLc.indexOf(cqlKeywords.valueSp);
+        int kwStart = cqlLc.indexOf(cqlKeyword.valueSp);
         if (kwStart == -1) {
             return null;
         }
-        kwStart += cqlKeywords.valueSp.length();
+        kwStart += cqlKeyword.valueSp.length();
 
         int end = cqlLc.indexOf(".", kwStart + 1);
         if (end == -1) {

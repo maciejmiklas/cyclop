@@ -95,7 +95,7 @@ public class CassandraSession {
         this.activeKeySpace = activeSpace;
     }
 
-    private void checkAuthenticated(){
+    private void checkAuthenticated() {
         if (session == null) {
             throw new ServiceException("Cassandra session not found");
         }

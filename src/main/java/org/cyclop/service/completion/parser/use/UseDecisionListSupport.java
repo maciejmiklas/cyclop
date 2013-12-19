@@ -15,7 +15,7 @@ import javax.inject.Named;
 @Named
 public class UseDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlKeyword("use");
+    private final CqlKeyword supports = CqlKeyword.Def.USE.value;
 
     private CqlPartCompletion[] decisionList;
 

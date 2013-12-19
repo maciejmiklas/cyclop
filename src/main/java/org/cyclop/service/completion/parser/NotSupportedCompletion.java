@@ -1,6 +1,5 @@
 package org.cyclop.service.completion.parser;
 
-import com.google.common.collect.ImmutableSortedSet;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.model.CqlPart;
@@ -13,13 +12,18 @@ import javax.inject.Named;
  * @author Maciej Miklas
  */
 @Named
-public abstract class NotSupportedCompletion implements CqlPartCompletionStatic {
+public abstract class NotSupportedCompletion extends MarkerBasedCompletion {
 
     private CqlCompletion completion;
 
+    protected NotSupportedCompletion(CqlPart startMarker) {
+        super(startMarker);
+    }
+
     @PostConstruct
     public void init() {
-        completion = CqlCompletion.Builder.naturalOrder().all(new CqlNotSupported("'" + getNotSupportedText() + "' is not supported yet.....")).build();
+        completion = CqlCompletion.Builder.naturalOrder().all(new CqlNotSupported("'" + getNotSupportedText() + "' is" +
+                " not supported yet.....")).build();
     }
 
     @Override

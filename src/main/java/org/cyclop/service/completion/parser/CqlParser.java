@@ -20,7 +20,6 @@ public class CqlParser {
 
     private CqlCompletion initialCqlCompletion = null;
 
-
     @PostConstruct
     public void init() {
 
@@ -81,13 +80,13 @@ public class CqlParser {
         // is the right chose for completion
         for (CqlPartCompletion partCompletion : decisionList) {
             int completionStartMarker = -1;
-            if (partCompletion instanceof CqlPartCompletionStatic) {
-                CqlPartCompletionStatic partStatic = (CqlPartCompletionStatic) partCompletion;
+            if (partCompletion instanceof MarkerBasedCompletion) {
+                MarkerBasedCompletion partStatic = (MarkerBasedCompletion) partCompletion;
                 String startMarker = partStatic.startMarker().partLc;
                 completionStartMarker = cqlLc.indexOf(startMarker, offset);
 
-            } else if (partCompletion instanceof CqlPartCompletionDynamic) {
-                CqlPartCompletionDynamic partDynamic = (CqlPartCompletionDynamic) partCompletion;
+            } else if (partCompletion instanceof OffsetBasedCompletion) {
+                OffsetBasedCompletion partDynamic = (OffsetBasedCompletion) partCompletion;
                 completionStartMarker = partDynamic.canApply(cqlQuery, offset);
             } else {
                 throw new ServiceException("Unsupported CqlPartCompletion: " + partCompletion.getClass());

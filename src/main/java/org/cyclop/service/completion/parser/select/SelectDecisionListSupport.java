@@ -1,13 +1,12 @@
 package org.cyclop.service.completion.parser.select;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.parser.CqlPartCompletion;
 import org.cyclop.service.completion.parser.DecisionListSupport;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  * @author Maciej Miklas
@@ -17,7 +16,7 @@ public class SelectDecisionListSupport implements DecisionListSupport {
 
     private CqlPartCompletion[] decisionList;
 
-    private final CqlKeyword supports = new CqlKeyword("select");
+    private final CqlKeyword supports = CqlKeyword.Def.SELECT.value;
 
     @Inject
     private SelectCompletionTemplate selectCompletion;
@@ -36,8 +35,8 @@ public class SelectDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{selectCompletion, fromCompletion,
-                afterFromCompletion, whereCompletion, orderByClausePartCompletion};
+        decisionList = new CqlPartCompletion[]{selectCompletion, fromCompletion, afterFromCompletion,
+                whereCompletion, orderByClausePartCompletion};
     }
 
     @Override

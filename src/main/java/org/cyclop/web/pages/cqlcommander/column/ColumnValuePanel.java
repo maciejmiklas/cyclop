@@ -90,8 +90,7 @@ class ColumnValuePanel extends Panel {
     }
 
     private String crateInfoDialogTitle(CqlPartitionKeyValue cqlPartitionKeyValue, CqlExtendedColumnName columnName) {
-        String partitionKeyValue = cqlPartitionKeyValue == null ? null : converter.convert(cqlPartitionKeyValue
-                .value);
+        String partitionKeyValue = cqlPartitionKeyValue == null ? null : converter.convert(cqlPartitionKeyValue.value);
         return (partitionKeyValue == null ? "Key" : partitionKeyValue) + " -> " + columnName.part;
     }
 }

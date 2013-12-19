@@ -1,10 +1,8 @@
 package org.cyclop.service.completion.parser.createkeyspace;
 
-import org.cyclop.model.CqlNotSupported;
-import org.cyclop.model.CqlPart;
-import org.cyclop.service.completion.parser.NotSupportedCompletion;
-
 import javax.inject.Named;
+import org.cyclop.model.CqlNotSupported;
+import org.cyclop.service.completion.parser.NotSupportedCompletion;
 
 /**
  * @author Maciej Miklas
@@ -12,11 +10,8 @@ import javax.inject.Named;
 @Named("createkeyspace.CreateCompletion")
 public class CreateCompletion extends NotSupportedCompletion {
 
-    private final CqlPart SM = new CqlNotSupported("create");
-
-    @Override
-    public CqlPart startMarker() {
-        return SM;
+    public CreateCompletion() {
+        super(new CqlNotSupported("create"));
     }
 
     @Override

@@ -20,5 +20,3 @@ public class ParentPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(NOTIFY));
     }
 }
-
-

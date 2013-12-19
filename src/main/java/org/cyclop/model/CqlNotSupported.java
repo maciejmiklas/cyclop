@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 /**
- *
  * @author Maciej Miklas
  */
 public class CqlNotSupported extends CqlKeyword {

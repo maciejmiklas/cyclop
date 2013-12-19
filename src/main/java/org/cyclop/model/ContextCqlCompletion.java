@@ -39,7 +39,7 @@ public class ContextCqlCompletion implements Serializable {
 
     @Override
     public String toString() {
-        return com.google.common.base.Objects.toStringHelper(this).add("queryType", queryType)
-                .add("cqlCompletion", cqlCompletion).toString();
+        return com.google.common.base.Objects.toStringHelper(this).add("queryType", queryType).add("cqlCompletion",
+                cqlCompletion).toString();
     }
 }

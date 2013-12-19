@@ -1,9 +1,8 @@
 package org.cyclop.service.completion.parser.truncate;
 
+import javax.inject.Named;
 import org.cyclop.model.CqlPart;
 import org.cyclop.service.completion.parser.NotSupportedCompletion;
-
-import javax.inject.Named;
 
 /**
  * @author Maciej Miklas
@@ -11,11 +10,8 @@ import javax.inject.Named;
 @Named("truncate.TruncateCompletion")
 public class TruncateCompletion extends NotSupportedCompletion {
 
-    private final static CqlPart SM = new CqlPart("truncate");
-
-    @Override
-    public CqlPart startMarker() {
-        return SM;
+    public TruncateCompletion() {
+        super(new CqlPart("truncate"));
     }
 
     @Override

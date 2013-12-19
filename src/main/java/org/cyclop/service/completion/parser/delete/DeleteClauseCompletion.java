@@ -1,35 +1,39 @@
 package org.cyclop.service.completion.parser.delete;
 
-import org.cyclop.model.*;
-import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
-
+import java.util.SortedSet;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.SortedSet;
+import org.cyclop.model.CqlColumnName;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlTable;
+import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
-import static org.cyclop.model.CqlKeywords.FROM;
 
 /**
  * @author Maciej Miklas
  */
 @Named("delete.DeleteClauseCompletion")
-public class DeleteClauseCompletion implements CqlPartCompletionStatic {
+public class DeleteClauseCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;
 
-    private final static CqlPart SM = new CqlKeyword("delete");
+    public DeleteClauseCompletion() {
+        super(CqlKeyword.Def.DELETE.value);
+    }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
 
         CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
-        cb.all(new CqlKeyword("from"));
+        cb.all(CqlKeyword.Def.FROM.value);
 
         SortedSet<CqlColumnName> columnNames;
-        CqlTable table = extractTableName(FROM, query);
+        CqlTable table = extractTableName(CqlKeyword.Def.FROM.value, query);
         if (queryService.checkTableExists(table)) {
             columnNames = queryService.findColumnNames(table);
         } else {
@@ -39,11 +43,6 @@ public class DeleteClauseCompletion implements CqlPartCompletionStatic {
         cb.all(columnNames);
 
         return cb.build();
-    }
-
-    @Override
-    public CqlPart startMarker() {
-        return SM;
     }
 
 }

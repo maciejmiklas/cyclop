@@ -24,4 +24,3 @@ public interface QueryService {
 
     ImmutableSortedSet<CqlTable> findTableNames(CqlKeySpace keySpace);
 }
-

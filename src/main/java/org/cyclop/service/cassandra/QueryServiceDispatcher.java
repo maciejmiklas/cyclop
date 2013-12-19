@@ -36,7 +36,6 @@ public class QueryServiceDispatcher implements QueryService {
         return instance;
     }
 
-
     @Override
     public ImmutableSortedSet<CqlTable> findTableNames(CqlKeySpace keySpace) {
         return get().findTableNames(keySpace);

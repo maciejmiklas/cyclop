@@ -17,6 +17,7 @@ import java.util.Iterator;
 public class CompletionHintPanel extends Panel {
 
     private ContextCqlCompletion currentCompletion;
+
     private boolean lastCssSwitch;
 
     public CompletionHintPanel(String id, String headerText) {
@@ -37,7 +38,7 @@ public class CompletionHintPanel extends Panel {
     }
 
     public void changeCompletion(ContextCqlCompletion newCompletion) {
-        if(currentCompletion != null && newCompletion != null && currentCompletion.equals(newCompletion)){
+        if (currentCompletion != null && newCompletion != null && currentCompletion.equals(newCompletion)) {
             return;
         }
 
@@ -50,7 +51,8 @@ public class CompletionHintPanel extends Panel {
         @Override
         public String getObject() {
 
-            String css = lastCssSwitch ? "cq-cqlInfoHint alert alert-dismissable cq-hintBodyA" : "cq-cqlInfoHint alert alert-dismissable cq-hintBodyB";
+            String css = lastCssSwitch ? "cq-cqlInfoHint alert alert-dismissable cq-hintBodyA" : "cq-cqlInfoHint " +
+                    "alert alert-dismissable cq-hintBodyB";
             return css;
         }
 

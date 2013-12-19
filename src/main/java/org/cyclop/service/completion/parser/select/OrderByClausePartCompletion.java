@@ -1,44 +1,46 @@
 package org.cyclop.service.completion.parser.select;
 
-import com.google.common.collect.ImmutableSortedSet;
-import org.cyclop.model.*;
-import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
-
+import java.util.SortedSet;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
+import org.cyclop.model.CqlColumnName;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlTable;
+import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
-import static org.cyclop.model.CqlKeywords.FROM;
 
 /**
  * @author Maciej Miklas
  */
 @Named("select.OrderByClausePartCompletion")
-public class OrderByClausePartCompletion implements CqlPartCompletionStatic {
-
-    private final static CqlPart SM = new CqlKeyword("order by");
+public class OrderByClausePartCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;
 
     private CqlCompletion.BuilderTemplate builderTemplate;
 
+    public OrderByClausePartCompletion() {
+        super(CqlKeyword.Def.ORDER_BY.value);
+    }
+
     @PostConstruct
     public void init() {
-        builderTemplate = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("asc")).all(new CqlKeyword("desc")).
-                all(new CqlKeyword("limit")).all(new CqlKeyword("allow filtering")).all(new CqlKeyword("token")).template();
+        builderTemplate = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.ASC.value).all(CqlKeyword.Def.DESC.value)
+                .all(CqlKeyword.Def.LIMIT.value).all(CqlKeyword.Def.ALLOW_FILTERING.value).all(CqlKeyword.Def.TOKEN.value)
+                .template();
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
         CqlCompletion.Builder builder = builderTemplate.naturalOrder();
 
-        CqlTable table = extractTableName(FROM, query);
+        CqlTable table = extractTableName(CqlKeyword.Def.FROM.value, query);
         SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
         builder.all(columnNames);
 
@@ -46,10 +48,4 @@ public class OrderByClausePartCompletion implements CqlPartCompletionStatic {
         return cmp;
     }
 
-    @Override
-    public CqlPart startMarker() {
-        return SM;
-    }
-
 }
-

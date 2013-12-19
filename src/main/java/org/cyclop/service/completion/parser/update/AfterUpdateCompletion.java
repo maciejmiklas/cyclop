@@ -1,16 +1,11 @@
 package org.cyclop.service.completion.parser.update;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.parser.template.AfterTableNameCompletionTemplate;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import static org.cyclop.model.CqlKeywords.UPDATE;
 
 /**
  * @author Maciej Miklas
@@ -20,17 +15,14 @@ public class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
 
     private CqlCompletion completion;
 
-    @Inject
-    private QueryService queryService;
-
     public AfterUpdateCompletion() {
-        super(UPDATE);
+        super(CqlKeyword.Def.UPDATE.value);
     }
 
     @PostConstruct
     public void init() {
-        completion = CqlCompletion.Builder.naturalOrder().all(new CqlKeyword("using ttl")).all(new CqlKeyword("using timestamp")).
-                all(new CqlKeyword("set")).build();
+        completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value).all(CqlKeyword.Def
+                .USING_TIMESTAMP.value).all(CqlKeyword.Def.SET.value).build();
     }
 
     @Override

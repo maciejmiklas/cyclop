@@ -48,7 +48,7 @@ public class CqlQuery implements Comparable<CqlQuery>, Serializable {
         return Objects.toStringHelper(this).add("cqlLc", cqlLc).add("cql", cql).add("type", type).toString();
     }
 
-    public boolean isSingleResultType(){
+    public boolean isSingleResultType() {
         return type != CqlQueryType.SELECT;
     }
 }

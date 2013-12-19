@@ -18,8 +18,8 @@ public class CqlColumnName extends CqlPart {
 
     @Override
     public String toString() {
-        return com.google.common.base.Objects.toStringHelper(this).
-                add("part", part).add("dataType", dataType).toString();
+        return com.google.common.base.Objects.toStringHelper(this).add("part", part).add("dataType",
+                dataType).toString();
     }
 
     @Override

@@ -14,7 +14,6 @@ import org.cyclop.model.CqlPartitionKeyValue;
  */
 class CollectionViewPanel extends Panel {
 
-
     CollectionViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue,
                         final ImmutableList<CqlColumnValue> content) {
         super(id);

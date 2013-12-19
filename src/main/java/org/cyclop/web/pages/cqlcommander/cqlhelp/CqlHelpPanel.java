@@ -28,7 +28,6 @@ public class CqlHelpPanel extends Panel {
         add(cqlHelpContent);
     }
 
-
     public void changeCompletion(ContextCqlCompletion currentCompletion) {
         this.currentCompletion = currentCompletion;
     }

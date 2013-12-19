@@ -17,7 +17,8 @@ import java.util.Map;
  */
 class MapViewPanel extends Panel {
 
-    MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue, final Map<CqlColumnValue, CqlColumnValue> content) {
+    MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue, final Map<CqlColumnValue,
+            CqlColumnValue> content) {
         super(id);
 
         List<Map.Entry<CqlColumnValue, CqlColumnValue>> keysList = new ArrayList<>(content.size());

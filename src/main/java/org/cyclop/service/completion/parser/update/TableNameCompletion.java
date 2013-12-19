@@ -1,38 +1,30 @@
 package org.cyclop.service.completion.parser.update;
 
-import org.cyclop.model.CqlCompletion;
-import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlPart;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
-import org.cyclop.service.completion.parser.DecisionHelper;
-
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import static org.cyclop.model.CqlKeywords.UPDATE;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.service.completion.parser.DecisionHelper;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 /**
  * @author Maciej Miklas
  */
 @Named("update.TableNameCompletion")
-public class TableNameCompletion implements CqlPartCompletionStatic {
+public class TableNameCompletion extends MarkerBasedCompletion {
 
     @Inject
     private DecisionHelper decisionHelper;
 
-    private final static CqlPart SM = new CqlKeyword("update");
-
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion;
-        completion = decisionHelper.computeTableNameCompletion(UPDATE, query);
-        return completion;
+    public TableNameCompletion() {
+        super(CqlKeyword.Def.UPDATE.value);
     }
 
     @Override
-    public CqlPart startMarker() {
-        return SM;
+    public CqlCompletion getCompletion(CqlQuery query) {
+        CqlCompletion completion = decisionHelper.computeTableNameCompletion(CqlKeyword.Def.UPDATE.value, query);
+        return completion;
     }
 
 }

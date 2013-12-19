@@ -3,7 +3,8 @@
 <i>Syntax:</i>
 <pre class="cq-helpCqlSyntax">
 &lt;batch-stmt&gt; ::= <span class="cq-hintCqlKeyword">BEGIN BATCH</span>
-                 ( <span class="cq-hintCqlKeyword">USING</span> &lt;option&gt; ( <span class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
+                 ( <span class="cq-hintCqlKeyword">USING</span> &lt;option&gt; ( <span
+        class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
                     &lt;modification-stmt&gt; ( ';' &lt;modification-stmt&gt; )*
                  <span class="cq-hintCqlKeyword">APPLY BATCH</span>
 
@@ -16,9 +17,16 @@
 <i>Sample:</i>
 <pre class="cq-helpCqlSample">
 <span class="cq-hintCqlKeyword">BEGIN BATCH</span>
-  <span class="cq-hintCqlKeyword">INSERT INTO</span> <span class="cq-hintCqlTable">users</span> (<span class="cq-hintCqlColumn">userid</span>, <span class="cq-hintCqlColumn">password</span>, <span class="cq-hintCqlColumn">name</span>) <span class="cq-hintCqlKeyword">VALUES</span> ('user2', 'ch@ngem3b', 'second user');
-  <span class="cq-hintCqlKeyword">UPDATE</span> <span class="cq-hintCqlTable">users</span> <span class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">password</span> = 'ps22dhds' <span class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">userid</span> = 'user3';
-  <span class="cq-hintCqlKeyword">INSERT INTO</span> <span class="cq-hintCqlTable">users</span> (userid, password) <span class="cq-hintCqlKeyword">VALUES</span> ('user4', 'ch@ngem3c');
-  <span class="cq-hintCqlKeyword">DELETE</span> <span class="cq-hintCqlColumn">name</span> <span class="cq-hintCqlKeyword">FROM</span> <span class="cq-hintCqlTable">users</span> <span class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">userid</span> = 'user1';
+  <span class="cq-hintCqlKeyword">INSERT INTO</span> <span class="cq-hintCqlTable">users</span> (<span
+        class="cq-hintCqlColumn">userid</span>, <span class="cq-hintCqlColumn">password</span>, <span
+        class="cq-hintCqlColumn">name</span>) <span class="cq-hintCqlKeyword">VALUES</span> ('user2', 'ch@ngem3b', 'second user');
+  <span class="cq-hintCqlKeyword">UPDATE</span> <span class="cq-hintCqlTable">users</span> <span
+        class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">password</span> = 'ps22dhds' <span
+        class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">userid</span> = 'user3';
+  <span class="cq-hintCqlKeyword">INSERT INTO</span> <span class="cq-hintCqlTable">users</span> (userid, password) <span
+        class="cq-hintCqlKeyword">VALUES</span> ('user4', 'ch@ngem3c');
+  <span class="cq-hintCqlKeyword">DELETE</span> <span class="cq-hintCqlColumn">name</span> <span
+        class="cq-hintCqlKeyword">FROM</span> <span class="cq-hintCqlTable">users</span> <span
+        class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">userid</span> = 'user1';
 <span class="cq-hintCqlKeyword">APPLY BATCH</span>;
 </pre>

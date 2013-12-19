@@ -15,7 +15,7 @@ import javax.inject.Named;
 @Named
 public class UpdateDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlKeyword("update");
+    private final CqlKeyword supports = CqlKeyword.Def.UPDATE.value;
 
     @Inject
     private TableNameCompletion tableNameCompletion;
@@ -33,7 +33,7 @@ public class UpdateDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[] { tableNameCompletion, afterUpdateCompletion, columnsCompletion,
+        decisionList = new CqlPartCompletion[]{tableNameCompletion, afterUpdateCompletion, columnsCompletion,
                 whereCompletion};
     }
 

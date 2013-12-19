@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     $("${infoDialogId}").dialog({
         autoOpen: false,
         width: 640,
@@ -11,7 +11,10 @@ $(function() {
             effect: "blind",
             duration: 150
         },
-        close: function(){$(this).dialog("destroy");$(this).css('display','none')}
+        close: function () {
+            $(this).dialog("destroy");
+            $(this).css('display', 'none')
+        }
     });
 
     $("${infoDialogId}").dialog("open");

@@ -1,35 +1,35 @@
 package org.cyclop.service.completion.parser.template;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.cyclop.common.QueryHelper;
-import org.cyclop.model.CqlKeywords;
+import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.completion.parser.CqlPartCompletionDynamic;
-
-import javax.inject.Inject;
-import javax.inject.Named;
+import org.cyclop.service.completion.parser.OffsetBasedCompletion;
 
 /**
  * @author Maciej Miklas
  */
 @Named
-public abstract class AfterTableNameCompletionTemplate implements CqlPartCompletionDynamic {
+public abstract class AfterTableNameCompletionTemplate implements OffsetBasedCompletion {
 
     @Inject
     private QueryService queryService;
 
-    private CqlKeywords cqlKeywords;
+    private CqlKeyword cqlKeyword;
 
-    public AfterTableNameCompletionTemplate(CqlKeywords cqlKeywords) {
-        this.cqlKeywords = cqlKeywords;
-
+    public AfterTableNameCompletionTemplate(CqlKeyword cqlKeyword) {
+        if (cqlKeyword == null) {
+            throw new IllegalArgumentException("Null cqlKeyword");
+        }
+        this.cqlKeyword = cqlKeyword;
     }
 
     @Override
     public final int canApply(CqlQuery query, int queryPosition) {
-
-        CqlTable table = QueryHelper.extractTableName(cqlKeywords, query);
+        CqlTable table = QueryHelper.extractTableName(cqlKeyword, query);
         if (table == null) {
             return -1;
         }

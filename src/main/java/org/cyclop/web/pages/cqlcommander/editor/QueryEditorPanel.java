@@ -33,7 +33,6 @@ import static org.cyclop.web.pages.parent.ScriptsRef.SUGGEST;
  */
 public class QueryEditorPanel extends Panel {
 
-
     private final String editorMarkupIdJq;
 
     private final String editorMarkupIdJs;
@@ -44,7 +43,6 @@ public class QueryEditorPanel extends Panel {
     private ContextCqlCompletion currentCompletion;
 
     private final List<CompletionChangeListener> completionChangeListeners = new ArrayList<>();
-
 
     private TextArea<String> editor;
 
@@ -70,7 +68,6 @@ public class QueryEditorPanel extends Panel {
         CqlQuery cq = new CqlQuery(currentCompletion.queryType, editorValue);
         return cq;
     }
-
 
     private TextArea<String> initEditor(String editorContent) {
         final Model<String> editorModel = new Model<>();

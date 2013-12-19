@@ -15,7 +15,7 @@ import javax.inject.Named;
 @Named
 public class DeleteDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlKeyword("delete");
+    private final CqlKeyword supports = CqlKeyword.Def.DELETE.value;
 
     private CqlPartCompletion[] decisionList;
 
@@ -36,8 +36,8 @@ public class DeleteDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{deleteClauseCompletion, fromClauseCompletion,
-                afterFromCompletion, whereClauseCompletion, orderByCompletion};
+        decisionList = new CqlPartCompletion[]{deleteClauseCompletion, fromClauseCompletion, afterFromCompletion,
+                whereClauseCompletion, orderByCompletion};
     }
 
     @Override

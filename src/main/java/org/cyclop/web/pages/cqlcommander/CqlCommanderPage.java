@@ -41,13 +41,13 @@ public class CqlCommanderPage extends ParentPage {
     private final static Logger LOG = LoggerFactory.getLogger(CqlCommanderPage.class);
 
     private CqlSelectResult lastQueryResult;
+
     private CqlQuery lastQuery;
 
     private QueryResultExport queryResultExport;
 
     @Inject
     private CsvQueryResultExporter exporter;
-
 
     public CqlCommanderPage(PageParameters params) {
         cqlHelpPanel = new CqlHelpPanel("cqlHelp");
@@ -73,7 +73,7 @@ public class CqlCommanderPage extends ParentPage {
     private QueryEditorPanel initQueryEditorPanel(PageParameters params) {
 
         StringValue editorContentVal = params.get("cql");
-        String editorContent = editorContentVal == null ? null :editorContentVal.toString();
+        String editorContent = editorContentVal == null ? null : editorContentVal.toString();
 
         QueryEditorPanel queryEditorPanel = new QueryEditorPanel("queryEditorPanel", editorContent);
         add(queryEditorPanel);

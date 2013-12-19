@@ -1,44 +1,42 @@
 package org.cyclop.service.completion.parser.update;
 
-import org.cyclop.model.*;
-import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.completion.parser.CqlPartCompletionStatic;
-
+import java.util.SortedSet;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.SortedSet;
+import org.cyclop.model.CqlColumnName;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlTable;
+import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
-import static org.cyclop.model.CqlKeywords.UPDATE;
 
 /**
  * @author Maciej Miklas
  */
 @Named("update.WhereCompletion")
-public class WhereCompletion implements CqlPartCompletionStatic {
-
-    private final CqlPart SM = new CqlKeyword("where");
+public class WhereCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;
 
+    public WhereCompletion() {
+        super(CqlKeyword.Def.WHERE.value);
+    }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
         CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
-        cb.all(new CqlKeyword("and"));
+        cb.all(CqlKeyword.Def.AND.value);
 
-        CqlTable table = extractTableName(UPDATE, query);
+        CqlTable table = extractTableName(CqlKeyword.Def.UPDATE.value, query);
         SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 
         cb.all(columnNames);
         CqlCompletion cmp = cb.build();
         return cmp;
-    }
-
-    @Override
-    public CqlPart startMarker() {
-        return SM;
     }
 
 }

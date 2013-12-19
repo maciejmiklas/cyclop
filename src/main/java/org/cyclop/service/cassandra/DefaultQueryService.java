@@ -8,20 +8,29 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.common.AppConfig;
-import org.cyclop.model.*;
+import org.cyclop.model.CqlColumnName;
+import org.cyclop.model.CqlColumnType;
+import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlKeySpace;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlPartitionKey;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlRow;
+import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlTable;
+import org.cyclop.model.QueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import static org.cyclop.common.QueryHelper.extractSpace;
 import static org.cyclop.common.QueryHelper.extractTableName;
-import static org.cyclop.model.CqlKeywords.FROM;
 
 /**
  * @author Maciej Miklas
@@ -162,7 +171,8 @@ class DefaultQueryService implements QueryService {
     }
 
     private CqlPartitionKey collectAndCountColumns(Row row, Map<CqlExtendedColumnName, MutableInt> columnsCount,
-            ImmutableList.Builder<CqlExtendedColumnName> cols, Map<String, CqlColumnType> typeMap) {
+                                                   ImmutableList.Builder<CqlExtendedColumnName> cols, Map<String,
+            CqlColumnType> typeMap) {
 
         // collect and count all columns
         ColumnDefinitions definitions = row.getColumnDefinitions();
@@ -195,14 +205,14 @@ class DefaultQueryService implements QueryService {
 
     protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
 
-        CqlTable table = extractTableName(FROM, query);
+        CqlTable table = extractTableName(CqlKeyword.Def.FROM.value, query);
         if (table == null) {
             LOG.warn("Could not extract table name from: {}. Column type information is not available.");
             return ImmutableMap.of();
         }
 
-        ResultSet result = executeSilent("select column_name, type from system.schema_columns where " + "columnfamily_name='"
-                + table.part + "' allow filtering");
+        ResultSet result = executeSilent("select column_name, type from system.schema_columns where " +
+                "columnfamily_name='" + table.part + "' allow filtering");
         if (result == null) {
             LOG.warn("Could not read types for columns of table: " + table);
             return ImmutableMap.of();

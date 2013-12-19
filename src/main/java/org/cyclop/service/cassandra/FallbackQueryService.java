@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
+import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
 import org.slf4j.Logger;
@@ -18,7 +19,6 @@ import javax.inject.Named;
 import java.util.Set;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
-import static org.cyclop.model.CqlKeywords.FROM;
 
 /**
  * @author Maciej Miklas
@@ -58,7 +58,7 @@ public class FallbackQueryService extends DefaultQueryService {
 
     @Override
     protected void loadPartitionKeyNames(CqlTable table, ImmutableSortedSet.Builder<CqlColumnName> cqlColumnNames) {
-        if(table == null){
+        if (table == null) {
             return;
         }
         ImmutableSet<String> partitionKeys = findPartitionKeyNamesLc(table);
@@ -69,7 +69,7 @@ public class FallbackQueryService extends DefaultQueryService {
 
     protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
 
-        CqlTable table = extractTableName(FROM, query);
+        CqlTable table = extractTableName(CqlKeyword.Def.FROM.value, query);
         if (table == null) {
             LOG.warn("Could not extract table name from: {}. Column type information is not available.");
             return ImmutableMap.of();

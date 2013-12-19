@@ -17,6 +17,7 @@ import org.cyclop.web.components.buttons.StateButton;
 public class ButtonsPanel extends Panel {
 
     private AjaxFallbackLink<Void> disableCompletionLink;
+
     private static final JavaScriptResourceReference JS_EXPAND = new JavaScriptResourceReference(ButtonsPanel.class,
             "buttons.js");
 
@@ -24,7 +25,7 @@ public class ButtonsPanel extends Panel {
         super(id);
         setRenderBodyOnly(true);
 
-        AjaxFallbackLink <CqlQuery> executeQueryLink = new AjaxFallbackLink<CqlQuery>("execCql") {
+        AjaxFallbackLink<CqlQuery> executeQueryLink = new AjaxFallbackLink<CqlQuery>("execCql") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 buttonListener.onClickExecCql(target);
@@ -33,7 +34,7 @@ public class ButtonsPanel extends Panel {
         };
         add(executeQueryLink);
 
-        AjaxFallbackLink <CqlQuery> exportCqlResult = new AjaxFallbackLink<CqlQuery>("exportCqlResult") {
+        AjaxFallbackLink<CqlQuery> exportCqlResult = new AjaxFallbackLink<CqlQuery>("exportCqlResult") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 buttonListener.onClickQueryResultExport(target);
@@ -50,8 +51,8 @@ public class ButtonsPanel extends Panel {
         };
         add(logOut);
 
-
-        disableCompletionLink = new StateButton("disableCompletion", true, "btn btn-sm btn-primary","btn btn-sm btn-primary active"){
+        disableCompletionLink = new StateButton("disableCompletion", true, "btn btn-sm btn-primary",
+                "btn btn-sm btn-primary active") {
             @Override
             protected void onClick(AjaxRequestTarget target, boolean pressed) {
                 buttonListener.onClickDisableCompletion(target, pressed);

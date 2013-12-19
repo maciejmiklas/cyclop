@@ -34,16 +34,16 @@ public class CqlSelectResult implements Serializable {
         this.partitionKey = null;
     }
 
-    public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns, ImmutableList<CqlExtendedColumnName> dynamicColumns,
-                           ImmutableList<CqlRow> rows, CqlPartitionKey partitionKey) {
+    public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns, ImmutableList<CqlExtendedColumnName>
+            dynamicColumns, ImmutableList<CqlRow> rows, CqlPartitionKey partitionKey) {
         this.commonColumns = commonColumns;
         this.dynamicColumns = dynamicColumns;
         this.rows = rows;
         this.partitionKey = partitionKey;
     }
 
-    public boolean isEmpty(){
-      return rows == null || rows.isEmpty();
+    public boolean isEmpty() {
+        return rows == null || rows.isEmpty();
     }
 
     @Override

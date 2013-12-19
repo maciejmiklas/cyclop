@@ -238,7 +238,7 @@ function replaceSuggests(editorId, suggests) {
                 case KEY.CTRL:
                 case KEY.ALT:
                 case KEY.RETURN:
-                    if(e.ctrlKey){
+                    if (e.ctrlKey) {
                         $(".cq-clqExecuteButton").click();
                     }
                     break;

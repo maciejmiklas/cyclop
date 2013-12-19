@@ -15,7 +15,7 @@ import javax.inject.Named;
 @Named
 public class InsertDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlKeyword("insert into");
+    private final CqlKeyword supports = CqlKeyword.Def.INSERT_INTO.value;
 
     @Inject
     private TableNameCompletion tableNameCompletion;
@@ -33,8 +33,8 @@ public class InsertDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{tableNameCompletion, columnsCompletion,
-                afterColumnsCompletion, afterValuesPartCompletion};
+        decisionList = new CqlPartCompletion[]{tableNameCompletion, columnsCompletion, afterColumnsCompletion,
+                afterValuesPartCompletion};
     }
 
     @Override

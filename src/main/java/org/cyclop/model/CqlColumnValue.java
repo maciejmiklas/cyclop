@@ -8,7 +8,9 @@ import com.google.common.base.Objects;
 public class CqlColumnValue {
 
     public final Class<?> valueClass;
+
     public final Object value;
+
     public final CqlExtendedColumnName columnName;
 
     public CqlColumnValue(Class<?> valueClass, Object value, CqlExtendedColumnName columnName) {
