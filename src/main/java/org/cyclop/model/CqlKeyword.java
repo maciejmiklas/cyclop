@@ -17,7 +17,7 @@ public class CqlKeyword extends CqlPart {
         ASC("asc"), DESC("desc"),
         LIMIT("limit"), ALLOW_FILTERING("allow filtering"), TOKEN("token"), IN("in"), AND("and"), IN_BL("in ("),
         DROP_TABLE("drop table"), VALUES("values"), SELECT("select"), COUNT_AST("count (*)"), COUNT_ONE("count (1)"),
-        WRITETIME("writetime"), TTL("ttl"),ORDER_BY_BL("order by ("),SET("set"),USE("use");
+        WRITETIME("writetime"), TTL("ttl"),ORDER_BY_BL("order by ("),SET("set"),USE("use"), DROP_KEYSPACE("drop keyspace");
 
         private Def(String value) {
             this.value = new CqlKeyword(value);

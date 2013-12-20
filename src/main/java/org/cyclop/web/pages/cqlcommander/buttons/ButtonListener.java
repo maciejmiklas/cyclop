@@ -11,7 +11,7 @@ public interface ButtonListener {
 
     void onClickQueryResultExport(AjaxRequestTarget target);
 
-    void onClickDisableCompletion(AjaxRequestTarget target, boolean pressed);
+    void onClickCompletion(AjaxRequestTarget target, boolean pressed);
 
     void onClickLogOut();
 }

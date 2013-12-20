@@ -9,7 +9,9 @@ import org.apache.wicket.util.string.StringValue;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.UserPreferences;
 import org.cyclop.service.converter.CsvQueryResultExporter;
+import org.cyclop.web.common.UserPreferencesStore;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonListener;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonsPanel;
 import org.cyclop.web.pages.cqlcommander.completionhint.CompletionHintPanel;
@@ -34,8 +36,6 @@ public class CqlCommanderPage extends ParentPage {
 
     private final CompletionHintPanel cqlCompletionHintPanel;
 
-    private QueryResultVerticalPanel queryResultVerticalPanel;
-
     private boolean queryRunning = false;
 
     private final static Logger LOG = LoggerFactory.getLogger(CqlCommanderPage.class);
@@ -49,6 +49,9 @@ public class CqlCommanderPage extends ParentPage {
     @Inject
     private CsvQueryResultExporter exporter;
 
+    @Inject
+    private UserPreferencesStore preferencesStore;
+
     public CqlCommanderPage(PageParameters params) {
         cqlHelpPanel = new CqlHelpPanel("cqlHelp");
         add(cqlHelpPanel);
@@ -56,10 +59,13 @@ public class CqlCommanderPage extends ParentPage {
         cqlCompletionHintPanel = new CompletionHintPanel("cqlInfoHint", "Completion Hint");
         add(cqlCompletionHintPanel);
 
-        queryResultVerticalPanel = initQueryResultPanel();
+        QueryResultVerticalPanel queryResultVerticalPanel = initQueryResultPanel();
         QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
-        initButtons(queryEditorPanel, queryResultVerticalPanel);
+        UserPreferences preferences = preferencesStore.read();
+        boolean completionEnabled = preferences.getShowCqlCompletionHint();
+        cqlCompletionHintPanel.setVisible(completionEnabled);
+        initButtons(queryEditorPanel, queryResultVerticalPanel, completionEnabled);
 
         queryResultExport = new QueryResultExport(this, exporter);
     }
@@ -86,8 +92,8 @@ public class CqlCommanderPage extends ParentPage {
     }
 
     private ButtonsPanel initButtons(final QueryEditorPanel queryEditorPanel,
-                                     final QueryResultVerticalPanel queryResultVerticalPanel) {
-        ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", new ButtonListener() {
+            final QueryResultVerticalPanel queryResultVerticalPanel, boolean completionEnabled) {
+        ButtonListener buttonListener = new ButtonListener() {
 
             @Override
             public void onClickQueryResultExport(AjaxRequestTarget target) {
@@ -122,16 +128,22 @@ public class CqlCommanderPage extends ParentPage {
             }
 
             @Override
-            public void onClickDisableCompletion(AjaxRequestTarget target, boolean pressed) {
+            public void onClickCompletion(AjaxRequestTarget target, boolean pressed) {
                 cqlCompletionHintPanel.setVisible(pressed);
                 target.add(cqlCompletionHintPanel);
+
+                UserPreferences preferences = preferencesStore.read();
+                preferences.setShowCqlCompletionHint(pressed);
+                preferencesStore.store(preferences);
             }
 
             @Override
             public void onClickLogOut() {
                 getSession().invalidate();
             }
-        });
+        };
+
+        ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", buttonListener, completionEnabled);
         add(buttonsPanel);
         return buttonsPanel;
     }

@@ -16,12 +16,10 @@ import org.cyclop.web.components.buttons.StateButton;
  */
 public class ButtonsPanel extends Panel {
 
-    private AjaxFallbackLink<Void> disableCompletionLink;
-
     private static final JavaScriptResourceReference JS_EXPAND = new JavaScriptResourceReference(ButtonsPanel.class,
             "buttons.js");
 
-    public ButtonsPanel(String id, final ButtonListener buttonListener) {
+    public ButtonsPanel(String id, final ButtonListener buttonListener, boolean completionPressed) {
         super(id);
         setRenderBodyOnly(true);
 
@@ -51,14 +49,14 @@ public class ButtonsPanel extends Panel {
         };
         add(logOut);
 
-        disableCompletionLink = new StateButton("disableCompletion", true, "btn btn-sm btn-primary",
+        AjaxFallbackLink<Void> completion = new StateButton("completion", completionPressed, "btn btn-sm btn-primary",
                 "btn btn-sm btn-primary active") {
             @Override
             protected void onClick(AjaxRequestTarget target, boolean pressed) {
-                buttonListener.onClickDisableCompletion(target, pressed);
+                buttonListener.onClickCompletion(target, pressed);
             }
         };
-        add(disableCompletionLink);
+        add(completion);
     }
 
     @Override

@@ -21,18 +21,18 @@ import org.springframework.test.context.web.WebAppConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {TestProps.TEST_CONTEXT})
 @WebAppConfiguration
+@Ignore
 public class TestDefaultCassandraService {
 
     @Inject
     QueryService cs;
 
-    @Ignore
+
     @Test
     public void testFindTableNames() {
         System.out.println(cs.findTableNamesForActiveKeySpace());
     }
 
-    @Ignore
     @Test
     public void testFindColumnNames() {
         for (CqlTable table : cs.findTableNamesForActiveKeySpace()) {
@@ -40,7 +40,6 @@ public class TestDefaultCassandraService {
         }
     }
 
-    @Ignore
     @Test
     public void testFindAllColumnNames() {
         for (CqlColumnName column : cs.findAllColumnNames()) {
@@ -48,7 +47,6 @@ public class TestDefaultCassandraService {
         }
     }
 
-    @Ignore
     @Test
     public void testExecute() {
         cs.execute(new CqlQuery(CqlQueryType.USE, "USE CqlDemo;"));
@@ -56,7 +54,6 @@ public class TestDefaultCassandraService {
         System.out.println(res);
     }
 
-    @Ignore
     @Test
     public void testCount() {
         cs.execute(new CqlQuery(CqlQueryType.USE, "USE CqlDemo;"));

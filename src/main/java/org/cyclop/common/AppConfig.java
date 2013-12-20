@@ -22,6 +22,8 @@ public class AppConfig {
 
     public final CqlExport cqlExport;
 
+    public final Cookie cookie;
+
     private static AppConfig instance = null;
 
     public static AppConfig get() {
@@ -42,11 +44,12 @@ public class AppConfig {
     }
 
     @Inject
-    public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport) {
+    public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie) {
         this.cassandra = cassandra;
         this.cqlEditor = cqlEditor;
         this.common = common;
         this.cqlExport = cqlExport;
+        this.cookie = cookie;
     }
 
     @Named
@@ -62,9 +65,9 @@ public class AppConfig {
         public final boolean useSsl;
 
         @Inject
-        public Cassandra(@Value("${cassandra.resultLimit:10000}") int resultLimit,
-                         @Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
-                         @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis) {
+        public Cassandra(@Value("${cassandra.resultLimit:10000}") int resultLimit, @Value("${cassandra.hosts}") String hosts,
+                @Value("${cassandra.useSsl}") boolean useSsl, @Value("${cassandra.port}") int port,
+                @Value("${cassandra.timeoutMilis}") int timeoutMilis) {
             this.resultLimit = resultLimit;
             this.hosts = hosts;
             this.useSsl = useSsl;
@@ -74,13 +77,23 @@ public class AppConfig {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("resultLimit", resultLimit).add("port", port).add("timeoutMilis",
-                    timeoutMilis).add("hosts", hosts).add("useSsl", useSsl).toString();
+            return Objects.toStringHelper(this).add("resultLimit", resultLimit).add("port", port)
+                    .add("timeoutMilis", timeoutMilis).add("hosts", hosts).add("useSsl", useSsl).toString();
         }
     }
 
     @Named
     public static class Common {
+    }
+
+    @Named
+    public static class Cookie {
+        public final int expirySeconds;
+
+        @Inject
+        public Cookie(@Value("${cookie.expirySeconds}") int expirySeconds) {
+            this.expirySeconds = expirySeconds;
+        }
     }
 
     @Named
@@ -96,9 +109,9 @@ public class AppConfig {
 
         @Inject
         protected CqlEditor(@Value("${cqlEditor.rowsPerPage}") int rowsPerPage,
-                            @Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
-                            @Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
-                            @Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
+                @Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
+                @Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
+                @Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
             this.rowsPerPage = rowsPerPage;
             this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
             this.maxColumnDisplayChars = maxColumnDisplayChars;
@@ -107,9 +120,10 @@ public class AppConfig {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("pageLimit", rowsPerPage).add("maxColumnEmbeddedDisplayChars",
-                    maxColumnEmbeddedDisplayChars).add("maxColumnDisplayChars",
-                    maxColumnDisplayChars).add("maxColumnTooltipDisplayChars", maxColumnTooltipDisplayChars).toString();
+            return Objects.toStringHelper(this).add("pageLimit", rowsPerPage)
+                    .add("maxColumnEmbeddedDisplayChars", maxColumnEmbeddedDisplayChars)
+                    .add("maxColumnDisplayChars", maxColumnDisplayChars)
+                    .add("maxColumnTooltipDisplayChars", maxColumnTooltipDisplayChars).toString();
         }
     }
 
@@ -146,16 +160,17 @@ public class AppConfig {
         public final boolean removeCrChars;
 
         @Inject
-        public CqlExport(@Value("${cqlExport.fileName}") String fileName, @Value("${cqlExport.fileName.date}") String
-                fileNameDate, @Value("${cqlExport.querySeparator}") String querySeparator,
-                         @Value("${cqlExport.rowSeparator}") String rowSeparator,
-                         @Value("${cqlExport.columnSeparator}") String columnSeparator,
-                         @Value("${cqlExport.listSeparator}") String listSeparator,
-                         @Value("${cqlExport.mapSeparator}") String mapSeparator,
-                         @Value("${cqlExport.valueBracketStart}") String valueBracketStart,
-                         @Value("${cqlExport.valueBracketEnd}") String valueBracketEnd,
-                         @Value("${cqlExport.crCharCode}") int crCharCode, @Value("${cqlExport.removeCrChars}")
-        boolean removeCrChars, @Value("${cqlExport.trim}") boolean trim) throws UnsupportedEncodingException {
+        public CqlExport(@Value("${cqlExport.fileName}") String fileName,
+                @Value("${cqlExport.fileName.date}") String fileNameDate,
+                @Value("${cqlExport.querySeparator}") String querySeparator,
+                @Value("${cqlExport.rowSeparator}") String rowSeparator,
+                @Value("${cqlExport.columnSeparator}") String columnSeparator,
+                @Value("${cqlExport.listSeparator}") String listSeparator,
+                @Value("${cqlExport.mapSeparator}") String mapSeparator,
+                @Value("${cqlExport.valueBracketStart}") String valueBracketStart,
+                @Value("${cqlExport.valueBracketEnd}") String valueBracketEnd, @Value("${cqlExport.crCharCode}") int crCharCode,
+                @Value("${cqlExport.removeCrChars}") boolean removeCrChars, @Value("${cqlExport.trim}") boolean trim)
+                throws UnsupportedEncodingException {
             this.crCharCode = crCharCode;
             String crChar = String.valueOf((char) crCharCode);
             this.querySeparator = crs(crChar, querySeparator);
@@ -173,9 +188,9 @@ public class AppConfig {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator",
-                    rowSeparator).add("listSeparator", listSeparator).add("mapSeparator",
-                    mapSeparator).add("removeCrChars", removeCrChars).toString();
+            return Objects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator", rowSeparator)
+                    .add("listSeparator", listSeparator).add("mapSeparator", mapSeparator).add("removeCrChars", removeCrChars)
+                    .toString();
         }
     }
 }
