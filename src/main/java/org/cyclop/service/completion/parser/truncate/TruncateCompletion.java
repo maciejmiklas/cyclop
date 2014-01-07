@@ -1,21 +1,30 @@
 package org.cyclop.service.completion.parser.truncate;
 
+import javax.inject.Inject;
 import javax.inject.Named;
-import org.cyclop.model.CqlPart;
-import org.cyclop.service.completion.parser.NotSupportedCompletion;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.service.completion.parser.CompletionHelper;
+import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 /**
  * @author Maciej Miklas
  */
 @Named("truncate.TruncateCompletion")
-public class TruncateCompletion extends NotSupportedCompletion {
+public class TruncateCompletion extends MarkerBasedCompletion {
+
+    @Inject
+    private CompletionHelper completionHelper;
 
     public TruncateCompletion() {
-        super(new CqlPart("truncate"));
+        super(CqlKeyword.Def.TRUNCATE.value);
     }
 
     @Override
-    protected String getNotSupportedText() {
-        return "truncate";
+    public CqlCompletion getCompletion(CqlQuery query) {
+        CqlCompletion completion = completionHelper.computeTableNameCompletion(CqlKeyword.Def.TRUNCATE.value, query);
+        return completion;
     }
+
 }

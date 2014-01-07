@@ -5,7 +5,7 @@ import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.service.completion.parser.DecisionHelper;
+import org.cyclop.service.completion.parser.CompletionHelper;
 import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 
 /**
@@ -15,7 +15,7 @@ import org.cyclop.service.completion.parser.MarkerBasedCompletion;
 public class DropCompletion extends MarkerBasedCompletion {
 
     @Inject
-    private DecisionHelper decisionHelper;
+    private CompletionHelper completionHelper;
 
     public DropCompletion() {
         super(CqlKeyword.Def.DROP.value);
@@ -23,7 +23,7 @@ public class DropCompletion extends MarkerBasedCompletion {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = decisionHelper.computeTableNameCompletion(CqlKeyword.Def.DROP.value, query);
+        CqlCompletion completion = completionHelper.computeTableNameCompletion(CqlKeyword.Def.DROP.value, query);
         return completion;
     }
 

@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.parser.CqlPartCompletion;
 import org.cyclop.service.completion.parser.DecisionListSupport;
 
@@ -50,8 +50,8 @@ public class SelectDecisionListSupport implements DecisionListSupport {
     }
 
     @Override
-    public CqlQueryType queryType() {
-        return CqlQueryType.SELECT;
+    public CqlQueryName queryName() {
+        return CqlQueryName.SELECT;
     }
 
 }

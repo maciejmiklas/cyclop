@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.parser;
 
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlQueryName;
 
 /**
  * @author Maciej Miklas
@@ -12,5 +12,5 @@ public interface DecisionListSupport {
 
     CqlKeyword supports();
 
-    CqlQueryType queryType();
+    CqlQueryName queryName();
 }

@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.parser.delete;
 
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.parser.CqlPartCompletion;
 import org.cyclop.service.completion.parser.DecisionListSupport;
 
@@ -51,8 +51,8 @@ public class DeleteDecisionListSupport implements DecisionListSupport {
     }
 
     @Override
-    public CqlQueryType queryType() {
-        return CqlQueryType.DELETE;
+    public CqlQueryName queryName() {
+        return CqlQueryName.DELETE;
     }
 
 }

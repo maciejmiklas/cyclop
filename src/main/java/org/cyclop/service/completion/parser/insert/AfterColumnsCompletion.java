@@ -1,33 +1,19 @@
 package org.cyclop.service.completion.parser.insert;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPart;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.service.completion.parser.MarkerBasedCompletion;
+import org.cyclop.service.completion.parser.template.StaticMarkerBasedCompletion;
 
 /**
  * @author Maciej Miklas
  */
 @Named("insert.AfterColumnsCompletion")
-public class AfterColumnsCompletion extends MarkerBasedCompletion {
-
-    private CqlCompletion completion;
+public class AfterColumnsCompletion extends StaticMarkerBasedCompletion {
 
     public AfterColumnsCompletion() {
-        super(new CqlPart(")"));
-    }
-
-    @PostConstruct
-    public void init() {
-        completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).build();
-    }
-
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-        return completion;
+        super(new CqlPart(")"), CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).build());
     }
 
 }

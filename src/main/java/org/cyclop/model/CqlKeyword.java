@@ -12,15 +12,17 @@ public class CqlKeyword extends CqlPart {
 
     public static enum Def {
         FROM("from"), DELETE("delete"), DROP("drop table"), INSERT_INTO("insert into"), INSERT("insert"),
-        UPDATE("update"),
+        UPDATE("update"), TRUNCATE("truncate"),
         WHERE("where"), USING_TIMESTAMP("using  timestamp"), USING_TTL("using ttl"), ORDER_BY("order by"),
-        ASC("asc"), DESC("desc"),
+        ASC("asc"), DESC("desc"),WITH("with"),
         LIMIT("limit"), ALLOW_FILTERING("allow filtering"), TOKEN("token"), IN("in"), AND("and"), IN_BL("in ("),
         DROP_TABLE("drop table"), VALUES("values"), SELECT("select"), COUNT_AST("count (*)"), COUNT_ONE("count (1)"),
-        WRITETIME("writetime"), TTL("ttl"),ORDER_BY_BL("order by ("),SET("set"),USE("use"), DROP_KEYSPACE("drop keyspace");
+        WRITETIME("writetime"), TTL("ttl"), ORDER_BY_BL("order by ("), SET("set"), USE("use"),
+        DROP_KEYSPACE("drop keyspace"),CREATE_KEYSPACE("create keyspace"), REPLICATION("replication"), DURABLE_WRITES("durable_writes"),
+        IF_NOT_EXISTS("if not exists");
 
         private Def(String value) {
-            this.value = new CqlKeyword(value);
+            this.value = new CqlKeyword(value.toLowerCase());
         }
 
         public CqlKeyword value;
@@ -28,7 +30,7 @@ public class CqlKeyword extends CqlPart {
 
     protected CqlKeyword(String val) {
         super(val);
-        this.valueSp = val + " ";
+        this.valueSp = val.toLowerCase() + " ";
     }
 
     @Override

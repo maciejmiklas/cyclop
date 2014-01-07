@@ -52,7 +52,7 @@ public class CqlParser {
         if (dls == null) {
             // user started typing, has first world and there is no decision list for it
             if (!cqlQuery.cqlLc.isEmpty() && !cqlQuery.cqlLc.contains(" ")) {
-                ContextCqlCompletion initial = new ContextCqlCompletion(CqlQueryType.UNKNOWN, initialCqlCompletion);
+                ContextCqlCompletion initial = new ContextCqlCompletion(CqlQueryName.UNKNOWN, initialCqlCompletion);
                 return initial;
             }
             return null;
@@ -106,7 +106,7 @@ public class CqlParser {
             return null;
         } else {
             CqlCompletion cqlCompletion = lastMatchingCompletion.getCompletion(cqlQuery);
-            ContextCqlCompletion cqc = new ContextCqlCompletion(dls.queryType(), cqlCompletion);
+            ContextCqlCompletion cqc = new ContextCqlCompletion(dls.queryName(), cqlCompletion);
             return cqc;
         }
     }

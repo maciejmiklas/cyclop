@@ -2,7 +2,7 @@ package org.cyclop.service.completion.parser.alterkeyspace;
 
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlNotSupported;
-import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.parser.CqlPartCompletion;
 import org.cyclop.service.completion.parser.DecisionListSupport;
 
@@ -39,8 +39,8 @@ public class AlterKeyspaceDecisionListSupport implements DecisionListSupport {
     }
 
     @Override
-    public CqlQueryType queryType() {
-        return CqlQueryType.ALTER_KEYSPACE;
+    public CqlQueryName queryName() {
+        return CqlQueryName.ALTER_KEYSPACE;
     }
 
 }

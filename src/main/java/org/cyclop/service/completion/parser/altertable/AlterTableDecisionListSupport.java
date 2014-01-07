@@ -2,7 +2,7 @@ package org.cyclop.service.completion.parser.altertable;
 
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlNotSupported;
-import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.parser.CqlPartCompletion;
 import org.cyclop.service.completion.parser.DecisionListSupport;
 
@@ -39,8 +39,8 @@ public class AlterTableDecisionListSupport implements DecisionListSupport {
     }
 
     @Override
-    public CqlQueryType queryType() {
-        return CqlQueryType.ALTER_TABLE;
+    public CqlQueryName queryName() {
+        return CqlQueryName.ALTER_TABLE;
     }
 
 }

@@ -1,14 +1,12 @@
 package org.cyclop.service.completion.parser.truncate;
 
-import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlNotSupported;
-import org.cyclop.model.CqlQueryType;
-import org.cyclop.service.completion.parser.CqlPartCompletion;
-import org.cyclop.service.completion.parser.DecisionListSupport;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryName;
+import org.cyclop.service.completion.parser.CqlPartCompletion;
+import org.cyclop.service.completion.parser.DecisionListSupport;
 
 /**
  * @author Maciej Miklas
@@ -16,7 +14,7 @@ import javax.inject.Named;
 @Named
 public class TruncateDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlNotSupported("truncate");
+    private final CqlKeyword supports = CqlKeyword.Def.TRUNCATE.value;
 
     private CqlPartCompletion[] decisionList;
 
@@ -39,8 +37,8 @@ public class TruncateDecisionListSupport implements DecisionListSupport {
     }
 
     @Override
-    public CqlQueryType queryType() {
-        return CqlQueryType.TRUNCATE;
+    public CqlQueryName queryName() {
+        return CqlQueryName.TRUNCATE;
     }
 
 }

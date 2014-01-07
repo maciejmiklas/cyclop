@@ -13,9 +13,9 @@ public class CqlQuery implements Comparable<CqlQuery>, Serializable {
 
     public final String cql;
 
-    public final CqlQueryType type;
+    public final CqlQueryName type;
 
-    public CqlQuery(CqlQueryType type, String cql) {
+    public CqlQuery(CqlQueryName type, String cql) {
         if (cql == null || cql.isEmpty()) {
             throw new IllegalArgumentException("Empty statement");
         }
@@ -49,6 +49,6 @@ public class CqlQuery implements Comparable<CqlQuery>, Serializable {
     }
 
     public boolean isSingleResultType() {
-        return type != CqlQueryType.SELECT;
+        return type != CqlQueryName.SELECT;
     }
 }

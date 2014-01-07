@@ -40,7 +40,7 @@ public class CqlHelpPanel extends Panel {
                 return ";-)";
             }
 
-            String name = "help_" + currentCompletion.queryType.name().toLowerCase() + ".html";
+            String name = "help_" + currentCompletion.queryName.name().toLowerCase() + ".html";
             try {
 
                 URL url = Resources.getResource("/org/cyclop/web/pages/cqlcommander/cqlhelp/help/" + name);

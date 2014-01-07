@@ -21,7 +21,7 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.CqlRow;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
@@ -121,7 +121,7 @@ class DefaultQueryService implements QueryService {
     public CqlSelectResult execute(CqlQuery query) {
         LOG.debug("Executing CQL: {}", query);
 
-        if (query.type == CqlQueryType.USE) {
+        if (query.type == CqlQueryName.USE) {
             setSpace(query);
         }
 

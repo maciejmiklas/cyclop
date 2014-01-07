@@ -35,6 +35,11 @@ public class CqlCompletion implements Serializable {
         this.minCompletion = minCompletion;
     }
 
+    private CqlCompletion() {
+        this.fullCompletion = ImmutableSortedSet.of();
+        this.minCompletion = ImmutableSortedSet.of();
+    }
+
     @Override
     public String toString() {
         return "CqlCompletion{" + "fullCompletion=" + fullCompletion + ", minCompletion=" + minCompletion + '}';
@@ -63,12 +68,18 @@ public class CqlCompletion implements Serializable {
      */
     public static class Builder {
 
+        private final static CqlCompletion EMPTY = new CqlCompletion();
+
         private ImmutableSortedSet.Builder<CqlPart> full = ImmutableSortedSet.naturalOrder();
 
         private ImmutableSortedSet.Builder<CqlPart> min = ImmutableSortedSet.naturalOrder();
 
         public static Builder naturalOrder() {
             return new Builder();
+        }
+
+        public static CqlCompletion empty() {
+            return EMPTY;
         }
 
         public Builder full(Collection<? extends CqlPart> part) {

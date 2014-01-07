@@ -7,25 +7,25 @@ import java.util.Objects;
  * @author Maciej Miklas
  */
 public class ContextCqlCompletion implements Serializable {
-    public final CqlQueryType queryType;
+    public final CqlQueryName queryName;
 
     public final CqlCompletion cqlCompletion;
 
-    public ContextCqlCompletion(CqlQueryType queryType, CqlCompletion cqlCompletion) {
-        if (queryType == null) {
-            throw new IllegalArgumentException("Null queryType set");
+    public ContextCqlCompletion(CqlQueryName queryName, CqlCompletion cqlCompletion) {
+        if (queryName == null) {
+            throw new IllegalArgumentException("Null queryName set");
         }
 
         if (cqlCompletion == null) {
             throw new IllegalArgumentException("Null cqlCompletion set");
         }
-        this.queryType = queryType;
+        this.queryName = queryName;
         this.cqlCompletion = cqlCompletion;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(queryType, cqlCompletion);
+        return Objects.hash(queryName, cqlCompletion);
     }
 
     @Override
@@ -34,12 +34,12 @@ public class ContextCqlCompletion implements Serializable {
             return false;
         }
         final ContextCqlCompletion other = (ContextCqlCompletion) obj;
-        return Objects.equals(queryType, other.queryType) && Objects.equals(cqlCompletion, other.cqlCompletion);
+        return Objects.equals(queryName, other.queryName) && Objects.equals(cqlCompletion, other.cqlCompletion);
     }
 
     @Override
     public String toString() {
-        return com.google.common.base.Objects.toStringHelper(this).add("queryType", queryType).add("cqlCompletion",
+        return com.google.common.base.Objects.toStringHelper(this).add("queryName", queryName).add("cqlCompletion",
                 cqlCompletion).toString();
     }
 }

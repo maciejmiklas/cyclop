@@ -16,7 +16,7 @@ import java.util.List;
  * @author Maciej Miklas
  */
 @Named
-public final class DecisionHelper {
+public final class CompletionHelper {
 
     @Inject
     private QueryService queryService;

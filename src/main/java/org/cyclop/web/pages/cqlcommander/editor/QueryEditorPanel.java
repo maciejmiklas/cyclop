@@ -16,7 +16,7 @@ import org.apache.wicket.request.cycle.RequestCycle;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.CqlCompletionService;
 
 import javax.inject.Inject;
@@ -65,7 +65,7 @@ public class QueryEditorPanel extends Panel {
         if (editorValue == null) {
             return null;
         }
-        CqlQuery cq = new CqlQuery(currentCompletion.queryType, editorValue);
+        CqlQuery cq = new CqlQuery(currentCompletion.queryName, editorValue);
         return cq;
     }
 
@@ -94,7 +94,7 @@ public class QueryEditorPanel extends Panel {
                 } else {
                     RequestCycle requestCycle = RequestCycle.get();
                     int index = requestCycle.getRequest().getRequestParameters().getParameterValue("cursorPos").toInt();
-                    CqlQuery cqlQuery = new CqlQuery(CqlQueryType.UNKNOWN, editorValue);
+                    CqlQuery cqlQuery = new CqlQuery(CqlQueryName.UNKNOWN, editorValue);
                     cqlCompletion = cqlCompletionService.findCompletion(cqlQuery, index);
                 }
                 if (cqlCompletion.cqlCompletion.isEmpty() || cqlCompletion.equals(currentCompletion)) {
