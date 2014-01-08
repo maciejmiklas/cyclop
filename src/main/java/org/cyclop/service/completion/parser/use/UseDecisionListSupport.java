@@ -17,18 +17,18 @@ public class UseDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.USE.value;
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     UseCompletion useCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{useCompletion};
+        decisionList = new CqlPartCompletion[][]{{useCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

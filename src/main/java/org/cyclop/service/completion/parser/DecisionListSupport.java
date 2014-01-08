@@ -8,7 +8,10 @@ import org.cyclop.model.CqlQueryName;
  */
 public interface DecisionListSupport {
 
-    CqlPartCompletion[] getDecisionList();
+    /**
+     * @return two dimensionless array: x - next completion, y - optional compilations for current position in x
+     */
+    CqlPartCompletion[][] getDecisionList();
 
     CqlKeyword supports();
 

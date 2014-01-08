@@ -18,18 +18,18 @@ public class CreateIndexDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = new CqlNotSupported("create index");
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     CreateCompletion createCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{createCompletion};
+        decisionList = new CqlPartCompletion[][]{{createCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

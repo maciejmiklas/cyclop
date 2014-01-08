@@ -18,18 +18,18 @@ public class BatchDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = new CqlNotSupported("batch");
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     BatchCompletion batchCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{batchCompletion};
+        decisionList = new CqlPartCompletion[][]{{batchCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

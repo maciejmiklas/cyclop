@@ -33,9 +33,7 @@ function initSuggests(editorId, suggests) {
         'endingSymbols': '',
         'stopSuggestionKeys': [$.asuggestKeys.RETURN],
         'minChunkSize': 1,
-        'delimiters': ', ',
-        'ignoreCase': true,
-        'followCase': true
+        'delimiters': ', ={}():'
     });
 }
 
@@ -89,9 +87,7 @@ function replaceSuggests(editorId, suggests) {
         'cycleOnTab': true,
         'autoComplete': true,
         'endingSymbols': ' ',
-        'stopSuggestionKeys': [$.asuggestKeys.RETURN, $.asuggestKeys.SPACE],
-        'ignoreCase': false,
-        'followCase': false
+        'stopSuggestionKeys': [$.asuggestKeys.RETURN, $.asuggestKeys.SPACE]
     };
 
     /* Make suggest:
@@ -115,9 +111,7 @@ function replaceSuggests(editorId, suggests) {
             var delimiters = this.options.delimiters.split(''), // array of chars
                 textBeforeCursor = this.val().substr(0, this.getSelection().start),
                 indexOfDelimiter = -1,
-                i,
-                d,
-                idx;
+                i,d,idx;
             for (i = 0; i < delimiters.length; i++) {
                 d = delimiters[i];
                 idx = textBeforeCursor.lastIndexOf(d);
@@ -137,7 +131,7 @@ function replaceSuggests(editorId, suggests) {
          */
         $area.getCompletion = function (performCycle) {
             var text = this.getChunk(),
-                selectionText = this.getSelection().text,
+                selectionText = this.getSelection().text.toLocaleLowerCase(),
                 foundAlreadySelectedValue = false,
                 firstMatchedValue = null,
                 i,
@@ -145,11 +139,8 @@ function replaceSuggests(editorId, suggests) {
 
             // search the variant
             for (i = 0; i < window.suggests.length; i++) {
-                suggest = window.suggests[i];
-                if ($area.options.ignoreCase) {
-                    suggest = suggest.toLowerCase();
-                    text = text.toLowerCase();
-                }
+                suggest = window.suggests[i].toLowerCase();
+                text = text.toLowerCase();
                 // some variant is found
                 if (suggest.indexOf(text) === 0) {
                     if (performCycle) {
@@ -175,20 +166,21 @@ function replaceSuggests(editorId, suggests) {
         $area.updateSelection = function (completion) {
             if (completion) {
                 var selectionText = this.getChunk();
-                if ($area.options.followCase && selectionText.toUpperCase() == selectionText) {
-                    completion = completion.toUpperCase();
+                var completionText = completion;
+                if (selectionText.toUpperCase() === selectionText && selectionText.toLowerCase() !== selectionText) {
+                    completionText = completion.toUpperCase();
                 }
-                var _selectionStart = $area.getSelection().start,
-                    _selectionEnd = _selectionStart + completion.length;
+                var selectionStart = $area.getSelection().start,
+                    selectionEnd = selectionStart + completion.length;
                 if ($area.getSelection().text === "") {
-                    if ($area.val().length === _selectionStart) { // Weird IE workaround, I really have no idea why it works
-                        $area.setCaretPos(_selectionStart + 10000);
+                    if ($area.val().length === selectionStart) { // Weird IE workaround, I really have no idea why it works
+                        $area.setCaretPos(selectionStart + 10000);
                     }
-                    $area.insertAtCaretPos(completion);
+                    $area.insertAtCaretPos(completionText);
                 } else {
-                    $area.replaceSelection(completion);
+                    $area.replaceSelection(completionText);
                 }
-                $area.setSelection(_selectionStart, _selectionEnd);
+                $area.setSelection(selectionStart, selectionEnd);
             }
         };
 

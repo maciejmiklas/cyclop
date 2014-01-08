@@ -29,16 +29,16 @@ public class InsertDecisionListSupport implements DecisionListSupport {
     @Inject
     private AfterValuesPartCompletion afterValuesPartCompletion;
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{tableNameCompletion, columnsCompletion, afterColumnsCompletion,
-                afterValuesPartCompletion};
+        decisionList = new CqlPartCompletion[][]{{tableNameCompletion}, {columnsCompletion}, {afterColumnsCompletion},
+                {afterValuesPartCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

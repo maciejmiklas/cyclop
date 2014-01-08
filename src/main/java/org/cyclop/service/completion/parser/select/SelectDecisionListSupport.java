@@ -14,7 +14,7 @@ import org.cyclop.service.completion.parser.DecisionListSupport;
 @Named
 public class SelectDecisionListSupport implements DecisionListSupport {
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     private final CqlKeyword supports = CqlKeyword.Def.SELECT.value;
 
@@ -35,12 +35,12 @@ public class SelectDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{selectCompletion, fromCompletion, afterFromCompletion,
-                whereCompletion, orderByClausePartCompletion};
+        decisionList = new CqlPartCompletion[][]{{selectCompletion}, {fromCompletion}, {afterFromCompletion},
+                {whereCompletion, orderByClausePartCompletion}, {orderByClausePartCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

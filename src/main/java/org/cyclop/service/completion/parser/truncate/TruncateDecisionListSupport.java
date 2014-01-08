@@ -16,18 +16,18 @@ public class TruncateDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.TRUNCATE.value;
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     TruncateCompletion truncateCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{truncateCompletion};
+        decisionList = new CqlPartCompletion[][]{{truncateCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

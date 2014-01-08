@@ -62,7 +62,7 @@ public class CqlParser {
             cursorPosition = 0;
         }
 
-        CqlPartCompletion[] decisionList = dls.getDecisionList();
+        CqlPartCompletion[][] decisionList = dls.getDecisionList();
         if (decisionList == null || decisionList.length == 0) {
             return null;
         }
@@ -78,28 +78,30 @@ public class CqlParser {
 
         // go over all parsing decisions, until you find one that cannot be applied - this means that previous one
         // is the right chose for completion
-        for (CqlPartCompletion partCompletion : decisionList) {
-            int completionStartMarker = -1;
-            if (partCompletion instanceof MarkerBasedCompletion) {
-                MarkerBasedCompletion partStatic = (MarkerBasedCompletion) partCompletion;
-                String startMarker = partStatic.startMarker().partLc;
-                completionStartMarker = cqlLc.indexOf(startMarker, offset);
+        for (CqlPartCompletion[] partCompletionList : decisionList) {
+            for (CqlPartCompletion partCompletion : partCompletionList) {
+                int completionStartMarker = -1;
+                if (partCompletion instanceof MarkerBasedCompletion) {
+                    MarkerBasedCompletion partStatic = (MarkerBasedCompletion) partCompletion;
+                    String startMarker = partStatic.startMarker().partLc;
+                    completionStartMarker = cqlLc.indexOf(startMarker, offset);
 
-            } else if (partCompletion instanceof OffsetBasedCompletion) {
-                OffsetBasedCompletion partDynamic = (OffsetBasedCompletion) partCompletion;
-                completionStartMarker = partDynamic.canApply(cqlQuery, offset);
-            } else {
-                throw new ServiceException("Unsupported CqlPartCompletion: " + partCompletion.getClass());
+                } else if (partCompletion instanceof OffsetBasedCompletion) {
+                    OffsetBasedCompletion partDynamic = (OffsetBasedCompletion) partCompletion;
+                    completionStartMarker = partDynamic.canApply(cqlQuery, offset);
+                } else {
+                    throw new ServiceException("Unsupported CqlPartCompletion: " + partCompletion.getClass());
+                }
+
+                if (completionStartMarker == -1) {
+                    // next decision cannot be applied - so the last selected one will be taken
+                    break;
+                }
+
+                // current decision can be applied - try next one
+                offset = completionStartMarker + 1;
+                lastMatchingCompletion = partCompletion;
             }
-
-            if (completionStartMarker == -1) {
-                // next decision cannot be applied - so the last selected one will be taken
-                break;
-            }
-
-            // current decision can be applied - try next one
-            offset = completionStartMarker + 1;
-            lastMatchingCompletion = partCompletion;
         }
 
         if (lastMatchingCompletion == null) {

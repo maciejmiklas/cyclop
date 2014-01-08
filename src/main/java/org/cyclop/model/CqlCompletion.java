@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 import com.google.common.collect.ImmutableSortedSet;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
@@ -10,6 +9,8 @@ import java.util.Objects;
  * @author Maciej Miklas
  */
 public class CqlCompletion implements Serializable {
+
+    private final static String[] VALUE_PREF = {"'", "(", ",", ":"};
 
     /**
      * used during typing, contains all possible combinations that will be suggested when pressing TAB
@@ -111,6 +112,36 @@ public class CqlCompletion implements Serializable {
         public Builder all(CqlPart part) {
             min.add(part);
             full.add(part);
+            return this;
+        }
+
+        public Builder value(CqlPart part) {
+            for (String pref : VALUE_PREF) {
+                prefix(pref, part);
+            }
+            return this;
+        }
+
+        private Builder prefix(String prefix, CqlPart part) {
+            min.add(part);
+            full.add(part);
+
+            CqlPart prefixPart = new CqlPart(prefix + part.part);
+            full.add(prefixPart);
+            return this;
+        }
+
+        private Builder prefix(String prefix, Collection<? extends CqlPart> col) {
+            for (CqlPart part : col) {
+                prefix(prefix, part);
+            }
+            return this;
+        }
+
+        public Builder value(Collection<? extends CqlPart> col) {
+            for (String pref : VALUE_PREF) {
+                prefix(pref, col);
+            }
             return this;
         }
 

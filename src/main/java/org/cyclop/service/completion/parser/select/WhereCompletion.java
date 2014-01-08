@@ -33,7 +33,7 @@ public class WhereCompletion extends MarkerBasedCompletion {
     public void init() {
         builderTemplate = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.LIMIT.value).all(CqlKeyword.Def
                 .ALLOW_FILTERING.value).all(CqlKeyword.Def.AND.value).full(CqlKeyword.Def.IN_BL.value).min(CqlKeyword
-                .Def.IN.value).full(CqlKeyword.Def.ORDER_BY_BL.value).min(CqlKeyword.Def.ORDER_BY.value).template();
+                .Def.IN.value).all(CqlKeyword.Def.ORDER_BY.value).template();
     }
 
     @Override

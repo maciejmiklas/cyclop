@@ -16,18 +16,18 @@ public class DropKeyspaceDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.DROP_KEYSPACE.value;
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     DropCompletion dropCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{dropCompletion};
+        decisionList = new CqlPartCompletion[][]{{dropCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

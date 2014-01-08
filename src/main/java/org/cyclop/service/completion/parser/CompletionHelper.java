@@ -1,16 +1,15 @@
 package org.cyclop.service.completion.parser;
 
-import com.datastax.driver.core.DataType;
 import com.google.common.collect.ImmutableSortedSet;
-import org.cyclop.common.QueryHelper;
-import org.cyclop.model.*;
-import org.cyclop.service.cassandra.QueryService;
-
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import org.cyclop.common.QueryHelper;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlKeySpace;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlTable;
+import org.cyclop.service.cassandra.QueryService;
 
 /**
  * @author Maciej Miklas
@@ -20,22 +19,6 @@ public final class CompletionHelper {
 
     @Inject
     private QueryService queryService;
-
-    public static List<CqlPart> prependToCqlPart(Collection<CqlPart> col, String value) {
-        List<CqlPart> newElements = new ArrayList<>(col.size());
-        for (CqlPart part : col) {
-            newElements.add(new CqlPart(value + part.part));
-        }
-        return newElements;
-    }
-
-    public List<CqlColumnName> prependToCqlColumnName(Collection<CqlColumnName> col, String value) {
-        List<CqlColumnName> newElements = new ArrayList<>(col.size());
-        for (CqlColumnName part : col) {
-            newElements.add(new CqlColumnName(DataType.text(), value + part.part));
-        }
-        return newElements;
-    }
 
     public CqlCompletion computeTableNameCompletion(CqlKeyword kw, CqlQuery query) {
         CqlCompletion completion = computeTableNameCompletionWithKeyspaceInQuery(kw, query);

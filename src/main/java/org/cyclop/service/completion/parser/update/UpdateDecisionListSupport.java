@@ -29,16 +29,16 @@ public class UpdateDecisionListSupport implements DecisionListSupport {
     @Inject
     private WhereCompletion whereCompletion;
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{tableNameCompletion, afterUpdateCompletion, columnsCompletion,
-                whereCompletion};
+        decisionList = new CqlPartCompletion[][]{{tableNameCompletion}, {afterUpdateCompletion}, {columnsCompletion},
+                {whereCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

@@ -18,18 +18,18 @@ public class DropIndexDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = new CqlNotSupported("drop index");
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     DropCompletion dropCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{dropCompletion};
+        decisionList = new CqlPartCompletion[][]{{dropCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

@@ -16,7 +16,7 @@ public class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.CREATE_KEYSPACE.value;
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     private KeyspaceNameCompletion keyspaceNameCompletion;
@@ -29,11 +29,11 @@ public class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{keyspaceNameCompletion, afterKeyspaceNameCompletion, withCompletion};
+        decisionList = new CqlPartCompletion[][]{{keyspaceNameCompletion}, {afterKeyspaceNameCompletion}, {withCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

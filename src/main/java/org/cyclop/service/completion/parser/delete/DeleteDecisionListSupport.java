@@ -17,7 +17,7 @@ public class DeleteDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.DELETE.value;
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     private DeleteClauseCompletion deleteClauseCompletion;
@@ -36,12 +36,12 @@ public class DeleteDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{deleteClauseCompletion, fromClauseCompletion, afterFromCompletion,
-                whereClauseCompletion, orderByCompletion};
+        decisionList = new CqlPartCompletion[][]{{deleteClauseCompletion}, {fromClauseCompletion}, {afterFromCompletion},
+                {whereClauseCompletion}, {orderByCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 

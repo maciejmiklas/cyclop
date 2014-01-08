@@ -14,12 +14,16 @@ public class CqlKeyword extends CqlPart {
         FROM("from"), DELETE("delete"), DROP("drop table"), INSERT_INTO("insert into"), INSERT("insert"),
         UPDATE("update"), TRUNCATE("truncate"),
         WHERE("where"), USING_TIMESTAMP("using  timestamp"), USING_TTL("using ttl"), ORDER_BY("order by"),
-        ASC("asc"), DESC("desc"),WITH("with"),
+        ASC("asc"), DESC("desc"), WITH("with"),
         LIMIT("limit"), ALLOW_FILTERING("allow filtering"), TOKEN("token"), IN("in"), AND("and"), IN_BL("in ("),
         DROP_TABLE("drop table"), VALUES("values"), SELECT("select"), COUNT_AST("count (*)"), COUNT_ONE("count (1)"),
-        WRITETIME("writetime"), TTL("ttl"), ORDER_BY_BL("order by ("), SET("set"), USE("use"),
-        DROP_KEYSPACE("drop keyspace"),CREATE_KEYSPACE("create keyspace"), REPLICATION("replication"), DURABLE_WRITES("durable_writes"),
-        IF_NOT_EXISTS("if not exists");
+        WRITETIME("writetime"), TTL("ttl"), SET("set"), USE("use"),
+        DROP_KEYSPACE("drop keyspace"), CREATE_KEYSPACE("create keyspace"), REPLICATION("replication"),
+        IF_NOT_EXISTS("if not exists"),
+        CLASS("class"), SIMPLE_STRATEGY("simplestrategy"), REPLICATION_FACTOR("replication_factor"),
+        NETWORK_TOPOLOGY_STRATEGY("networktopologystrategy"), DURABLE_WRITES("durable_writes"), TRUE("true"),
+        FALSE("false"),
+        OLD_NETWORK_TOPOLOGY_STRATEGY("OldNetworkTopologyStrategy");
 
         private Def(String value) {
             this.value = new CqlKeyword(value.toLowerCase());

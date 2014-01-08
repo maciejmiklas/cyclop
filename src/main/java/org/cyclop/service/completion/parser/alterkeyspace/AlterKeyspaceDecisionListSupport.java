@@ -18,18 +18,18 @@ public class AlterKeyspaceDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = new CqlNotSupported("alter keyspace");
 
-    private CqlPartCompletion[] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
     @Inject
     AlterCompletion alterCompletion;
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[]{alterCompletion};
+        decisionList = new CqlPartCompletion[][]{{alterCompletion}};
     }
 
     @Override
-    public CqlPartCompletion[] getDecisionList() {
+    public CqlPartCompletion[][] getDecisionList() {
         return decisionList;
     }
 
