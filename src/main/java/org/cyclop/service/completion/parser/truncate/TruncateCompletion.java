@@ -23,8 +23,8 @@ public class TruncateCompletion extends MarkerBasedCompletion {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = completionHelper.computeTableNameCompletion(CqlKeyword.Def.TRUNCATE.value, query);
-        return completion;
+        CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.TRUNCATE.value);
+        return completion.build();
     }
 
 }

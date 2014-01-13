@@ -19,9 +19,6 @@ public class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
     private CqlPartCompletion[][] decisionList;
 
     @Inject
-    private KeyspaceNameCompletion keyspaceNameCompletion;
-
-    @Inject
     private AfterKeyspaceNameCompletion afterKeyspaceNameCompletion;
 
     @Inject
@@ -29,7 +26,7 @@ public class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
 
     @PostConstruct
     public void init() {
-        decisionList = new CqlPartCompletion[][]{{keyspaceNameCompletion}, {afterKeyspaceNameCompletion}, {withCompletion}};
+        decisionList = new CqlPartCompletion[][]{{afterKeyspaceNameCompletion}, {withCompletion}};
     }
 
     @Override

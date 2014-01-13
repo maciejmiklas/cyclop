@@ -23,8 +23,8 @@ public class TableNameCompletion extends MarkerBasedCompletion {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = completionHelper.computeTableNameCompletion(CqlKeyword.Def.UPDATE.value, query);
-        return completion;
+        CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.UPDATE.value);
+        return completion.build();
     }
 
 }

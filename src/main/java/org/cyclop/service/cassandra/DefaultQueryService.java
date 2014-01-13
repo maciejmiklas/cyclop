@@ -17,6 +17,7 @@ import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPartitionKey;
@@ -58,6 +59,11 @@ class DefaultQueryService implements QueryService {
         ResultSet result = executeSilent(cql.toString());
         boolean tableExists = result != null && !result.isExhausted();
         return tableExists;
+    }
+
+    @Override
+    public ImmutableSortedSet<CqlIndex> findAllIndexes() {
+        return null;
     }
 
     @Override

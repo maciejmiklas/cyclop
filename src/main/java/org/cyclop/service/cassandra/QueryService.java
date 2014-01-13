@@ -18,6 +18,8 @@ public interface QueryService {
 
     ImmutableSortedSet<CqlColumnName> findAllColumnNames();
 
+    ImmutableSortedSet<CqlIndex> findAllIndexes();
+
     ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
 
     CqlSelectResult execute(CqlQuery query);

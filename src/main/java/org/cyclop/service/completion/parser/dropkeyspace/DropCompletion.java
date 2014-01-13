@@ -1,6 +1,7 @@
 package org.cyclop.service.completion.parser.dropkeyspace;
 
 import com.google.common.collect.ImmutableSortedSet;
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
@@ -19,6 +20,13 @@ public class DropCompletion extends MarkerBasedCompletion {
     @Inject
     private QueryService queryService;
 
+    private CqlCompletion.BuilderTemplate completion;
+
+    @PostConstruct
+    public void init() {
+        completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.IF_EXISTS.value).template();
+    }
+
     public DropCompletion() {
         super(CqlKeyword.Def.DROP_KEYSPACE.value);
     }
@@ -26,7 +34,7 @@ public class DropCompletion extends MarkerBasedCompletion {
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
         ImmutableSortedSet<CqlKeySpace> keySpaces = queryService.findAllKeySpaces();
-        return CqlCompletion.Builder.naturalOrder().all(keySpaces).build();
+        return completion.naturalOrder().all(keySpaces).build();
     }
 
 }

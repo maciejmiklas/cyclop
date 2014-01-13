@@ -66,7 +66,18 @@ public class QueryHelper {
         return result;
     }
 
-    public static CqlKeySpace extractKeyspace(CqlKeyword cqlKeyword, CqlQuery query) {
+    public static CqlKeySpace extractKeyspace(CqlQuery query, CqlKeyword ... cqlKeyword) {
+        for (CqlKeyword kw: cqlKeyword){
+            CqlKeySpace keySpace = extractKeyspaceSingle(query, kw);
+            if(keySpace != null){
+                return keySpace;
+            }
+        }
+        return null;
+    }
+
+
+    private static CqlKeySpace extractKeyspaceSingle(CqlQuery query, CqlKeyword cqlKeyword) {
         String cqlLc = query.cqlLc;
         int kwStart = cqlLc.indexOf(cqlKeyword.valueSp);
         if (kwStart == -1) {

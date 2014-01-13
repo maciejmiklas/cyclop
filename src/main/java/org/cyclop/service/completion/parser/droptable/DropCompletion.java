@@ -18,13 +18,15 @@ public class DropCompletion extends MarkerBasedCompletion {
     private CompletionHelper completionHelper;
 
     public DropCompletion() {
-        super(CqlKeyword.Def.DROP.value);
+        super(CqlKeyword.Def.DROP_TABLE.value);
     }
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = completionHelper.computeTableNameCompletion(CqlKeyword.Def.DROP.value, query);
-        return completion;
+        CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query,
+                CqlKeyword.Def.DROP_TABLE.value, CqlKeyword.Def.IF_EXISTS.value);
+        completion.all(CqlKeyword.Def.IF_EXISTS.value);
+        return completion.build();
     }
 
 }

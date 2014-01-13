@@ -1,14 +1,12 @@
 package org.cyclop.service.completion.parser.dropindex;
 
-import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlNotSupported;
-import org.cyclop.model.CqlQueryName;
-import org.cyclop.service.completion.parser.CqlPartCompletion;
-import org.cyclop.service.completion.parser.DecisionListSupport;
-
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQueryName;
+import org.cyclop.service.completion.parser.CqlPartCompletion;
+import org.cyclop.service.completion.parser.DecisionListSupport;
 
 /**
  * @author Maciej Miklas
@@ -16,12 +14,12 @@ import javax.inject.Named;
 @Named
 public class DropIndexDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlNotSupported("drop index");
+    private final CqlKeyword supports = CqlKeyword.Def.DROP_INDEX.value;
 
     private CqlPartCompletion[][] decisionList;
 
     @Inject
-    DropCompletion dropCompletion;
+    private DropCompletion dropCompletion;
 
     @PostConstruct
     public void init() {

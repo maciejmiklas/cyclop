@@ -23,8 +23,8 @@ public class FromClauseCompletion extends MarkerBasedCompletion {
 
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion completion = completionHelper.computeTableNameCompletion(CqlKeyword.Def.FROM.value, query);
-        return completion;
+        CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.FROM.value);
+        return completion.build();
     }
 
 }
