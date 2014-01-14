@@ -37,6 +37,15 @@ function initSuggests(editorId, suggests) {
     });
 }
 
+function endsWith(str, suffix) {
+    if (!str || !suffix) {
+        console.log("NULL --> str:'" + str + "', suffix:'" + suffix + "'");
+        return false;
+    }
+    console.log("Str: '" + str + "' suffix: '" + suffix + "'");
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
 function replaceSuggests(editorId, suggests) {
     window.suggests = suggests;
 }
@@ -84,7 +93,6 @@ function replaceSuggests(editorId, suggests) {
     $.fn.asuggest.defaults = {
         'delimiters': '\n ',
         'minChunkSize': 1,
-        'cycleOnTab': true,
         'autoComplete': true,
         'endingSymbols': ' ',
         'stopSuggestionKeys': [$.asuggestKeys.RETURN, $.asuggestKeys.SPACE]
@@ -101,66 +109,77 @@ function replaceSuggests(editorId, suggests) {
      */
     $.makeSuggest = function (area, options) {
         options = $.extend({}, $.fn.asuggest.defaults, options);
-
-        var KEY = $.asuggestKeys,
-            $area = $(area);
+        var KEY = $.asuggestKeys;
+        var $area = $(area);
         $area.options = options;
+        $area.lastSuggest = null;
 
-        /* Internal method: get the chunk of text before the cursor */
+        // get the chunk of text (separated by delimiter) before the cursor
         $area.getChunk = function () {
-            var delimiters = this.options.delimiters.split(''), // array of chars
-                textBeforeCursor = this.val().substr(0, this.getSelection().start),
-                indexOfDelimiter = -1,
-                i,d,idx;
-            for (i = 0; i < delimiters.length; i++) {
-                d = delimiters[i];
+            var delimiters = this.options.delimiters.split(''); // array of chars
+            var textBeforeCursor = this.val().substr(0, this.getSelection().start);
+            var indexOfDelimiter = -1;
+            var idx;
+            for (var i = 0; i < delimiters.length; i++) {
+                var d = delimiters[i];
                 idx = textBeforeCursor.lastIndexOf(d);
                 if (idx > indexOfDelimiter) {
                     indexOfDelimiter = idx;
                 }
             }
+
+            var chunk;
             if (indexOfDelimiter < 0) {
-                return textBeforeCursor;
+                chunk = textBeforeCursor;
             } else {
-                return textBeforeCursor.substr(indexOfDelimiter + 1);
+                chunk = textBeforeCursor.substr(indexOfDelimiter + 1);
             }
+
+            return chunk;
         };
 
-        /* Internal method: get cqlCompletion.
-         * If performCycle is true then analyze getChunk() and and getSelection()
+        /**
+         * @param performCycle true if user select next completion with TAB, false when user types text in editor
          */
         $area.getCompletion = function (performCycle) {
-            var text = this.getChunk(),
-                selectionText = this.getSelection().text.toLocaleLowerCase(),
-                foundAlreadySelectedValue = false,
-                firstMatchedValue = null,
-                i,
-                suggest;
+            var text = this.getChunk().toLowerCase();
+            var selectionText = this.getSelection().text.toLocaleLowerCase();
+            var foundAlreadySelectedValue = false;
+            var firstMatchedValue = null;
+            var foundCompletion = null;
 
-            // search the variant
-            for (i = 0; i < window.suggests.length; i++) {
-                suggest = window.suggests[i].toLowerCase();
-                text = text.toLowerCase();
+            if (endsWith(this.val(), this.lastSuggest)) {
+                console.log("Suggest still in: " + this.lastSuggest)
+            } else {
+                console.log("Suggest NOT in: " + this.lastSuggest)
+            }
+
+            for (var i = 0; i < window.suggests.length; i++) {
+                var suggest = window.suggests[i].toLowerCase();
                 // some variant is found
                 if (suggest.indexOf(text) === 0) {
                     if (performCycle) {
                         if (text + selectionText === suggest) {
                             foundAlreadySelectedValue = true;
+
                         } else if (foundAlreadySelectedValue) {
-                            return suggest.substr(text.length);
+                            foundCompletion = suggest.substr(text.length);
+                            this.lastSuggest = suggest;
                         } else if (firstMatchedValue === null) {
                             firstMatchedValue = suggest;
+                            this.lastSuggest = suggest;
                         }
                     } else {
-                        return suggest.substr(text.length);
+                        foundCompletion = suggest.substr(text.length);
+                        this.lastSuggest = suggest;
                     }
                 }
             }
-            if (performCycle && firstMatchedValue) {
-                return firstMatchedValue.substr(text.length);
-            } else {
-                return null;
+            if (!foundCompletion && performCycle && firstMatchedValue) {
+                foundCompletion = firstMatchedValue.substr(text.length);
             }
+
+            return foundCompletion;
         };
 
         $area.updateSelection = function (completion) {
@@ -186,18 +205,17 @@ function replaceSuggests(editorId, suggests) {
 
         $area.keydown(function (e) {
             if (e.keyCode === KEY.TAB) {
-                if ($area.options.cycleOnTab) {
-                    var chunk = $area.getChunk();
-                    if (chunk.length >= $area.options.minChunkSize) {
-                        var completionText = $area.getCompletion(true);
-                        $area.updateSelection(completionText);
-                    }
-                    e.preventDefault();
-                    e.stopPropagation();
-                    $area.focus();
-                    $.asuggestFocused = this;
-                    return false;
+                var chunk = $area.getChunk();
+                if (chunk.length >= $area.options.minChunkSize) {
+                    var completionText = $area.getCompletion(true);
+                    console.log("updateSelection keydown: " + completionText);
+                    $area.updateSelection(completionText);
                 }
+                e.preventDefault();
+                e.stopPropagation();
+                $area.focus();
+                $.asuggestFocused = this;
+                return false;
             }
             // Check for conditions to stop suggestion
             if ($area.getSelection().length &&
@@ -235,7 +253,7 @@ function replaceSuggests(editorId, suggests) {
                     }
                     break;
                 case KEY.TAB:
-                    if (!hasSpecialKeysOrShift && $area.options.cycleOnTab) {
+                    if (!hasSpecialKeysOrShift) {
                         break;
                     }
                 case KEY.ESC:

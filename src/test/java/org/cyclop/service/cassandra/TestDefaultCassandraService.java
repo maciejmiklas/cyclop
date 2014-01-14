@@ -6,7 +6,6 @@ import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.CqlSelectResult;
-import org.cyclop.model.CqlTable;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,18 +26,6 @@ public class TestDefaultCassandraService {
     @Inject
     QueryService cs;
 
-
-    @Test
-    public void testFindTableNames() {
-        System.out.println(cs.findTableNamesForActiveKeySpace());
-    }
-
-    @Test
-    public void testFindColumnNames() {
-        for (CqlTable table : cs.findTableNamesForActiveKeySpace()) {
-            System.out.println(table.part + ": " + cs.findColumnNames(table));
-        }
-    }
 
     @Test
     public void testFindAllColumnNames() {

@@ -9,6 +9,7 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
+import org.cyclop.service.cassandra.QueryScope;
 import org.cyclop.service.cassandra.QueryService;
 
 /**
@@ -19,6 +20,9 @@ public final class CompletionHelper {
 
     @Inject
     private QueryService queryService;
+
+    @Inject
+    private QueryScope queryScope;
 
     public CqlCompletion.Builder computeTableNameCompletion(CqlQuery query, CqlKeyword ... kw) {
         CqlCompletion.Builder completion = computeTableNameCompletionWithKeyspaceInQuery(query, kw);
@@ -51,7 +55,8 @@ public final class CompletionHelper {
     private CqlCompletion.Builder computeTableNameCompletionWithoutKeyspaceInQuery() {
         CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
 
-        ImmutableSortedSet<CqlTable> tables = queryService.findTableNamesForActiveKeySpace();
+        CqlKeySpace activeKeySpace = queryScope.getActiveKeySpace();
+        ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(activeKeySpace);
         builder.all(tables);
 
         ImmutableSortedSet<CqlKeySpace> keyspaces = queryService.findAllKeySpaces();

@@ -42,13 +42,8 @@ public class QueryServiceDispatcher implements QueryService {
     }
 
     @Override
-    public ImmutableSortedSet<CqlIndex> findAllIndexes() {
-        return get().findAllIndexes();
-    }
-
-    @Override
-    public boolean checkKeyspaceExists(CqlKeySpace keySpace) {
-        return get().checkKeyspaceExists(keySpace);
+    public ImmutableSortedSet<CqlIndex> findAllIndexes(CqlKeySpace keySpace) {
+        return get().findAllIndexes(keySpace);
     }
 
     @Override
@@ -59,11 +54,6 @@ public class QueryServiceDispatcher implements QueryService {
     @Override
     public ImmutableSortedSet<CqlColumnName> findColumnNames(CqlTable table) {
         return get().findColumnNames(table);
-    }
-
-    @Override
-    public ImmutableSortedSet<CqlTable> findTableNamesForActiveKeySpace() {
-        return get().findTableNamesForActiveKeySpace();
     }
 
     @Override
