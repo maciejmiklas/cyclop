@@ -48,6 +48,9 @@ class DefaultQueryService implements QueryService {
     @Inject
     protected CassandraSession session;
 
+    @Inject
+    protected QueryScope queryScope;
+
     @Override
     public boolean checkTableExists(CqlTable table) {
         if (table == null) {
@@ -62,13 +65,28 @@ class DefaultQueryService implements QueryService {
     }
 
     @Override
-    public ImmutableSortedSet<CqlIndex> findAllIndexes() {
-        return null;
-    }
+    public ImmutableSortedSet<CqlIndex> findAllIndexes(CqlKeySpace keySpace) {
+        StringBuilder cql = new StringBuilder("SELECT index_name FROM system.schema_columns");
+        if (keySpace != null) {
+            cql.append(" where keyspace_name='").append(keySpace.partLc).append("'");
+        }
+        ResultSet result = executeSilent(cql.toString());
+        if (result == null) {
+            LOG.debug("No indexes found for keyspace: " + keySpace);
+            return ImmutableSortedSet.of();
+        }
 
-    @Override
-    public boolean checkKeyspaceExists(CqlKeySpace keySpace) {
-        return false;
+        ImmutableSortedSet.Builder<CqlIndex> indexes = ImmutableSortedSet.naturalOrder();
+        for (Row row : result) {
+            String indexName = row.getString("index_name");
+            indexName = StringUtils.trimToNull(indexName);
+            if (indexName == null) {
+                continue;
+            }
+            CqlIndex table = new CqlIndex(indexName);
+            indexes.add(table);
+        }
+        return indexes.build();
     }
 
     @Override
@@ -112,15 +130,9 @@ class DefaultQueryService implements QueryService {
         return tables.build();
     }
 
-    @Override
-    public ImmutableSortedSet<CqlTable> findTableNamesForActiveKeySpace() {
-        CqlKeySpace space = session.getActiveKeySpace();
-        return findTableNames(space);
-    }
-
-    private void setSpace(CqlQuery query) {
+    private void setActiveKeySpace(CqlQuery query) {
         CqlKeySpace space = extractSpace(query);
-        session.setActiveKeySpace(space);
+        queryScope.setActiveKeySpace(space);
     }
 
     @Override
@@ -128,7 +140,7 @@ class DefaultQueryService implements QueryService {
         LOG.debug("Executing CQL: {}", query);
 
         if (query.type == CqlQueryName.USE) {
-            setSpace(query);
+            setActiveKeySpace(query);
         }
 
         ResultSet cqlResult = execute(query.cql);

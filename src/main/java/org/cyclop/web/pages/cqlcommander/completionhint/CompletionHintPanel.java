@@ -92,6 +92,9 @@ public class CompletionHintPanel extends Panel {
                     case KEYSPACE:
                         css = "cq-hintCqlKeyspace";
                         break;
+                    case INDEX:
+                        css = "cq-hintCqlIndex";
+                        break;
                     case NOT_SUPPORTED:
                         css = "cq-hintCqlNotSupported";
                         break;

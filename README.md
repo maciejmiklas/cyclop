@@ -17,6 +17,7 @@ User name and password are used to create Cassandra session,  which is bind to a
    * Enter - confirms currently highlighted completion
    * Tab - next completion value
    * Ctrl+Enter - executes query
+   * ESC - cancel completion
 * completion hint - the green pop up on the right side shows all possible completion values. Font has different colors for table, keyspace, column, type and keyword.
 * query syntax help - contains CQL syntax help copied from original Cassandra documentation. It is decorated with color highlighting matching "completion hint" colors.
 

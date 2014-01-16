@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.SortedSet;
 
 import static org.cyclop.web.common.JsUtils.escapeParam;
-import static org.cyclop.web.pages.parent.ScriptsRef.SUGGEST;
+import static org.cyclop.web.common.ScriptsRef.SUGGEST;
 
 /**
  * @author Maciej Miklas

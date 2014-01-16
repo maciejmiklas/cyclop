@@ -1,5 +1,6 @@
 $(function () {
-    $("${infoDialogId}").dialog({
+    var $dialog = $("${infoDialogId}");
+    $dialog.dialog({
         autoOpen: false,
         width: 640,
         maxHeight: 640,
@@ -12,12 +13,11 @@ $(function () {
             duration: 150
         },
         close: function () {
-            $(this).dialog("destroy");
-            $(this).css('display', 'none')
+            $dialog.dialog("destroy");
+            $dialog.css('display', 'none')
         }
     });
-
-    $("${infoDialogId}").dialog("open");
+    $dialog.dialog("open");
 });
 
 

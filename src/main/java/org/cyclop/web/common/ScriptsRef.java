@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.parent;
+package org.cyclop.web.common;
 
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
@@ -8,13 +8,13 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 public final class ScriptsRef {
 
     public static final JavaScriptResourceReference JQUERY_TOOLS = new JavaScriptResourceReference(ScriptsRef.class,
-            "custom/js/jquery.a-tools.js");
+            "js/jquery.a-tools.js");
 
     public static final JavaScriptResourceReference SUGGEST = new JavaScriptResourceReference(ScriptsRef.class,
-            "custom/js/asuggest.js");
+            "js/asuggest.js");
 
     public static final JavaScriptResourceReference NOTIFY = new JavaScriptResourceReference(ScriptsRef.class,
-            "custom/js/notify.js");
+            "js/notify.js");
 
     public static final JavaScriptResourceReference BOOTSTRAP = new JavaScriptResourceReference(ScriptsRef.class,
             "bootstrap/js/bootstrap.js");
