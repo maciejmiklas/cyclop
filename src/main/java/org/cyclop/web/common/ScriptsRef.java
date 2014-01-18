@@ -13,8 +13,8 @@ public final class ScriptsRef {
     public static final JavaScriptResourceReference SUGGEST = new JavaScriptResourceReference(ScriptsRef.class,
             "js/asuggest.js");
 
-    public static final JavaScriptResourceReference NOTIFY = new JavaScriptResourceReference(ScriptsRef.class,
-            "js/notify.js");
+    public static final JavaScriptResourceReference COMMON = new JavaScriptResourceReference(ScriptsRef.class,
+            "js/common.js");
 
     public static final JavaScriptResourceReference BOOTSTRAP = new JavaScriptResourceReference(ScriptsRef.class,
             "bootstrap/js/bootstrap.js");

@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.delete;
 
+import com.google.common.base.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
@@ -25,6 +26,11 @@ public class FromClauseCompletion extends MarkerBasedCompletion {
     public CqlCompletion getCompletion(CqlQuery query) {
         CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.FROM.value);
         return completion.build();
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

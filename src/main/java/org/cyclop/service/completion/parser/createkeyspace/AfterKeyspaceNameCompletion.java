@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.createkeyspace;
 
+import com.google.common.base.Objects;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
@@ -39,5 +40,10 @@ public class AfterKeyspaceNameCompletion implements OffsetBasedCompletion {
         int indLastSpace = cqlLc.indexOf(' ', indCreate + 1);
 
         return indLastSpace;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("completion", completion).toString();
     }
 }

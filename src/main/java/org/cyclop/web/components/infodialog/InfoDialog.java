@@ -31,7 +31,6 @@ public class InfoDialog extends Panel {
         infoDialog.setVisible(false);
         infoDialog.setOutputMarkupId(true);
         infoDialog.setOutputMarkupPlaceholderTag(true);
-
         titleModel = new StringModel();
         infoDialog.add(new AttributeModifier("title", titleModel));
 
@@ -42,7 +41,7 @@ public class InfoDialog extends Panel {
         infoDialog.add(message);
     }
 
-    public void open(AjaxRequestTarget target, String title, String message) {
+    public void open(AjaxRequestTarget target, String linkNameToDisable, String title, String message) {
         titleModel.setObject(title);
         messageModel.setObject(message);
         infoDialog.setVisible(true);
@@ -50,6 +49,7 @@ public class InfoDialog extends Panel {
 
         Map<String, String> jsVariables = new HashMap<>();
         jsVariables.put("infoDialogId", "#" + infoDialog.getMarkupId());
+        jsVariables.put("linkNameToDisable", "#" + linkNameToDisable);
         String jsContent = infoJs.asString(jsVariables);
         target.appendJavaScript(jsContent);
     }

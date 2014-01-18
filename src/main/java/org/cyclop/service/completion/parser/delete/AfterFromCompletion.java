@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.delete;
 
+import com.google.common.base.Objects;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
@@ -30,4 +31,8 @@ public class AfterFromCompletion extends AfterTableNameCompletionTemplate {
         return completion;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("completion", completion).toString();
+    }
 }

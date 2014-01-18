@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.insert;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -35,6 +36,11 @@ public class ColumnsCompletion extends MarkerBasedCompletion {
 
         CqlCompletion cmp = CqlCompletion.Builder.naturalOrder().value(columnNames).build();
         return cmp;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

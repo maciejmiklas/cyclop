@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.createtable;
 
+import com.google.common.base.Objects;
 import javax.inject.Named;
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.service.completion.parser.NotSupportedCompletion;
@@ -18,4 +19,11 @@ public class CreateCompletion extends NotSupportedCompletion {
     protected String getNotSupportedText() {
         return "create table";
     }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
+    }
+
+
 }

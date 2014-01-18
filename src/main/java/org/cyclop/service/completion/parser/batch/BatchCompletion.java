@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.batch;
 
+import com.google.common.base.Objects;
 import javax.inject.Named;
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.service.completion.parser.NotSupportedCompletion;
@@ -17,5 +18,10 @@ public class BatchCompletion extends NotSupportedCompletion {
     @Override
     protected String getNotSupportedText() {
         return "batch";
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 }

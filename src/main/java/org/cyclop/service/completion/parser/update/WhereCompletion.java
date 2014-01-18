@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.update;
 
+import com.google.common.base.Objects;
 import java.util.SortedSet;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -37,6 +38,11 @@ public class WhereCompletion extends MarkerBasedCompletion {
         cb.all(columnNames);
         CqlCompletion cmp = cb.build();
         return cmp;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.dropkeyspace;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -37,4 +38,8 @@ public class DropCompletion extends MarkerBasedCompletion {
         return completion.naturalOrder().all(keySpaces).build();
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
+    }
 }

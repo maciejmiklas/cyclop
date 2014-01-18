@@ -10,6 +10,10 @@ function notify(text) {
     }, 5000);
 }
 
-function isEmpty(str) {
-    return 0 === str.length;
-}
+String.prototype.isEmpty = function isEmpty() {
+    return 0 === this.length;
+};
+
+String.prototype.endsWith = function (suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
