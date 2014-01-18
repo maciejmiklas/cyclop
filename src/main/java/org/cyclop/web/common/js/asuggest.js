@@ -191,6 +191,7 @@ function replaceSuggests(editorId, suggests) {
                 return null;
             }
 
+            chunk = chunk.toLowerCase();
             var foundCompletion = null;
             for (var i = 0; i < window.suggests.length; i++) {
                 var suggest = window.suggests[i].toLowerCase();
