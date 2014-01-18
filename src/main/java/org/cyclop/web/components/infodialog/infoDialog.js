@@ -1,4 +1,7 @@
 $(function () {
+    var $linkNameToDisable = $("${linkNameToDisable}");
+    $linkNameToDisable.addClass('cq-disableLink');
+
     var $dialog = $("${infoDialogId}");
     $dialog.dialog({
         autoOpen: false,
@@ -14,9 +17,11 @@ $(function () {
         },
         close: function () {
             $dialog.dialog("destroy");
-            $dialog.css('display', 'none')
+            $dialog.css('display', 'none');
+            $linkNameToDisable.removeClass('cq-disableLink');
         }
     });
+
     $dialog.dialog("open");
 });
 

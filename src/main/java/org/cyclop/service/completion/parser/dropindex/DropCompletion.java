@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.dropindex;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -52,5 +53,10 @@ public class DropCompletion implements OffsetBasedCompletion {
         int indLastSpace = cqlLc.indexOf(' ', indCreate + 1);
 
         return indLastSpace;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).add("completion", completion).toString();
     }
 }

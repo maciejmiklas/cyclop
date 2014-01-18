@@ -51,9 +51,10 @@ class ColumnValuePanel extends Panel {
                 public void onClick(AjaxRequestTarget target) {
 
                     String title = crateInfoDialogTitle(cqlPartitionKeyValue, cqlColumnValue.columnName);
-                    infoDialog.open(target, title, convertedValueNotNull);
+                    infoDialog.open(target, this.getMarkupId(), title, convertedValueNotNull);
                 }
             };
+
             columnContent = new Label("columnContent", trimmedEntry);
             fullContentLink.add(new AttributeModifier("title", new IModel<String>() {
 

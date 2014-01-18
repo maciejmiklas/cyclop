@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.insert;
 
+import com.google.common.base.Objects;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
@@ -29,6 +30,11 @@ public class AfterValuesPartCompletion extends MarkerBasedCompletion {
     @Override
     public CqlCompletion getCompletion(CqlQuery query) {
         return completion;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.delete;
 
+import com.google.common.base.Objects;
 import java.util.SortedSet;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -45,6 +46,11 @@ public class WhereClauseCompletion extends MarkerBasedCompletion {
 
         CqlCompletion cmp = builder.build();
         return cmp;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

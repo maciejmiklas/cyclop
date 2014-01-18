@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.truncate;
 
+import com.google.common.base.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
@@ -25,6 +26,12 @@ public class TruncateCompletion extends MarkerBasedCompletion {
     public CqlCompletion getCompletion(CqlQuery query) {
         CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.TRUNCATE.value);
         return completion.build();
+    }
+
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

@@ -26,7 +26,7 @@ function initButtons() {
     $(".cq-clqBookmark").click(function () {
             var $area = $(".cq-textareaCql");
             var text = $area.val();
-            if (isEmpty(text)) {
+            if (text.isEmpty()) {
                 notify("CQL Editor is empty - there is nothing to bookmark ;)");
                 return;
             }

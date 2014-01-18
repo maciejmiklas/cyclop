@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.delete;
 
+import com.google.common.base.Objects;
 import java.util.SortedSet;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,6 +44,11 @@ public class DeleteClauseCompletion extends MarkerBasedCompletion {
         cb.all(columnNames);
 
         return cb.build();
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.droptable;
 
+import com.google.common.base.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
@@ -27,6 +28,11 @@ public class DropCompletion extends MarkerBasedCompletion {
                 CqlKeyword.Def.DROP_TABLE.value, CqlKeyword.Def.IF_EXISTS.value);
         completion.all(CqlKeyword.Def.IF_EXISTS.value);
         return completion.build();
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

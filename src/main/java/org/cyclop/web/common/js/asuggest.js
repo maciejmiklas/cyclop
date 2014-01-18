@@ -29,10 +29,6 @@ function getCaretPosition(ctrl) {
 
 function initSuggests(editorId, suggests) {
 
-    String.prototype.endsWith = function (suffix) {
-        return this.indexOf(suffix, this.length - suffix.length) !== -1;
-    };
-
     window.suggests = suggests;
     var $editor = $(editorId);
     $editor.asuggest({
@@ -109,7 +105,7 @@ function replaceSuggests(editorId, suggests) {
         var $area = $(area);
         $area.options = options;
         $area.lastSuggest = "";
-        $area.lastText = "";
+        $area.lastSuggestActive = false;
 
         // get the chunk of text (separated by delimiter) before the cursor
         $area.getSuggestChunkBeforeCursor = function () {
@@ -134,25 +130,39 @@ function replaceSuggests(editorId, suggests) {
             return chunk;
         };
 
-        $area.endsWithLastSuggest = function () {
-            var str = $area.lastText;
-            var endText = $area.lastSuggest;
-            if (!str || !endText) {
+        $area.checkSuggestActive = function () {
+            var editorText = $area.val();
+            var lastSuggest = $area.lastSuggest;
+            if (!editorText || !lastSuggest) {
                 return false;
             }
-            return str.indexOf(endText, str.length - endText.length) !== -1;
+            editorText = editorText.toLowerCase();
+            lastSuggest = lastSuggest.toLowerCase();
+
+            var selectionEnd = $area.getSelection().end;
+            if (selectionEnd > 0) {
+                editorText = editorText.substr(0, selectionEnd);
+            }
+            return editorText.indexOf(lastSuggest, editorText.length - lastSuggest.length) !== -1;
         };
 
         $area.getTextBeforeCursor = function () {
-            return $area.val().substr(0, $area.getSelection().start).toLowerCase();
+            var selectionStart = $area.getSelection().start;
+
+            var textBeforeCursor;
+            if (selectionStart === -1) {
+                textBeforeCursor = $area.val();
+            } else {
+                textBeforeCursor = $area.val().substr(0, selectionStart);
+            }
+            return textBeforeCursor;
         };
 
         /** support for suggests of keywords containing space like "drop table" */
         $area.getCompletionForLastSuggest = function () {
 
             var suggestFromLast = null;
-
-            if ($area.endsWithLastSuggest()) {
+            if ($area.lastSuggestActive) {
                 var matchIdx = $area.lastSuggest.length;
                 var textBeforeCursor = $area.getTextBeforeCursor().toLowerCase();
                 var suggestLow = $area.lastSuggest.toLowerCase();
@@ -324,7 +334,7 @@ function replaceSuggests(editorId, suggests) {
                     }
                     break;
             }
-            $area.lastText = $area.val();
+            $area.lastSuggestActive = $area.checkSuggestActive();
         });
         return $area;
     };

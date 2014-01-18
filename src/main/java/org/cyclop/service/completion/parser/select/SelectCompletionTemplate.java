@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.select;
 
+import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Named;
@@ -19,13 +20,17 @@ public class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
         super(staticPart, CqlKeyword.Def.FROM.value, CqlKeyword.Def.SELECT.value);
     }
 
-    // TODO
     static {
         staticPart.add(CqlKeyword.Def.COUNT_AST.value);
         staticPart.add(CqlKeyword.Def.COUNT_ONE.value);
         staticPart.add(CqlKeyword.Def.WRITETIME.value);
         staticPart.add(CqlKeyword .Def.TTL.value);
         staticPart.add(CqlKeyword .Def.FROM.value);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

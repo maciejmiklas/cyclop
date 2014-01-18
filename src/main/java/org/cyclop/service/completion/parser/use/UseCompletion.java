@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.use;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -27,6 +28,11 @@ public class UseCompletion extends MarkerBasedCompletion {
     public CqlCompletion getCompletion(CqlQuery query) {
         ImmutableSortedSet<CqlKeySpace> keySpaces = queryService.findAllKeySpaces();
         return CqlCompletion.Builder.naturalOrder().all(keySpaces).build();
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

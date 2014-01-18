@@ -79,6 +79,8 @@ public class CqlParser {
         // go over all parsing decisions, until you find one that cannot be applied - this means that previous one
         // is the right chose for completion
         for (CqlPartCompletion[] partCompletionList : decisionList) {
+
+            boolean found = false;
             for (CqlPartCompletion partCompletion : partCompletionList) {
                 int completionStartMarker = -1;
                 if (partCompletion instanceof MarkerBasedCompletion) {
@@ -89,18 +91,23 @@ public class CqlParser {
                 } else if (partCompletion instanceof OffsetBasedCompletion) {
                     OffsetBasedCompletion partDynamic = (OffsetBasedCompletion) partCompletion;
                     completionStartMarker = partDynamic.canApply(cqlQuery, offset);
+
                 } else {
                     throw new ServiceException("Unsupported CqlPartCompletion: " + partCompletion.getClass());
                 }
 
                 if (completionStartMarker == -1) {
                     // next decision cannot be applied - so the last selected one will be taken
-                    break;
+                    continue;
                 }
-
+                found = true;
                 // current decision can be applied - try next one
                 offset = completionStartMarker + 1;
                 lastMatchingCompletion = partCompletion;
+            }
+
+            if(!found){
+                break;
             }
         }
 

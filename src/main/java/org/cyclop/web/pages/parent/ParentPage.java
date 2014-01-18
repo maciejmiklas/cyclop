@@ -17,6 +17,6 @@ public class ParentPage extends WebPage {
         response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
         response.render(JavaScriptHeaderItem.forReference(JQUERY_UI));
         response.render(JavaScriptHeaderItem.forReference(JQUERY_TOOLS));
-        response.render(JavaScriptHeaderItem.forReference(NOTIFY));
+        response.render(JavaScriptHeaderItem.forReference(COMMON));
     }
 }

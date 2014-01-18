@@ -25,6 +25,7 @@ public abstract class ColumnNameCompletionTemplate extends MarkerBasedCompletion
 
     private CqlKeyword cqlKeyword;
 
+    // TODO use builder instead of collection
     public ColumnNameCompletionTemplate(Collection<? extends CqlPart> staticPartAll, CqlKeyword cqlKeyword,
                                         CqlPart startMarker) {
         super(startMarker);

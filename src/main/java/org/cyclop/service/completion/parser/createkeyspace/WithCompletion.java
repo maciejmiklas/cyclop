@@ -1,5 +1,6 @@
 package org.cyclop.service.completion.parser.createkeyspace;
 
+import com.google.common.base.Objects;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
@@ -18,6 +19,11 @@ public class WithCompletion extends StaticMarkerBasedCompletion {
                 (CqlKeyword.Def.REPLICATION_FACTOR.value).value(CqlKeyword.Def.NETWORK_TOPOLOGY_STRATEGY.value).value
                 (CqlKeyword.Def.DURABLE_WRITES.value).all(CqlKeyword.Def.TRUE.value).all(CqlKeyword.Def.FALSE.value)
                 .value(CqlKeyword.Def.OLD_NETWORK_TOPOLOGY_STRATEGY.value).build());
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).toString();
     }
 
 }

@@ -172,4 +172,9 @@ ul.cq-cqlCollectionList {
     color: red;
 }
 
+.cq-disableLink {
+    color: #444444;
+    pointer-events: none;
+    cursor: default;
+}
 
