@@ -45,14 +45,14 @@ User name and password are used to create Cassandra session,  which is bind to a
 * Tomcat v7 or another v3.x web container
 
 # Technologies
-* web app v3.0
+* web app v3.x
 * maven v3.x
-* spring v3.2.0
-* wicket v6.9.1
-* wicket-auth-roles v6.10.0
-* bootstrap v3.0.0 (theme: cyborg from bootswatch)
-* jQuery UI - v1.10.3
-* cassandra-driver-core - v1.0.3
+* spring v3.x
+* wicket v6.x
+* wicket-auth-roles v6.x
+* bootstrap v3.x (theme: cyborg from bootswatch)
+* jQuery UI - v1.10.x
+* cassandra-driver-core - v1.x
 * slf4j/logback
 
 
