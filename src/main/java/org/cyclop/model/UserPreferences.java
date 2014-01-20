@@ -15,7 +15,7 @@ import com.google.common.base.Objects;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UserPreferences {
+public final class UserPreferences {
 
     @XmlElement(name = "e_hi")
     @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)

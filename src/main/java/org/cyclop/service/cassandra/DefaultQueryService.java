@@ -155,7 +155,13 @@ class DefaultQueryService implements QueryService {
         Map<CqlExtendedColumnName, MutableInt> columnsCount = new LinkedHashMap<>();
         ImmutableList.Builder<CqlRow> rowsBuild = ImmutableList.builder();
         CqlPartitionKey partitionKey = null;
+        int rowNr = 0;
         for (Row row : cqlResult) {
+            if (++rowNr > config.cassandra.rowsLimit) {
+                LOG.debug("Reached rows limit: {}", config.cassandra.rowsLimit);
+                break;
+            }
+
             ImmutableList.Builder<CqlExtendedColumnName> colsBuild = ImmutableList.builder();
 
             CqlPartitionKey partitionKeyTmp = collectAndCountColumns(row, columnsCount, colsBuild, typeMap);
@@ -175,6 +181,7 @@ class DefaultQueryService implements QueryService {
 
         ImmutableList.Builder<CqlExtendedColumnName> commonColumnsBuild = ImmutableList.builder();
         ImmutableList.Builder<CqlExtendedColumnName> dynamicColumnsBuild = ImmutableList.builder();
+
         for (Map.Entry<CqlExtendedColumnName, MutableInt> entry : columnsCount.entrySet()) {
             if (entry.getValue().anInt > 1) {
                 commonColumnsBuild.add(entry.getKey());
@@ -196,6 +203,10 @@ class DefaultQueryService implements QueryService {
         ColumnDefinitions definitions = row.getColumnDefinitions();
         CqlPartitionKey partitionKey = null;
         for (int colIndex = 0; colIndex < definitions.size(); colIndex++) {
+            if (colIndex > config.cassandra.columnsLimit) {
+                LOG.debug("Reached columns limit: {}", config.cassandra.columnsLimit);
+                break;
+            }
             if (row.isNull(colIndex)) {
                 continue;
             }
@@ -217,6 +228,7 @@ class DefaultQueryService implements QueryService {
             } else {
                 colCount.anInt++;
             }
+
         }
         return partitionKey;
     }
@@ -258,7 +270,7 @@ class DefaultQueryService implements QueryService {
             buf.append("'");
         }
         buf.append(" limit ");
-        buf.append(config.cassandra.resultLimit);
+        buf.append(config.cassandra.columnsLimit);
         buf.append(" allow filtering");
 
         ResultSet result = executeSilent(buf.toString());

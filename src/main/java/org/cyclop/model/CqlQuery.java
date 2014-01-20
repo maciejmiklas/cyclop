@@ -29,13 +29,18 @@ public class CqlQuery implements Comparable<CqlQuery>, Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return cqlLc.equals(obj);
+    public int hashCode() {
+        return java.util.Objects.hash(cql);
     }
 
     @Override
-    public int hashCode() {
-        return cqlLc.hashCode();
+    public boolean equals(final Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final CqlQuery other = (CqlQuery) obj;
+        return java.util.Objects.equals(cql, other.cql);
     }
 
     @Override
@@ -46,9 +51,5 @@ public class CqlQuery implements Comparable<CqlQuery>, Serializable {
     @Override
     public String toString() {
         return Objects.toStringHelper(this).add("cqlLc", cqlLc).add("cql", cql).add("type", type).toString();
-    }
-
-    public boolean isSingleResultType() {
-        return type != CqlQueryName.SELECT;
     }
 }

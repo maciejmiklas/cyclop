@@ -7,7 +7,7 @@ import com.google.common.collect.ImmutableList;
 /**
  * @author Maciej Miklas
  */
-public class CqlRow {
+public final class CqlRow {
 
     public final Row original;
 

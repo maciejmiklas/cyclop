@@ -5,7 +5,7 @@ import com.google.common.base.Objects;
 /**
  * @author Maciej Miklas
  */
-public class CqlColumnValue {
+public final class CqlColumnValue {
 
     public final Class<?> valueClass;
 

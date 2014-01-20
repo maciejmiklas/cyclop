@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * @author Maciej Miklas
  */
-public class CqlSelectResult implements Serializable {
+public final class CqlSelectResult implements Serializable {
 
     /**
      * List of columns that can be found in every row returned by the query

@@ -9,4 +9,6 @@
     <context:component-scan base-package="org.cyclop"/>
 
     <context:property-placeholder location="classpath:cyclop.properties"/>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 </beans>

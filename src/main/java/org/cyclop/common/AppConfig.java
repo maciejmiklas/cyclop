@@ -1,12 +1,23 @@
 package org.cyclop.common;
 
-import com.google.common.base.Objects;
-import org.springframework.beans.factory.annotation.Value;
+import java.io.UnsupportedEncodingException;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.UnsupportedEncodingException;
+import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
+import javax.validation.Validator;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import org.cyclop.validation.SimpleDate;
+import org.cyclop.model.ServiceException;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
+
+import com.google.common.base.Objects;
 
 /**
  * @author Maciej Miklas
@@ -14,17 +25,32 @@ import java.io.UnsupportedEncodingException;
 @Named
 public class AppConfig {
 
+    @NotNull
+    @Valid
     public final Cassandra cassandra;
 
+    @NotNull
+    @Valid
     public final CqlEditor cqlEditor;
 
+    @NotNull
+    @Valid
     public final Common common;
 
+    @NotNull
+    @Valid
     public final CqlExport cqlExport;
 
+    @NotNull
+    @Valid
     public final Cookie cookie;
 
+    @NotNull
+    @Valid
     private static AppConfig instance = null;
+
+    @Inject
+    private Validator validator;
 
     public static AppConfig get() {
         if (instance == null) {
@@ -36,6 +62,10 @@ public class AppConfig {
     @PostConstruct
     void init() {
         instance = this;
+        Set<ConstraintViolation<AppConfig>> validateRes = validator.validate(instance);
+        if (!validateRes.isEmpty()) {
+            throw new ServiceException("Application configuration file (cyclop.properties) contains errors: " + validateRes);
+        }
     }
 
     private static String crs(String cr, String str) throws UnsupportedEncodingException {
@@ -54,31 +84,40 @@ public class AppConfig {
 
     @Named
     public static class Cassandra {
-        public final int resultLimit;
 
+        @Min(0)
         public final int port;
 
+        @Min(0)
         public final int timeoutMilis;
 
+        @Min(1)
+        public final int rowsLimit;
+
+        @Min(1)
+        public final int columnsLimit;
+
+        @NotEmpty
         public final String hosts;
 
         public final boolean useSsl;
 
         @Inject
-        public Cassandra(@Value("${cassandra.resultLimit:10000}") int resultLimit, @Value("${cassandra.hosts}") String hosts,
-                @Value("${cassandra.useSsl}") boolean useSsl, @Value("${cassandra.port}") int port,
-                @Value("${cassandra.timeoutMilis}") int timeoutMilis) {
-            this.resultLimit = resultLimit;
+        public Cassandra(@Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
+                @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis,
+                @Value("${cassandra.rowsLimit}") int rowsLimit, @Value("${cassandra.columnsLimit}") int columnsLimit) {
             this.hosts = hosts;
             this.useSsl = useSsl;
             this.port = port;
             this.timeoutMilis = timeoutMilis;
+            this.rowsLimit = rowsLimit;
+            this.columnsLimit = columnsLimit;
         }
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("resultLimit", resultLimit).add("port", port)
-                    .add("timeoutMilis", timeoutMilis).add("hosts", hosts).add("useSsl", useSsl).toString();
+            return Objects.toStringHelper(this).add("port", port).add("timeoutMilis", timeoutMilis).add("rowsLimit", rowsLimit)
+                    .add("columnsLimit", columnsLimit).add("hosts", hosts).add("useSsl", useSsl).toString();
         }
     }
 
@@ -99,12 +138,16 @@ public class AppConfig {
     @Named
     public static class CqlEditor {
 
+        @Min(1)
         public final int rowsPerPage;
 
+        @Min(1)
         public final int maxColumnEmbeddedDisplayChars;
 
+        @Min(1)
         public final int maxColumnDisplayChars;
 
+        @Min(1)
         public final int maxColumnTooltipDisplayChars;
 
         @Inject
@@ -134,25 +177,34 @@ public class AppConfig {
 
     @Named
     public static final class CqlExport {
+
+        @NotEmpty
         public final String querySeparator;
 
+        @NotEmpty
         public final String rowSeparator;
 
+        @NotEmpty
         public final String listSeparator;
 
+        @NotEmpty
         public final String mapSeparator;
 
+        @NotEmpty
         public final String columnSeparator;
 
         public final int crCharCode;
 
+        @NotEmpty
         public final String valueBracketStart;
 
+        @NotEmpty
         public final String fileName;
 
-        // TODO add javax validation for fields like date
+        @SimpleDate
         public final String fileNameDate;
 
+        @NotEmpty
         public final String valueBracketEnd;
 
         public final boolean trim;

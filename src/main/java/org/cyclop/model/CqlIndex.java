@@ -3,7 +3,7 @@ package org.cyclop.model;
 /**
  * @author Maciej Miklas
  */
-public class CqlIndex extends CqlPart {
+public final class CqlIndex extends CqlPart {
 
     public CqlIndex(String part) {
         super(part);

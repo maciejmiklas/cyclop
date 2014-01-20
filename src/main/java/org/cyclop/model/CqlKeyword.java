@@ -6,7 +6,7 @@ package org.cyclop.model;
  *
  * @author Maciej Miklas
  */
-public class CqlKeyword extends CqlPart {
+public final class CqlKeyword extends CqlPart {
 
     public final String valueSp;
 

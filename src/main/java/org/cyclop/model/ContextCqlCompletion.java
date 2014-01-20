@@ -6,7 +6,7 @@ import java.util.Objects;
 /**
  * @author Maciej Miklas
  */
-public class ContextCqlCompletion implements Serializable {
+public final class ContextCqlCompletion implements Serializable {
     public final CqlQueryName queryName;
 
     public final CqlCompletion cqlCompletion;

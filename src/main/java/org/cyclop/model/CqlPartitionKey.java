@@ -5,7 +5,7 @@ import com.datastax.driver.core.DataType;
 /**
  * @author Maciej Miklas
  */
-public class CqlPartitionKey extends CqlExtendedColumnName {
+public final class CqlPartitionKey extends CqlExtendedColumnName {
 
     public CqlPartitionKey(CqlColumnType columnType, DataType dataType, String columnName) {
         super(columnType, dataType, columnName);

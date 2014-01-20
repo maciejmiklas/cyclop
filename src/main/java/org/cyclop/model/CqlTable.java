@@ -7,7 +7,7 @@ import com.google.common.base.Objects;
  *
  * @author Maciej Miklas
  */
-public class CqlTable extends CqlPart {
+public final class CqlTable extends CqlPart {
 
     /**
      * can be null

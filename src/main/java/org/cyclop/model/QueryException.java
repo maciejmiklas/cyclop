@@ -3,7 +3,7 @@ package org.cyclop.model;
 /**
  * @author Maciej Miklas
  */
-public class QueryException extends ServiceException {
+public final class QueryException extends ServiceException {
     public QueryException(String message) {
         super(message);
     }

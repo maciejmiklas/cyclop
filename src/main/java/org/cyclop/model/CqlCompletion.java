@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * @author Maciej Miklas
  */
-public class CqlCompletion implements Serializable {
+public final class CqlCompletion implements Serializable {
 
     private final static String[] VALUE_PREF = {"'", "(", ",", ":"};
 
