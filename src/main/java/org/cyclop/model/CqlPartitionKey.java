@@ -1,10 +1,12 @@
 package org.cyclop.model;
 
 import com.datastax.driver.core.DataType;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public final class CqlPartitionKey extends CqlExtendedColumnName {
 
     public CqlPartitionKey(CqlColumnType columnType, DataType dataType, String columnName) {

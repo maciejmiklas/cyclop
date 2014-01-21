@@ -3,10 +3,12 @@ package org.cyclop.model;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public class CqlQuery implements Comparable<CqlQuery>, Serializable {
 
     public final String cqlLc;

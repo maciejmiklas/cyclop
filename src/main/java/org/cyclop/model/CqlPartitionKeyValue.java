@@ -1,10 +1,12 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public class CqlPartitionKeyValue extends CqlColumnValue {
 
     public final CqlPartitionKey cqlPartitionKey;

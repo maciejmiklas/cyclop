@@ -1,9 +1,10 @@
 package org.cyclop.common;
 
+import com.google.common.base.Objects;
 import java.io.UnsupportedEncodingException;
 import java.util.Set;
-
 import javax.annotation.PostConstruct;
+import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.ConstraintViolation;
@@ -11,19 +12,20 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-
-import org.cyclop.validation.SimpleDate;
 import org.cyclop.model.ServiceException;
+import org.cyclop.validation.SimpleDate;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-
-import com.google.common.base.Objects;
 
 /**
  * @author Maciej Miklas
  */
 @Named
+@Immutable
 public class AppConfig {
+    private final static Logger LOG = LoggerFactory.getLogger(AppConfig.class);
 
     @NotNull
     @Valid
@@ -36,6 +38,10 @@ public class AppConfig {
     @NotNull
     @Valid
     public final Common common;
+
+    @NotNull
+    @Valid
+    public final History history;
 
     @NotNull
     @Valid
@@ -74,15 +80,17 @@ public class AppConfig {
     }
 
     @Inject
-    public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie) {
+    public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie, History history) {
         this.cassandra = cassandra;
         this.cqlEditor = cqlEditor;
         this.common = common;
         this.cqlExport = cqlExport;
         this.cookie = cookie;
+        this.history = history;
     }
 
     @Named
+    @Immutable
     public static class Cassandra {
 
         @Min(0)
@@ -122,10 +130,35 @@ public class AppConfig {
     }
 
     @Named
+    @Immutable
+    public static class History {
+        public final int limit;
+
+        public final boolean enabled;
+
+        /** history file will be truncated every xxx seconds, and not on each access */
+        public final int truncateEverySeconds;
+
+        public final String folder;
+
+        @Inject
+        public History(@Value("${history.limit}") int limit, @Value("${history.truncateEverySeconds}") int truncateEverySeconds,
+                @Value("${history.folder}") String folder, @Value("${history.enabled}") boolean enabled) {
+            this.limit = limit;
+            this.truncateEverySeconds = truncateEverySeconds;
+            this.folder = folder;
+            this.enabled = enabled;
+        }
+
+    }
+
+    @Named
+    @Immutable
     public static class Common {
     }
 
     @Named
+    @Immutable
     public static class Cookie {
         public final int expirySeconds;
 
@@ -136,6 +169,7 @@ public class AppConfig {
     }
 
     @Named
+    @Immutable
     public static class CqlEditor {
 
         @Min(1)
@@ -176,6 +210,7 @@ public class AppConfig {
     }
 
     @Named
+    @Immutable
     public static final class CqlExport {
 
         @NotEmpty

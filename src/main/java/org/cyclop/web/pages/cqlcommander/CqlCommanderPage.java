@@ -1,5 +1,7 @@
 package org.cyclop.web.pages.cqlcommander;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
@@ -11,7 +13,7 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.converter.CsvQueryResultExporter;
-import org.cyclop.web.common.UserPreferencesStore;
+import org.cyclop.service.um.UserManagementService;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonListener;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonsPanel;
 import org.cyclop.web.pages.cqlcommander.completionhint.CompletionHintPanel;
@@ -23,8 +25,6 @@ import org.cyclop.web.pages.cqlcommander.verticalresult.QueryResultVerticalPanel
 import org.cyclop.web.pages.parent.ParentPage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 
 /**
  * @author Maciej Miklas
@@ -50,7 +50,7 @@ public class CqlCommanderPage extends ParentPage {
     private CsvQueryResultExporter exporter;
 
     @Inject
-    private UserPreferencesStore preferencesStore;
+    private UserManagementService userManagementService;
 
     public CqlCommanderPage(PageParameters params) {
         cqlHelpPanel = new CqlHelpPanel("cqlHelp");
@@ -62,7 +62,7 @@ public class CqlCommanderPage extends ParentPage {
         QueryResultVerticalPanel queryResultVerticalPanel = initQueryResultPanel();
         QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
-        UserPreferences preferences = preferencesStore.read();
+        UserPreferences preferences = userManagementService.readPreferences();
         boolean completionEnabled = preferences.getShowCqlCompletionHint();
         cqlCompletionHintPanel.setVisible(completionEnabled);
         initButtons(queryEditorPanel, queryResultVerticalPanel, completionEnabled);
@@ -132,9 +132,9 @@ public class CqlCommanderPage extends ParentPage {
                 cqlCompletionHintPanel.setVisible(pressed);
                 target.add(cqlCompletionHintPanel);
 
-                UserPreferences preferences = preferencesStore.read();
+                UserPreferences preferences = userManagementService.readPreferences();
                 preferences.setShowCqlCompletionHint(pressed);
-                preferencesStore.store(preferences);
+                userManagementService.storePreferences(preferences);
             }
 
             @Override

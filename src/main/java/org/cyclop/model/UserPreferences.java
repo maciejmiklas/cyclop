@@ -1,5 +1,6 @@
 package org.cyclop.model;
 
+import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -13,6 +14,7 @@ import com.google.common.base.Objects;
 /**
  * @author Maciej Miklas
  */
+@Immutable
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class UserPreferences {

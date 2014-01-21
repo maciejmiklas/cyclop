@@ -1,12 +1,14 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Cql keyword
  *
  * @author Maciej Miklas
  */
+@Immutable
 public final class CqlTable extends CqlPart {
 
     /**

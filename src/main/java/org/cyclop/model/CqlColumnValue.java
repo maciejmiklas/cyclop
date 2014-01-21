@@ -1,11 +1,13 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
-public final class CqlColumnValue {
+@Immutable
+public class CqlColumnValue {
 
     public final Class<?> valueClass;
 

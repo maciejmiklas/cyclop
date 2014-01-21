@@ -3,10 +3,12 @@ package org.cyclop.model;
 import com.datastax.driver.core.Row;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public final class CqlRow {
 
     public final Row original;

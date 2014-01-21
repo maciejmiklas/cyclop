@@ -2,10 +2,12 @@ package org.cyclop.model;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public final class ContextCqlCompletion implements Serializable {
     public final CqlQueryName queryName;
 

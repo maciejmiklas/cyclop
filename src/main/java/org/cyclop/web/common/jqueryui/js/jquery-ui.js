@@ -6957,7 +6957,7 @@
             showCurrentAtPos: 0, // The position in multipe months at which to show the current month (starting at 0)
             stepMonths: 1, // Number of months to step back/forward
             stepBigMonths: 12, // Number of months to step back/forward for the big links
-            altField: "", // Selector for an alternate field to store selected dates into
+            altField: "", // Selector for an alternate field to storeIdentifier selected dates into
             altFormat: "", // The date format to use for the alternate field
             constrainInput: true, // The input is constrained by the current date format
             showButtonPanel: false, // True to show button panel, false to not show it
@@ -10803,7 +10803,7 @@
                     uiHash.values = this.values();
                 }
 
-                //store the last changed value index for reference when handles overlap
+                //storeIdentifier the last changed value index for reference when handles overlap
                 this._lastChangedValue = index;
 
                 this._trigger("change", event, uiHash);
@@ -13583,7 +13583,7 @@
                     applyClassChange,
                     allAnimations = o.children ? animated.find("*").addBack() : animated;
 
-                // map the animated objects to store the original styles.
+                // map the animated objects to storeIdentifier the original styles.
                 allAnimations = allAnimations.map(function () {
                     var el = $(this);
                     return {

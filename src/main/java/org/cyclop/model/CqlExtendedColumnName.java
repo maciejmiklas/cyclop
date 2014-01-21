@@ -3,12 +3,14 @@ package org.cyclop.model;
 import com.datastax.driver.core.DataType;
 
 import java.util.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Cql keyword
  *
  * @author Maciej Miklas
  */
+@Immutable
 public class CqlExtendedColumnName extends CqlColumnName {
 
     public final CqlColumnType columnType;

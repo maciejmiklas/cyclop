@@ -3,10 +3,12 @@ package org.cyclop.model;
 import com.datastax.driver.core.DataType;
 
 import java.util.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public class CqlColumnName extends CqlPart {
 
     public final DataType dataType;

@@ -4,10 +4,12 @@ import com.google.common.collect.ImmutableSortedSet;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public final class CqlCompletion implements Serializable {
 
     private final static String[] VALUE_PREF = {"'", "(", ",", ":"};

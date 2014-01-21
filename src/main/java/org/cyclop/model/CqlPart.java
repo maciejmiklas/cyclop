@@ -3,12 +3,14 @@ package org.cyclop.model;
 import com.google.common.base.Objects;
 
 import java.io.Serializable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Cql part
  *
  * @author Maciej Miklas
  */
+@Immutable
 public class CqlPart implements Comparable<CqlPart>, Serializable {
 
     public final String partLc;

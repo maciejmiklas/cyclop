@@ -93,7 +93,7 @@ function replaceSuggests(editorId, suggests) {
     /* Make suggest:
      *
      * create and return jQuery object on the top of DOM object
-     * and store suggests as part of this object
+     * and storeIdentifier suggests as part of this object
      *
      * @param area: HTML DOM element to add suggests to
      * @param suggests: The array of suggest strings

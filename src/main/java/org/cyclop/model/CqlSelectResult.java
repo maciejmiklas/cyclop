@@ -4,10 +4,12 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
 import java.io.Serializable;
+import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public final class CqlSelectResult implements Serializable {
 
     /**

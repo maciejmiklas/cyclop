@@ -1,12 +1,15 @@
 package org.cyclop.model;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * cql keywords are: create keyspace, use, alter keyspace, drop keyspace, create table, alter table, drop table,
  * truncate, create index, drop index, insert, update, delete, batch, select
  *
  * @author Maciej Miklas
  */
-public final class CqlKeyword extends CqlPart {
+@Immutable
+public class CqlKeyword extends CqlPart {
 
     public final String valueSp;
 

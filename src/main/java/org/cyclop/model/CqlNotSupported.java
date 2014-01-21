@@ -1,8 +1,11 @@
 package org.cyclop.model;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * @author Maciej Miklas
  */
+@Immutable
 public class CqlNotSupported extends CqlKeyword {
 
     public CqlNotSupported(String part) {
