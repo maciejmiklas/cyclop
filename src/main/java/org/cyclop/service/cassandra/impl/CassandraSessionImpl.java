@@ -7,7 +7,7 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cyclop.common.AppConfig;
-import org.cyclop.model.ServiceException;
+import org.cyclop.model.exception.ServiceException;
 import org.cyclop.service.cassandra.CassandraSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

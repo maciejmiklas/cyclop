@@ -1,4 +1,4 @@
-package org.cyclop.model;
+package org.cyclop.model.exception;
 
 import javax.annotation.concurrent.Immutable;
 

@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
+import org.cyclop.model.exception.ServiceException;
 
 /**
  * LL(1) like cql parser

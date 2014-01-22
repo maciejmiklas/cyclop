@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import org.cyclop.model.ServiceException;
+import org.cyclop.model.exception.ServiceException;
 import org.cyclop.validation.SimpleDate;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -132,22 +132,25 @@ public class AppConfig {
     @Named
     @Immutable
     public static class History {
-        public final int limit;
+        public final int historyLimit;
+
+        public final int starredLimit;
 
         public final boolean enabled;
 
-        /** history file will be truncated every xxx seconds, and not on each access */
-        public final int truncateEverySeconds;
-
         public final String folder;
 
+        public final int maxFileSize;
+
         @Inject
-        public History(@Value("${history.limit}") int limit, @Value("${history.truncateEverySeconds}") int truncateEverySeconds,
-                @Value("${history.folder}") String folder, @Value("${history.enabled}") boolean enabled) {
-            this.limit = limit;
-            this.truncateEverySeconds = truncateEverySeconds;
+        public History(@Value("${history.historyLimit}") int historyLimit, @Value("${history.starredLimit}") int starredLimit,
+                @Value("${history.folder}") String folder, @Value("${history.enabled}") boolean enabled,
+                @Value("${history.maxFileSize}") int maxFileSize) {
+            this.historyLimit = historyLimit;
+            this.starredLimit = starredLimit;
             this.folder = folder;
             this.enabled = enabled;
+            this.maxFileSize = maxFileSize;
         }
 
     }

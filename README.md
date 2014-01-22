@@ -11,7 +11,7 @@ User name and password are used to create Cassandra session,  which is bind to a
 # Query Editor
 ![Cyclop Pain Page](/doc/img/overview.png)
 
-#### Editor futures
+#### Editor features
 * supports context based CQL 3 completion. So for example completion list contains tables that belong to active keyspace - if you previously executed "use myKespace" query, or tables that belong to keyspace that is part of the query that you are typing (select * from myKespace.xyz...), or columns of table if its already provided in query (insert into table values .... ).
 * keyboard navigation:
    * Enter - confirms currently highlighted completion
@@ -21,13 +21,13 @@ User name and password are used to create Cassandra session,  which is bind to a
 * completion hint - the green pop up on the right side shows all possible completion values. Font has different colors for table, keyspace, column, type and keyword.
 * query syntax help - contains CQL syntax help copied from original Cassandra documentation. It is decorated with color highlighting matching "completion hint" colors.
 
-#### Result Table futures
+#### Result Table features
 * results table is column-oriented, it’s reversed when compared to traditional SQL editors - rows are displayed horizontally, and columns vertically. When scrolling page from left to right you will switch between rows, scrolling from top to bottom will show follow up columns.
 * columns are displayed in order returned by the query, but additionally they are grouped into two sections divided by separator line. The top of the table contains "static columns" - their values are not empty in multiple rows returned by the query. The second section contains columns, which value is not empty only for single row. Cassandra supports dynamic columns, and the idea is to have "static" columns at the top of the table, and "dynamic" ones on the bottom.
 * table header for each row displays partition key value, assuming that query returns it
 * long text is trimmed to fit into table cell, clicking on it opens popup containing the whole
 
-#### General futures
+#### General features
 * CQL query can be bookmarked. This is convenient for frequently used queries, or if you like to share it with somebody else.
 * Query results can be exported to CSV file
   
@@ -55,6 +55,7 @@ User name and password are used to create Cassandra session,  which is bind to a
 * cassandra-driver-core - v1.x
 * slf4j/logback - v1.7.x
 * hibernate validator - v4.x
+* guava - v16.x
 
 
 # Installation

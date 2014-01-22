@@ -26,7 +26,7 @@ import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.CqlRow;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
-import org.cyclop.model.QueryException;
+import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.cassandra.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
