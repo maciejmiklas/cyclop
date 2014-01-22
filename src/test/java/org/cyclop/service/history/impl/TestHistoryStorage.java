@@ -1,9 +1,5 @@
 package org.cyclop.service.history.impl;
 
-import java.io.File;
-import java.sql.Date;
-import java.util.UUID;
-import javax.inject.Inject;
 import org.cyclop.AbstractTestCase;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlQuery;
@@ -14,13 +10,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.annotation.Repeat;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import javax.inject.Inject;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Maciej Miklas
  */
 public class TestHistoryStorage extends AbstractTestCase {
+
+    SimpleDateFormat sid = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     @Inject
     private AppConfig config;
@@ -58,13 +61,20 @@ public class TestHistoryStorage extends AbstractTestCase {
         UserIdentifier userId = new UserIdentifier(UUID.randomUUID());
         QueryHistory newHistory = new QueryHistory(10, 10);
 
-        Date histDate = new Date(System.currentTimeMillis());
-        QueryHistoryEntry histEntry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from mytable"), histDate);
+        Date histDate = new Date();
+        CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
+        QueryHistoryEntry histEntry = new QueryHistoryEntry(query, histDate);
         newHistory.history.add(histEntry);
 
         storage.storeHistory(newHistory, userId);
 
         QueryHistory readHistory = storage.readHistory(userId);
-        System.out.println("");
+        assertNotNull(readHistory);
+        assertEquals(0, readHistory.starred.size());
+        assertEquals(1, readHistory.history.size());
+        QueryHistoryEntry readEntry = readHistory.history.peek();
+        assertEquals(query, readEntry.query);
+        assertEquals(sid.format(histDate), sid.format(readEntry.executedOn));
+
     }
 }

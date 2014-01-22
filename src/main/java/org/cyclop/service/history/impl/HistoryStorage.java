@@ -1,5 +1,15 @@
 package org.cyclop.service.history.impl;
 
+import org.cyclop.common.AppConfig;
+import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.exception.ServiceException;
+import org.cyclop.service.converter.JsonMarshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -11,17 +21,6 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import org.cyclop.common.AppConfig;
-import org.cyclop.model.UserIdentifier;
-import org.cyclop.model.exception.ServiceException;
-import org.cyclop.service.converter.JsonMarshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Maciej Miklas
@@ -90,59 +89,59 @@ public class HistoryStorage {
     }
 
     public void storeHistory(QueryHistory history, UserIdentifier userId) throws ServiceException {
-        try (FileChannel channel = openForWrite(userId)) {
-            String jsonText = jsonMarshaller.marshal(history.toJson());
+        Path histPath = getPath(userId);
+        try (FileChannel channel = openForWrite(histPath)) {
+            String jsonText = jsonMarshaller.marshal(history);
             ByteBuffer buf = encoder.get().encode(CharBuffer.wrap(jsonText));
-            buf.flip();
+            //buf.flip();
             int written = channel.write(buf);
-            channel.truncate(written);
-        } catch (IOException | SecurityException e) {
-            throw new ServiceException("Error storing query history:" + e.getMessage(), e);
+           // channel.truncate(buf.limit());
+        } catch (IOException | SecurityException | IllegalStateException e) {
+            throw new ServiceException("Error storing query history in:" + histPath + " - " + e.getMessage(), e);
         }
     }
 
     public QueryHistory readHistory(UserIdentifier userId) throws ServiceException {
-
-        try (FileChannel channel = openForRead(userId)) {
+        Path histPath = getPath(userId);
+        try (FileChannel channel = openForRead(histPath)) {
             int fileSize = (int) channel.size();
             if (fileSize > config.history.maxFileSize) {
-                LOG.info("History file: {} too large: {} - skipping it", userId, fileSize);
+                LOG.info("History file: {} too large: {} - skipping it", histPath, fileSize);
                 return new QueryHistory(config.history.historyLimit, config.history.starredLimit);
             }
             ByteBuffer buf = ByteBuffer.allocate(fileSize);
             channel.read(buf);
             buf.flip();
             String decoded = decoder.get().decode(buf).toString();
-            QueryHistory.QueryHistoryJson historyJson = jsonMarshaller.unmarshal(QueryHistory.QueryHistoryJson.class, decoded);
-            QueryHistory history = new QueryHistory(historyJson, config.history.historyLimit, config.history.starredLimit);
+            QueryHistory history = jsonMarshaller.unmarshal(QueryHistory.class, decoded);
             return history;
-        } catch (IOException | SecurityException e) {
-            throw new ServiceException(e.getMessage(), e);
+        } catch (IOException | SecurityException | IllegalStateException e) {
+            throw new ServiceException("Error reading query history from:" + histPath + " - " + e.getMessage(), e);
         }
 
     }
 
-    private FileChannel openForWrite(UserIdentifier userId) throws IOException {
-        Path histPath = getPath(userId);
-        FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.CREATE);
-        byteChannel.lock();
+    private FileChannel openForWrite(Path histPath) throws IOException {
+        FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+       // byteChannel.lock();
         return byteChannel;
     }
 
-    private FileChannel openForRead(UserIdentifier userId) throws IOException {
-        Path histPath = getPath(userId);
+    private FileChannel openForRead(Path histPath) throws IOException {
+
         File file = histPath.toFile();
         if (!file.exists() || !file.canRead()) {
             LOG.debug("History file not found: " + histPath);
             return null;
         }
         FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.READ);
-        byteChannel.lock();
+        //byteChannel.lock();
         return byteChannel;
     }
 
     private Path getPath(UserIdentifier userId) {
-        Path histPath = Paths.get(config.history.folder, "hostory-" + userId.id);
+        Path histPath = Paths.get(config.history.folder, "history-" + userId.id + ".json");
         return histPath;
     }
 }

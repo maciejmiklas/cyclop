@@ -26,6 +26,7 @@ public class CqlPart implements Comparable<CqlPart>, Serializable {
         if (part == null || part.isEmpty()) {
             throw new IllegalArgumentException("Empty cqlPart");
         }
+        // TODO remove control characters
         this.part = part;
         this.partLc = part.trim().toLowerCase();
     }
