@@ -93,9 +93,8 @@ public class HistoryStorage {
         try (FileChannel channel = openForWrite(histPath)) {
             String jsonText = jsonMarshaller.marshal(history);
             ByteBuffer buf = encoder.get().encode(CharBuffer.wrap(jsonText));
-            //buf.flip();
             int written = channel.write(buf);
-           // channel.truncate(buf.limit());
+            channel.truncate(written);
         } catch (IOException | SecurityException | IllegalStateException e) {
             throw new ServiceException("Error storing query history in:" + histPath + " - " + e.getMessage(), e);
         }
@@ -124,19 +123,17 @@ public class HistoryStorage {
     private FileChannel openForWrite(Path histPath) throws IOException {
         FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
-       // byteChannel.lock();
-        return byteChannel;
+        FileChannel lockChannel = byteChannel.lock().channel();
+        return lockChannel;
     }
 
     private FileChannel openForRead(Path histPath) throws IOException {
-
         File file = histPath.toFile();
         if (!file.exists() || !file.canRead()) {
             LOG.debug("History file not found: " + histPath);
             return null;
         }
         FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.READ);
-        //byteChannel.lock();
         return byteChannel;
     }
 
