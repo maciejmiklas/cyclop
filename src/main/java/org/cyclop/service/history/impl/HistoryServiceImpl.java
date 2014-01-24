@@ -38,15 +38,16 @@ class HistoryServiceImpl implements HistoryService {
     private final AtomicReference<QueryHistory> history = new AtomicReference<>();
 
     private UserIdentifier getUser() {
-        UserIdentifier cookieIdentifier = um.readIdentifier();
+        UserIdentifier fromCookie = um.readIdentifier();
         if (identifier == null) {
-            identifier = cookieIdentifier;
+            LOG.debug("Using identifier from cookie: {}",fromCookie);
+            identifier = fromCookie;
         } else {
 
             // make sure that there is only one user identifier pro http session
             // if it's not the case overwrite new one with existing one
-            if (!cookieIdentifier.equals(identifier)) {
-                LOG.debug("Replacing {} with {}", cookieIdentifier, identifier);
+            if (!fromCookie.equals(identifier)) {
+                LOG.debug("Replacing {} with {}", fromCookie, identifier);
                 um.storeIdentifier(identifier);
             }
         }
