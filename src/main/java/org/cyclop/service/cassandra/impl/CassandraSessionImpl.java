@@ -20,7 +20,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class CassandraSessionImpl implements CassandraSession {
+class CassandraSessionImpl implements CassandraSession {
     private final static Logger LOG = LoggerFactory.getLogger(CassandraSessionImpl.class);
 
     private Session session;

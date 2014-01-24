@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("insert.AfterValuesPartCompletion")
-public class AfterValuesPartCompletion extends MarkerBasedCompletion {
+class AfterValuesPartCompletion extends MarkerBasedCompletion {
 
     private CqlCompletion completion = null;
 

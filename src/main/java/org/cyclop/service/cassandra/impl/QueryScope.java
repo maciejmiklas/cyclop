@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+// TODO move from impl package because CompletionHelper references it
 public class QueryScope {
 
     private CqlKeySpace activeKeySpace;

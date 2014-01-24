@@ -10,7 +10,7 @@ import org.cyclop.service.completion.impl.parser.template.StaticMarkerBasedCompl
  * @author Maciej Miklas
  */
 @Named("createkeyspace.WithCompletion")
-public class WithCompletion extends StaticMarkerBasedCompletion {
+class WithCompletion extends StaticMarkerBasedCompletion {
 
     public WithCompletion() {
         super(CqlKeyword.Def.WITH.value, CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).all

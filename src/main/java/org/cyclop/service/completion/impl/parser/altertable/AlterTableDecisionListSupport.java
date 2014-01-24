@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
  * @author Maciej Miklas
  */
 @Named
-public class AlterTableDecisionListSupport implements DecisionListSupport {
+class AlterTableDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = new CqlNotSupported("alter table");
 

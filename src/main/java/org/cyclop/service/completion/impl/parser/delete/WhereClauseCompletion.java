@@ -19,7 +19,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
  * @author Maciej Miklas
  */
 @Named("delete.WhereClauseCompletion")
-public class WhereClauseCompletion extends MarkerBasedCompletion {
+class WhereClauseCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;

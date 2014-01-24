@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.template.ColumnNameCompletionTe
  * @author Maciej Miklas
  */
 @Named("select.SelectCompletionTemplate")
-public class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
+class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
 
     private final static List<CqlPart> staticPart = new ArrayList<>();
 

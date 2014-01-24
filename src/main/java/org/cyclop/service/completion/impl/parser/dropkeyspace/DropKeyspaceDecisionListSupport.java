@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
  * @author Maciej Miklas
  */
 @Named
-public class DropKeyspaceDecisionListSupport implements DecisionListSupport {
+class DropKeyspaceDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.DROP_KEYSPACE.value;
 

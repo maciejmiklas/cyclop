@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("truncate.TruncateCompletion")
-public class TruncateCompletion extends MarkerBasedCompletion {
+class TruncateCompletion extends MarkerBasedCompletion {
 
     @Inject
     private CompletionHelper completionHelper;

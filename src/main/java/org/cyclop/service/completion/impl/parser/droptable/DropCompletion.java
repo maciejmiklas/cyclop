@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("droptable.DropCompletion")
-public class DropCompletion extends MarkerBasedCompletion {
+class DropCompletion extends MarkerBasedCompletion {
 
     @Inject
     private CompletionHelper completionHelper;

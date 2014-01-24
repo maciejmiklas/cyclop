@@ -15,7 +15,7 @@ import javax.inject.Named;
  */
 @Named("droptable.DropTableDecisionListSupport")
 @ThreadSafe
-public class DropTableDecisionListSupport implements DecisionListSupport {
+class DropTableDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.DROP_TABLE.value;
 

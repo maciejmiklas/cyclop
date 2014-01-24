@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.template.StaticMarkerBasedCompl
  */
 @Named("insert.AfterColumnsCompletion")
 @ThreadSafe
-public class AfterColumnsCompletion extends StaticMarkerBasedCompletion {
+class AfterColumnsCompletion extends StaticMarkerBasedCompletion {
 
     public AfterColumnsCompletion() {
         super(new CqlPart(")"), CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).build());

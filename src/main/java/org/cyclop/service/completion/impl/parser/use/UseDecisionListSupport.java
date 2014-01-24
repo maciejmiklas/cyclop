@@ -13,7 +13,7 @@ import javax.inject.Named;
  * @author Maciej Miklas
  */
 @Named
-public class UseDecisionListSupport implements DecisionListSupport {
+class UseDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.USE.value;
 

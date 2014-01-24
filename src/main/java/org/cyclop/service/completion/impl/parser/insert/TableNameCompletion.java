@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("insert.TableNameCompletion")
-public class TableNameCompletion extends MarkerBasedCompletion {
+class TableNameCompletion extends MarkerBasedCompletion {
 
     @Inject
     private CompletionHelper completionHelper;

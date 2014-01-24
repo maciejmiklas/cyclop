@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("createkeyspace.AfterKeyspaceNameCompletion")
-public class AfterKeyspaceNameCompletion implements OffsetBasedCompletion {
+class AfterKeyspaceNameCompletion implements OffsetBasedCompletion {
 
     private CqlCompletion completion;
 

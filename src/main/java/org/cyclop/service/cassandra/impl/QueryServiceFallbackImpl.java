@@ -24,7 +24,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
  */
 @Named
 @CassandraVersionQualifier(CassandraVersion.VER_1_x)
-public class QueryServiceFallbackImpl extends QueryServiceImpl {
+class QueryServiceFallbackImpl extends QueryServiceImpl {
 
     private final static Logger LOG = LoggerFactory.getLogger(QueryServiceFallbackImpl.class);
 

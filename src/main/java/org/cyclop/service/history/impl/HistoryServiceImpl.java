@@ -1,13 +1,5 @@
 package org.cyclop.service.history.impl;
 
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.service.history.HistoryService;
@@ -17,15 +9,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.concurrent.atomic.AtomicReference;
+
 /**
  * @author Maciej Miklas
  */
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class HistoryServiceImpl implements HistoryService {
-
-    private final ReadWriteLock historyLock = new ReentrantReadWriteLock();
+class HistoryServiceImpl implements HistoryService {
 
     private final static Logger LOG = LoggerFactory.getLogger(HistoryServiceImpl.class);
 
@@ -34,6 +29,9 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Inject
     private FileStorage storage;
+
+    @Inject
+    private AsyncFileStore accessor;
 
     private UserIdentifier identifier;
 
@@ -61,9 +59,15 @@ public class HistoryServiceImpl implements HistoryService {
         if (newHistory == null) {
             throw new IllegalArgumentException("History cannot be null");
         }
-        history.set(newHistory);
 
-        // TODO add to queue
+        history.set(newHistory);
+        UserIdentifier user = getUser();
+
+        // this synchronization ensures that history will be not added to write queue while it's being read from
+        // disk in #readHistory()
+        synchronized (this) {
+            accessor.store(user, newHistory);
+        }
     }
 
     @Override
@@ -72,8 +76,13 @@ public class HistoryServiceImpl implements HistoryService {
             synchronized (this) {
                 if (history.get() == null) {
                     UserIdentifier user = getUser();
-                    QueryHistory read = storage.readHistory(user);
-                    history.set(read);
+                    QueryHistory read = accessor.getFromWriteQueue(user);
+                    if (read == null) {
+                        read = storage.readHistory(user);
+                    }
+                    if (read == null) {
+                        history.set(new QueryHistory());
+                    }
                 }
             }
         }

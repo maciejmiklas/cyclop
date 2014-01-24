@@ -9,7 +9,7 @@ import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
  * @author Maciej Miklas
  */
 @Named("createindex.CreateCompletion")
-public class CreateCompletion extends NotSupportedCompletion {
+class CreateCompletion extends NotSupportedCompletion {
 
     public CreateCompletion() {
         super(new CqlNotSupported("create"));

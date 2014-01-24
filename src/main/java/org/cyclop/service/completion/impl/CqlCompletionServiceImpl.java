@@ -16,7 +16,7 @@ import javax.inject.Named;
  */
 @Named
 @ThreadSafe
-public class CqlCompletionServiceImpl implements CqlCompletionService {
+class CqlCompletionServiceImpl implements CqlCompletionService {
 
     @Inject
     private CqlParser parser;

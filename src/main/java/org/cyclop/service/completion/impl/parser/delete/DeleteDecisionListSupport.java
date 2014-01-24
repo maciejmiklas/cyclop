@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
  * @author Maciej Miklas
  */
 @Named
-public class DeleteDecisionListSupport implements DecisionListSupport {
+class DeleteDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.DELETE.value;
 

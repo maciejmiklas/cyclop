@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
  * @author Maciej Miklas
  */
 @Named
-public class BatchDecisionListSupport implements DecisionListSupport {
+class BatchDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = new CqlNotSupported("batch");
 

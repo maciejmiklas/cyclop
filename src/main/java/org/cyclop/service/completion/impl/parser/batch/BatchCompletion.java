@@ -9,7 +9,7 @@ import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
  * @author Maciej Miklas
  */
 @Named("batch.BatchCompletion")
-public class BatchCompletion extends NotSupportedCompletion {
+class BatchCompletion extends NotSupportedCompletion {
 
     public BatchCompletion() {
         super(new CqlNotSupported("batch"));

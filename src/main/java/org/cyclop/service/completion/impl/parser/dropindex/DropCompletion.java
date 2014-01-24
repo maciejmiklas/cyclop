@@ -18,7 +18,7 @@ import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("dropindex.DropCompletion")
-public class DropCompletion implements OffsetBasedCompletion {
+class DropCompletion implements OffsetBasedCompletion {
 
     private CqlCompletion.BuilderTemplate completion;
 

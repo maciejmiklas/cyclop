@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
  * @author Maciej Miklas
  */
 @Named
-public class TruncateDecisionListSupport implements DecisionListSupport {
+class TruncateDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.TRUNCATE.value;
 

@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 @Named
 @NotThreadSafe
-public class FileStorage {
+class FileStorage {
     private final static Logger LOG = LoggerFactory.getLogger(HistoryServiceImpl.class);
 
     private ThreadLocal<CharsetEncoder> encoder;

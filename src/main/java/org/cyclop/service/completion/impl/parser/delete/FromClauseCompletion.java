@@ -13,7 +13,7 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("delete.FromClauseCompletion")
-public class FromClauseCompletion extends MarkerBasedCompletion {
+class FromClauseCompletion extends MarkerBasedCompletion {
 
     @Inject
     protected CompletionHelper completionHelper;

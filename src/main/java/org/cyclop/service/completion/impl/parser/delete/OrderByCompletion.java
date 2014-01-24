@@ -19,7 +19,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
  * @author Maciej Miklas
  */
 @Named("delete.OrderByCompletion")
-public class OrderByCompletion extends MarkerBasedCompletion {
+class OrderByCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;

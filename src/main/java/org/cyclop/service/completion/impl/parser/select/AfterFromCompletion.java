@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.template.AfterTableNameCompleti
  * @author Maciej Miklas
  */
 @Named("select.AfterFromCompletion")
-public class AfterFromCompletion extends AfterTableNameCompletionTemplate {
+class AfterFromCompletion extends AfterTableNameCompletionTemplate {
 
     private CqlCompletion completion;
 

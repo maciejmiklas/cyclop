@@ -19,7 +19,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
  * @author Maciej Miklas
  */
 @Named("select.OrderByClausePartCompletion")
-public class OrderByClausePartCompletion extends MarkerBasedCompletion {
+class OrderByClausePartCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;

@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
  * @author Maciej Miklas
  */
 @Named
-public class DropIndexDecisionListSupport implements DecisionListSupport {
+class DropIndexDecisionListSupport implements DecisionListSupport {
 
     private final CqlKeyword supports = CqlKeyword.Def.DROP_INDEX.value;
 

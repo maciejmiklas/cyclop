@@ -9,7 +9,7 @@ import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
  * @author Maciej Miklas
  */
 @Named("altertable.AlterCompletion")
-public class AlterCompletion extends NotSupportedCompletion {
+class AlterCompletion extends NotSupportedCompletion {
 
     public AlterCompletion() {
         super(new CqlNotSupported("alter"));

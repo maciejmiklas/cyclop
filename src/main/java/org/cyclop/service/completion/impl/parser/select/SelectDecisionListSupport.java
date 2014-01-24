@@ -12,7 +12,7 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
  * @author Maciej Miklas
  */
 @Named
-public class SelectDecisionListSupport implements DecisionListSupport {
+class SelectDecisionListSupport implements DecisionListSupport {
 
     private CqlPartCompletion[][] decisionList;
 

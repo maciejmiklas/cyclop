@@ -20,7 +20,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
  * @author Maciej Miklas
  */
 @Named("update.ColumnsCompletion")
-public class ColumnsCompletion extends MarkerBasedCompletion {
+class ColumnsCompletion extends MarkerBasedCompletion {
 
     private CqlCompletion.BuilderTemplate builderTemplate;
 

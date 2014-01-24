@@ -15,7 +15,7 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
  * @author Maciej Miklas
  */
 @Named("use.UsePartCompletion")
-public class UseCompletion extends MarkerBasedCompletion {
+class UseCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;

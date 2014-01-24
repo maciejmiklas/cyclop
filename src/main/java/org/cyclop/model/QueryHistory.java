@@ -1,13 +1,9 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+import org.cyclop.common.AppConfig;
+
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -16,8 +12,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.apache.commons.collections4.queue.CircularFifoQueue;
-import org.cyclop.common.AppConfig;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Maciej Miklas
@@ -30,9 +30,9 @@ public class QueryHistory {
 
     private final CircularFifoQueue<QueryHistoryEntry> starred;
 
-    private final ReadWriteLock historyLock = new ReentrantReadWriteLock();
+    private final Lock historyLock = new ReentrantLock();
 
-    private final ReadWriteLock starredLock = new ReentrantReadWriteLock();
+    private final Lock starredLock = new ReentrantLock();
 
     public QueryHistory() {
         history = new CircularFifoQueue(AppConfig.get().history.historyLimit);
@@ -62,17 +62,14 @@ public class QueryHistory {
     }
 
     private void move(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> from, CircularFifoQueue<QueryHistoryEntry> to) {
-        Lock historyWriteLock = historyLock.writeLock();
-        historyWriteLock.lock();
-
-        Lock starredWriteLock = starredLock.writeLock();
-        starredWriteLock.lock();
+        historyLock.lock();
+        starredLock.lock();
         try {
             to.add(entry);
             from.remove(entry);
         } finally {
-            historyWriteLock.unlock();
-            starredWriteLock.unlock();
+            historyLock.unlock();
+            starredLock.unlock();
         }
     }
 
@@ -84,8 +81,7 @@ public class QueryHistory {
         return size(starred, starredLock);
     }
 
-    private int size(CircularFifoQueue<QueryHistoryEntry> queue, ReadWriteLock readWriteLock) {
-        Lock lock = readWriteLock.readLock();
+    private int size(CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
         lock.lock();
         try {
             return queue.size();
@@ -102,8 +98,7 @@ public class QueryHistory {
         return contains(entry, starred, starredLock);
     }
 
-    private boolean contains(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> queue, ReadWriteLock readWriteLock) {
-        Lock lock = readWriteLock.readLock();
+    private boolean contains(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
         lock.lock();
         try {
             return queue.contains(entry);
@@ -120,8 +115,7 @@ public class QueryHistory {
         return add(entry, starred, starredLock);
     }
 
-    private boolean add(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> queue, ReadWriteLock readWriteLock) {
-        Lock lock = readWriteLock.writeLock();
+    private boolean add(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
         lock.lock();
         try {
             return queue.add(entry);
@@ -178,24 +172,22 @@ public class QueryHistory {
             }
             QueryHistoryJaxb jaxb = new QueryHistoryJaxb();
 
-            Lock historyWriteLock = histObj.historyLock.writeLock();
-            historyWriteLock.lock();
+            histObj.historyLock.lock();
             try {
                 List<QueryHistoryEntry> historyList = new ArrayList<>(histObj.history.size());
                 historyList.addAll(histObj.history);
                 jaxb.history = historyList;
             } finally {
-                historyWriteLock.unlock();
+                histObj.historyLock.unlock();
             }
 
-            Lock starredWriteLock = histObj.starredLock.writeLock();
-            starredWriteLock.lock();
+            histObj.starredLock.lock();
             try {
                 List<QueryHistoryEntry> starredList = new ArrayList<>(histObj.starred.size());
                 starredList.addAll(histObj.starred);
                 jaxb.starred = starredList;
             } finally {
-                starredWriteLock.unlock();
+                histObj.starredLock.unlock();
             }
             return jaxb;
         }
@@ -215,10 +207,10 @@ public class QueryHistory {
 
         private CircularFifoQueue<QueryHistoryEntry> queue;
 
-        private HistoryIterator(ReadWriteLock readWriteLock, CircularFifoQueue<QueryHistoryEntry> queue) {
+        private HistoryIterator(Lock lock, CircularFifoQueue<QueryHistoryEntry> queue) {
             this.queue = queue;
             this.position = queue.size() - 1;
-            this.lock = readWriteLock.readLock();
+            this.lock = lock;
             this.lock.lock();
         }
 

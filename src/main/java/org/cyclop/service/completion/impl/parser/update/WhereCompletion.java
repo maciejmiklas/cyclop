@@ -18,7 +18,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
  * @author Maciej Miklas
  */
 @Named("update.WhereCompletion")
-public class WhereCompletion extends MarkerBasedCompletion {
+class WhereCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;

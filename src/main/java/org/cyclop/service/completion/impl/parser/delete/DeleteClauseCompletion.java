@@ -18,7 +18,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
  * @author Maciej Miklas
  */
 @Named("delete.DeleteClauseCompletion")
-public class DeleteClauseCompletion extends MarkerBasedCompletion {
+class DeleteClauseCompletion extends MarkerBasedCompletion {
 
     @Inject
     private QueryService queryService;
