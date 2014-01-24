@@ -1,32 +1,38 @@
 package org.cyclop.service.history.impl;
 
-import org.cyclop.common.AppConfig;
-import org.cyclop.model.UserIdentifier;
-import org.cyclop.model.exception.ServiceException;
-import org.cyclop.service.converter.JsonMarshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.channels.FileLockInterruptionException;
+import java.nio.channels.OverlappingFileLockException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.PostConstruct;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Named;
+import org.cyclop.common.AppConfig;
+import org.cyclop.model.QueryHistory;
+import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.exception.ServiceException;
+import org.cyclop.service.converter.JsonMarshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Maciej Miklas
  */
 @Named
-public class HistoryStorage {
+@NotThreadSafe
+public class FileStorage {
     private final static Logger LOG = LoggerFactory.getLogger(HistoryServiceImpl.class);
 
     private ThreadLocal<CharsetEncoder> encoder;
@@ -40,6 +46,8 @@ public class HistoryStorage {
     private JsonMarshaller jsonMarshaller;
 
     private boolean supported;
+
+    private final AtomicInteger lockRetryCount = new AtomicInteger(0);
 
     @PostConstruct
     protected void init() {
@@ -88,7 +96,7 @@ public class HistoryStorage {
         return true;
     }
 
-    public void storeHistory(QueryHistory history, UserIdentifier userId) throws ServiceException {
+    public void storeHistory(UserIdentifier userId, QueryHistory history) throws ServiceException {
         Path histPath = getPath(userId);
         try (FileChannel channel = openForWrite(histPath)) {
             String jsonText = jsonMarshaller.marshal(history);
@@ -103,10 +111,14 @@ public class HistoryStorage {
     public QueryHistory readHistory(UserIdentifier userId) throws ServiceException {
         Path histPath = getPath(userId);
         try (FileChannel channel = openForRead(histPath)) {
+            if (channel == null) {
+                LOG.debug("History file not found: {}", histPath);
+                return null;
+            }
             int fileSize = (int) channel.size();
             if (fileSize > config.history.maxFileSize) {
                 LOG.info("History file: {} too large: {} - skipping it", histPath, fileSize);
-                return new QueryHistory(config.history.historyLimit, config.history.starredLimit);
+                return new QueryHistory();
             }
             ByteBuffer buf = ByteBuffer.allocate(fileSize);
             channel.read(buf);
@@ -123,7 +135,8 @@ public class HistoryStorage {
     private FileChannel openForWrite(Path histPath) throws IOException {
         FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.CREATE,
                 StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
-        FileChannel lockChannel = byteChannel.lock().channel();
+        byteChannel.force(true);
+        FileChannel lockChannel = lock(histPath, byteChannel);
         return lockChannel;
     }
 
@@ -133,12 +146,45 @@ public class HistoryStorage {
             LOG.debug("History file not found: " + histPath);
             return null;
         }
-        FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.READ);
-        return byteChannel;
+        FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.READ, StandardOpenOption.WRITE);
+        FileChannel lockChannel = lock(histPath, byteChannel);
+        return lockChannel;
+    }
+
+    private FileChannel lock(Path histPath, FileChannel channel) throws IOException {
+
+        long start = System.currentTimeMillis();
+        String lastExMessage = null;
+        FileChannel lockChannel = null;
+        while (lockChannel == null && System.currentTimeMillis() - start < config.history.lockWaitTimeoutMilis) {
+            try {
+                FileLock lock = channel.lock();
+                lockChannel = lock.channel();
+            } catch (FileLockInterruptionException | OverlappingFileLockException e) {
+                lockRetryCount.incrementAndGet();
+                lastExMessage = e.getMessage();
+                LOG.debug("File lock on '{}' cannot be obtained (retrying operation): {}", histPath, lastExMessage);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e1) {
+                    Thread.interrupted();
+                }
+            }
+        }
+        if (lockChannel == null) {
+            throw new ServiceException("File lock on '" + histPath + "' cannot be obtained: " + lastExMessage);
+        }
+
+        return lockChannel;
     }
 
     private Path getPath(UserIdentifier userId) {
         Path histPath = Paths.get(config.history.folder, "history-" + userId.id + ".json");
         return histPath;
     }
+
+    public int getLockRetryCount() {
+        return lockRetryCount.get();
+    }
+
 }

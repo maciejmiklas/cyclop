@@ -142,15 +142,18 @@ public class AppConfig {
 
         public final int maxFileSize;
 
+        public final int lockWaitTimeoutMilis;
+
         @Inject
         public History(@Value("${history.historyLimit}") int historyLimit, @Value("${history.starredLimit}") int starredLimit,
                 @Value("${history.folder}") String folder, @Value("${history.enabled}") boolean enabled,
-                @Value("${history.maxFileSize}") int maxFileSize) {
+                @Value("${history.maxFileSize}") int maxFileSize,@Value("${history.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis) {
             this.historyLimit = historyLimit;
             this.starredLimit = starredLimit;
             this.folder = folder;
             this.enabled = enabled;
             this.maxFileSize = maxFileSize;
+            this.lockWaitTimeoutMilis = lockWaitTimeoutMilis;
         }
 
     }

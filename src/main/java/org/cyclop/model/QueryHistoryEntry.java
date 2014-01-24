@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
-
 import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,7 +8,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 /**
  * @author Maciej Miklas
@@ -20,16 +20,20 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
 
     public final CqlQuery query;
 
-    public final Date executedOn;
+    public final DateTime executedOnUtc;
 
-    public QueryHistoryEntry(CqlQuery query, Date executedOn) {
+    public QueryHistoryEntry(CqlQuery query) {
+        this(query, new DateTime().toDateTime(DateTimeZone.UTC));
+    }
+
+    private QueryHistoryEntry(CqlQuery query, DateTime executedOnUtc) {
         this.query = query;
-        this.executedOn = executedOn;
+        this.executedOnUtc = executedOnUtc;
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("query", query).add("executedOn", executedOn).toString();
+        return Objects.toStringHelper(this).add("query", query).add("executedOnUtc", executedOnUtc).toString();
     }
 
     @Override
@@ -49,21 +53,18 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
 
     @Override
     public int compareTo(QueryHistoryEntry o) {
-        return executedOn.compareTo(o.executedOn);
+        return executedOnUtc.compareTo(o.executedOnUtc);
     }
 
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     public final static class QueryHistoryEntryJaxb {
         public CqlQuery query;
-        public Date executedOn;
+        public DateTime executedOn;
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this)
-                    .add("query", query)
-                    .add("executedOn", executedOn)
-                    .toString();
+            return Objects.toStringHelper(this).add("query", query).add("executedOn", executedOn).toString();
         }
     }
 
@@ -86,7 +87,7 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
                 return null;
             }
             QueryHistoryEntryJaxb jaxb = new QueryHistoryEntryJaxb();
-            jaxb.executedOn = histObj.executedOn;
+            jaxb.executedOn = histObj.executedOnUtc;
             jaxb.query = histObj.query;
             return jaxb;
         }

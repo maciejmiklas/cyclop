@@ -21,11 +21,12 @@ public class UserManagementServiceImpl implements UserManagementService {
     private CookieStorage cookieStorage;
 
     public void storePreferences(UserPreferences preferences) {
-        cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_prefs,preferences);
+        cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_prefs, preferences);
     }
 
     public UserPreferences readPreferences() {
-        UserPreferences preferences = cookieStorage.readCookieAsJson(CookieStorage.CookieName.cyclop_prefs, UserPreferences.class);
+        UserPreferences preferences = cookieStorage
+                .readCookieAsJson(CookieStorage.CookieName.cyclop_prefs, UserPreferences.class);
         if (preferences == null) {
             LOG.debug("User preferences not found as cookie - using default");
             preferences = new UserPreferences();
@@ -33,11 +34,9 @@ public class UserManagementServiceImpl implements UserManagementService {
         return preferences;
     }
 
-
-
     @Override
     public void storeIdentifier(UserIdentifier id) {
-        cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_userid,id);
+        cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_userid, id);
     }
 
     @Override
@@ -46,6 +45,7 @@ public class UserManagementServiceImpl implements UserManagementService {
         if (id == null) {
             LOG.debug("User Identifier not found as cookie - generating new");
             id = new UserIdentifier();
+            cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_userid, id);
         }
 
         return id;

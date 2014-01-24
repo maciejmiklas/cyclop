@@ -60,7 +60,7 @@ public class CqlQuery implements Comparable<CqlQuery>, Serializable {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("cqlLc", cqlLc).add("cql", cql).add("type", type).toString();
+        return Objects.toStringHelper(this).add("cql", cql).add("type", type).toString();
     }
 
     @XmlRootElement

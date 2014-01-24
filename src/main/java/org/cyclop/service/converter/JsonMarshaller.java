@@ -3,6 +3,7 @@ package org.cyclop.service.converter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import javax.inject.Named;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.AnnotationIntrospector;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -41,6 +42,7 @@ public class JsonMarshaller {
     }
 
     public <T> T unmarshal(Class<T> clazz, String input) {
+        input = StringUtils.trimToNull(input);
         if (input == null) {
             return null;
         }
@@ -49,7 +51,8 @@ public class JsonMarshaller {
         try {
             unmarshalObj = objectMapper.get().readValue(input, clazz);
         } catch (IOException e) {
-            throw new ServiceException("Got IOException during json unmarshalling: " + e.getMessage(), e);
+            throw new ServiceException("Got IOException during json unmarshalling: " + e.getMessage() + " - input:'" + input
+                    + "'", e);
         }
         return unmarshalObj;
     }
@@ -62,13 +65,15 @@ public class JsonMarshaller {
         try {
             marshalBytes = objectMapper.get().writeValueAsBytes(obj);
         } catch (IOException e) {
-            throw new ServiceException("Gout IOException during json marshalling: " + e.getMessage(), e);
+            throw new ServiceException("Gout IOException during json marshalling: " + e.getMessage() + " - input:'" + obj + "'",
+                    e);
         }
 
         try {
             return new String(marshalBytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new ServiceException("UnsupportedEncodingException marshalling Json stream: " + e.getMessage(), e);
+            throw new ServiceException("UnsupportedEncodingException marshalling Json stream: " + e.getMessage() + " - input:'"
+                    + obj + "'", e);
         }
 
     }
