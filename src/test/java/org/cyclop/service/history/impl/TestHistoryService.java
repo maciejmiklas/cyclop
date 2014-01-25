@@ -2,13 +2,13 @@ package org.cyclop.service.history.impl;
 
 import org.cyclop.AbstractTestCase;
 import org.cyclop.model.*;
+import org.cyclop.test.ThreadTestScope;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,6 +35,14 @@ public class TestHistoryService extends AbstractTestCase {
 
     @Inject
     private FileStorage storage;
+
+    @Inject
+    private ThreadTestScope threadTestScope;
+
+    @After
+    public void cleanUp() {
+        threadTestScope.setSingleThread(false);
+    }
 
     @Before
     public void setup() {
@@ -124,13 +132,25 @@ public class TestHistoryService extends AbstractTestCase {
         }
     }
 
-    /**
-     * HistoryServiceImpl is a session scoped bean. In order to simulate multi-thread access on such beans we have
-     * configured ThreadsLimitedScope in testContext.xml
-     */
     @Test
-    public void testMultiThreadForSingleUser() throws Exception {
+    public void testMultiThreadForMultipleUsers() throws Exception {
+        threadTestScope.setSingleThread(false);
+
+        Set<QueryHistory> histories = executeMultiThreadTest();
+        assertEquals(5, histories.size());
+    }
+
+    @Test
+    public void testMultiThreadForSingleUsers() throws Exception {
+        threadTestScope.setSingleThread(true);
+
+        Set<QueryHistory> histories = executeMultiThreadTest();
+        assertEquals(1, histories.size());
+    }
+
+    public Set<QueryHistory> executeMultiThreadTest() throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(5);
+        final Set<QueryHistory> histories = Collections.synchronizedSet(new HashSet<QueryHistory>());
 
         List<Callable<Void>> tasks = new ArrayList<>(3);
         final AtomicInteger executedCount = new AtomicInteger(0);
@@ -141,6 +161,8 @@ public class TestHistoryService extends AbstractTestCase {
                 public Void call() throws Exception {
                     for (int i = 0; i < 300; i++) {
                         QueryHistory history = historyService.readHistory();
+                        histories.add(history);
+
                         QueryHistoryEntry histEntry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
                                 "select * from MyTable2 where id=" + UUID.randomUUID()));
                         history.addToHistory(histEntry);
@@ -184,5 +206,7 @@ public class TestHistoryService extends AbstractTestCase {
             result.get();
         }
         assertEquals(1500, executedCount.get());
+        return histories;
     }
+
 }
