@@ -1,39 +1,22 @@
 package org.cyclop.service.history.impl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import javax.inject.Inject;
 import org.cyclop.AbstractTestCase;
 import org.cyclop.common.AppConfig;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
-import org.cyclop.model.QueryHistory;
-import org.cyclop.model.QueryHistoryEntry;
-import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import javax.inject.Inject;
+import java.io.File;
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Maciej Miklas
  */
-public class TestHistoryStorage extends AbstractTestCase {
+public class TestFileStorage extends AbstractTestCase {
 
     @Inject
     private AppConfig config;
@@ -278,63 +261,5 @@ public class TestHistoryStorage extends AbstractTestCase {
         }
     }
 
-    @Ignore
-    @Test
-    public void testMultiThreadForSingleUser() throws Exception {
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-        final UserIdentifier userId = new UserIdentifier();
-        final QueryHistory history = new QueryHistory();
-
-        List<Callable<Void>> tasks = new ArrayList<>(100);
-        final AtomicInteger executedCount = new AtomicInteger(0);
-        for (int i = 0; i < 2; i++) {
-            tasks.add(new Callable<Void>() {
-
-                @Override
-                public Void call() throws Exception {
-                    for (int i = 0; i < 500; i++) {
-                        QueryHistoryEntry histEntry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
-                                "select * from MyTable2 where id=" + UUID.randomUUID()));
-                        history.addToHistory(histEntry);
-
-                        QueryHistoryEntry starredEntry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
-                                "select * from MyTable2 where id=" + UUID.randomUUID()));
-                        history.addToStarred(starredEntry);
-
-                        verifyHistEntry(history, histEntry, starredEntry);
-
-                        storage.storeHistory(userId, history);
-
-                        verifyHistEntry(history, histEntry, starredEntry);
-
-                        QueryHistory readHist = storage.readHistory(userId);
-                        verifyHistEntry(history, histEntry, starredEntry);
-                        verifyHistEntry(readHist, histEntry, starredEntry);
-
-                        executedCount.incrementAndGet();
-                    }
-                    return null;
-                }
-
-                void verifyHistEntry(QueryHistory history, QueryHistoryEntry histEntry, QueryHistoryEntry starredEntry) {
-                    assertNotNull(history);
-                    assertTrue("Starred (" + executedCount + "):" + starredEntry + " not found in: " + history,
-                            history.containsStarred(starredEntry));
-
-                    assertTrue("History (" + executedCount + "):" + histEntry + " not found in: " + history,
-                            history.containsHistory(histEntry));
-                }
-            });
-        }
-
-        List<Future<Void>> results = executor.invokeAll(tasks);
-        executor.shutdown();
-        executor.awaitTermination(5, TimeUnit.MINUTES);
-
-        for (Future<Void> result : results) {
-            result.get();
-        }
-        assertEquals(500, executedCount.get());
-    }
 
 }

@@ -35,10 +35,15 @@ class AsyncFileStore {
         }
     }
 
+    /**
+     * method must be synchronized to avoid parallel write access on files for single user-id.
+     * Second synchronization block on map ensures short lock time on map, so that
+     * {@link #store(UserIdentifier, QueryHistory)} method block time is reduced
+     */
     public synchronized void flush() {
         while (true) {
-            UserIdentifier identifier = null;
-            QueryHistory history = null;
+            UserIdentifier identifier;
+            QueryHistory history;
 
             // synchronize #historyMap only for short time to not block store(...) function by file operation
             synchronized (historyMap) {

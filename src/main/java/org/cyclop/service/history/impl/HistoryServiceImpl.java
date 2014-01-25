@@ -31,16 +31,16 @@ class HistoryServiceImpl implements HistoryService {
     private FileStorage storage;
 
     @Inject
-    private AsyncFileStore accessor;
+    private AsyncFileStore asyncFileStore;
 
     private UserIdentifier identifier;
 
     private final AtomicReference<QueryHistory> history = new AtomicReference<>();
 
-    private UserIdentifier getUser() {
+    protected UserIdentifier getUser() {
         UserIdentifier fromCookie = um.readIdentifier();
         if (identifier == null) {
-            LOG.debug("Using identifier from cookie: {}",fromCookie);
+            LOG.debug("Using identifier from cookie: {}", fromCookie);
             identifier = fromCookie;
         } else {
 
@@ -66,18 +66,21 @@ class HistoryServiceImpl implements HistoryService {
 
         // this synchronization ensures that history will be not added to write queue while it's being read from
         // disk in #readHistory()
-        synchronized (this) {
-            accessor.store(user, newHistory);
+        synchronized (asyncFileStore) {
+            asyncFileStore.store(user, newHistory);
         }
     }
 
     @Override
     public QueryHistory readHistory() {
         if (history.get() == null) {
-            synchronized (this) {
+            synchronized (asyncFileStore) {
                 if (history.get() == null) {
                     UserIdentifier user = getUser();
-                    QueryHistory read = accessor.getFromWriteQueue(user);
+
+                    // history can be in write queue when user closes http session and opens new few seconds later.
+                    // in this case async queue might be not flushed to disk yet
+                    QueryHistory read = asyncFileStore.getFromWriteQueue(user);
                     if (read == null) {
                         read = storage.readHistory(user);
                     }

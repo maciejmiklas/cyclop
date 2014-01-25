@@ -39,6 +39,23 @@ public class QueryHistory {
         starred = new CircularFifoQueue(AppConfig.get().history.starredLimit);
     }
 
+    public void clearHistory() {
+        clear(history, historyLock);
+    }
+
+    public void clearStarred() {
+        clear(starred, starredLock);
+    }
+
+    private void clear(CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
+        lock.lock();
+        try {
+            queue.clear();
+        } finally {
+            lock.unlock();
+        }
+    }
+
     /**
      * CALL CLOSE ON ITERATOR BECAUSE IT HOLDS READ-LOCK
      */
@@ -61,6 +78,7 @@ public class QueryHistory {
         move(entry, starred, history);
     }
 
+    /** Implementation is very slow (2xo(n)) - but it's not being used very often */
     private void move(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> from, CircularFifoQueue<QueryHistoryEntry> to) {
         historyLock.lock();
         starredLock.lock();
@@ -98,6 +116,7 @@ public class QueryHistory {
         return contains(entry, starred, starredLock);
     }
 
+    /** Implementation is very slow (o(n)) - but it's not being used very often */
     private boolean contains(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
         lock.lock();
         try {
@@ -141,7 +160,14 @@ public class QueryHistory {
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this).add("history", history).add("starred", starred).toString();
+        historyLock.lock();
+        starredLock.lock();
+        try {
+            return Objects.toStringHelper(this).add("history", history).add("starred", starred).toString();
+        } finally {
+            historyLock.unlock();
+            starredLock.unlock();
+        }
     }
 
     @XmlTransient
@@ -233,7 +259,7 @@ public class QueryHistory {
         }
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             if (lock != null) {
                 lock.unlock();
             }
