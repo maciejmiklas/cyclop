@@ -35,7 +35,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
-    public void storeIdentifier(UserIdentifier id) {
+    public void registerIdentifier(UserIdentifier id) {
         cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_userid, id);
     }
 

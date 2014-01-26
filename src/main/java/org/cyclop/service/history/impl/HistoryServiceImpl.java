@@ -48,7 +48,7 @@ class HistoryServiceImpl implements HistoryService {
             // if it's not the case overwrite new one with existing one
             if (!fromCookie.equals(identifier)) {
                 LOG.debug("Replacing {} with {}", fromCookie, identifier);
-                um.storeIdentifier(identifier);
+                um.registerIdentifier(identifier);
             }
         }
 

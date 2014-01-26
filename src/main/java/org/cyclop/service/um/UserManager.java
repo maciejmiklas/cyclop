@@ -8,7 +8,7 @@ import org.cyclop.model.UserPreferences;
  */
 public interface UserManager {
 
-    void storeIdentifier(UserIdentifier id);
+    void registerIdentifier(UserIdentifier id);
 
     UserIdentifier readIdentifier();
 
