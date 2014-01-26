@@ -143,6 +143,7 @@ public class QueryHistory {
             if (favourites.contains(entry)) {
                 favourites.remove(entry);
                 favourites.add(entry);
+
             } else if (favourites.size() >= AppConfig.get().history.starredLimit) {
                 return false;
             }
@@ -211,6 +212,7 @@ public class QueryHistory {
                 List<QueryHistoryEntry> historyList = new ArrayList<>(histObj.history.size());
                 historyList.addAll(histObj.history);
                 jaxb.history = historyList;
+
                 List<QueryHistoryEntry> starredList = new ArrayList<>(histObj.favourites.size());
                 starredList.addAll(histObj.favourites);
                 jaxb.starred = starredList;
@@ -227,7 +229,7 @@ public class QueryHistory {
      */
     @XmlTransient
     @ThreadSafe
-    public final class HistoryIterator implements Iterator<QueryHistoryEntry>, AutoCloseable {
+    public final static class HistoryIterator implements Iterator<QueryHistoryEntry>, AutoCloseable {
 
         private Lock lock;
 

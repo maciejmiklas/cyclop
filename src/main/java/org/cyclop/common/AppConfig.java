@@ -1,8 +1,11 @@
 package org.cyclop.common;
 
 import com.google.common.base.Objects;
-import java.io.UnsupportedEncodingException;
-import java.util.Set;
+import org.cyclop.model.exception.ServiceException;
+import org.cyclop.validation.SimpleDate;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Value;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.concurrent.Immutable;
 import javax.inject.Inject;
@@ -12,20 +15,16 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import org.cyclop.model.exception.ServiceException;
-import org.cyclop.validation.SimpleDate;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import java.io.UnsupportedEncodingException;
+import java.util.Set;
 
 /**
  * @author Maciej Miklas
  */
 @Named
 @Immutable
+@SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 public class AppConfig {
-    private final static Logger LOG = LoggerFactory.getLogger(AppConfig.class);
 
     @NotNull
     @Valid
@@ -64,6 +63,7 @@ public class AppConfig {
         }
         return instance;
     }
+
 
     @PostConstruct
     void init() {
@@ -112,8 +112,8 @@ public class AppConfig {
 
         @Inject
         public Cassandra(@Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
-                @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis,
-                @Value("${cassandra.rowsLimit}") int rowsLimit, @Value("${cassandra.columnsLimit}") int columnsLimit) {
+                         @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis,
+                         @Value("${cassandra.rowsLimit}") int rowsLimit, @Value("${cassandra.columnsLimit}") int columnsLimit) {
             this.hosts = hosts;
             this.useSsl = useSsl;
             this.port = port;
@@ -146,8 +146,8 @@ public class AppConfig {
 
         @Inject
         public History(@Value("${history.historyLimit}") int historyLimit, @Value("${history.starredLimit}") int starredLimit,
-                @Value("${history.folder}") String folder, @Value("${history.enabled}") boolean enabled,
-                @Value("${history.maxFileSize}") int maxFileSize,@Value("${history.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis) {
+                       @Value("${history.folder}") String folder, @Value("${history.enabled}") boolean enabled,
+                       @Value("${history.maxFileSize}") int maxFileSize, @Value("${history.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis) {
             this.historyLimit = historyLimit;
             this.starredLimit = starredLimit;
             this.folder = folder;
@@ -192,9 +192,9 @@ public class AppConfig {
 
         @Inject
         protected CqlEditor(@Value("${cqlEditor.rowsPerPage}") int rowsPerPage,
-                @Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
-                @Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
-                @Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
+                            @Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
+                            @Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
+                            @Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
             this.rowsPerPage = rowsPerPage;
             this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
             this.maxColumnDisplayChars = maxColumnDisplayChars;
@@ -254,15 +254,15 @@ public class AppConfig {
 
         @Inject
         public CqlExport(@Value("${cqlExport.fileName}") String fileName,
-                @Value("${cqlExport.fileName.date}") String fileNameDate,
-                @Value("${cqlExport.querySeparator}") String querySeparator,
-                @Value("${cqlExport.rowSeparator}") String rowSeparator,
-                @Value("${cqlExport.columnSeparator}") String columnSeparator,
-                @Value("${cqlExport.listSeparator}") String listSeparator,
-                @Value("${cqlExport.mapSeparator}") String mapSeparator,
-                @Value("${cqlExport.valueBracketStart}") String valueBracketStart,
-                @Value("${cqlExport.valueBracketEnd}") String valueBracketEnd, @Value("${cqlExport.crCharCode}") int crCharCode,
-                @Value("${cqlExport.removeCrChars}") boolean removeCrChars, @Value("${cqlExport.trim}") boolean trim)
+                         @Value("${cqlExport.fileName.date}") String fileNameDate,
+                         @Value("${cqlExport.querySeparator}") String querySeparator,
+                         @Value("${cqlExport.rowSeparator}") String rowSeparator,
+                         @Value("${cqlExport.columnSeparator}") String columnSeparator,
+                         @Value("${cqlExport.listSeparator}") String listSeparator,
+                         @Value("${cqlExport.mapSeparator}") String mapSeparator,
+                         @Value("${cqlExport.valueBracketStart}") String valueBracketStart,
+                         @Value("${cqlExport.valueBracketEnd}") String valueBracketEnd, @Value("${cqlExport.crCharCode}") int crCharCode,
+                         @Value("${cqlExport.removeCrChars}") boolean removeCrChars, @Value("${cqlExport.trim}") boolean trim)
                 throws UnsupportedEncodingException {
             this.crCharCode = crCharCode;
             String crChar = String.valueOf((char) crCharCode);

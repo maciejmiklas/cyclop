@@ -1,5 +1,17 @@
-package org.cyclop.service.history.impl;
+package org.cyclop.service.common;
 
+import org.cyclop.common.AppConfig;
+import org.cyclop.model.QueryHistory;
+import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.exception.ServiceException;
+import org.cyclop.service.converter.JsonMarshaller;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -15,25 +27,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.annotation.PostConstruct;
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.inject.Inject;
-import javax.inject.Named;
-import org.cyclop.common.AppConfig;
-import org.cyclop.model.QueryHistory;
-import org.cyclop.model.UserIdentifier;
-import org.cyclop.model.exception.ServiceException;
-import org.cyclop.service.converter.JsonMarshaller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Maciej Miklas
  */
 @Named
 @NotThreadSafe
-class FileStorage {
-    private final static Logger LOG = LoggerFactory.getLogger(HistoryServiceImpl.class);
+public class FileStorage {
+    private final static Logger LOG = LoggerFactory.getLogger(FileStorage.class);
 
     private ThreadLocal<CharsetEncoder> encoder;
 
@@ -104,7 +105,7 @@ class FileStorage {
             int written = channel.write(buf);
             channel.truncate(written);
         } catch (IOException | SecurityException | IllegalStateException e) {
-            throw new ServiceException("Error storing query history in:" + histPath + " - " + e.getMessage(), e);
+            throw new ServiceException("Error storing query history in:" + histPath + " - " + e.getClass() + " - " + e.getMessage(), e);
         }
     }
 

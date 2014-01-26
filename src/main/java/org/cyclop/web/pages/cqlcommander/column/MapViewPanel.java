@@ -1,5 +1,6 @@
 package org.cyclop.web.pages.cqlcommander.column;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -17,8 +18,8 @@ import java.util.Map;
  */
 class MapViewPanel extends Panel {
 
-    MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue, final Map<CqlColumnValue,
-            CqlColumnValue> content) {
+    MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue, final ImmutableMap<CqlColumnValue,
+                CqlColumnValue> content) {
         super(id);
 
         List<Map.Entry<CqlColumnValue, CqlColumnValue>> keysList = new ArrayList<>(content.size());

@@ -1,4 +1,4 @@
-package org.cyclop.service.cookie;
+package org.cyclop.service.common;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.request.cycle.RequestCycle;

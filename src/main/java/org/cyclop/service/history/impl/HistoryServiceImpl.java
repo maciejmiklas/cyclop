@@ -2,6 +2,7 @@ package org.cyclop.service.history.impl;
 
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
+import org.cyclop.service.common.FileStorage;
 import org.cyclop.service.history.HistoryService;
 import org.cyclop.service.um.UserManager;
 import org.slf4j.Logger;

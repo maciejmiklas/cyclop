@@ -3,6 +3,7 @@ package org.cyclop.service.history.impl;
 import com.google.common.collect.UnmodifiableIterator;
 import org.cyclop.AbstractTestCase;
 import org.cyclop.model.*;
+import org.cyclop.service.common.FileStorage;
 import org.cyclop.test.ThreadTestScope;
 import org.junit.After;
 import org.junit.Before;
@@ -138,7 +139,7 @@ public class TestHistoryService extends AbstractTestCase {
         threadTestScope.setSingleThread(false);
 
         Set<QueryHistory> histories = executeMultiThreadTest();
-        assertEquals(5, histories.size());
+        assertEquals(3, histories.size());
     }
 
     @Test
@@ -150,12 +151,12 @@ public class TestHistoryService extends AbstractTestCase {
     }
 
     public Set<QueryHistory> executeMultiThreadTest() throws Exception {
-        ExecutorService executor = Executors.newFixedThreadPool(5);
+        ExecutorService executor = Executors.newFixedThreadPool(3);
         final Set<QueryHistory> histories = Collections.synchronizedSet(new HashSet<QueryHistory>());
 
         List<Callable<Void>> tasks = new ArrayList<>(3);
         final AtomicInteger executedCount = new AtomicInteger(0);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             tasks.add(new Callable<Void>() {
 
                 @Override
@@ -218,7 +219,7 @@ public class TestHistoryService extends AbstractTestCase {
         for (Future<Void> result : results) {
             result.get();
         }
-        assertEquals(1500, executedCount.get());
+        assertEquals(900, executedCount.get());
         return histories;
     }
 

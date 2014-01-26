@@ -17,7 +17,7 @@ import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
-import org.cyclop.service.completion.CqlCompletionService;
+import org.cyclop.service.completion.CompletionService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class QueryEditorPanel extends Panel {
     private final String editorMarkupIdJs;
 
     @Inject
-    private CqlCompletionService cqlCompletionService;
+    private CompletionService completionService;
 
     private ContextCqlCompletion currentCompletion;
 
@@ -90,12 +90,12 @@ public class QueryEditorPanel extends Panel {
 
                 ContextCqlCompletion cqlCompletion;
                 if (StringUtils.isEmpty(editorValue)) {
-                    cqlCompletion = cqlCompletionService.findInitialCompletion();
+                    cqlCompletion = completionService.findInitialCompletion();
                 } else {
                     RequestCycle requestCycle = RequestCycle.get();
                     int index = requestCycle.getRequest().getRequestParameters().getParameterValue("cursorPos").toInt();
                     CqlQuery cqlQuery = new CqlQuery(CqlQueryName.UNKNOWN, editorValue);
-                    cqlCompletion = cqlCompletionService.findCompletion(cqlQuery, index);
+                    cqlCompletion = completionService.findCompletion(cqlQuery, index);
                 }
                 if (cqlCompletion.cqlCompletion.isEmpty() || cqlCompletion.equals(currentCompletion)) {
                     return;
@@ -136,7 +136,7 @@ public class QueryEditorPanel extends Panel {
     public void renderHead(IHeaderResponse response) {
         response.render(JavaScriptReferenceHeaderItem.forReference(SUGGEST));
 
-        ContextCqlCompletion cqlCompletion = cqlCompletionService.findInitialCompletion();
+        ContextCqlCompletion cqlCompletion = completionService.findInitialCompletion();
         fireCompletionChanged(cqlCompletion);
 
         String suggestsScript = generateInitSuggestsJs(editorMarkupIdJq, cqlCompletion.cqlCompletion.fullCompletion);

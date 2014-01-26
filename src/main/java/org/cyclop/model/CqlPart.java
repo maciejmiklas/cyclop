@@ -11,7 +11,8 @@ import javax.annotation.concurrent.Immutable;
  * @author Maciej Miklas
  */
 @Immutable
-public class CqlPart implements Comparable<CqlPart>, Serializable {
+@SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
+public class CqlPart implements Comparable<CqlPart> {
 
     public final String partLc;
 

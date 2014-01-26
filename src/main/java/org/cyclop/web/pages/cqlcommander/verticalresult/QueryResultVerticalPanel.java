@@ -36,7 +36,7 @@ public class QueryResultVerticalPanel extends Panel {
     private final ColumnsModel columnsModel;
 
     @Inject
-    private WidgetFactory widgetFactory;
+    private  WidgetFactory widgetFactory;
 
     private WebMarkupContainer resultTable;
 

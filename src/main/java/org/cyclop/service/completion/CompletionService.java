@@ -6,7 +6,7 @@ import org.cyclop.model.CqlQuery;
 /**
  * @author Maciej Miklas
  */
-public interface CqlCompletionService {
+public interface CompletionService {
     /**
      * @return cql markers are: "alter table", "select" or "create keyspace" - columnType of cql query
      */

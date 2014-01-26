@@ -10,7 +10,7 @@ import javax.annotation.concurrent.Immutable;
  * @author Maciej Miklas
  */
 @Immutable
-public final class CqlSelectResult implements Serializable {
+public final class CqlSelectResult {
 
     /**
      * List of columns that can be found in every row returned by the query

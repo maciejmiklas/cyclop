@@ -315,7 +315,7 @@ class QueryServiceImpl implements QueryService {
         return findColumnNames(null);
     }
 
-    private class MutableInt {
+    private static class MutableInt {
         public int anInt = 1;
 
         @Override

@@ -5,7 +5,7 @@ import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
-import org.cyclop.service.completion.CqlCompletionService;
+import org.cyclop.service.completion.CompletionService;
 import org.cyclop.service.completion.impl.parser.CqlParser;
 
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ import javax.inject.Named;
  */
 @Named
 @ThreadSafe
-class CqlCompletionServiceImpl implements CqlCompletionService {
+class CompletionServiceImpl implements CompletionService {
 
     @Inject
     private CqlParser parser;
