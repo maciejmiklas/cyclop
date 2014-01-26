@@ -1,5 +1,6 @@
 package org.cyclop.service.history.impl;
 
+import com.google.common.collect.UnmodifiableIterator;
 import org.cyclop.AbstractTestCase;
 import org.cyclop.model.*;
 import org.cyclop.test.ThreadTestScope;
@@ -49,10 +50,10 @@ public class TestHistoryService extends AbstractTestCase {
         QueryHistory history = historyService.readHistory();
         assertNotNull(history);
         history.clearHistory();
-        history.clearStarred();
+        history.clearFavourite();
 
         assertEquals(0, history.historySize());
-        assertEquals(0, history.starredSize());
+        assertEquals(0, history.favouritesSize());
 
         user = historyService.getUser();
         assertNotNull(user);
@@ -60,12 +61,18 @@ public class TestHistoryService extends AbstractTestCase {
     }
 
     @Test
-    public void testCreateAndRead() {
+    public void testCreateReadAndClear() throws Exception {
         QueryHistory history = historyService.readHistory();
 
         for (int i = 0; i < 20; i++) {
-            history.addToHistory(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id=" + i)));
-            history.addToStarred(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i)));
+            history.addToHistory(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
+                    "select * from HistoryTest where id=" + i)));
+
+            assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
+                    "select * from HistoryStarTest where id=" + i))));
+
+            assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
+                    "select * from HistoryStarTest where id=" + i))));
 
             historyService.store(history);
             QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user);
@@ -74,7 +81,7 @@ public class TestHistoryService extends AbstractTestCase {
             // should be the same instance
             assertSame(history, historyQueue);
         }
-        assertEquals(20, history.starredSize());
+        assertEquals(20, history.favouritesSize());
         assertEquals(20, history.historySize());
 
         assertNull(storage.readHistory(user));
@@ -95,32 +102,26 @@ public class TestHistoryService extends AbstractTestCase {
                     QueryHistoryEntry entry = histIt.next();
                     assertEquals("select * from HistoryTest where id=" + iterCount, entry.query.cql);
                     assertTrue(readHist + " - " + entry, readHist.containsHistory(entry));
-                    assertFalse(readHist + " - " + entry, readHist.containsStarred(entry));
+                    assertFalse(readHist + " - " + entry, readHist.containsFavourite(entry));
                 }
             }
             assertEquals(0, iterCount);
         }
 
         {
-            int iterCount = 20;
-            try (QueryHistory.HistoryIterator histIt = history.starredIterator()) {
-                while (histIt.hasNext()) {
-                    iterCount--;
-                    QueryHistoryEntry entry = histIt.next();
-                    assertEquals("select * from HistoryStarTest where id=" + iterCount, entry.query.cql);
-                    assertTrue(readHist + " - " + entry, readHist.containsStarred(entry));
-                    assertFalse(readHist + " - " + entry, readHist.containsHistory(entry));
-                }
+            for (int i = 0; i < 20; i++) {
+                QueryHistoryEntry entry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
+                        "select * from HistoryStarTest where id=" + i));
+                assertTrue(entry.toString(), history.containsFavourite(entry));
             }
-            assertEquals(0, iterCount);
         }
 
         {
-            history.clearStarred();
-            assertEquals(0, history.starredSize());
+            history.clearFavourite();
+            assertEquals(0, history.favouritesSize());
             historyService.store(history);
             asyncFileStore.flush();
-            assertEquals(0, storage.readHistory(user).starredSize());
+            assertEquals(0, storage.readHistory(user).favouritesSize());
         }
 
         {
@@ -167,9 +168,21 @@ public class TestHistoryService extends AbstractTestCase {
                                 "select * from MyTable2 where id=" + UUID.randomUUID()));
                         history.addToHistory(histEntry);
 
+
                         QueryHistoryEntry starredEntry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
                                 "select * from MyTable2 where id=" + UUID.randomUUID()));
-                        history.addToStarred(starredEntry);
+                        int retry = 0;
+                        while (!history.addToFavouritesWithSizeCheck(starredEntry)) {
+                            retry++;
+                            assertTrue(retry < 100);
+
+                            UnmodifiableIterator<QueryHistoryEntry> iterator = history.copyOfFavourites().iterator();
+                            QueryHistoryEntry oldestToRemove = null;
+                            for (int a = 0; a < 20; a++) {
+                                oldestToRemove = iterator.next();
+                            }
+                            history.removeFavourite(oldestToRemove);
+                        }
 
                         verifyHistEntry(history, histEntry, starredEntry);
 
@@ -190,7 +203,7 @@ public class TestHistoryService extends AbstractTestCase {
                 void verifyHistEntry(QueryHistory history, QueryHistoryEntry histEntry, QueryHistoryEntry starredEntry) {
                     assertNotNull(history);
                     assertTrue("Starred (" + executedCount + "):" + starredEntry + " not found in: " + history,
-                            history.containsStarred(starredEntry));
+                            history.containsFavourite(starredEntry));
 
                     assertTrue("History (" + executedCount + "):" + histEntry + " not found in: " + history,
                             history.containsHistory(histEntry));

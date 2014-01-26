@@ -1,6 +1,9 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import javax.annotation.concurrent.Immutable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,10 +11,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 /**
+ * Unique by query, sorted by date
+ *
  * @author Maciej Miklas
  */
 @Immutable
@@ -26,7 +29,7 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
         this(query, new DateTime().toDateTime(DateTimeZone.UTC));
     }
 
-    private QueryHistoryEntry(CqlQuery query, DateTime executedOnUtc) {
+    public QueryHistoryEntry(CqlQuery query, DateTime executedOnUtc) {
         this.query = query;
         this.executedOnUtc = executedOnUtc;
     }
@@ -41,6 +44,9 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
         return java.util.Objects.hash(query);
     }
 
+    /**
+     * equals and hashCode are only on query to recognize the same queries
+     */
     @Override
     public boolean equals(final Object obj) {
         if (obj == null || getClass() != obj.getClass()) {
@@ -53,7 +59,13 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
 
     @Override
     public int compareTo(QueryHistoryEntry o) {
-        return executedOnUtc.compareTo(o.executedOnUtc);
+        int compRes = o.executedOnUtc.compareTo(executedOnUtc);
+
+        // just make sure that entries with the same date are not removed if query is different
+        if (compRes == 0) {
+            compRes = query.compareTo(o.query);
+        }
+        return compRes;
     }
 
     @XmlRootElement

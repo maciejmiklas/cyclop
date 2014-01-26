@@ -1,6 +1,7 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSortedSet;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.cyclop.common.AppConfig;
 
@@ -12,14 +13,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
+ * Favourites are sorted by change date, favourites are queued.
+ *
  * @author Maciej Miklas
  */
 @ThreadSafe
@@ -28,26 +28,25 @@ public class QueryHistory {
 
     private final CircularFifoQueue<QueryHistoryEntry> history;
 
-    private final CircularFifoQueue<QueryHistoryEntry> starred;
+    private final Set<QueryHistoryEntry> favourites;
 
-    private final Lock historyLock = new ReentrantLock();
+    private final Lock lock = new ReentrantLock();
 
-    private final Lock starredLock = new ReentrantLock();
 
     public QueryHistory() {
         history = new CircularFifoQueue(AppConfig.get().history.historyLimit);
-        starred = new CircularFifoQueue(AppConfig.get().history.starredLimit);
+        favourites = new HashSet<>(AppConfig.get().history.starredLimit);
     }
 
     public void clearHistory() {
-        clear(history, historyLock);
+        clear(history);
     }
 
-    public void clearStarred() {
-        clear(starred, starredLock);
+    public void clearFavourite() {
+        clear(favourites);
     }
 
-    private void clear(CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
+    private void clear(Collection<QueryHistoryEntry> queue) {
         lock.lock();
         try {
             queue.clear();
@@ -60,46 +59,30 @@ public class QueryHistory {
      * CALL CLOSE ON ITERATOR BECAUSE IT HOLDS READ-LOCK
      */
     public HistoryIterator historyIterator() {
-        return new HistoryIterator(historyLock, history);
+        return new HistoryIterator(lock, history);
     }
 
-    /**
-     * CALL CLOSE ON ITERATOR BECAUSE IT HOLDS READ-LOCK
-     */
-    public HistoryIterator starredIterator() {
-        return new HistoryIterator(starredLock, starred);
-    }
-
-    public void moveToStarred(QueryHistoryEntry entry) {
-        move(entry, history, starred);
-    }
-
-    public void moveToHistory(QueryHistoryEntry entry) {
-        move(entry, starred, history);
-    }
-
-    /** Implementation is very slow (2xo(n)) - but it's not being used very often */
-    private void move(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> from, CircularFifoQueue<QueryHistoryEntry> to) {
-        historyLock.lock();
-        starredLock.lock();
+    public ImmutableSortedSet<QueryHistoryEntry> copyOfFavourites() {
+        lock.lock();
         try {
-            to.add(entry);
-            from.remove(entry);
+            ImmutableSortedSet.Builder<QueryHistoryEntry> builder = ImmutableSortedSet.naturalOrder();
+            builder.addAll(favourites);
+            ImmutableSortedSet<QueryHistoryEntry> sortedFav = builder.build();
+            return sortedFav;
         } finally {
-            historyLock.unlock();
-            starredLock.unlock();
+            lock.unlock();
         }
     }
 
     public int historySize() {
-        return size(history, historyLock);
+        return size(history);
     }
 
-    public int starredSize() {
-        return size(starred, starredLock);
+    public int favouritesSize() {
+        return size(favourites);
     }
 
-    private int size(CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
+    private int size(Collection<QueryHistoryEntry> queue) {
         lock.lock();
         try {
             return queue.size();
@@ -109,15 +92,17 @@ public class QueryHistory {
     }
 
     public boolean containsHistory(QueryHistoryEntry entry) {
-        return contains(entry, history, historyLock);
+        return contains(entry, history);
     }
 
-    public boolean containsStarred(QueryHistoryEntry entry) {
-        return contains(entry, starred, starredLock);
+    public boolean containsFavourite(QueryHistoryEntry entry) {
+        return contains(entry, favourites);
     }
 
-    /** Implementation is very slow (o(n)) - but it's not being used very often */
-    private boolean contains(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
+    /**
+     * Implementation is very slow (o(n)) - but it's not being used very often
+     */
+    private boolean contains(QueryHistoryEntry entry, Collection<QueryHistoryEntry> queue) {
         lock.lock();
         try {
             return queue.contains(entry);
@@ -126,18 +111,43 @@ public class QueryHistory {
         }
     }
 
-    public boolean addToHistory(QueryHistoryEntry entry) {
-        return add(entry, history, historyLock);
-    }
-
-    public boolean addToStarred(QueryHistoryEntry entry) {
-        return add(entry, starred, starredLock);
-    }
-
-    private boolean add(QueryHistoryEntry entry, CircularFifoQueue<QueryHistoryEntry> queue, Lock lock) {
+    public void addToHistory(QueryHistoryEntry entry) {
         lock.lock();
         try {
-            return queue.add(entry);
+            history.add(entry);
+            if (favourites.contains(entry)) {
+                favourites.remove(entry);
+                favourites.add(entry);
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public boolean removeFavourite(QueryHistoryEntry entry) {
+        lock.lock();
+        try {
+            return favourites.remove(entry);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * @return true if add was successful, otherwise false - meaning that size limit is reached.
+     *         Already existing elements can be always replaced - update change date
+     */
+    public boolean addToFavouritesWithSizeCheck(QueryHistoryEntry entry) {
+        lock.lock();
+        try {
+            if (favourites.contains(entry)) {
+                favourites.remove(entry);
+                favourites.add(entry);
+            } else if (favourites.size() >= AppConfig.get().history.starredLimit) {
+                return false;
+            }
+            favourites.add(entry);
+            return true;
         } finally {
             lock.unlock();
         }
@@ -154,19 +164,17 @@ public class QueryHistory {
 
         @Override
         public String toString() {
-            return Objects.toStringHelper(this).add("history", history).add("starred", starred).toString();
+            return Objects.toStringHelper(this).add("history", history).add("favourites", starred).toString();
         }
     }
 
     @Override
     public String toString() {
-        historyLock.lock();
-        starredLock.lock();
+        lock.lock();
         try {
-            return Objects.toStringHelper(this).add("history", history).add("starred", starred).toString();
+            return Objects.toStringHelper(this).add("history", history).add("favourites", favourites).toString();
         } finally {
-            historyLock.unlock();
-            starredLock.unlock();
+            lock.unlock();
         }
     }
 
@@ -186,7 +194,7 @@ public class QueryHistory {
             }
 
             if (jaxb.starred != null) {
-                history.starred.addAll(jaxb.starred);
+                history.favourites.addAll(jaxb.starred);
             }
             return history;
         }
@@ -198,22 +206,16 @@ public class QueryHistory {
             }
             QueryHistoryJaxb jaxb = new QueryHistoryJaxb();
 
-            histObj.historyLock.lock();
+            histObj.lock.lock();
             try {
                 List<QueryHistoryEntry> historyList = new ArrayList<>(histObj.history.size());
                 historyList.addAll(histObj.history);
                 jaxb.history = historyList;
-            } finally {
-                histObj.historyLock.unlock();
-            }
-
-            histObj.starredLock.lock();
-            try {
-                List<QueryHistoryEntry> starredList = new ArrayList<>(histObj.starred.size());
-                starredList.addAll(histObj.starred);
+                List<QueryHistoryEntry> starredList = new ArrayList<>(histObj.favourites.size());
+                starredList.addAll(histObj.favourites);
                 jaxb.starred = starredList;
             } finally {
-                histObj.starredLock.unlock();
+                histObj.lock.unlock();
             }
             return jaxb;
         }
@@ -221,7 +223,7 @@ public class QueryHistory {
 
     /**
      * CALL CLOSE ON ITERATOR BECAUSE IT HOLDS READ-LOCK <br>
-     * Iterates over history entries from newest to oldest entry (reversed fifo queue)
+     * Iterates over history entries from newest to oldest entry (reversed fifo col)
      */
     @XmlTransient
     @ThreadSafe
