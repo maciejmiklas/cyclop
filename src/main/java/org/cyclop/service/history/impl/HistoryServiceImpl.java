@@ -3,7 +3,7 @@ package org.cyclop.service.history.impl;
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.service.history.HistoryService;
-import org.cyclop.service.um.UserManagementService;
+import org.cyclop.service.um.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,7 +25,7 @@ class HistoryServiceImpl implements HistoryService {
     private final static Logger LOG = LoggerFactory.getLogger(HistoryServiceImpl.class);
 
     @Inject
-    private UserManagementService um;
+    private UserManager um;
 
     @Inject
     private FileStorage storage;

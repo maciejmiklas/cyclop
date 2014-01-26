@@ -6,7 +6,7 @@ import org.cyclop.model.UserPreferences;
 /**
  * @author Maciej Miklas
  */
-public interface UserManagementService {
+public interface UserManager {
 
     void storeIdentifier(UserIdentifier id);
 

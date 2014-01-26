@@ -5,7 +5,7 @@ import javax.inject.Named;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.cookie.CookieStorage;
-import org.cyclop.service.um.UserManagementService;
+import org.cyclop.service.um.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
  * @author Maciej Miklas
  */
 @Named
-public class UserManagementServiceImpl implements UserManagementService {
+public class UserManagerImpl implements UserManager {
 
-    private final static Logger LOG = LoggerFactory.getLogger(UserManagementServiceImpl.class);
+    private final static Logger LOG = LoggerFactory.getLogger(UserManagerImpl.class);
 
     @Inject
     private CookieStorage cookieStorage;

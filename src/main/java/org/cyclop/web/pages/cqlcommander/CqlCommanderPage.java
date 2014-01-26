@@ -13,7 +13,7 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.converter.CsvQueryResultExporter;
-import org.cyclop.service.um.UserManagementService;
+import org.cyclop.service.um.UserManager;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonListener;
 import org.cyclop.web.pages.cqlcommander.buttons.ButtonsPanel;
 import org.cyclop.web.pages.cqlcommander.completionhint.CompletionHintPanel;
@@ -50,7 +50,7 @@ public class CqlCommanderPage extends ParentPage {
     private CsvQueryResultExporter exporter;
 
     @Inject
-    private UserManagementService userManagementService;
+    private UserManager userManager;
 
     public CqlCommanderPage(PageParameters params) {
         cqlHelpPanel = new CqlHelpPanel("cqlHelp");
@@ -62,7 +62,7 @@ public class CqlCommanderPage extends ParentPage {
         QueryResultVerticalPanel queryResultVerticalPanel = initQueryResultPanel();
         QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
-        UserPreferences preferences = userManagementService.readPreferences();
+        UserPreferences preferences = userManager.readPreferences();
         boolean completionEnabled = preferences.getShowCqlCompletionHint();
         cqlCompletionHintPanel.setVisible(completionEnabled);
         initButtons(queryEditorPanel, queryResultVerticalPanel, completionEnabled);
@@ -132,9 +132,9 @@ public class CqlCommanderPage extends ParentPage {
                 cqlCompletionHintPanel.setVisible(pressed);
                 target.add(cqlCompletionHintPanel);
 
-                UserPreferences preferences = userManagementService.readPreferences();
+                UserPreferences preferences = userManager.readPreferences();
                 preferences.setShowCqlCompletionHint(pressed);
-                userManagementService.storePreferences(preferences);
+                userManager.storePreferences(preferences);
             }
 
             @Override
