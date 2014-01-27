@@ -1,6 +1,6 @@
 package org.cyclop.model.exception;
 
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 
 /**
  * @author Maciej Miklas

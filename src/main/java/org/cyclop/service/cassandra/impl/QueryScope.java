@@ -1,6 +1,6 @@
 package org.cyclop.service.cassandra.impl;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import net.jcip.annotations.NotThreadSafe;
 import javax.inject.Named;
 import org.cyclop.model.CqlKeySpace;
 import org.springframework.context.annotation.Scope;

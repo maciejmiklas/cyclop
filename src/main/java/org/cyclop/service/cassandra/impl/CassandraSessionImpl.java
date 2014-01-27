@@ -3,7 +3,7 @@ package org.cyclop.service.cassandra.impl;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
-import javax.annotation.concurrent.NotThreadSafe;
+import net.jcip.annotations.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.cyclop.common.AppConfig;

@@ -3,7 +3,7 @@ package org.cyclop.model;
 import java.util.UUID;
 
 import com.google.common.base.Objects;
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;

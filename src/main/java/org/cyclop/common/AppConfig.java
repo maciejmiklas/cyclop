@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.ConstraintViolation;
@@ -22,7 +22,6 @@ import java.util.Set;
  * @author Maciej Miklas
  */
 @Named
-@Immutable
 public class AppConfig {
 
     @NotNull

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 
 /**
  * @author Maciej Miklas

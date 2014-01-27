@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.impl.parser.insert;
 
 import com.google.common.base.Objects;
-import javax.annotation.concurrent.ThreadSafe;
+import net.jcip.annotations.ThreadSafe;
 import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;

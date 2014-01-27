@@ -1,6 +1,6 @@
 package org.cyclop.model;
 
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 
 import com.datastax.driver.core.Row;
 import com.google.common.base.Objects;

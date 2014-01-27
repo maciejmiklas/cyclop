@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableSortedSet;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.cyclop.common.AppConfig;
 
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.annotation.concurrent.ThreadSafe;
+import net.jcip.annotations.NotThreadSafe;
+import net.jcip.annotations.ThreadSafe;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;

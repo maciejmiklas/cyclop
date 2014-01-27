@@ -3,7 +3,7 @@ package org.cyclop.model;
 import com.datastax.driver.core.DataType;
 
 import java.util.Objects;
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 
 /**
  * @author Maciej Miklas

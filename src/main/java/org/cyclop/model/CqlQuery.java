@@ -2,7 +2,7 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;

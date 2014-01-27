@@ -1,6 +1,6 @@
 package org.cyclop.service.completion.impl;
 
-import javax.annotation.concurrent.ThreadSafe;
+import net.jcip.annotations.ThreadSafe;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlQuery;

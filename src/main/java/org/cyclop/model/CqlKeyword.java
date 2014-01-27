@@ -1,6 +1,6 @@
 package org.cyclop.model;
 
-import javax.annotation.concurrent.Immutable;
+import net.jcip.annotations.Immutable;
 
 /**
  * cql keywords are: create keyspace, use, alter keyspace, drop keyspace, create table, alter table, drop table,

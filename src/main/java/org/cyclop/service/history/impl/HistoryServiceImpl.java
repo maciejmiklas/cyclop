@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
-import javax.annotation.concurrent.NotThreadSafe;
+import net.jcip.annotations.NotThreadSafe;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.concurrent.atomic.AtomicReference;

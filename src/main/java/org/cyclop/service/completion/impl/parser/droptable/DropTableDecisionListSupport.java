@@ -1,6 +1,6 @@
 package org.cyclop.service.completion.impl.parser.droptable;
 
-import javax.annotation.concurrent.ThreadSafe;
+import net.jcip.annotations.ThreadSafe;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
