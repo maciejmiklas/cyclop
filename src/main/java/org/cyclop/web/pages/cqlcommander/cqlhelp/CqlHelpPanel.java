@@ -32,7 +32,7 @@ public class CqlHelpPanel extends Panel {
         this.currentCompletion = currentCompletion;
     }
 
-    private class CqlHelpContentModel implements IModel<String>, Serializable {
+    private class CqlHelpContentModel implements IModel<String> {
 
         @Override
         public String getObject() {

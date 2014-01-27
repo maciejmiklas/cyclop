@@ -46,7 +46,7 @@ public class CompletionHintPanel extends Panel {
         lastCssSwitch = !lastCssSwitch;
     }
 
-    private class CqlInfoHintCssModel implements IModel<String>, Serializable {
+    private class CqlInfoHintCssModel implements IModel<String> {
 
         @Override
         public String getObject() {
@@ -65,7 +65,7 @@ public class CompletionHintPanel extends Panel {
         }
     }
 
-    private class CqlInfoHintModel implements IModel<String>, Serializable {
+    private class CqlInfoHintModel implements IModel<String> {
 
         @Override
         public String getObject() {

@@ -54,7 +54,7 @@ public class InfoDialog extends Panel {
         target.appendJavaScript(jsContent);
     }
 
-    private final class StringModel implements IModel<String> {
+    private final static class StringModel implements IModel<String> {
 
         private String value = "";
 

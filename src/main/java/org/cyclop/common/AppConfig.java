@@ -23,7 +23,6 @@ import java.util.Set;
  */
 @Named
 @Immutable
-@SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 public class AppConfig {
 
     @NotNull
@@ -64,8 +63,8 @@ public class AppConfig {
         return instance;
     }
 
-
     @PostConstruct
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
     void init() {
         instance = this;
         Set<ConstraintViolation<AppConfig>> validateRes = validator.validate(instance);

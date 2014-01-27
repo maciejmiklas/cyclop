@@ -32,6 +32,7 @@ public class CqlPart implements Comparable<CqlPart> {
         this.partLc = part.trim().toLowerCase();
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
     @Override
     public boolean equals(Object obj) {
         return partLc.equals(obj);

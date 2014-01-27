@@ -58,7 +58,9 @@ public class DataConverter {
     }
 
     public String convert(Object val) {
-
+        if(val == null){
+            return null;
+        }
         String converted = null;
         if (val instanceof String) {
             converted = val.toString();
