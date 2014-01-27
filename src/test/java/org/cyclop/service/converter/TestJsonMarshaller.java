@@ -1,7 +1,7 @@
 package org.cyclop.service.converter;
 
 import javax.inject.Inject;
-import org.cyclop.AbstractTestCase;
+import org.cyclop.test.AbstractTestCase;
 import org.cyclop.model.UserPreferences;
 import org.junit.Test;
 

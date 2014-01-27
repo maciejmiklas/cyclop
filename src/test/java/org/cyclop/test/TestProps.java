@@ -1,4 +1,4 @@
-package org.cyclop;
+package org.cyclop.test;
 
 public abstract class TestProps {
 

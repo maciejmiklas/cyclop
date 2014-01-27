@@ -1,17 +1,23 @@
 package org.cyclop.service.converter;
 
-import com.datastax.driver.core.DataType;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import org.cyclop.common.AppConfig;
-import org.cyclop.model.*;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.cyclop.common.AppConfig;
+import org.cyclop.model.CqlColumnValue;
+import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlSelectResult;
+
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * @author Maciej Miklas
@@ -43,14 +49,14 @@ public class CsvQueryResultExporter {
         buf.append(conf.rowSeparator);
 
         // content
-        for (CqlRow row : result.rows) {
+        for (Row row : result.rows) {
             appendRow(buf, row, cols);
             buf.append(conf.rowSeparator);
         }
         return buf.toString();
     }
 
-    private void appendRow(StringBuilder buf, CqlRow row, List<CqlExtendedColumnName> cols) {
+    private void appendRow(StringBuilder buf, Row row, List<CqlExtendedColumnName> cols) {
         Iterator<CqlExtendedColumnName> it = cols.iterator();
         while (it.hasNext()) {
             CqlExtendedColumnName column = it.next();
@@ -71,8 +77,8 @@ public class CsvQueryResultExporter {
         }
     }
 
-    private void appendMap(StringBuilder buf, CqlRow row, CqlExtendedColumnName column) {
-        ImmutableSet<Map.Entry<CqlColumnValue, CqlColumnValue>> displayMap = extractor.extractMap(row.original,
+    private void appendMap(StringBuilder buf, Row row, CqlExtendedColumnName column) {
+        ImmutableSet<Map.Entry<CqlColumnValue, CqlColumnValue>> displayMap = extractor.extractMap(row,
                 column).entrySet();
         Iterator<Map.Entry<CqlColumnValue, CqlColumnValue>> it = displayMap.iterator();
 
@@ -98,8 +104,8 @@ public class CsvQueryResultExporter {
         buf.append(esc(mapBuf.toString()));
     }
 
-    private void appendCollection(StringBuilder buf, CqlRow row, CqlExtendedColumnName column) {
-        ImmutableList<CqlColumnValue> content = extractor.extractCollection(row.original, column);
+    private void appendCollection(StringBuilder buf, Row row, CqlExtendedColumnName column) {
+        ImmutableList<CqlColumnValue> content = extractor.extractCollection(row, column);
         Iterator<CqlColumnValue> contentIt = content.iterator();
         StringBuilder listBuild = new StringBuilder();
         while (contentIt.hasNext()) {
@@ -113,8 +119,8 @@ public class CsvQueryResultExporter {
         buf.append(esc(listBuild.toString()));
     }
 
-    private void appendSingleValue(StringBuilder buf, CqlRow row, CqlExtendedColumnName column) {
-        CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row.original, column);
+    private void appendSingleValue(StringBuilder buf, Row row, CqlExtendedColumnName column) {
+        CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row, column);
         String valText = esc(converter.convert(cqlColumnValue.value));
         buf.append(valText);
     }

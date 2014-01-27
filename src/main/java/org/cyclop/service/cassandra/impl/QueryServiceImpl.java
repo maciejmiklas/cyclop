@@ -23,7 +23,6 @@ import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
-import org.cyclop.model.CqlRow;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.exception.QueryException;
@@ -154,7 +153,7 @@ class QueryServiceImpl implements QueryService {
         // - count columns to find those that are the same over many rows
         // - collect rows, since we cannot iterate over results again
         Map<CqlExtendedColumnName, MutableInt> columnsCount = new LinkedHashMap<>();
-        ImmutableList.Builder<CqlRow> rowsBuild = ImmutableList.builder();
+        ImmutableList.Builder<Row> rowsBuild = ImmutableList.builder();
         CqlPartitionKey partitionKey = null;
         int rowNr = 0;
         for (Row row : cqlResult) {
@@ -163,19 +162,15 @@ class QueryServiceImpl implements QueryService {
                 break;
             }
 
-            ImmutableList.Builder<CqlExtendedColumnName> colsBuild = ImmutableList.builder();
-
-            CqlPartitionKey partitionKeyTmp = collectAndCountColumns(row, columnsCount, colsBuild, typeMap);
+            CqlPartitionKey partitionKeyTmp = collectAndCountColumns(row, columnsCount, typeMap);
             if (partitionKeyTmp != null) {
                 partitionKey = partitionKeyTmp;
             }
-            ImmutableList<CqlExtendedColumnName> cols = colsBuild.build();
-            CqlRow cqlRow = new CqlRow(row, cols);
-            rowsBuild.add(cqlRow);
+            rowsBuild.add(row);
         }
 
         // create query result
-        ImmutableList<CqlRow> rows = rowsBuild.build();
+        ImmutableList<Row> rows = rowsBuild.build();
         if (rows.isEmpty()) {
             return new CqlSelectResult();
         }
@@ -197,8 +192,7 @@ class QueryServiceImpl implements QueryService {
     }
 
     private CqlPartitionKey collectAndCountColumns(Row row, Map<CqlExtendedColumnName, MutableInt> columnsCount,
-                                                   ImmutableList.Builder<CqlExtendedColumnName> cols, Map<String,
-            CqlColumnType> typeMap) {
+            Map<String, CqlColumnType> typeMap) {
 
         // collect and count all columns
         ColumnDefinitions definitions = row.getColumnDefinitions();
@@ -222,7 +216,6 @@ class QueryServiceImpl implements QueryService {
             if (columnType == CqlColumnType.PARTITION_KEY) {
                 partitionKey = CqlPartitionKey.fromColumn(columnName);
             }
-            cols.add(columnName);
             MutableInt colCount = columnsCount.get(columnName);
             if (colCount == null) {
                 columnsCount.put(columnName, new MutableInt());
@@ -242,8 +235,8 @@ class QueryServiceImpl implements QueryService {
             return ImmutableMap.of();
         }
 
-        ResultSet result = executeSilent("select column_name, type from system.schema_columns where " +
-                "columnfamily_name='" + table.part + "' allow filtering");
+        ResultSet result = executeSilent("select column_name, type from system.schema_columns where " + "columnfamily_name='"
+                + table.part + "' allow filtering");
         if (result == null) {
             LOG.warn("Could not readIdentifier types for columns of table: " + table);
             return ImmutableMap.of();
@@ -259,7 +252,8 @@ class QueryServiceImpl implements QueryService {
             CqlColumnType type = extractType(typeText);
             typesBuild.put(name.toLowerCase(), type);
         }
-        return typesBuild.build();
+        ImmutableMap<String, CqlColumnType> typesMap = typesBuild.build();
+        return typesMap;
     }
 
     @Override
@@ -286,6 +280,7 @@ class QueryServiceImpl implements QueryService {
             if (name == null) {
                 continue;
             }
+            // TODO DataType is hardcoded to text
             cqlColumnNames.add(new CqlColumnName(DataType.text(), name));
         }
 

@@ -55,7 +55,7 @@ User name and password are used to create Cassandra session,  which is bind to a
 * cassandra-driver-core - v1.x
 * slf4j/logback - v1.7.x
 * hibernate validator - v4.x
-* guava - v16.x
+* guava - v15.x (Cassandra 2.0 does not work with 16)
 
 
 # Installation

@@ -71,8 +71,8 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
     @XmlRootElement
     @XmlAccessorType(XmlAccessType.FIELD)
     public final static class QueryHistoryEntryJaxb {
-        public CqlQuery query;
-        public DateTime executedOn;
+        private CqlQuery query;
+        private DateTime executedOn;
 
         @Override
         public String toString() {

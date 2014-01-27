@@ -1,10 +1,9 @@
 package org.cyclop.service.common;
 
 import com.google.common.collect.ImmutableSortedSet;
-import org.cyclop.AbstractTestCase;
+import org.cyclop.test.AbstractTestCase;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.*;
-import org.cyclop.service.common.FileStorage;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;

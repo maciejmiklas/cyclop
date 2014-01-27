@@ -1,7 +1,10 @@
 package org.cyclop.web.pages.cqlcommander.verticalresult;
 
-import com.datastax.driver.core.DataType;
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,14 +17,18 @@ import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.cyclop.common.AppConfig;
-import org.cyclop.model.*;
+import org.cyclop.model.CqlColumnType;
+import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlPartitionKey;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlSelectResult;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.pages.cqlcommander.column.WidgetFactory;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableList;
 
 /**
  * @author Maciej Miklas
@@ -36,7 +43,7 @@ public class QueryResultVerticalPanel extends Panel {
     private final ColumnsModel columnsModel;
 
     @Inject
-    private  WidgetFactory widgetFactory;
+    private WidgetFactory widgetFactory;
 
     private WebMarkupContainer resultTable;
 
@@ -69,12 +76,11 @@ public class QueryResultVerticalPanel extends Panel {
         rowsModel = new RowsModel();
         columnsModel = new ColumnsModel();
 
-        List<CqlRow> displayedRows = initRowNamesList(resultTable, rowsModel, appConfig.cqlEditor.rowsPerPage);
+        List<Row> displayedRows = initRowNamesList(resultTable, rowsModel, appConfig.cqlEditor.rowsPerPage);
         initColumnList(resultTable, columnsModel, displayedRows);
     }
 
-    private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel,
-                                final List<CqlRow> displayedRows) {
+    private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel, final List<Row> displayedRows) {
         ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>("columnList", columnsModel) {
             @Override
             protected void populateItem(ListItem<CqlExtendedColumnName> item) {
@@ -110,15 +116,13 @@ public class QueryResultVerticalPanel extends Panel {
                 CqlSelectResult result = model.getResult();
                 final CqlPartitionKey partitionKey = result == null ? null : result.partitionKey;
 
-                ListView<CqlRow> columnValueList = new ListView<CqlRow>("columnValueList",
-                        new RowsModel(displayedRows)) {
+                ListView<Row> columnValueList = new ListView<Row>("columnValueList", new RowsModel(displayedRows)) {
 
                     @Override
-                    protected void populateItem(ListItem<CqlRow> item) {
-                        CqlRow row = item.getModelObject();
+                    protected void populateItem(ListItem<Row> item) {
+                        Row row = item.getModelObject();
 
-                        Component component = widgetFactory.createForColumn(row.original, partitionKey, columnName,
-                                "columnValue");
+                        Component component = widgetFactory.createForColumn(row, partitionKey, columnName, "columnValue");
                         item.add(component);
                         component.setRenderBodyOnly(true);
                     }
@@ -130,10 +134,10 @@ public class QueryResultVerticalPanel extends Panel {
         resultTable.add(columnList);
     }
 
-    private List<CqlRow> initRowNamesList(WebMarkupContainer resultTable, RowsModel rowsModel, int perPage) {
+    private List<Row> initRowNamesList(WebMarkupContainer resultTable, RowsModel rowsModel, int perPage) {
 
-        final List<CqlRow> displayedRows = new ArrayList<>();
-        PageableListView<CqlRow> rowNamesList = new PageableListView<CqlRow>("rowNamesList", rowsModel, perPage) {
+        final List<Row> displayedRows = new ArrayList<>();
+        PageableListView<Row> rowNamesList = new PageableListView<Row>("rowNamesList", rowsModel, perPage) {
 
             @Override
             protected void onBeforeRender() {
@@ -142,8 +146,8 @@ public class QueryResultVerticalPanel extends Panel {
             }
 
             @Override
-            protected void populateItem(ListItem<CqlRow> item) {
-                CqlRow row = item.getModel().getObject();
+            protected void populateItem(ListItem<Row> item) {
+                Row row = item.getModel().getObject();
                 displayedRows.add(row);
 
                 RowsModel model = (RowsModel) getModel();
@@ -152,7 +156,7 @@ public class QueryResultVerticalPanel extends Panel {
 
                 Component component;
                 if (partitionKey != null) {
-                    component = widgetFactory.createForColumn(row.original, partitionKey, partitionKey, "rowName");
+                    component = widgetFactory.createForColumn(row, partitionKey, partitionKey, "rowName");
                 } else {
                     component = new Label("rowName", displayedRows.size());
                 }
@@ -212,9 +216,9 @@ public class QueryResultVerticalPanel extends Panel {
         columnsModel.updateResult(result);
     }
 
-    private final static class RowsModel implements IModel<List<CqlRow>> {
+    private final static class RowsModel implements IModel<List<Row>> {
 
-        private List<CqlRow> content;
+        private List<Row> content;
 
         private CqlSelectResult result;
 
@@ -224,11 +228,11 @@ public class QueryResultVerticalPanel extends Panel {
         }
 
         @Override
-        public List<CqlRow> getObject() {
+        public List<Row> getObject() {
             return content;
         }
 
-        public RowsModel(List<CqlRow> content) {
+        public RowsModel(List<Row> content) {
             this.content = content;
         }
 
@@ -237,7 +241,7 @@ public class QueryResultVerticalPanel extends Panel {
         }
 
         @Override
-        public void setObject(List<CqlRow> object) {
+        public void setObject(List<Row> object) {
             content = object;
         }
 
@@ -282,9 +286,9 @@ public class QueryResultVerticalPanel extends Panel {
         public void updateResult(CqlSelectResult result) {
             this.result = result;
             ImmutableList.Builder<CqlExtendedColumnName> allColumnsBuild = ImmutableList.builder();
-            List<CqlExtendedColumnName> allColumns = allColumnsBuild.addAll(result.commonColumns).add(new
-                    CqlExtendedColumnName(CqlColumnType.SEPARATOR, DataType.text(),
-                    "-")).addAll(result.dynamicColumns).build();
+            List<CqlExtendedColumnName> allColumns = allColumnsBuild.addAll(result.commonColumns)
+                    .add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, DataType.text(), "-")).addAll(result.dynamicColumns)
+                    .build();
             setObject(allColumns);
         }
 

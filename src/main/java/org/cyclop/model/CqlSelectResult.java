@@ -1,10 +1,10 @@
 package org.cyclop.model;
 
+import javax.annotation.concurrent.Immutable;
+
+import com.datastax.driver.core.Row;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
-
-import java.io.Serializable;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * @author Maciej Miklas
@@ -22,7 +22,7 @@ public final class CqlSelectResult {
      */
     public final ImmutableList<CqlExtendedColumnName> dynamicColumns;
 
-    public final ImmutableList<CqlRow> rows;
+    public final ImmutableList<Row> rows;
 
     /**
      * could be null, it not found in result, or in case of error while reading meta data info
@@ -37,7 +37,7 @@ public final class CqlSelectResult {
     }
 
     public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns, ImmutableList<CqlExtendedColumnName>
-            dynamicColumns, ImmutableList<CqlRow> rows, CqlPartitionKey partitionKey) {
+            dynamicColumns, ImmutableList<Row> rows, CqlPartitionKey partitionKey) {
         this.commonColumns = commonColumns;
         this.dynamicColumns = dynamicColumns;
         this.rows = rows;

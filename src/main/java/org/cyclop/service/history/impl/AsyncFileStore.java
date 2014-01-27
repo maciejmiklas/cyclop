@@ -1,21 +1,26 @@
 package org.cyclop.service.history.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.service.common.FileStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * @author Maciej Miklas
  */
 @Named
 class AsyncFileStore {
+
+    private final static int FLUSH_MILIS = 300000;
 
     @Inject
     private FileStorage fileStorage;
@@ -37,10 +42,12 @@ class AsyncFileStore {
     }
 
     /**
-     * method must be synchronized to avoid parallel write access on files for single user-id.
-     * Second synchronization block on map ensures short lock time on map, so that
-     * {@link #store(UserIdentifier, QueryHistory)} method block time is reduced
+     * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization
+     * block on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block
+     * time is reduced
      */
+    @Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
+    @PreDestroy
     public synchronized void flush() {
         while (true) {
             UserIdentifier identifier;
@@ -58,6 +65,5 @@ class AsyncFileStore {
             fileStorage.storeHistory(identifier, history);
         }
     }
-
 
 }

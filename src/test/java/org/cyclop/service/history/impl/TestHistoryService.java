@@ -1,7 +1,7 @@
 package org.cyclop.service.history.impl;
 
 import com.google.common.collect.UnmodifiableIterator;
-import org.cyclop.AbstractTestCase;
+import org.cyclop.test.AbstractTestCase;
 import org.cyclop.model.*;
 import org.cyclop.service.common.FileStorage;
 import org.cyclop.test.ThreadTestScope;
@@ -66,8 +66,8 @@ public class TestHistoryService extends AbstractTestCase {
         QueryHistory history = historyService.readHistory();
 
         for (int i = 0; i < 20; i++) {
-            history.addToHistory(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
-                    "select * from HistoryTest where id=" + i)));
+            history.addToHistory(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id="
+                    + i)));
 
             assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
                     "select * from HistoryStarTest where id=" + i))));
@@ -138,7 +138,7 @@ public class TestHistoryService extends AbstractTestCase {
     public void testMultiThreadForMultipleUsers() throws Exception {
         threadTestScope.setSingleThread(false);
 
-        Set<QueryHistory> histories = executeMultiThreadTest();
+        Set<QueryHistory> histories = executeMultiThreadTest(300);
         assertEquals(3, histories.size());
     }
 
@@ -146,11 +146,11 @@ public class TestHistoryService extends AbstractTestCase {
     public void testMultiThreadForSingleUsers() throws Exception {
         threadTestScope.setSingleThread(true);
 
-        Set<QueryHistory> histories = executeMultiThreadTest();
+        Set<QueryHistory> histories = executeMultiThreadTest(100);
         assertEquals(1, histories.size());
     }
 
-    public Set<QueryHistory> executeMultiThreadTest() throws Exception {
+    public Set<QueryHistory> executeMultiThreadTest(final int repeatInTest) throws Exception {
         ExecutorService executor = Executors.newFixedThreadPool(3);
         final Set<QueryHistory> histories = Collections.synchronizedSet(new HashSet<QueryHistory>());
 
@@ -161,14 +161,13 @@ public class TestHistoryService extends AbstractTestCase {
 
                 @Override
                 public Void call() throws Exception {
-                    for (int i = 0; i < 300; i++) {
+                    for (int i = 0; i < repeatInTest; i++) {
                         QueryHistory history = historyService.readHistory();
                         histories.add(history);
 
                         QueryHistoryEntry histEntry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
                                 "select * from MyTable2 where id=" + UUID.randomUUID()));
                         history.addToHistory(histEntry);
-
 
                         QueryHistoryEntry starredEntry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
                                 "select * from MyTable2 where id=" + UUID.randomUUID()));
@@ -219,7 +218,7 @@ public class TestHistoryService extends AbstractTestCase {
         for (Future<Void> result : results) {
             result.get();
         }
-        assertEquals(900, executedCount.get());
+        assertEquals(3 * repeatInTest, executedCount.get());
         return histories;
     }
 

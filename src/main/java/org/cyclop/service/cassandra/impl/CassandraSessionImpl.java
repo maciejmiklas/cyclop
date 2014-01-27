@@ -45,8 +45,10 @@ class CassandraSessionImpl implements CassandraSession {
             builder.withSSL();
         }
         builder.withPort(appConfig.cassandra.port);
-        builder.socketOptions().setConnectTimeoutMillis(appConfig.cassandra.timeoutMilis);
-        builder.socketOptions().setReadTimeoutMillis(appConfig.cassandra.timeoutMilis);
+
+        // FIXME timeouts
+       // builder.socketOptions().setConnectTimeoutMillis(appConfig.cassandra.timeoutMilis);
+       // builder.socketOptions().setReadTimeoutMillis(appConfig.cassandra.timeoutMilis);
         Cluster cluster = builder.build();
         session = cluster.connect();
 
