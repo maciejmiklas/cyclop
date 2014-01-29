@@ -1,9 +1,9 @@
 package org.cyclop.model;
 
 import com.datastax.driver.core.DataType;
+import net.jcip.annotations.Immutable;
 
 import java.util.Objects;
-import net.jcip.annotations.Immutable;
 
 /**
  * @author Maciej Miklas
@@ -12,6 +12,10 @@ import net.jcip.annotations.Immutable;
 public class CqlColumnName extends CqlPart {
 
     public final DataType dataType;
+
+    public CqlColumnName(String columnName) {
+        this(DataType.text(), columnName);
+    }
 
     public CqlColumnName(DataType dataType, String columnName) {
         super(columnName);

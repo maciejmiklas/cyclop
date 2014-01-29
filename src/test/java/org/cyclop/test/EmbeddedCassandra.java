@@ -47,7 +47,7 @@ public class EmbeddedCassandra {
         session.execute("CREATE INDEX ON MyBooks(genre)");
         session.execute("CREATE INDEX ON MyBooks(pages)");
 
-        session.execute("create table CompoundTest (id uuid, id2 int, id3 text, description text, primary key(id, id2, id3))");
+        session.execute("create table CompoundTest (id uuid, id2 int, id3 text, deesc text, primary key(id, id2, id3))");
     }
 
     public Cluster getCluster() {

@@ -3,18 +3,13 @@ package org.cyclop.service.cassandra;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableSortedSet;
-import java.util.UUID;
-import javax.inject.Inject;
-import org.cyclop.model.CqlColumnName;
-import org.cyclop.model.CqlColumnType;
-import org.cyclop.model.CqlExtendedColumnName;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
-import org.cyclop.model.CqlSelectResult;
-import org.cyclop.model.CqlTable;
+import org.cyclop.model.*;
 import org.cyclop.test.AbstractTestCase;
-import org.junit.Before;
+import org.cyclop.test.ValidationHelper;
 import org.junit.Test;
+
+import javax.inject.Inject;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -27,51 +22,100 @@ import static org.junit.Assert.assertFalse;
 public class TestCassandraServiceImpl extends AbstractTestCase {
 
     @Inject
-    private QueryService cs;
+    private QueryService qs;
 
     @Inject
-    private CassandraSession cassandraSession;
+    private ValidationHelper vh;
 
-    @Before
-    public void setup() {
-        cassandraSession.authenticate("test", "test1234");
+    @Test
+    public void testFindColumnNames_TableDoesNotExist() {
+        ImmutableSortedSet<CqlColumnName> col = qs.findColumnNames(new CqlTable("not-existing"));
+        vh.verifyEmpty(col);
     }
 
     @Test
-    public void testFindColumnNames_TableDoesNotExists() {
-        ImmutableSortedSet<CqlColumnName> resp = cs.findColumnNames(new CqlTable("not-existing"));
+    public void testFindColumnNames_KeyspaceWithTable() {
+        ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("MyBooks", "cqldemo"));
         assertNotNull(resp);
-        assertEquals(0, resp.size());
+        assertTrue("size: " + resp.size(), resp.size() > 5);
+        vh.verifyMybooksColumns(resp, true);
+        vh.verifySystemColumns(resp, false);
+        vh.verifyCompoundTestColumns(resp, false);
+    }
+
+    @Test
+    public void testFindTableNames_SpaceCqlDemo() {
+        ImmutableSortedSet<CqlTable> col = qs.findTableNames(new CqlKeySpace("cqldemo"));
+        vh.verifyTableNamesCqlDemo(col, true);
+    }
+
+    @Test
+    public void testFindTableNames_SpaceSystem() {
+        ImmutableSortedSet<CqlTable> col = qs.findTableNames(new CqlKeySpace("system"));
+        vh.verifyTableNamesSystem(col, true);
+    }
+
+    @Test
+    public void testFindTableNames_SpaceDoesNotExist() {
+        ImmutableSortedSet<CqlTable> col = qs.findTableNames(new CqlKeySpace("abcx"));
+        vh.verifyEmpty(col);
+    }
+
+    @Test
+    public void testFindAllIndexes_CqlDemo() {
+        ImmutableSortedSet<CqlIndex> index = qs.findAllIndexes(new CqlKeySpace("cqldemo"));
+        vh.verifyIndexFromCqlDemo(index, true);
+    }
+
+    @Test
+    public void testFindAllKeySpaces() {
+        ImmutableSortedSet<CqlKeySpace> kss = qs.findAllKeySpaces();
+        vh.verifyKeyspaces(kss, true);
+    }
+
+    @Test
+    public void testFindAllIndexes_KeyspaceDoesNotExist() {
+        ImmutableSortedSet<CqlIndex> index = qs.findAllIndexes(new CqlKeySpace("space..."));
+        vh.verifyEmpty(index);
+    }
+
+    @Test
+    public void testFindColumnNames_KeyspaceInSession() {
+        qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+        ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("MyBooks"));
+        assertNotNull(resp);
+        assertTrue("size: " + resp.size(), resp.size() > 5);
+        vh.verifyMybooksColumns(resp, true);
+        vh.verifySystemColumns(resp, false);
+        vh.verifyCompoundTestColumns(resp, false);
     }
 
     @Test
     public void testFindAllColumnNames() {
-        ImmutableSortedSet<CqlColumnName> allColumnNames = cs.findAllColumnNames();
+        ImmutableSortedSet<CqlColumnName> allColumnNames = qs.findAllColumnNames();
         assertNotNull(allColumnNames);
         assertFalse(allColumnNames.isEmpty());
 
-        assertTrue(allColumnNames.contains(new CqlColumnName(DataType.text(), "title")));
-        assertTrue(allColumnNames.contains(new CqlColumnName(DataType.text(), "dynamicColumn1")));
-        assertTrue(allColumnNames.contains(new CqlColumnName(DataType.text(), "dynamicColumn3")));
-        assertTrue(allColumnNames.contains(new CqlColumnName(DataType.text(), "rpc_address")));
-        assertTrue(allColumnNames.contains(new CqlColumnName(DataType.text(), "publishDate")));
+        vh.verifyMybooksColumns(allColumnNames, true);
+        vh.verifySystemColumns(allColumnNames, true);
+        vh.verifyCompoundTestColumns(allColumnNames, true);
     }
 
     @Test
     public void testExecuteCompoundPkNoDynamicColumns() {
         // create data
         {
-            cs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
+            qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
             for (int i = 0; i < 50; i++) {
-                StringBuilder cql = new StringBuilder("INSERT INTO CompoundTest (id,id2,id3,description) VALUES (");
+                StringBuilder cql = new StringBuilder("INSERT INTO CompoundTest (id,id2,id3,deesc) VALUES (");
                 cql.append(UUID.randomUUID()).append(",");
                 cql.append(i);
                 cql.append(",'abc','some text-" + i + "')");
-                cs.execute(new CqlQuery(CqlQueryName.INSERT, cql.toString()));
+                qs.execute(new CqlQuery(CqlQueryName.INSERT, cql.toString()));
             }
         }
 
-        CqlSelectResult res = cs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from CompoundTest"));
+        CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from CompoundTest"));
         assertEquals(50, res.rows.size());
 
         assertEquals(4, res.commonColumns.size());
@@ -88,11 +132,11 @@ public class TestCassandraServiceImpl extends AbstractTestCase {
                 res.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, DataType.varchar(), "id3")));
 
         assertTrue(comColsStr,
-                res.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, DataType.varchar(), "description")));
+                res.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, DataType.varchar(), "deesc")));
 
         for (Row row : res.rows) {
             int idx = row.getInt("id2");
-            assertEquals("some text-" + idx, row.getString("description"));
+            assertEquals("some text-" + idx, row.getString("deesc"));
         }
     }
 
@@ -101,7 +145,7 @@ public class TestCassandraServiceImpl extends AbstractTestCase {
 
         // create data
         {
-            cs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
+            qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
             for (int i = 0; i < 100; i++) {
                 StringBuilder cql = new StringBuilder(
                         "INSERT INTO MyBooks (id,title,genre,publishDate,description,authors,pages,price,idx) VALUES (");
@@ -117,10 +161,10 @@ public class TestCassandraServiceImpl extends AbstractTestCase {
                 cql.append("'Description.....-").append(i).append("',");
                 cql.append("{'Ralls, Kim'},2212, {'D':2.85,'E':3.11,'F':4.22},");
                 cql.append(i).append(")");
-                cs.execute(new CqlQuery(CqlQueryName.INSERT, cql.toString()));
+                qs.execute(new CqlQuery(CqlQueryName.INSERT, cql.toString()));
             }
         }
-        CqlSelectResult res = cs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from MyBooks where pages=2212"));
+        CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from MyBooks where pages=2212"));
         assertEquals(100, res.rows.size());
 
         assertTrue(res.toString(),

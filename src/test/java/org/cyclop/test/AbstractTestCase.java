@@ -7,11 +7,15 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.apache.cassandra.io.util.FileUtils;
+import org.cyclop.service.cassandra.CassandraSession;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -26,6 +30,14 @@ public abstract class AbstractTestCase {
     private static final EmbeddedCassandra CASSANDRA = new EmbeddedCassandra();
 
     private static boolean INIT_EXECUTED = false;
+
+    @Inject
+    protected CassandraSession cassandraSession;
+
+    @Before
+    public void setup() {
+        cassandraSession.authenticate("test", "test1234");
+    }
 
     @BeforeClass
     public static void staticInit() throws Exception {
