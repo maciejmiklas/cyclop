@@ -146,7 +146,7 @@ public class CsvQueryResultExporter {
         while (commonColsIt.hasNext()) {
             CqlExtendedColumnName next = commonColsIt.next();
             ret.add(next);
-            buf.append(prep(esc(next.part)));
+            buf.append(prep(esc(next.toDisplayString())));
 
             if (commonColsIt.hasNext()) {
                 buf.append(conf.columnSeparator);

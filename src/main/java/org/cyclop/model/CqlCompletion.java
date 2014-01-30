@@ -128,7 +128,7 @@ public final class CqlCompletion implements Serializable {
             min.add(part);
             full.add(part);
 
-            CqlPart prefixPart = new CqlPart(prefix + part.part);
+            CqlPart prefixPart = new CqlPart(prefix + part.toDisplayString());
             full.add(prefixPart);
             return this;
         }

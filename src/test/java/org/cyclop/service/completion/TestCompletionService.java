@@ -56,22 +56,40 @@ public class TestCompletionService extends AbstractTestCase {
     }
 
     @Test
-    public void testFindCompletion_Select_SelectContainsColumnsFromKeyspaceWithTable_CursonOnEnd() {
+    public void testFindCompletion_Select_ContainsColumnsFromKeyspaceWithTable_CursorOnEnd() {
         ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), 8);
         vh.verifyColumnsFromMybooksAndFrom(completion);
     }
 
     @Test
-    public void testFindCompletion_Select_SelectContainsColumnsFromKeyspaceWithTable_CursonOnFr() {
+    public void testFindCompletion_Select_ContainsColumnsFromKeyspaceWithTable_CursonOnFr() {
         ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), 10);
         vh.verifyColumnsFromMybooksAndFrom(completion);
     }
 
     @Test
-    public void testFindCompletion_Select_SelectContainsColumnsFromKeyspaceInSessionScope() {
+    public void testFindCompletion_Select_ContainsColumnsFromKeyspaceInSessionScope() {
         qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
         ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from mybooks"), 8);
         vh.verifyColumnsFromMybooksAndFrom(completion);
+    }
+
+    @Test
+    public void testFindCompletion_Select_TablesFromCqldemoSpace() {
+        qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo."), 22);
+        vh.verifyFullAndMinCompletionNotTheSame(completion, 2, 4);
+
+        ImmutableSortedSet<? extends CqlPart> fullCompletion = completion.cqlCompletion.fullCompletion;
+        vh.verifyTableNamesCqlDemo(fullCompletion, true);
+        vh.verifyTableNamesSystem(fullCompletion, false);
+        vh.verifyTableNamesWithSpaceCqlDemo(fullCompletion, true);
+
+
+        ImmutableSortedSet<? extends CqlPart> minCompletion = completion.cqlCompletion.minCompletion;
+        vh.verifyTableNamesCqlDemo(minCompletion, true);
+        vh.verifyTableNamesSystem(minCompletion, false);
+        vh.verifyTableNamesWithSpaceCqlDemo(minCompletion, false);
     }
 
     @Test
@@ -80,7 +98,5 @@ public class TestCompletionService extends AbstractTestCase {
         ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from mybooks"), 8);
         vh.verifyColumnsFromMybooksAndFrom(completion);
     }
-
-
 
 }

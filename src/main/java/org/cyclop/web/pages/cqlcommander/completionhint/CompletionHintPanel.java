@@ -105,9 +105,9 @@ public class CompletionHintPanel extends Panel {
                 }
 
                 if (css == null) {
-                    buf.append(part.part);
+                    buf.append(part.toDisplayString());
                 } else {
-                    buf.append("<span class=\"").append(css).append("\">").append(part.part);
+                    buf.append("<span class=\"").append(css).append("\">").append(part.toDisplayString());
                     if (partIt.hasNext()) {
                         buf.append(", ");
                     }

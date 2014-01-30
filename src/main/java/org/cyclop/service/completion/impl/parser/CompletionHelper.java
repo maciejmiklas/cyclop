@@ -46,7 +46,7 @@ public final class CompletionHelper {
         builder.all(tables);
 
         for (CqlTable ta : tables) {
-            builder.full(new CqlKeySpace(keySpace.partLc + "." + ta.partLc));
+            builder.full(new CqlTable(keySpace.partLc,  ta.partLc));
         }
 
         return builder;

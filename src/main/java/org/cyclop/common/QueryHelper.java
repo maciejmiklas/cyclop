@@ -56,7 +56,7 @@ public class QueryHelper {
                 if (keyspaceStr == null) {
                     result = new CqlTable(candidate);
                 } else {
-                    result = new CqlTable(tableStr, keyspaceStr);
+                    result = new CqlTable(keyspaceStr, tableStr);
                 }
             }
 

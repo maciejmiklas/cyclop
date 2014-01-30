@@ -35,7 +35,7 @@ public class TestCassandraServiceImpl extends AbstractTestCase {
 
     @Test
     public void testFindColumnNames_KeyspaceWithTable() {
-        ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("MyBooks", "cqldemo"));
+        ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("cqldemo", "MyBooks"));
         assertNotNull(resp);
         assertTrue("size: " + resp.size(), resp.size() > 5);
         vh.verifyMybooksColumns(resp, true);

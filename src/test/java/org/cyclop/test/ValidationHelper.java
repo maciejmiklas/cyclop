@@ -37,7 +37,7 @@ public class ValidationHelper {
         verifyEmpty(completion.cqlCompletion.minCompletion);
     }
 
-    public void verifyTableNamesCqlDemo(Collection<CqlTable> col, boolean contains) {
+    public void verifyTableNamesCqlDemo(Collection<? extends CqlPart> col, boolean contains) {
         assertNotNull(col);
         assertTrue("Size:" + col.size(), col.size() >= 2);
 
@@ -46,9 +46,18 @@ public class ValidationHelper {
     }
 
 
-    public void verifyTableNamesSystem(Collection<CqlTable> col, boolean contains) {
+    public void verifyTableNamesWithSpaceCqlDemo(Collection<? extends CqlPart> col, boolean contains) {
         assertNotNull(col);
-        assertTrue("Size:" + col.size(), col.size() >= 10);
+        assertTrue("Size:" + col.size(), col.size() >= 2);
+
+        assertEquals(col.toString(), contains, col.contains(new CqlTable("cqldemo", "mybooks")));
+        assertEquals(col.toString(), contains, col.contains(new CqlTable("cqldemo", "compoundtest")));
+    }
+
+
+    public void verifyTableNamesSystem(Collection<? extends CqlPart> col, boolean contains) {
+        assertNotNull(col);
+        assertTrue("Size:" + col.size(), col.size() >= (contains ? 10 : 0));
 
         assertEquals(col.toString(), contains, col.contains(new CqlTable("sstable_activity")));
         assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_triggers")));
@@ -59,7 +68,7 @@ public class ValidationHelper {
         assertEquals(col.toString(), contains, col.contains(new CqlTable("compaction_history")));
     }
 
-    public void verifyIndexFromCqlDemo(Collection<CqlIndex> col, boolean contains) {
+    public void verifyIndexFromCqlDemo(Collection<? extends CqlPart> col, boolean contains) {
         assertNotNull(col);
         assertTrue("Size:" + col.size(), col.size() >= 4);
 
@@ -119,6 +128,18 @@ public class ValidationHelper {
 
         assertEquals(fullCompletion.size(), minCompletion.size());
         assertTrue(fullCompletion + " - " + minCompletion, fullCompletion.containsAll(minCompletion));
-        assertTrue(minCompletion.size() + "<" + minSize, minCompletion.size() >= minSize);
+        assertTrue(minCompletion.size() + ">" + minSize, minCompletion.size() >= minSize);
+    }
+
+    public void verifyFullAndMinCompletionNotTheSame(ContextCqlCompletion completion, int minMinSize, int fullMinSize) {
+        assertNotNull(completion);
+        ImmutableSortedSet<? extends CqlPart> fullCompletion = completion.cqlCompletion.fullCompletion;
+        assertNotNull(fullCompletion);
+        ImmutableSortedSet<? extends CqlPart> minCompletion = completion.cqlCompletion.minCompletion;
+        assertNotNull(minCompletion);
+
+        assertTrue(fullCompletion.size() != minCompletion.size());
+        assertTrue(minCompletion.size() + ">" + minMinSize, minCompletion.size() >= minMinSize);
+        assertTrue(fullCompletion.size() + ">" + fullMinSize, fullCompletion.size() >= fullMinSize);
     }
 }

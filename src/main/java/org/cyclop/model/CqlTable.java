@@ -16,7 +16,7 @@ public final class CqlTable extends CqlPart {
      */
     public final CqlKeySpace keySpace;
 
-    public CqlTable(String table, String keySpace) {
+    public CqlTable(String keySpace, String table) {
         super(table);
 
         if (keySpace == null) {
@@ -26,8 +26,42 @@ public final class CqlTable extends CqlPart {
         }
     }
 
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(partLc, keySpace);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        final CqlTable other = (CqlTable) obj;
+        return java.util.Objects.equals(partLc, other.partLc) && java.util.Objects.equals(keySpace, other.keySpace);
+    }
+
     public CqlTable(String table) {
-        this(table, null);
+        this(null, table);
+    }
+
+    @Override
+    public int compareTo(CqlPart o) {
+        if (!(o instanceof CqlTable)) {
+            return -1;
+        }
+        CqlTable table = (CqlTable)o;
+
+        return toDisplayString().toLowerCase().compareTo(table.toDisplayString().toLowerCase());
+    }
+
+    public String toDisplayString(){
+        StringBuilder buf = new StringBuilder();
+        if(keySpace != null){
+            buf.append(keySpace.part);
+        }
+        buf.append(".").append(part);
+        return buf.toString();
     }
 
     @Override

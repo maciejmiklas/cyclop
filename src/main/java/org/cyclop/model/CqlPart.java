@@ -1,8 +1,6 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
-
-import java.io.Serializable;
 import net.jcip.annotations.Immutable;
 
 /**
@@ -55,5 +53,9 @@ public class CqlPart implements Comparable<CqlPart> {
 
     public CqlType type() {
         return CqlType.PART;
+    }
+
+    public String toDisplayString() {
+        return part;
     }
 }
