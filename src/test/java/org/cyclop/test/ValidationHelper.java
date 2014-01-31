@@ -5,8 +5,11 @@ import org.cyclop.model.*;
 
 import javax.inject.Named;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static junit.framework.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 /**
  * @author Maciej Miklas
@@ -138,8 +141,23 @@ public class ValidationHelper {
         ImmutableSortedSet<? extends CqlPart> minCompletion = completion.cqlCompletion.minCompletion;
         assertNotNull(minCompletion);
 
-        assertTrue(fullCompletion.size() != minCompletion.size());
         assertTrue(minCompletion.size() + ">" + minMinSize, minCompletion.size() >= minMinSize);
         assertTrue(fullCompletion.size() + ">" + fullMinSize, fullCompletion.size() >= fullMinSize);
+    }
+
+    public void verifyContainsOnlyKeywords(ImmutableSortedSet<? extends CqlPart> cmp, CqlKeyword.Def... keywords) {
+        Set<CqlKeyword> keywordsSet = new HashSet<>();
+
+        for (CqlKeyword.Def def : keywords) {
+            assertTrue(def.value+" not found in: "+ cmp, cmp.contains(def.value));
+            keywordsSet.add(def.value);
+        }
+
+        for (CqlKeyword.Def def : CqlKeyword.Def.values()) {
+            if(keywordsSet.contains(def.value)){
+                continue;
+            }
+            assertFalse(def.value+" FOUND in: "+ cmp, cmp.contains(def.value));
+        }
     }
 }
