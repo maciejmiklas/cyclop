@@ -16,4 +16,6 @@ public interface CompletionService {
      * @param cursorPosition starts from 0
      */
     ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition);
+
+    ContextCqlCompletion findCompletion(CqlQuery cqlQuery);
 }

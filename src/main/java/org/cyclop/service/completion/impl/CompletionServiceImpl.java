@@ -27,7 +27,13 @@ class CompletionServiceImpl implements CompletionService {
     }
 
     @Override
+    public ContextCqlCompletion findCompletion(CqlQuery cqlQuery) {
+        return findCompletion(cqlQuery, -1);
+    }
+
+    @Override
     public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
+
         ContextCqlCompletion comp = parser.findCompletion(cqlQuery, cursorPosition);
         if (comp == null) {
             comp = new ContextCqlCompletion(CqlQueryName.UNKNOWN, CqlCompletion.Builder.naturalOrder().build());

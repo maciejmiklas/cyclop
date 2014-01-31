@@ -32,9 +32,8 @@ public class CqlQuery implements Comparable<CqlQuery>, Serializable {
         if (type == null) {
             throw new IllegalArgumentException("Null type");
         }
-        // TODO remove control characters
-        this.cqlLc = cql.trim().toLowerCase();
-        this.cql = cql;
+        this.cql = cql.replaceAll("\\p{Cc}", "");
+        this.cqlLc = this.cql.trim().toLowerCase();
         this.type = type;
     }
 

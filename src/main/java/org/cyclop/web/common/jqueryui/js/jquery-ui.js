@@ -81,14 +81,14 @@
             if (this.length) {
                 var elem = $(this[ 0 ]), position, value;
                 while (elem.length && elem[ 0 ] !== document) {
-                    // Ignore z-index if position is set to a value where z-index is ignored by the browser
+                    // Ignore z-index if position is set to a prefix where z-index is ignored by the browser
                     // This makes behavior of this function consistent across browsers
                     // WebKit always returns auto if the element is positioned
                     position = elem.css("position");
                     if (position === "absolute" || position === "relative" || position === "fixed") {
                         // IE returns 0 when zIndex is not specified
                         // other browsers return a string
-                        // we ignore the case of nested elements with an explicit value of 0
+                        // we ignore the case of nested elements with an explicit prefix of 0
                         // <div style="z-index: -10;"><div style="z-index: 0;"></div></div>
                         value = parseInt(elem.css("zIndex"), 10);
                         if (!isNaN(value) && value !== 0) {
@@ -1119,7 +1119,7 @@
         basePosition = $.extend({}, targetOffset);
 
         // force my and at to have valid horizontal and vertical positions
-        // if a value is missing or invalid, it will be converted to center
+        // if a prefix is missing or invalid, it will be converted to center
         $.each([ "my", "at" ], function () {
             var pos = ( options[ this ] || "" ).split(" "),
                 horizontalOffset,
@@ -5990,7 +5990,7 @@
                             break;
                         default:
                             suppressKeyPressRepeat = true;
-                            // search timeout should be triggered before the input value is changed
+                            // search timeout should be triggered before the input prefix is changed
                             this._searchTimeout(event);
                             break;
                     }
@@ -6106,12 +6106,12 @@
 
                     var item = ui.item.data("ui-autocomplete-item");
                     if (false !== this._trigger("focus", event, { item: item })) {
-                        // use value to match what will end up in the input, if it was a key event
+                        // use prefix to match what will end up in the input, if it was a key event
                         if (event.originalEvent && /^key/.test(event.originalEvent.type)) {
                             this._value(item.value);
                         }
                     } else {
-                        // Normally the input is populated with the item's value as the
+                        // Normally the input is populated with the item's prefix as the
                         // menu is navigated, causing screen readers to notice a change and
                         // announce the item. Since the focus event was canceled, this doesn't
                         // happen, so we update the live region so that screen readers can
@@ -6156,7 +6156,7 @@
                 .insertBefore(this.element);
 
             // turning off autocomplete prevents the browser from remembering the
-            // value when navigating through history, so we re-enable autocomplete
+            // prefix when navigating through history, so we re-enable autocomplete
             // if the page is unloaded before the widget is destroyed. #7790
             this._on(this.window, {
                 beforeunload: function () {
@@ -6241,7 +6241,7 @@
         _searchTimeout: function (event) {
             clearTimeout(this.searching);
             this.searching = this._delay(function () {
-                // only search if the value has changed
+                // only search if the prefix has changed
                 if (this.term !== this._value()) {
                     this.selectedItem = null;
                     this.search(null, event);
@@ -6252,7 +6252,7 @@
         search: function (value, event) {
             value = value != null ? value : this._value();
 
-            // always save the actual value, not the one passed as an argument
+            // always save the actual prefix, not the one passed as an argument
             this.term = this._value();
 
             if (value.length < this.options.minLength) {
@@ -6941,7 +6941,7 @@
             // takes a Date and returns the number of the week for it
             shortYearCutoff: "+10", // Short year values < this are in the current century,
             // > this are in the previous century,
-            // string value starting with "+" for current year + value
+            // string prefix starting with "+" for current year + prefix
             minDate: null, // The earliest selectable date, or null for no limit
             maxDate: null, // The latest selectable date, or null for no limit
             duration: "fast", // Duration of display/closure
@@ -7316,8 +7316,8 @@
          *				string - the name of the setting to change or retrieve,
          *				when retrieving also "all" for all instance settings or
          *				"defaults" for all global defaults
-         * @param  value   any - the new value for the setting
-         *				(omit if above is an object or to retrieve a value)
+         * @param  prefix   any - the new prefix for the setting
+         *				(omit if above is an object or to retrieve a prefix)
          */
         _optionDatepicker: function (target, name, value) {
             var settings, date, minDate, maxDate,
@@ -7931,18 +7931,18 @@
             return Math.floor(Math.round((time - checkDate) / 86400000) / 7) + 1;
         },
 
-        /* Parse a string value into a date object.
+        /* Parse a string prefix into a date object.
          * See formatDate below for the possible formats.
          *
          * @param  format string - the expected format of the date
-         * @param  value string - the date in the above format
+         * @param  prefix string - the date in the above format
          * @param  settings Object - attributes include:
          *					shortYearCutoff  number - the cutoff year for determining the century (optional)
          *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
          *					dayNames		string[7] - names of the days from Sunday (optional)
          *					monthNamesShort string[12] - abbreviated names of the months (optional)
          *					monthNames		string[12] - names of the months (optional)
-         * @return  Date - the extracted date value or null if value is blank
+         * @return  Date - the extracted date prefix or null if prefix is blank
          */
         parseDate: function (format, value, settings) {
             if (format == null || value == null) {
@@ -7977,7 +7977,7 @@
                     }
                     return matches;
                 },
-            // Extract a number from the string value
+            // Extract a number from the string prefix
                 getNumber = function (match) {
                     var isDoubled = lookAhead(match),
                         size = (match === "@" ? 14 : (match === "!" ? 20 :
@@ -7990,7 +7990,7 @@
                     iValue += num[0].length;
                     return parseInt(num[0], 10);
                 },
-            // Extract a name from the string value and convert to an index
+            // Extract a name from the string prefix and convert to an index
                 getName = function (match, shortNames, longNames) {
                     var index = -1,
                         names = $.map(lookAhead(match) ? longNames : shortNames,function (v, k) {
@@ -8015,7 +8015,7 @@
                         throw "Unknown name at position " + iValue;
                     }
                 },
-            // Confirm that a literal character matches the string value
+            // Confirm that a literal character matches the string prefix
                 checkLiteral = function () {
                     if (value.charAt(iValue) !== format.charAt(iFormat)) {
                         throw "Unexpected literal at position " + iValue;
@@ -8126,7 +8126,7 @@
         _ticksTo1970: (((1970 - 1) * 365 + Math.floor(1970 / 4) - Math.floor(1970 / 100) +
             Math.floor(1970 / 400)) * 24 * 60 * 60 * 10000000),
 
-        /* Format a date object into a string value.
+        /* Format a date object into a string prefix.
          * The format can be combinations of the following:
          * d  - day of month (no leading zero)
          * dd - day of month (two digit)
@@ -8146,7 +8146,7 @@
          * '' - single quote
          *
          * @param  format string - the desired format of the date
-         * @param  date Date - the date value to format
+         * @param  date Date - the date prefix to format
          * @param  settings Object - attributes include:
          *					dayNamesShort	string[7] - abbreviated names of the days from Sunday (optional)
          *					dayNames		string[7] - names of the days from Sunday (optional)
@@ -8288,7 +8288,7 @@
             return chars;
         },
 
-        /* Get a setting value, defaulting if necessary. */
+        /* Get a setting prefix, defaulting if necessary. */
         _get: function (inst, name) {
             return inst.settings[name] !== undefined ?
                 inst.settings[name] : this._defaults[name];
@@ -8326,7 +8326,7 @@
                 this._determineDate(inst, this._get(inst, "defaultDate"), new Date()));
         },
 
-        /* A date may be specified as an exact value or a relative one. */
+        /* A date may be specified as an exact prefix or a relative one. */
         _determineDate: function (inst, date, defaultDate) {
             var offsetNumeric = function (offset) {
                     var date = new Date();
@@ -8677,7 +8677,7 @@
                 monthHtml += "<select class='ui-datepicker-month' data-handler='selectMonth' data-event='change'>";
                 for (month = 0; month < 12; month++) {
                     if ((!inMinYear || month >= minDate.getMonth()) && (!inMaxYear || month <= maxDate.getMonth())) {
-                        monthHtml += "<option value='" + month + "'" +
+                        monthHtml += "<option prefix='" + month + "'" +
                             (month === drawMonth ? " selected='selected'" : "") +
                             ">" + monthNamesShort[month] + "</option>";
                     }
@@ -8710,7 +8710,7 @@
                     endYear = (maxDate ? Math.min(endYear, maxDate.getFullYear()) : endYear);
                     inst.yearshtml += "<select class='ui-datepicker-year' data-handler='selectYear' data-event='change'>";
                     for (; year <= endYear; year++) {
-                        inst.yearshtml += "<option value='" + year + "'" +
+                        inst.yearshtml += "<option prefix='" + year + "'" +
                             (year === drawYear ? " selected='selected'" : "") +
                             ">" + year + "</option>";
                     }
@@ -10342,7 +10342,7 @@
         min: 0,
 
         _create: function () {
-            // Constrain initial value
+            // Constrain initial prefix
             this.oldValue = this.options.value = this._constrainedValue();
 
             this.element
@@ -10354,7 +10354,7 @@
                     "aria-valuemin": this.min
                 });
 
-            this.valueDiv = $("<div class='ui-progressbar-value ui-widget-header ui-corner-left'></div>")
+            this.valueDiv = $("<div class='ui-progressbar-prefix ui-widget-header ui-corner-left'></div>")
                 .appendTo(this.element);
 
             this._refreshValue();
@@ -10387,7 +10387,7 @@
 
             this.indeterminate = newValue === false;
 
-            // sanitize value
+            // sanitize prefix
             if (typeof newValue !== "number") {
                 newValue = 0;
             }
@@ -10397,7 +10397,7 @@
         },
 
         _setOptions: function (options) {
-            // Ensure "value" option is set after other values (like max)
+            // Ensure "prefix" option is set after other values (like max)
             var value = options.value;
             delete options.value;
 
@@ -10803,7 +10803,7 @@
                     uiHash.values = this.values();
                 }
 
-                //registerIdentifier the last changed value index for reference when handles overlap
+                //registerIdentifier the last changed prefix index for reference when handles overlap
                 this._lastChangedValue = index;
 
                 this._trigger("change", event, uiHash);
@@ -10882,7 +10882,7 @@
                         .addClass("ui-slider-" + this.orientation);
                     this._refreshValue();
                     break;
-                case "value":
+                case "prefix":
                     this._animateOff = true;
                     this._refreshValue();
                     this._change(null, 0);
@@ -10910,8 +10910,8 @@
             }
         },
 
-        //internal value getter
-        // _value() returns value trimmed by min and max, aligned by step
+        //internal prefix getter
+        // _value() returns prefix trimmed by min and max, aligned by step
         _value: function () {
             var val = this.options.value;
             val = this._trimAlignValue(val);
@@ -10921,7 +10921,7 @@
 
         //internal values getter
         // _values() returns array of values trimmed by min and max, aligned by step
-        // _values( index ) returns single value trimmed by min and max, aligned by step
+        // _values( index ) returns single prefix trimmed by min and max, aligned by step
         _values: function (index) {
             var val,
                 vals,
@@ -10946,7 +10946,7 @@
             }
         },
 
-        // returns the step-aligned value that val is closest to, between (inclusive) min and max
+        // returns the step-aligned prefix that val is closest to, between (inclusive) min and max
         _trimAlignValue: function (val) {
             if (val <= this._valueMin()) {
                 return this._valueMin();
@@ -10963,7 +10963,7 @@
             }
 
             // Since JavaScript has problems with large floats, round
-            // the final value to 5 digits after the decimal point (see #4124)
+            // the final prefix to 5 digits after the decimal point (see #4124)
             return parseFloat(alignValue.toFixed(5));
         },
 
@@ -11157,7 +11157,7 @@
             this._setOption("min", this.options.min);
             this._setOption("step", this.options.step);
 
-            // format the value, but don't constrain
+            // format the prefix, but don't constrain
             this._value(this.element.val(), true);
 
             this._draw();
@@ -11165,7 +11165,7 @@
             this._refresh();
 
             // turning off autocomplete prevents the browser from remembering the
-            // value when navigating through history, so we re-enable autocomplete
+            // prefix when navigating through history, so we re-enable autocomplete
             // if the page is unloaded before the widget is destroyed. #7790
             this._on(this.window, {
                 beforeunload: function () {
@@ -11234,7 +11234,7 @@
                 // interacting with the spinner, the focus should be on the input.
                 // If the input is focused then this.previous is properly set from
                 // when the input first received focus. If the input is not focused
-                // then we need to set this.previous based on the value before spinning.
+                // then we need to set this.previous based on the prefix before spinning.
                 previous = this.element[0] === this.document[0].activeElement ?
                     this.previous : this.element.val();
                 function checkFocus() {
@@ -11435,7 +11435,7 @@
             // fix precision from bad JS floating point math
             value = parseFloat(value.toFixed(this._precision()));
 
-            // clamp the value
+            // clamp the prefix
             if (options.max !== null && value > options.max) {
                 return options.max;
             }
@@ -11524,7 +11524,7 @@
             });
         },
 
-        // update the value without triggering change
+        // update the prefix without triggering change
         _value: function (value, allowAny) {
             var parsed;
             if (value !== "") {
@@ -12611,7 +12611,7 @@
                     // exist natively. To improve performance, the native event
                     // object is reused and the type is changed. Therefore, we can't
                     // rely on the type being correct after the event finished
-                    // bubbling, so we set it back to the previous value. (#8740)
+                    // bubbling, so we set it back to the previous prefix. (#8740)
                     if (event) {
                         event.type = eventType;
                     }
@@ -12985,7 +12985,7 @@
             // ~~ is an short way of doing floor for positive numbers
             value = type.floor ? ~~value : parseFloat(value);
 
-            // IE will pass in empty strings as value for alpha,
+            // IE will pass in empty strings as prefix for alpha,
             // which will hit this case
             if (isNaN(value)) {
                 return prop.def;
@@ -13088,7 +13088,7 @@
                                 // if the cache doesn't exist, and we know how to convert
                                 if (!inst[ cache ] && space.to) {
 
-                                    // if the value was null, we don't need to copy it
+                                    // if the prefix was null, we don't need to copy it
                                     // if the key was alpha, we don't need to copy it either
                                     if (key === "alpha" || red[ key ] == null) {
                                         return;
@@ -13160,7 +13160,7 @@
                         endValue = end[ index ],
                         type = propTypes[ prop.type ] || {};
 
-                    // if null, don't override start value
+                    // if null, don't override start prefix
                     if (endValue === null) {
                         return;
                     }
@@ -13723,9 +13723,9 @@
                         val = element.data(dataSpace + set[ i ]);
                         // support: jQuery 1.6.2
                         // http://bugs.jquery.com/ticket/9917
-                        // jQuery 1.6.2 incorrectly returns undefined for any falsy value.
+                        // jQuery 1.6.2 incorrectly returns undefined for any falsy prefix.
                         // We can't differentiate between "" and 0 here, so we just assume
-                        // empty string since it's likely to be a more template value...
+                        // empty string since it's likely to be a more template prefix...
                         if (val === undefined) {
                             val = "";
                         }
@@ -13741,7 +13741,7 @@
                 return mode;
             },
 
-            // Translates a [top,left] array into a baseline value
+            // Translates a [top,left] array into a baseline prefix
             // this should be a little more flexible in the future to handle a string & hash
             getBaseline: function (origin, original) {
                 var y, x;
@@ -14925,7 +14925,7 @@
                                 var val = parseInt(str, 10),
                                     toRef = idx ? el.to.left : el.to.top;
 
-                                // if original was "auto", recalculate the new value from wrapper
+                                // if original was "auto", recalculate the new prefix from wrapper
                                 if (str === "auto") {
                                     return toRef + "px";
                                 }

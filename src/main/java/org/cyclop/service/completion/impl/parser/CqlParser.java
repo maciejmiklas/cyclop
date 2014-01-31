@@ -1,12 +1,15 @@
 package org.cyclop.service.completion.impl.parser;
 
-import org.cyclop.model.*;
+import org.cyclop.model.ContextCqlCompletion;
+import org.cyclop.model.CqlCompletion;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.exception.ServiceException;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
-import org.cyclop.model.exception.ServiceException;
 
 /**
  * LL(1) like cql parser
@@ -47,6 +50,10 @@ public class CqlParser {
     }
 
     public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
+        if (cursorPosition == -1) {
+            cursorPosition = cqlQuery.cql.length() - 1;
+        }
+
         cursorPosition++;
 
         DecisionListSupport dls = findCompletionDecisionList(cqlQuery);
@@ -107,7 +114,7 @@ public class CqlParser {
                 lastMatchingCompletion = partCompletion;
             }
 
-            if(!found){
+            if (!found) {
                 break;
             }
         }

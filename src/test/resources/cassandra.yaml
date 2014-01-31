@@ -128,7 +128,7 @@ disk_failure_policy: stop
 #
 # NOTE: if you reduce the size, you may not get you hottest keys loaded on startup.
 #
-# Default value is empty to make it "auto" (min(5% of Heap (in MB), 100MB)). Set to 0 to disable key cache.
+# Default prefix is empty to make it "auto" (min(5% of Heap (in MB), 100MB)). Set to 0 to disable key cache.
 key_cache_size_in_mb:
 
 # Duration in seconds after which Cassandra should
@@ -149,7 +149,7 @@ key_cache_save_period: 14400
 # Maximum size of the row cache in memory.
 # NOTE: if you reduce the size, you may not get you hottest keys loaded on startup.
 #
-# Default value is 0, to disable row caching.
+# Default prefix is 0, to disable row caching.
 row_cache_size_in_mb: 0
 
 # Duration in seconds after which Cassandra should
@@ -243,7 +243,7 @@ concurrent_writes: 32
 # mmapped, and hence use up address space, the default size is 32
 # on 32-bit JVMs, and 1024 on 64-bit JVMs.
 #
-# If space gets above this value (it will round up to the next nearest
+# If space gets above this prefix (it will round up to the next nearest
 # segment multiple), Cassandra will flush every dirty CF in the oldest
 # segment and remove it.  So a small total commitlog space will tend
 # to cause more flush activity on less-active columnfamilies.
@@ -252,7 +252,7 @@ concurrent_writes: 32
 # This sets the amount of memtable flush writer threads.  These will
 # be blocked by disk io, and each one will hold a memtable in memory
 # while blocked. If you have a large heap and many data directories,
-# you can increase this value for better flush performance.
+# you can increase this prefix for better flush performance.
 # By default this will be set to the amount of data directories defined.
 #memtable_flush_writers: 1
 
@@ -289,7 +289,7 @@ ssl_storage_port: 7001
 listen_address: localhost
 
 # Address to broadcast to other Cassandra nodes
-# Leaving this blank will set it to the same value as listen_address
+# Leaving this blank will set it to the same prefix as listen_address
 # broadcast_address: 1.2.3.4
 
 # Internode authentication backend, implementing IInternodeAuthenticator;
@@ -480,11 +480,11 @@ cross_node_timeout: false
 # Enable socket timeout for streaming operation.
 # When a timeout occurs during streaming, streaming is retried from the start
 # of the current file. This _can_ involve re-streaming an important amount of
-# data, so you should avoid setting the value too low.
-# Default value is 0, which never timeout streams.
+# data, so you should avoid setting the prefix too low.
+# Default prefix is 0, which never timeout streams.
 # streaming_socket_timeout_in_ms: 0
 
-# phi value that must be reached for a host to be marked down.
+# phi prefix that must be reached for a host to be marked down.
 # most users should never need to adjust this.
 # phi_convict_threshold: 8
 
@@ -549,7 +549,7 @@ dynamic_snitch_reset_interval_in_ms: 600000
 # 'pinning' of replicas to hosts in order to increase cache capacity.
 # The badness threshold will control how much worse the pinned host has to be
 # before the dynamic snitch will prefer other replicas over it.  This is
-# expressed as a double which represents a percentage.  Thus, a value of
+# expressed as a double which represents a percentage.  Thus, a prefix of
 # 0.2 means Cassandra would continue to prefer the static snitch values
 # until the pinned host was 20% worse than the fastest.
 dynamic_snitch_badness_threshold: 0.1
@@ -574,7 +574,7 @@ request_scheduler: org.apache.cassandra.scheduler.NoScheduler
 #                      requests per client.  Requests beyond
 #                      that limit are queued up until
 #                      running requests can complete.
-#                      The value of 80 here is twice the number of
+#                      The prefix of 80 here is twice the number of
 #                      concurrent_reads + concurrent_writes.
 #  - default_weight -- default_weight is optional and allows for
 #                      overriding the default which is 1.

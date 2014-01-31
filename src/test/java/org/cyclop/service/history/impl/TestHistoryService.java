@@ -1,9 +1,9 @@
 package org.cyclop.service.history.impl;
 
 import com.google.common.collect.UnmodifiableIterator;
-import org.cyclop.test.AbstractTestCase;
 import org.cyclop.model.*;
 import org.cyclop.service.common.FileStorage;
+import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ThreadTestScope;
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +26,8 @@ import static org.junit.Assert.assertTrue;
  * @author Maciej Miklas
  */
 public class TestHistoryService extends AbstractTestCase {
+
+    public static String CR = System.getProperty("line.separator");
 
     @Inject
     private HistoryServiceImpl historyService;
@@ -66,8 +68,8 @@ public class TestHistoryService extends AbstractTestCase {
         QueryHistory history = historyService.readHistory();
 
         for (int i = 0; i < 20; i++) {
-            history.addToHistory(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id="
-                    + i)));
+            history.addToHistory(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * " + CR + "from HistoryTest " +
+                    "where " + CR + "id=" + i)));
 
             assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
                     "select * from HistoryStarTest where id=" + i))));

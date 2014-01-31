@@ -117,7 +117,7 @@ public final class CqlCompletion implements Serializable {
             return this;
         }
 
-        public Builder value(CqlPart part) {
+        public Builder prefix(CqlPart part) {
             for (String pref : VALUE_PREF) {
                 prefix(pref, part);
             }

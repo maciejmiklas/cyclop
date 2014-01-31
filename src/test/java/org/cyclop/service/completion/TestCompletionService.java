@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -26,26 +27,62 @@ public class TestCompletionService extends AbstractTestCase {
     private CompletionService cs;
 
     @Test
+    public void testFindCompletion_CreateKeyspace_Start() throws Exception {
+        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, "create keyspace "));
+
+        vh.verifyFullAndMinCompletionTheSame(completion, 2);
+
+        ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
+        vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.WITH, CqlKeyword.Def.IF_NOT_EXISTS);
+    }
+
+    @Test
+    public void testFindCompletion_CreateKeyspace_With() throws Exception {
+        verifyCreatekeyspaceWiht("create keyspace with ");
+    }
+
+
+    @Test
+    public void testFindCompletion_CreateKeyspace_ExistsWith() throws Exception {
+        verifyCreatekeyspaceWiht("create keyspace inf not exists with ");
+    }
+
+    private void verifyCreatekeyspaceWiht(String cql){
+        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, cql));
+
+        vh.verifyFullAndMinCompletionNotTheSame(completion, 11, 35);
+
+        ImmutableSortedSet<? extends CqlPart> mcmp = completion.cqlCompletion.minCompletion;
+        vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.VALUES,CqlKeyword.Def.TRUE,
+                CqlKeyword.Def.SIMPLE_STRATEGY,CqlKeyword.Def.REPLICATION_FACTOR,CqlKeyword.Def.REPLICATION,
+                CqlKeyword.Def.OLD_NETWORK_TOPOLOGY_STRATEGY,CqlKeyword.Def.NETWORK_TOPOLOGY_STRATEGY,CqlKeyword.Def.FALSE,
+                CqlKeyword.Def.DURABLE_WRITES,CqlKeyword.Def.CLASS,CqlKeyword.Def.AND);
+
+
+        ImmutableSortedSet<? extends CqlPart> fcmp = completion.cqlCompletion.fullCompletion;
+        assertTrue(fcmp.containsAll(mcmp));
+
+        assertTrue(fcmp.toString(), fcmp.contains(new CqlPart(",oldnetworktopologystrategy")));
+        assertTrue(fcmp.toString(), fcmp.contains(new CqlPart("(class")));
+        assertTrue(fcmp.toString(), fcmp.contains(new CqlPart(":replication_factor")));
+        assertTrue(fcmp.toString(), fcmp.contains(new CqlPart(":class")));
+    }
+
+    @Test
     public void testFindInitialCompletion() {
         ContextCqlCompletion completion = cs.findInitialCompletion();
 
         vh.verifyFullAndMinCompletionTheSame(completion, 15);
 
         ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.USE.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.UPDATE.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.TRUNCATE.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.SELECT.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.INSERT_INTO.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.DROP_TABLE.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.DROP_KEYSPACE.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.DROP_INDEX.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.DELETE.value));
+        vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.USE, CqlKeyword.Def.UPDATE, CqlKeyword.Def.TRUNCATE,
+                CqlKeyword.Def.SELECT, CqlKeyword.Def.INSERT_INTO, CqlKeyword.Def.DROP_TABLE, CqlKeyword.Def.DROP_KEYSPACE,
+                CqlKeyword.Def.DROP_INDEX, CqlKeyword.Def.DELETE, CqlKeyword.Def.CREATE_KEYSPACE);
     }
 
     @Test
     public void testFindCompletion_Select_SelectContainsAllColumns() {
-        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select *"), 8);
+        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select *"), 88);
         vh.verifyFullAndMinCompletionTheSame(completion, 30);
         ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
 
@@ -63,10 +100,9 @@ public class TestCompletionService extends AbstractTestCase {
 
         ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
         vh.verifyMybooksColumns(cmp, false);
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.WHERE.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.LIMIT.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.ORDER_BY.value));
-        assertTrue(cmp.toString(), cmp.contains(CqlKeyword.Def.ALLOW_FILTERING.value));
+
+        vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.WHERE, CqlKeyword.Def.LIMIT, CqlKeyword.Def.ORDER_BY,
+                CqlKeyword.Def.ALLOW_FILTERING);
     }
 
     @Test
@@ -91,9 +127,17 @@ public class TestCompletionService extends AbstractTestCase {
 
     @Test
     public void testFindCompletion_Select_AfterOrderBy() {
-        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT,
-                "select * from cqldemo.mybooks  where king " +
-                "" + "= 'none' AND reign_start >= 1500 AND reign_start < 3000 LIMIT 10 ALLOW FILTERING ORDER by "), 131);
+        veifySelectWithOrderBy("select * from cqldemo.mybooks  where king = 'none' AND reign_start >= 1500 AND reign_start < "
+                + "3000 LIMIT 10 ALLOW FILTERING ORDER by ");
+    }
+
+    @Test
+    public void testFindCompletion_Select_AfterOrderByNoWhere() {
+        veifySelectWithOrderBy("select * from cqldemo.mybooks ORDER by ");
+    }
+
+    private void veifySelectWithOrderBy(String cql) {
+        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, cql), -1);
         vh.verifyFullAndMinCompletionTheSame(completion, 18);
 
         ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
