@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import javax.inject.Inject;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 /**
@@ -26,6 +25,38 @@ public class TestCompletionService extends AbstractTestCase {
     @Inject
     private CompletionService cs;
 
+
+    @Test
+    public void testFindCompletion_Delete_Start() throws Exception {
+        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete "));
+
+        vh.verifyFullAndMinCompletionTheSame(completion, 30);
+        ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
+
+        vh.verifyMybooksColumns(cmp, true);
+        vh.verifySystemColumns(cmp, true);
+        vh.verifyCompoundTestColumns(cmp, true);
+        vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.FROM);
+    }
+
+
+    @Test
+    public void testFindCompletion_Delete_From() throws Exception {
+       // XXXX qs
+        ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete abc from "));
+
+        vh.verifyFullAndMinCompletionTheSame(completion, 30);
+        ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
+
+        vh.verifyTableNamesCqlDemo(cmp,false);
+        vh.verifyTableNamesSystem(cmp,false);
+        vh.verifyTableNamesCqlDemo(cmp,true);
+        vh.verifyMybooksColumns(cmp, false);
+        vh.verifySystemColumns(cmp, false);
+        vh.verifyCompoundTestColumns(cmp, false);
+        vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.FROM);
+    }
+
     @Test
     public void testFindCompletion_CreateKeyspace_Start() throws Exception {
         ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, "create keyspace "));
@@ -38,25 +69,24 @@ public class TestCompletionService extends AbstractTestCase {
 
     @Test
     public void testFindCompletion_CreateKeyspace_With() throws Exception {
-        verifyCreatekeyspaceWiht("create keyspace with ");
+        verifyCreateKeyspaceWith("create keyspace with ");
     }
-
 
     @Test
     public void testFindCompletion_CreateKeyspace_ExistsWith() throws Exception {
-        verifyCreatekeyspaceWiht("create keyspace inf not exists with ");
+        verifyCreateKeyspaceWith("create keyspace inf not exists with ");
     }
 
-    private void verifyCreatekeyspaceWiht(String cql){
+    private void verifyCreateKeyspaceWith(String cql) {
         ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, cql));
 
         vh.verifyFullAndMinCompletionNotTheSame(completion, 11, 35);
 
         ImmutableSortedSet<? extends CqlPart> mcmp = completion.cqlCompletion.minCompletion;
-        vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.VALUES,CqlKeyword.Def.TRUE,
-                CqlKeyword.Def.SIMPLE_STRATEGY,CqlKeyword.Def.REPLICATION_FACTOR,CqlKeyword.Def.REPLICATION,
-                CqlKeyword.Def.OLD_NETWORK_TOPOLOGY_STRATEGY,CqlKeyword.Def.NETWORK_TOPOLOGY_STRATEGY,CqlKeyword.Def.FALSE,
-                CqlKeyword.Def.DURABLE_WRITES,CqlKeyword.Def.CLASS,CqlKeyword.Def.AND);
+        vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.VALUES, CqlKeyword.Def.TRUE, CqlKeyword.Def.SIMPLE_STRATEGY,
+                CqlKeyword.Def.REPLICATION_FACTOR, CqlKeyword.Def.REPLICATION, CqlKeyword.Def.OLD_NETWORK_TOPOLOGY_STRATEGY,
+                CqlKeyword.Def.NETWORK_TOPOLOGY_STRATEGY, CqlKeyword.Def.FALSE, CqlKeyword.Def.DURABLE_WRITES,
+                CqlKeyword.Def.CLASS, CqlKeyword.Def.AND);
 
 
         ImmutableSortedSet<? extends CqlPart> fcmp = completion.cqlCompletion.fullCompletion;
@@ -81,7 +111,7 @@ public class TestCompletionService extends AbstractTestCase {
     }
 
     @Test
-    public void testFindCompletion_Select_SelectContainsAllColumns() {
+    public void testFindCompletion_Select_ContainsAllColumns() {
         ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select *"), 88);
         vh.verifyFullAndMinCompletionTheSame(completion, 30);
         ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
