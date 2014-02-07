@@ -60,7 +60,7 @@ public abstract class AbstractTestCase {
         CASSANDRA.start();
     }
 
-    private static void rmdir(Path dir) throws IOException {
+    private static void rmdir(Path dir) {
         File dirFile = dir.toFile();
         if (dirFile.exists()) {
             FileUtils.deleteRecursive(dirFile);
