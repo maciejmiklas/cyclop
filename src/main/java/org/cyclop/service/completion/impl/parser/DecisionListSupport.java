@@ -3,17 +3,13 @@ package org.cyclop.service.completion.impl.parser;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQueryName;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public interface DecisionListSupport {
 
-    /**
-     * @return two dimensionless array: x - next completion, y - optional compilations for current position in x
-     */
-    CqlPartCompletion[][] getDecisionList();
+	/** @return two dimensionless array: x - next completion, y - optional compilations for current position in x */
+	CqlPartCompletion[][] getDecisionList();
 
-    CqlKeyword supports();
+	CqlKeyword supports();
 
-    CqlQueryName queryName();
+	CqlQueryName queryName();
 }

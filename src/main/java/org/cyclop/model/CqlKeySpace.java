@@ -2,23 +2,21 @@ package org.cyclop.model;
 
 import net.jcip.annotations.Immutable;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 @Immutable
 public class CqlKeySpace extends CqlPart {
 
-    public CqlKeySpace(String part) {
-        super(part);
-    }
+	public CqlKeySpace(String part) {
+		super(part);
+	}
 
-    @Override
-    public String toString() {
-        return "CqlKeySpace{" + "part='" + part + '\'' + '}';
-    }
+	@Override
+	public String toString() {
+		return "CqlKeySpace{" + "part='" + part + '\'' + '}';
+	}
 
-    @Override
-    public CqlType type() {
-        return CqlType.KEYSPACE;
-    }
+	@Override
+	public CqlType type() {
+		return CqlType.KEYSPACE;
+	}
 }

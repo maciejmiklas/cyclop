@@ -2,13 +2,13 @@
 
 <i>Syntax:</i>
 <pre class="cq-helpCqlSyntax">&lt;insertStatement&gt; ::= <span class="cq-hintCqlKeyword">INSERT INTO</span> &lt;<span
-        class="cq-hintCqlTable">tablename</span>&gt;
+		class="cq-hintCqlTable">tablename</span>&gt;
                              '(' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ( ',' &lt;<span
-            class="cq-hintCqlColumn">identifier</span>&gt; )* ')'
+			class="cq-hintCqlColumn">identifier</span>&gt; )* ')'
                       <span class="cq-hintCqlKeyword">VALUES</span> '(' &lt;term-or-literal&gt; ( ',' &lt;term-or-literal&gt; )* ')'
                       ( <span class="cq-hintCqlKeyword">IF NOT EXISTS</span> )?
                       ( <span class="cq-hintCqlKeyword">USING</span> &lt;option&gt; ( <span
-            class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
+			class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
 
 &lt;term-or-literal&gt; ::= &lt;term&gt;
                     | &lt;collection-literal&gt;
@@ -18,9 +18,9 @@
 </pre>
 <i>Sample:</i>
 <pre class="cq-helpCqlSample"><span class="cq-hintCqlKeyword">INSERT INTO</span> <span
-        class="cq-hintCqlTable">NerdMovies</span> (<span class="cq-hintCqlColumn">movie</span>, <span
-        class="cq-hintCqlColumn">director</span>, <span
-        class="cq-hintCqlColumn">main_actor</span>, <span class="cq-hintCqlColumn">year</span>)
+		class="cq-hintCqlTable">NerdMovies</span> (<span class="cq-hintCqlColumn">movie</span>, <span
+		class="cq-hintCqlColumn">director</span>, <span
+		class="cq-hintCqlColumn">main_actor</span>, <span class="cq-hintCqlColumn">year</span>)
                 <span class="cq-hintCqlKeyword">VALUES</span> ('Serenity', 'Joss Whedon', 'Nathan Fillion', 2005)
 <span class="cq-hintCqlKeyword">USING TTL</span> 86400;
 </pre>

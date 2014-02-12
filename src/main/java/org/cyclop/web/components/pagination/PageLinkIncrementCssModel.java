@@ -5,46 +5,44 @@ import org.apache.wicket.model.IModel;
 
 import java.io.Serializable;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public class PageLinkIncrementCssModel implements IModel<String>, Serializable {
 
-    protected final IPageable pageable;
+	protected final IPageable pageable;
 
-    private final long pageNumber;
+	private final long pageNumber;
 
-    public PageLinkIncrementCssModel(IPageable pageable, long pageNumber) {
-        this.pageable = pageable;
-        this.pageNumber = pageNumber;
-    }
+	public PageLinkIncrementCssModel(IPageable pageable, long pageNumber) {
+		this.pageable = pageable;
+		this.pageNumber = pageNumber;
+	}
 
-    @Override
-    public String getObject() {
-        return isEnabled() ? "" : "disabled";
-    }
+	@Override
+	public String getObject() {
+		return isEnabled() ? "" : "disabled";
+	}
 
-    @Override
-    public void setObject(String object) {
-    }
+	@Override
+	public void setObject(String object) {
+	}
 
-    @Override
-    public void detach() {
-    }
+	@Override
+	public void detach() {
+	}
 
-    public boolean isEnabled() {
-        if (pageNumber < 0) {
-            return !isFirst();
-        } else {
-            return !isLast();
-        }
-    }
+	public boolean isEnabled() {
+		if (pageNumber < 0) {
+			return !isFirst();
+		} else {
+			return !isLast();
+		}
+	}
 
-    public boolean isFirst() {
-        return pageable.getCurrentPage() <= 0;
-    }
+	public boolean isFirst() {
+		return pageable.getCurrentPage() <= 0;
+	}
 
-    public boolean isLast() {
-        return pageable.getCurrentPage() >= (pageable.getPageCount() - 1);
-    }
+	public boolean isLast() {
+		return pageable.getCurrentPage() >= (pageable.getPageCount() - 1);
+	}
 }

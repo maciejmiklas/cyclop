@@ -8,29 +8,27 @@ import org.cyclop.model.CqlQuery;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 @Named
 public abstract class NotSupportedCompletion extends MarkerBasedCompletion {
 
-    private CqlCompletion completion;
+	private CqlCompletion completion;
 
-    protected NotSupportedCompletion(CqlPart startMarker) {
-        super(startMarker);
-    }
+	protected NotSupportedCompletion(CqlPart startMarker) {
+		super(startMarker);
+	}
 
-    @PostConstruct
-    public void init() {
-        completion = CqlCompletion.Builder.naturalOrder().all(new CqlNotSupported("'" + getNotSupportedText() + "' is" +
-                " not supported yet.....")).build();
-    }
+	@PostConstruct
+	public void init() {
+		completion = CqlCompletion.Builder.naturalOrder().all(new CqlNotSupported("'" + getNotSupportedText() + "' is" +
+				" not supported yet.....")).build();
+	}
 
-    @Override
-    public final CqlCompletion getCompletion(CqlQuery query) {
-        return completion;
-    }
+	@Override
+	public final CqlCompletion getCompletion(CqlQuery query) {
+		return completion;
+	}
 
-    protected abstract String getNotSupportedText();
+	protected abstract String getNotSupportedText();
 
 }

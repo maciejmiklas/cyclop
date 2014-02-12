@@ -11,34 +11,31 @@ import org.cyclop.service.completion.impl.parser.CqlParser;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 @Named
-@ThreadSafe
-class CompletionServiceImpl implements CompletionService {
+@ThreadSafe class CompletionServiceImpl implements CompletionService {
 
-    @Inject
-    private CqlParser parser;
+	@Inject
+	private CqlParser parser;
 
-    @Override
-    public ContextCqlCompletion findInitialCompletion() {
-        return new ContextCqlCompletion(CqlQueryName.UNKNOWN, parser.findInitialCompletion());
-    }
+	@Override
+	public ContextCqlCompletion findInitialCompletion() {
+		return new ContextCqlCompletion(CqlQueryName.UNKNOWN, parser.findInitialCompletion());
+	}
 
-    @Override
-    public ContextCqlCompletion findCompletion(CqlQuery cqlQuery) {
-        return findCompletion(cqlQuery, -1);
-    }
+	@Override
+	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery) {
+		return findCompletion(cqlQuery, -1);
+	}
 
-    @Override
-    public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
+	@Override
+	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
 
-        ContextCqlCompletion comp = parser.findCompletion(cqlQuery, cursorPosition);
-        if (comp == null) {
-            comp = new ContextCqlCompletion(CqlQueryName.UNKNOWN, CqlCompletion.Builder.naturalOrder().build());
-        }
+		ContextCqlCompletion comp = parser.findCompletion(cqlQuery, cursorPosition);
+		if (comp == null) {
+			comp = new ContextCqlCompletion(CqlQueryName.UNKNOWN, CqlCompletion.Builder.naturalOrder().build());
+		}
 
-        return comp;
-    }
+		return comp;
+	}
 }

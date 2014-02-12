@@ -11,57 +11,55 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.web.components.buttons.StateButton;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public class ButtonsPanel extends Panel {
 
-    private static final JavaScriptResourceReference JS_EXPAND = new JavaScriptResourceReference(ButtonsPanel.class,
-            "buttons.js");
+	private static final JavaScriptResourceReference JS_EXPAND = new JavaScriptResourceReference(ButtonsPanel.class,
+			"buttons.js");
 
-    public ButtonsPanel(String id, final ButtonListener buttonListener, boolean completionPressed) {
-        super(id);
-        setRenderBodyOnly(true);
+	public ButtonsPanel(String id, final ButtonListener buttonListener, boolean completionPressed) {
+		super(id);
+		setRenderBodyOnly(true);
 
-        AjaxFallbackLink<CqlQuery> executeQueryLink = new AjaxFallbackLink<CqlQuery>("execCql") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                buttonListener.onClickExecCql(target);
-                target.appendJavaScript("cqlQuerySuccessResponse()");
-            }
-        };
-        add(executeQueryLink);
+		AjaxFallbackLink<CqlQuery> executeQueryLink = new AjaxFallbackLink<CqlQuery>("execCql") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				buttonListener.onClickExecCql(target);
+				target.appendJavaScript("cqlQuerySuccessResponse()");
+			}
+		};
+		add(executeQueryLink);
 
-        AjaxFallbackLink<CqlQuery> exportCqlResult = new AjaxFallbackLink<CqlQuery>("exportCqlResult") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                buttonListener.onClickQueryResultExport(target);
-            }
-        };
-        add(exportCqlResult);
+		AjaxFallbackLink<CqlQuery> exportCqlResult = new AjaxFallbackLink<CqlQuery>("exportCqlResult") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				buttonListener.onClickQueryResultExport(target);
+			}
+		};
+		add(exportCqlResult);
 
-        Link<CqlQuery> logOut = new Link<CqlQuery>("logOut") {
+		Link<CqlQuery> logOut = new Link<CqlQuery>("logOut") {
 
-            @Override
-            public void onClick() {
-                buttonListener.onClickLogOut();
-            }
-        };
-        add(logOut);
+			@Override
+			public void onClick() {
+				buttonListener.onClickLogOut();
+			}
+		};
+		add(logOut);
 
-        AjaxFallbackLink<Void> completion = new StateButton("completion", completionPressed, "btn btn-sm btn-primary",
-                "btn btn-sm btn-primary active") {
-            @Override
-            protected void onClick(AjaxRequestTarget target, boolean pressed) {
-                buttonListener.onClickCompletion(target, pressed);
-            }
-        };
-        add(completion);
-    }
+		AjaxFallbackLink<Void> completion = new StateButton("completion", completionPressed, "btn btn-sm btn-primary",
+				"btn btn-sm btn-primary active") {
+			@Override
+			protected void onClick(AjaxRequestTarget target, boolean pressed) {
+				buttonListener.onClickCompletion(target, pressed);
+			}
+		};
+		add(completion);
+	}
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        response.render(JavaScriptReferenceHeaderItem.forReference(JS_EXPAND));
-        response.render(OnDomReadyHeaderItem.forScript("initButtons()"));
-    }
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		response.render(JavaScriptReferenceHeaderItem.forReference(JS_EXPAND));
+		response.render(OnDomReadyHeaderItem.forScript("initButtons()"));
+	}
 }

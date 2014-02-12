@@ -1,5 +1,5 @@
 <FindBugsFilter>
-    <Match>
-        <Bug pattern="SE_BAD_FIELD" />
-    </Match>
+	<Match>
+		<Bug pattern="SE_BAD_FIELD"/>
+	</Match>
 </FindBugsFilter>

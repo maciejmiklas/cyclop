@@ -9,37 +9,34 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-/**
- * @author Maciej Miklas
- */
-@Named
-class UseDecisionListSupport implements DecisionListSupport {
+/** @author Maciej Miklas */
+@Named class UseDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = CqlKeyword.Def.USE.value;
+	private final CqlKeyword supports = CqlKeyword.Def.USE.value;
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    UseCompletion useCompletion;
+	@Inject
+	UseCompletion useCompletion;
 
-    @PostConstruct
-    public void init() {
-        decisionList = new CqlPartCompletion[][]{{useCompletion}};
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][]{{useCompletion}};
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-        return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword supports() {
-        return supports;
-    }
+	@Override
+	public CqlKeyword supports() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryName queryName() {
-        return CqlQueryName.USE;
-    }
+	@Override
+	public CqlQueryName queryName() {
+		return CqlQueryName.USE;
+	}
 
 }

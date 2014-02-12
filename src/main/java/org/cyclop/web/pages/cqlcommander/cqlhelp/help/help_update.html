@@ -4,11 +4,11 @@
 <pre class="cq-helpCqlSyntax">
 &lt;update-stmt&gt; ::= <span class="cq-hintCqlKeyword">UPDATE</span> &lt;<span class="cq-hintCqlTable">tablename</span>&gt;
                   ( <span class="cq-hintCqlKeyword">USING</span> &lt;option&gt; ( <span
-        class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
+		class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
                   <span class="cq-hintCqlKeyword">SET</span> &lt;assignment&gt; ( ',' &lt;assignment&gt; )*
                   <span class="cq-hintCqlKeyword">WHERE</span> &lt;where-clause&gt;
                   ( <span class="cq-hintCqlKeyword">IF</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt; ( <span
-        class="cq-hintCqlKeyword">AND</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt; )* )?
+		class="cq-hintCqlKeyword">AND</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt; )* )?
 
 &lt;assignment&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt;
                | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ('+' | '-') (&lt;int-term&gt; | &lt;set-literal&gt; | &lt;list-literal&gt;)
@@ -27,15 +27,15 @@
 <i>Sample:</i>
 <pre class="cq-helpCqlSample">
 <span class="cq-hintCqlKeyword">UPDATE</span> <span class="cq-hintCqlTable">NerdMovies</span> <span
-        class="cq-hintCqlKeyword">USING TTL</span> 400
+		class="cq-hintCqlKeyword">USING TTL</span> 400
 <span class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">director</span> = 'Joss Whedon',
     <span class="cq-hintCqlColumn">main_actor</span> = 'Nathan Fillion',
     <span class="cq-hintCqlColumn">year</span> = 2005
 <span class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">movie</span> = 'Serenity';
 
 <span class="cq-hintCqlKeyword">UPDATE</span> <span class="cq-hintCqlTable">UserActions</span> <span
-        class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">total</span> = <span
-        class="cq-hintCqlColumn">total</span> + 2 <span class="cq-hintCqlKeyword">WHERE</span> <span
-        class="cq-hintCqlColumn">user</span> = B70DE1D0-9908-4AE3-BE34-5573E5B09F14 <span
-        class="cq-hintCqlKeyword">AND</span> <span class="cq-hintCqlColumn">action</span> = 'click';
+		class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">total</span> = <span
+		class="cq-hintCqlColumn">total</span> + 2 <span class="cq-hintCqlKeyword">WHERE</span> <span
+		class="cq-hintCqlColumn">user</span> = B70DE1D0-9908-4AE3-BE34-5573E5B09F14 <span
+		class="cq-hintCqlKeyword">AND</span> <span class="cq-hintCqlColumn">action</span> = 'click';
 </pre>

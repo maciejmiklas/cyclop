@@ -1,36 +1,34 @@
 package org.cyclop.service.completion.impl.parser.update;
 
 import com.google.common.base.Objects;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.service.completion.impl.parser.CompletionHelper;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-/**
- * @author Maciej Miklas
- */
-@Named("update.TableNameCompletion")
-class TableNameCompletion extends MarkerBasedCompletion {
+import javax.inject.Inject;
+import javax.inject.Named;
 
-    @Inject
-    private CompletionHelper completionHelper;
+/** @author Maciej Miklas */
+@Named("update.TableNameCompletion") class TableNameCompletion extends MarkerBasedCompletion {
 
-    public TableNameCompletion() {
-        super(CqlKeyword.Def.UPDATE.value);
-    }
+	@Inject
+	private CompletionHelper completionHelper;
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-        CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.UPDATE.value);
-        return completion.build();
-    }
+	public TableNameCompletion() {
+		super(CqlKeyword.Def.UPDATE.value);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.UPDATE.value);
+		return completion.build();
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

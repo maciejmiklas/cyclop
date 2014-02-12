@@ -2,9 +2,6 @@ package org.cyclop.service.completion.impl.parser.dropindex;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
@@ -14,49 +11,50 @@ import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.cassandra.impl.QueryScope;
 import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
 
-/**
- * @author Maciej Miklas
- */
-@Named("dropindex.DropCompletion")
-class DropCompletion implements OffsetBasedCompletion {
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-    private CqlCompletion.BuilderTemplate completion;
+/** @author Maciej Miklas */
+@Named("dropindex.DropCompletion") class DropCompletion implements OffsetBasedCompletion {
 
-    @Inject
-    private QueryService queryService;
+	private CqlCompletion.BuilderTemplate completion;
 
-    @Inject
-    private QueryScope queryScope;
+	@Inject
+	private QueryService queryService;
 
-    @PostConstruct
-    public void init() {
-        completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.IF_NOT_EXISTS.value).template();
-    }
+	@Inject
+	private QueryScope queryScope;
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-        CqlKeySpace activeKeySpace = queryScope.getActiveKeySpace();
-        ImmutableSortedSet<CqlIndex> allIndexesForActiveKeySpace = queryService.findAllIndexes(activeKeySpace);
-        return completion.naturalOrder().all(allIndexesForActiveKeySpace).build();
-    }
+	@PostConstruct
+	public void init() {
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.IF_NOT_EXISTS.value).template();
+	}
 
-    @Override
-    public int canApply(CqlQuery query, int queryPosition) {
-        String cqlLc = query.cqlLc;
-        int cqlLcLen = query.cqlLc.length();
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		CqlKeySpace activeKeySpace = queryScope.getActiveKeySpace();
+		ImmutableSortedSet<CqlIndex> allIndexesForActiveKeySpace = queryService.findAllIndexes(activeKeySpace);
+		return completion.naturalOrder().all(allIndexesForActiveKeySpace).build();
+	}
 
-        int indCreate = cqlLc.indexOf(CqlKeyword.Def.DROP_INDEX.value + " ", queryPosition);
-        if (indCreate + 1 >= cqlLcLen) {
-            return -1;
-        }
+	@Override
+	public int canApply(CqlQuery query, int queryPosition) {
+		String cqlLc = query.part;
+		int cqlLcLen = query.partLc.length();
 
-        int indLastSpace = cqlLc.indexOf(' ', indCreate + 1);
+		int indCreate = cqlLc.indexOf(CqlKeyword.Def.DROP_INDEX.value + " ", queryPosition);
+		if (indCreate + 1 >= cqlLcLen) {
+			return -1;
+		}
 
-        return indLastSpace;
-    }
+		int indLastSpace = cqlLc.indexOf(' ', indCreate + 1);
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).add("completion", completion).toString();
-    }
+		return indLastSpace;
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("completion", completion).toString();
+	}
 }

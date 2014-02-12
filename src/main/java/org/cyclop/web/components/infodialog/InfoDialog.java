@@ -12,65 +12,63 @@ import org.cyclop.web.common.JsTextTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public class InfoDialog extends Panel {
 
-    private JsTextTemplate infoJs = new JsTextTemplate(new PackageTextTemplate(InfoDialog.class, "infoDialog.js"));
+	private JsTextTemplate infoJs = new JsTextTemplate(new PackageTextTemplate(InfoDialog.class, "infoDialog.js"));
 
-    private final WebMarkupContainer infoDialog;
+	private final WebMarkupContainer infoDialog;
 
-    private final StringModel titleModel;
+	private final StringModel titleModel;
 
-    private final StringModel messageModel;
+	private final StringModel messageModel;
 
-    public InfoDialog(String id) {
-        super(id);
-        infoDialog = new WebMarkupContainer("infoDialog");
-        infoDialog.setVisible(false);
-        infoDialog.setOutputMarkupId(true);
-        infoDialog.setOutputMarkupPlaceholderTag(true);
-        titleModel = new StringModel();
-        infoDialog.add(new AttributeModifier("title", titleModel));
+	public InfoDialog(String id) {
+		super(id);
+		infoDialog = new WebMarkupContainer("infoDialog");
+		infoDialog.setVisible(false);
+		infoDialog.setOutputMarkupId(true);
+		infoDialog.setOutputMarkupPlaceholderTag(true);
+		titleModel = new StringModel();
+		infoDialog.add(new AttributeModifier("title", titleModel));
 
-        add(infoDialog);
+		add(infoDialog);
 
-        messageModel = new StringModel();
-        Label message = new Label("message", messageModel);
-        infoDialog.add(message);
-    }
+		messageModel = new StringModel();
+		Label message = new Label("message", messageModel);
+		infoDialog.add(message);
+	}
 
-    public void open(AjaxRequestTarget target, String linkNameToDisable, String title, String message) {
-        titleModel.setObject(title);
-        messageModel.setObject(message);
-        infoDialog.setVisible(true);
-        target.add(infoDialog);
+	public void open(AjaxRequestTarget target, String linkNameToDisable, String title, String message) {
+		titleModel.setObject(title);
+		messageModel.setObject(message);
+		infoDialog.setVisible(true);
+		target.add(infoDialog);
 
-        Map<String, String> jsVariables = new HashMap<>();
-        jsVariables.put("infoDialogId", "#" + infoDialog.getMarkupId());
-        jsVariables.put("linkNameToDisable", "#" + linkNameToDisable);
-        String jsContent = infoJs.asString(jsVariables);
-        target.appendJavaScript(jsContent);
-    }
+		Map<String, String> jsVariables = new HashMap<>();
+		jsVariables.put("infoDialogId", "#" + infoDialog.getMarkupId());
+		jsVariables.put("linkNameToDisable", "#" + linkNameToDisable);
+		String jsContent = infoJs.asString(jsVariables);
+		target.appendJavaScript(jsContent);
+	}
 
-    private final static class StringModel implements IModel<String> {
+	private final static class StringModel implements IModel<String> {
 
-        private String value = "";
+		private String value = "";
 
-        @Override
-        public String getObject() {
-            return value;
-        }
+		@Override
+		public String getObject() {
+			return value;
+		}
 
-        @Override
-        public void setObject(String object) {
-            this.value = object;
-        }
+		@Override
+		public void setObject(String object) {
+			this.value = object;
+		}
 
-        @Override
-        public void detach() {
-        }
+		@Override
+		public void detach() {
+		}
 
-    }
+	}
 }

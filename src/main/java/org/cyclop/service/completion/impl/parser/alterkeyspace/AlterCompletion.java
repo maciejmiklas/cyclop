@@ -1,27 +1,25 @@
 package org.cyclop.service.completion.impl.parser.alterkeyspace;
 
 import com.google.common.base.Objects;
-import javax.inject.Named;
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
 
-/**
- * @author Maciej Miklas
- */
-@Named("alterkeyspace.AlterCompletion")
-class AlterCompletion extends NotSupportedCompletion {
+import javax.inject.Named;
 
-    public AlterCompletion() {
-        super(new CqlNotSupported("alter"));
-    }
+/** @author Maciej Miklas */
+@Named("alterkeyspace.AlterCompletion") class AlterCompletion extends NotSupportedCompletion {
 
-    @Override
-    protected String getNotSupportedText() {
-        return "alter keyspace";
-    }
+	public AlterCompletion() {
+		super(new CqlNotSupported("alter"));
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	protected String getNotSupportedText() {
+		return "alter keyspace";
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 }

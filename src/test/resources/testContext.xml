@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
-        <property name="scopes">
-            <map>
-                <entry key="session" value-ref="threadTestScope" />
-            </map>
-        </property>
-    </bean>
+	<bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+		<property name="scopes">
+			<map>
+				<entry key="session" value-ref="threadTestScope"/>
+			</map>
+		</property>
+	</bean>
 
-    <context:property-placeholder location="classpath:cyclop.properties,classpath:cyclop-test.properties"
-                                  system-properties-mode="OVERRIDE"/>
+	<context:property-placeholder location="classpath:cyclop.properties,classpath:cyclop-test.properties"
+								  system-properties-mode="OVERRIDE"/>
 
-    <import resource="classpath:applicationContext.xml"/>
+	<import resource="classpath:applicationContext.xml"/>
 
 </beans>

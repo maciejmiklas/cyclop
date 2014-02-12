@@ -9,31 +9,29 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.cyclop.model.CqlColumnValue;
 import org.cyclop.model.CqlPartitionKeyValue;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 class CollectionViewPanel extends Panel {
 
-    CollectionViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue,
-                        final ImmutableList<CqlColumnValue> content) {
-        super(id);
+	CollectionViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue,
+						final ImmutableList<CqlColumnValue> content) {
+		super(id);
 
-        ListView<CqlColumnValue> cqlCollectionListEntry = new ListView<CqlColumnValue>("listEntry", content) {
-            @Override
-            protected void populateItem(ListItem<CqlColumnValue> item) {
-                CqlColumnValue cqlColumnValue = item.getModelObject();
-                Component entry = new ColumnValuePanel("entryValue", cqlPartitionKeyValue, cqlColumnValue, true);
-                item.add(entry);
-            }
-        };
-        add(cqlCollectionListEntry);
-    }
+		ListView<CqlColumnValue> cqlCollectionListEntry = new ListView<CqlColumnValue>("listEntry", content) {
+			@Override
+			protected void populateItem(ListItem<CqlColumnValue> item) {
+				CqlColumnValue cqlColumnValue = item.getModelObject();
+				Component entry = new ColumnValuePanel("entryValue", cqlPartitionKeyValue, cqlColumnValue, true);
+				item.add(entry);
+			}
+		};
+		add(cqlCollectionListEntry);
+	}
 
-    @Override
-    protected void onComponentTag(ComponentTag tag) {
-        if ("a".equalsIgnoreCase(tag.getName())) {
-            tag.setName("div");
-        }
-        super.onComponentTag(tag);
-    }
+	@Override
+	protected void onComponentTag(ComponentTag tag) {
+		if ("a".equalsIgnoreCase(tag.getName())) {
+			tag.setName("div");
+		}
+		super.onComponentTag(tag);
+	}
 }

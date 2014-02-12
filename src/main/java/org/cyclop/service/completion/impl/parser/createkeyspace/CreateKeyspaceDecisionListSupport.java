@@ -1,47 +1,45 @@
 package org.cyclop.service.completion.impl.parser.createkeyspace;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
-/**
- * @author Maciej Miklas
- */
-@Named
-class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-    private final CqlKeyword supports = CqlKeyword.Def.CREATE_KEYSPACE.value;
+/** @author Maciej Miklas */
+@Named class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
 
-    private CqlPartCompletion[][] decisionList;
+	private final CqlKeyword supports = CqlKeyword.Def.CREATE_KEYSPACE.value;
 
-    @Inject
-    private AfterKeyspaceNameCompletion afterKeyspaceNameCompletion;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    private WithCompletion withCompletion;
+	@Inject
+	private AfterKeyspaceNameCompletion afterKeyspaceNameCompletion;
 
-    @PostConstruct
-    public void init() {
-        decisionList = new CqlPartCompletion[][]{{afterKeyspaceNameCompletion}, {withCompletion}};
-    }
+	@Inject
+	private WithCompletion withCompletion;
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-        return decisionList;
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][]{{afterKeyspaceNameCompletion}, {withCompletion}};
+	}
 
-    @Override
-    public CqlKeyword supports() {
-        return supports;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlQueryName queryName() {
-        return CqlQueryName.CREATE_KEYSPACE;
-    }
+	@Override
+	public CqlKeyword supports() {
+		return supports;
+	}
+
+	@Override
+	public CqlQueryName queryName() {
+		return CqlQueryName.CREATE_KEYSPACE;
+	}
 
 }

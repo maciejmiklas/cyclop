@@ -1,36 +1,26 @@
 package org.cyclop.service.completion.impl.parser.select;
 
 import com.google.common.base.Objects;
-import java.util.ArrayList;
-import java.util.List;
-import javax.inject.Named;
+import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlPart;
 import org.cyclop.service.completion.impl.parser.template.ColumnNameCompletionTemplate;
 
-/**
- * @author Maciej Miklas
- */
-@Named("select.SelectCompletionTemplate")
-class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
+import javax.inject.Named;
 
-    private final static List<CqlPart> staticPart = new ArrayList<>();
+/** @author Maciej Miklas */
+@Named("select.SelectCompletionTemplate") class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
 
-    public SelectCompletionTemplate() {
-        super(staticPart, CqlKeyword.Def.FROM.value, CqlKeyword.Def.SELECT.value);
-    }
+	private final static CqlCompletion.Builder STATC_PART = CqlCompletion.Builder.naturalOrder()
+			.all(CqlKeyword.Def.COUNT_AST.value).all(CqlKeyword.Def.COUNT_ONE.value)
+			.all(CqlKeyword.Def.WRITETIME.value).all(CqlKeyword.Def.TTL.value).all(CqlKeyword.Def.FROM.value);
 
-    static {
-        staticPart.add(CqlKeyword.Def.COUNT_AST.value);
-        staticPart.add(CqlKeyword.Def.COUNT_ONE.value);
-        staticPart.add(CqlKeyword.Def.WRITETIME.value);
-        staticPart.add(CqlKeyword .Def.TTL.value);
-        staticPart.add(CqlKeyword .Def.FROM.value);
-    }
+	public SelectCompletionTemplate() {
+		super(STATC_PART, CqlKeyword.Def.FROM.value, CqlKeyword.Def.SELECT.value);
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

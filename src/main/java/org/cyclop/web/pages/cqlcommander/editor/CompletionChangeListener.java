@@ -5,12 +5,10 @@ import org.cyclop.model.ContextCqlCompletion;
 
 import java.io.Serializable;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public interface CompletionChangeListener extends Serializable {
 
-    void onCompletionChange(ContextCqlCompletion currentCompletion);
+	void onCompletionChange(ContextCqlCompletion currentCompletion);
 
-    Component getReferencesForRefresh();
+	Component getReferencesForRefresh();
 }

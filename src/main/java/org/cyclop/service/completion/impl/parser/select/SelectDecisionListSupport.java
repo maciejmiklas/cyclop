@@ -1,57 +1,55 @@
 package org.cyclop.service.completion.impl.parser.select;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
-/**
- * @author Maciej Miklas
- */
-@Named
-class SelectDecisionListSupport implements DecisionListSupport {
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-    private CqlPartCompletion[][] decisionList;
+/** @author Maciej Miklas */
+@Named class SelectDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = CqlKeyword.Def.SELECT.value;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    private SelectCompletionTemplate selectCompletion;
+	private final CqlKeyword supports = CqlKeyword.Def.SELECT.value;
 
-    @Inject
-    private FromCompletion fromCompletion;
+	@Inject
+	private SelectCompletionTemplate selectCompletion;
 
-    @Inject
-    private AfterFromCompletion afterFromCompletion;
+	@Inject
+	private FromCompletion fromCompletion;
 
-    @Inject
-    private WhereCompletion whereCompletion;
+	@Inject
+	private AfterFromCompletion afterFromCompletion;
 
-    @Inject
-    private OrderByClausePartCompletion orderByClausePartCompletion;
+	@Inject
+	private WhereCompletion whereCompletion;
 
-    @PostConstruct
-    public void init() {
-        decisionList = new CqlPartCompletion[][]{{selectCompletion}, {fromCompletion}, {afterFromCompletion},
-                {whereCompletion, orderByClausePartCompletion}, {orderByClausePartCompletion}};
-    }
+	@Inject
+	private OrderByClausePartCompletion orderByClausePartCompletion;
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-        return decisionList;
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][]{{selectCompletion}, {fromCompletion}, {afterFromCompletion},
+				{whereCompletion, orderByClausePartCompletion}, {orderByClausePartCompletion}};
+	}
 
-    @Override
-    public CqlKeyword supports() {
-        return supports;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlQueryName queryName() {
-        return CqlQueryName.SELECT;
-    }
+	@Override
+	public CqlKeyword supports() {
+		return supports;
+	}
+
+	@Override
+	public CqlQueryName queryName() {
+		return CqlQueryName.SELECT;
+	}
 
 }

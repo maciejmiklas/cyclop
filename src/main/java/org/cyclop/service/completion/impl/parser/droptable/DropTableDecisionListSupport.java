@@ -10,38 +10,35 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 @Named("droptable.DropTableDecisionListSupport")
-@ThreadSafe
-class DropTableDecisionListSupport implements DecisionListSupport {
+@ThreadSafe class DropTableDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = CqlKeyword.Def.DROP_TABLE.value;
+	private final CqlKeyword supports = CqlKeyword.Def.DROP_TABLE.value;
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    DropCompletion dropCompletion;
+	@Inject
+	DropCompletion dropCompletion;
 
-    @PostConstruct
-    public void init() {
-        decisionList = new CqlPartCompletion[][]{{dropCompletion}};
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][]{{dropCompletion}};
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-        return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword supports() {
-        return supports;
-    }
+	@Override
+	public CqlKeyword supports() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryName queryName() {
-        return CqlQueryName.DROP_TABLE;
-    }
+	@Override
+	public CqlQueryName queryName() {
+		return CqlQueryName.DROP_TABLE;
+	}
 
 }

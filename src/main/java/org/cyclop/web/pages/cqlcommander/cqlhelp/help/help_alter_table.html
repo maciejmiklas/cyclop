@@ -4,16 +4,16 @@
 <pre class="cq-helpCqlSyntax">
 
 &lt;alter-table-stmt&gt; ::= <span class="cq-hintCqlKeyword">ALTER</span> (<span class="cq-hintCqlKeyword">TABLE</span> | <span
-        class="cq-hintCqlKeyword">COLUMNFAMILY</span>) &lt;<span class="cq-hintCqlTable">tablename</span>&gt; &lt;instruction&gt;
+		class="cq-hintCqlKeyword">COLUMNFAMILY</span>) &lt;<span class="cq-hintCqlTable">tablename</span>&gt; &lt;instruction&gt;
 
 &lt;instruction&gt; ::= <span class="cq-hintCqlKeyword">ALTER</span> &lt;<span
-        class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">TYPE</span> &lt;<span
-        class="cq-hintCqlType">type</span>&gt;
+		class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">TYPE</span> &lt;<span
+		class="cq-hintCqlType">type</span>&gt;
                 | <span class="cq-hintCqlKeyword">ADD</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; &lt;<span
-        class="cq-hintCqlType">type</span>&gt;
+		class="cq-hintCqlType">type</span>&gt;
                 | <span class="cq-hintCqlKeyword">DROP</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt;
                 | <span class="cq-hintCqlKeyword">WITH</span> &lt;option&gt; ( <span
-        class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )*
+		class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )*
 
 </pre>
 <i>Sample:</i>
@@ -21,7 +21,7 @@
 
 <span class="cq-hintCqlKeyword">ALTER TABLE</span> <span class="cq-hintCqlTable">addamsFamily</span>
 <span class="cq-hintCqlKeyword">ALTER</span> <span class="cq-hintCqlTable">lastKnownLocation</span> <span
-        class="cq-hintCqlKeyword">TYPE</span> <span class="cq-hintCqlType">uuid</span>;
+		class="cq-hintCqlKeyword">TYPE</span> <span class="cq-hintCqlType">uuid</span>;
 
 <span class="cq-hintCqlKeyword">ALTER TABLE</span> <span class="cq-hintCqlTable">addamsFamily</span>
 <span class="cq-hintCqlKeyword">ADD</span> <span class="cq-hintCqlColumn">gravesite</span> <span class="cq-hintCqlType">varchar</span>;

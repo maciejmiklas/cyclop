@@ -13,41 +13,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 class MapViewPanel extends Panel {
 
-    MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue, final ImmutableMap<CqlColumnValue,
-                CqlColumnValue> content) {
-        super(id);
+	MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue, final ImmutableMap<CqlColumnValue,
+			CqlColumnValue> content) {
+		super(id);
 
-        List<Map.Entry<CqlColumnValue, CqlColumnValue>> keysList = new ArrayList<>(content.size());
-        keysList.addAll(content.entrySet());
+		List<Map.Entry<CqlColumnValue, CqlColumnValue>> keysList = new ArrayList<>(content.size());
+		keysList.addAll(content.entrySet());
 
-        ListView<Map.Entry<CqlColumnValue, CqlColumnValue>> cqlCollectionListEntry = new ListView<Map
-                .Entry<CqlColumnValue, CqlColumnValue>>("cqlMapEntry", keysList) {
-            @Override
-            protected void populateItem(ListItem<Map.Entry<CqlColumnValue, CqlColumnValue>> item) {
-                Map.Entry<CqlColumnValue, CqlColumnValue> entry = item.getModelObject();
-                CqlColumnValue key = entry.getKey();
-                CqlColumnValue value = entry.getValue();
+		ListView<Map.Entry<CqlColumnValue, CqlColumnValue>> cqlCollectionListEntry = new ListView<Map
+				.Entry<CqlColumnValue, CqlColumnValue>>("cqlMapEntry", keysList) {
+			@Override
+			protected void populateItem(ListItem<Map.Entry<CqlColumnValue, CqlColumnValue>> item) {
+				Map.Entry<CqlColumnValue, CqlColumnValue> entry = item.getModelObject();
+				CqlColumnValue key = entry.getKey();
+				CqlColumnValue value = entry.getValue();
 
-                Component cqlMapKeyComp = new ColumnValuePanel("cqlMapKey", cqlPartitionKeyValue, key, true);
-                item.add(cqlMapKeyComp);
+				Component cqlMapKeyComp = new ColumnValuePanel("cqlMapKey", cqlPartitionKeyValue, key, true);
+				item.add(cqlMapKeyComp);
 
-                Component cqlMapValueComp = new ColumnValuePanel("cqlMapValue", cqlPartitionKeyValue, value, true);
-                item.add(cqlMapValueComp);
-            }
-        };
-        add(cqlCollectionListEntry);
-    }
+				Component cqlMapValueComp = new ColumnValuePanel("cqlMapValue", cqlPartitionKeyValue, value, true);
+				item.add(cqlMapValueComp);
+			}
+		};
+		add(cqlCollectionListEntry);
+	}
 
-    @Override
-    protected void onComponentTag(ComponentTag tag) {
-        if ("a".equalsIgnoreCase(tag.getName())) {
-            tag.setName("div");
-        }
-        super.onComponentTag(tag);
-    }
+	@Override
+	protected void onComponentTag(ComponentTag tag) {
+		if ("a".equalsIgnoreCase(tag.getName())) {
+			tag.setName("div");
+		}
+		super.onComponentTag(tag);
+	}
 }

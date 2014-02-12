@@ -1,11 +1,9 @@
 package org.cyclop.service.cassandra;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public interface CassandraSession {
 
-    void authenticate(String userName, String password);
+	void authenticate(String userName, String password);
 
-    void close();
+	void close();
 }

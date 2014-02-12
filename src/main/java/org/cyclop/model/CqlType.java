@@ -1,8 +1,6 @@
 package org.cyclop.model;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public enum CqlType {
-    TABLE, COLUMN, QUERY, KEYWORD, PART, KEYSPACE, NOT_SUPPORTED, INDEX
+	TABLE, COLUMN, QUERY, KEYWORD, KEYWORD_VALUE, PART, KEYSPACE, NOT_SUPPORTED, INDEX
 }

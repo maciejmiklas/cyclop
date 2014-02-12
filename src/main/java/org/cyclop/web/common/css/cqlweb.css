@@ -1,180 +1,180 @@
 .cq-hintCqlKeyword {
-    color: #9933cc;
+	color: #9933cc;
 }
 
 .cq-hintCqlType {
-    color: #ba38cb;
+	color: #ba38cb;
 }
 
 .cq-hintCqlColumn {
-    color: #3278b3;
+	color: #3278b3;
 }
 
 .cq-hintCqlKeyspace {
-    color: #1b5aff;
+	color: #1b5aff;
 }
 
 .cq-hintCqlIndex {
-    color: #000fff;
+	color: #000fff;
 }
 
 .cq-hintCqlNotSupported {
-    color: #444444;
+	color: #444444;
 }
 
 .cq-hintCqlTable {
-    color: #0a39b3;
+	color: #0a39b3;
 }
 
 .cq-hintBodyA {
-    color: #ffffff;
-    background-color: #77b300;
-    border-color: #809a00;
+	color: #ffffff;
+	background-color: #77b300;
+	border-color: #809a00;
 }
 
 .cq-hintBodyA hr {
-    border-top-color: #6a8000;
+	border-top-color: #6a8000;
 }
 
 .cq-hintBodyB {
-    color: #ffffff;
-    background-color: #6cb34b;
-    border-color: #809a00;
+	color: #ffffff;
+	background-color: #6cb34b;
+	border-color: #809a00;
 }
 
 .cq-hintBodyB hr {
-    border-top-color: #6a8000;
+	border-top-color: #6a8000;
 }
 
 pre.cq-helpCqlSample {
-    font-size: 90%;
-    padding: 1ex 1ex 1ex 4ex;
-    border: 1px solid #ada;
-    background-color: #fafffa;
+	font-size: 90%;
+	padding: 1ex 1ex 1ex 4ex;
+	border: 1px solid #ada;
+	background-color: #fafffa;
 }
 
 pre.cq-helpCqlSyntax {
-    font-size: 90%;
-    padding: 1ex 1ex 1ex 4ex;
-    border: 1px solid #aaf;
-    background-color: #fafaff;
+	font-size: 90%;
+	padding: 1ex 1ex 1ex 4ex;
+	border: 1px solid #aaf;
+	background-color: #fafaff;
 }
 
 .cq-clqHelpExpandSupportBody > div {
-    font-size: 90%;
-    padding: 1em;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
+	font-size: 90%;
+	padding: 1em;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
 }
 
 .cq-clqHelpExpandSupportBodyDiv {
-    font-size: 90%;
-    padding: 1em;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
+	font-size: 90%;
+	padding: 1em;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
 }
 
 .cq-mainContainer {
-    padding: 0.5em 1.5em 0.5em 0.5em;
+	padding: 0.5em 1.5em 0.5em 0.5em;
 }
 
 .cq-divButtons {
-    float: left;
+	float: left;
 }
 
 .cq-divQuery {
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .cq-textareaCql {
-    resize: vertical;
+	resize: vertical;
 }
 
 .cq-cqlInfoHint {
-    position: fixed;
-    z-index: 2;
-    margin: 0 1em 0 0;
+	position: fixed;
+	z-index: 2;
+	margin: 0 1em 0 0;
 }
 
 .cq-sepLine {
-    padding: 0;
-    margin: 0.5em 0 0.5em 0;
-    border-bottom: 1px solid #282828;
+	padding: 0;
+	margin: 0.5em 0 0.5em 0;
+	border-bottom: 1px solid #282828;
 }
 
 .table-hover > tbody > tr.cq-tableRowSeparator:hover > td {
-    background-color: #0a39b3;
+	background-color: #0a39b3;
 }
 
 .table-hover > tbody > tr.cq-tableRowSeparator,
 .table-hover > tbody > tr.cq-tableRowSeparator > td {
-    padding: 0.3em;
-    border: 0;
+	padding: 0.3em;
+	border: 0;
 }
 
 ul.cq-cqlCollectionList {
-    padding-top: 0;
-    padding-bottom: 0;
+	padding-top: 0;
+	padding-bottom: 0;
 }
 
 .cq-cqlCollectionList {
-    padding: 1.2em;
-    max-height: 10em;
-    overflow: auto;
+	padding: 1.2em;
+	max-height: 10em;
+	overflow: auto;
 }
 
 ::-webkit-scrollbar {
-    width: 10px; /* for vertical scrollbar */
-    height: 10px; /* for horizontal scrollbar */
+	width: 10px; /* for vertical scrollbar */
+	height: 10px; /* for horizontal scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-    background: #444444;
+	background: #444444;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #555555;
+	background: #555555;
 }
 
 .cq-columnValue {
-    word-break: break-all;
-    max-width: 40em;
+	word-break: break-all;
+	max-width: 40em;
 }
 
 .cq-btns-right {
-    float: right !important;
+	float: right !important;
 }
 
 .cq-page-center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px; /* this is half the height of your div*/
-    margin-left: -100px; /*this is half of width of your div*/
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px; /* this is half the height of your div*/
+	margin-left: -100px; /*this is half of width of your div*/
 }
 
 .cq-notify {
-    left: 120%;
-    overflow: hidden;
-    position: fixed;
-    width: 70%;
-    opacity: 0.9;
-    z-index: 10000;
-    transition: left 0.3s ease-out 0s;
-    bottom: 10px;
+	left: 120%;
+	overflow: hidden;
+	position: fixed;
+	width: 70%;
+	opacity: 0.9;
+	z-index: 10000;
+	transition: left 0.3s ease-out 0s;
+	bottom: 10px;
 }
 
 .cq-notify.in {
-    left: 70%;
+	left: 70%;
 }
 
 .feedbackPanelERROR {
-    color: red;
+	color: red;
 }
 
 .cq-disableLink {
-    color: #444444;
-    pointer-events: none;
-    cursor: default;
+	color: #444444;
+	pointer-events: none;
+	cursor: default;
 }
 

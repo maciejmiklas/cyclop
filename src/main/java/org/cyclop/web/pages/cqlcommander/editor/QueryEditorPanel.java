@@ -28,146 +28,144 @@ import java.util.SortedSet;
 import static org.cyclop.web.common.JsUtils.escapeParam;
 import static org.cyclop.web.common.ScriptsRef.SUGGEST;
 
-/**
- * @author Maciej Miklas
- */
+/** @author Maciej Miklas */
 public class QueryEditorPanel extends Panel {
 
-    private final String editorMarkupIdJq;
+	private final String editorMarkupIdJq;
 
-    private final String editorMarkupIdJs;
+	private final String editorMarkupIdJs;
 
-    @Inject
-    private CompletionService completionService;
+	@Inject
+	private CompletionService completionService;
 
-    private ContextCqlCompletion currentCompletion;
+	private ContextCqlCompletion currentCompletion;
 
-    private final List<CompletionChangeListener> completionChangeListeners = new ArrayList<>();
+	private final List<CompletionChangeListener> completionChangeListeners = new ArrayList<>();
 
-    private TextArea<String> editor;
+	private TextArea<String> editor;
 
-    public QueryEditorPanel(String id, String editorContent) {
-        super(id);
-        Injector.get().inject(this);
+	public QueryEditorPanel(String id, String editorContent) {
+		super(id);
+		Injector.get().inject(this);
 
-        editor = initEditor(StringUtils.trimToNull(editorContent));
-        editorMarkupIdJq = "#" + editor.getMarkupId();
-        editorMarkupIdJs = editor.getMarkupId();
-    }
+		editor = initEditor(StringUtils.trimToNull(editorContent));
+		editorMarkupIdJq = "#" + editor.getMarkupId();
+		editorMarkupIdJs = editor.getMarkupId();
+	}
 
-    public void registerCompletionChangeListener(CompletionChangeListener list) {
-        completionChangeListeners.add(list);
-    }
+	public void registerCompletionChangeListener(CompletionChangeListener list) {
+		completionChangeListeners.add(list);
+	}
 
-    public CqlQuery getEditorContent() {
-        String editorValue = editor.getDefaultModelObjectAsString();
-        editorValue = StringUtils.trimToNull(editorValue);
-        if (editorValue == null) {
-            return null;
-        }
-        CqlQuery cq = new CqlQuery(currentCompletion.queryName, editorValue);
-        return cq;
-    }
+	public CqlQuery getEditorContent() {
+		String editorValue = editor.getDefaultModelObjectAsString();
+		editorValue = StringUtils.trimToNull(editorValue);
+		if (editorValue == null) {
+			return null;
+		}
+		CqlQuery cq = new CqlQuery(currentCompletion.queryName, editorValue);
+		return cq;
+	}
 
-    private TextArea<String> initEditor(String editorContent) {
-        final Model<String> editorModel = new Model<>();
-        if (editorContent != null) {
-            editorModel.setObject(editorContent);
-        }
+	private TextArea<String> initEditor(String editorContent) {
+		final Model<String> editorModel = new Model<>();
+		if (editorContent != null) {
+			editorModel.setObject(editorContent);
+		}
 
-        TextArea<String> editor = new TextArea<>("queryEditor", editorModel);
-        editor.setEscapeModelStrings(false);
+		TextArea<String> editor = new TextArea<>("queryEditor", editorModel);
+		editor.setEscapeModelStrings(false);
 
-        add(editor);
+		add(editor);
 
-        editor.add(new OnChangeAjaxBehavior() {
+		editor.add(new OnChangeAjaxBehavior() {
 
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
 
-                Component cmp = getComponent();
-                String editorValue = cmp.getDefaultModelObjectAsString();
+				Component cmp = getComponent();
+				String editorValue = cmp.getDefaultModelObjectAsString();
 
-                ContextCqlCompletion cqlCompletion;
-                if (StringUtils.isEmpty(editorValue)) {
-                    cqlCompletion = completionService.findInitialCompletion();
-                } else {
-                    RequestCycle requestCycle = RequestCycle.get();
-                    int index = requestCycle.getRequest().getRequestParameters().getParameterValue("cursorPos").toInt();
-                    CqlQuery cqlQuery = new CqlQuery(CqlQueryName.UNKNOWN, editorValue);
-                    cqlCompletion = completionService.findCompletion(cqlQuery, index);
-                }
-                if (cqlCompletion.cqlCompletion.isEmpty() || cqlCompletion.equals(currentCompletion)) {
-                    return;
-                }
+				ContextCqlCompletion cqlCompletion;
+				if (StringUtils.isEmpty(editorValue)) {
+					cqlCompletion = completionService.findInitialCompletion();
+				} else {
+					RequestCycle requestCycle = RequestCycle.get();
+					int index = requestCycle.getRequest().getRequestParameters().getParameterValue("cursorPos").toInt();
+					CqlQuery cqlQuery = new CqlQuery(CqlQueryName.UNKNOWN, editorValue);
+					cqlCompletion = completionService.findCompletion(cqlQuery, index);
+				}
+				if (cqlCompletion.cqlCompletion.isEmpty() || cqlCompletion.equals(currentCompletion)) {
+					return;
+				}
 
-                fireCompletionChanged(cqlCompletion);
-                String suggestsScript = generateReplaceSuggestsJs(editorMarkupIdJq,
-                        cqlCompletion.cqlCompletion.fullCompletion);
-                target.appendJavaScript(suggestsScript);
+				fireCompletionChanged(cqlCompletion);
+				String suggestsScript = generateReplaceSuggestsJs(editorMarkupIdJq,
+						cqlCompletion.cqlCompletion.fullCompletion);
+				target.appendJavaScript(suggestsScript);
 
-                for (CompletionChangeListener list : completionChangeListeners) {
-                    Component refresh = list.getReferencesForRefresh();
-                    if (refresh == null) {
-                        continue;
-                    }
-                    target.add(refresh);
-                }
-            }
+				for (CompletionChangeListener list : completionChangeListeners) {
+					Component refresh = list.getReferencesForRefresh();
+					if (refresh == null) {
+						continue;
+					}
+					target.add(refresh);
+				}
+			}
 
-            @Override
-            protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-                attributes.getDynamicExtraParameters().add("return {'cursorPos' : getCaretPosition(" +
-                        editorMarkupIdJs + ")}");
-                super.updateAjaxAttributes(attributes);
-            }
-        });
-        return editor;
-    }
+			@Override
+			protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+				attributes.getDynamicExtraParameters().add("return {'cursorPos' : getCaretPosition(" +
+						editorMarkupIdJs + ")}");
+				super.updateAjaxAttributes(attributes);
+			}
+		});
+		return editor;
+	}
 
-    private void fireCompletionChanged(ContextCqlCompletion currentCompletion) {
-        this.currentCompletion = currentCompletion;
-        for (CompletionChangeListener list : completionChangeListeners) {
-            list.onCompletionChange(currentCompletion);
-        }
-    }
+	private void fireCompletionChanged(ContextCqlCompletion currentCompletion) {
+		this.currentCompletion = currentCompletion;
+		for (CompletionChangeListener list : completionChangeListeners) {
+			list.onCompletionChange(currentCompletion);
+		}
+	}
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        response.render(JavaScriptReferenceHeaderItem.forReference(SUGGEST));
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		response.render(JavaScriptReferenceHeaderItem.forReference(SUGGEST));
 
-        ContextCqlCompletion cqlCompletion = completionService.findInitialCompletion();
-        fireCompletionChanged(cqlCompletion);
+		ContextCqlCompletion cqlCompletion = completionService.findInitialCompletion();
+		fireCompletionChanged(cqlCompletion);
 
-        String suggestsScript = generateInitSuggestsJs(editorMarkupIdJq, cqlCompletion.cqlCompletion.fullCompletion);
-        response.render(OnDomReadyHeaderItem.forScript(suggestsScript));
-    }
+		String suggestsScript = generateInitSuggestsJs(editorMarkupIdJq, cqlCompletion.cqlCompletion.fullCompletion);
+		response.render(OnDomReadyHeaderItem.forScript(suggestsScript));
+	}
 
-    private String generateInitSuggestsJs(String editorMarkupId, SortedSet<? extends CqlPart> suggestValues) {
-        return generateSuggests("initSuggests", editorMarkupId, suggestValues);
-    }
+	private String generateInitSuggestsJs(String editorMarkupId, SortedSet<? extends CqlPart> suggestValues) {
+		return generateSuggests("initSuggests", editorMarkupId, suggestValues);
+	}
 
-    private String generateReplaceSuggestsJs(String editorMarkupId, SortedSet<? extends CqlPart> suggestValues) {
-        return generateSuggests("replaceSuggests", editorMarkupId, suggestValues);
-    }
+	private String generateReplaceSuggestsJs(String editorMarkupId, SortedSet<? extends CqlPart> suggestValues) {
+		return generateSuggests("replaceSuggests", editorMarkupId, suggestValues);
+	}
 
-    private String generateSuggests(String function, String editorMarkupId,
-                                    SortedSet<? extends CqlPart> suggestValues) {
-        StringBuilder buf = new StringBuilder(function);
-        buf.append("(");
-        buf.append(escapeParam(editorMarkupId));
-        buf.append(",[");
+	private String generateSuggests(String function, String editorMarkupId,
+									SortedSet<? extends CqlPart> suggestValues) {
+		StringBuilder buf = new StringBuilder(function);
+		buf.append("(");
+		buf.append(escapeParam(editorMarkupId));
+		buf.append(",[");
 
-        Iterator<? extends CqlPart> suggestValuesIt = suggestValues.iterator();
-        while (suggestValuesIt.hasNext()) {
-            buf.append(escapeParam(suggestValuesIt.next().partLc));
-            if (suggestValuesIt.hasNext()) {
-                buf.append(",");
-            }
-        }
-        buf.append("])");
+		Iterator<? extends CqlPart> suggestValuesIt = suggestValues.iterator();
+		while (suggestValuesIt.hasNext()) {
+			buf.append(escapeParam(suggestValuesIt.next().toDisplayString()));
+			if (suggestValuesIt.hasNext()) {
+				buf.append(",");
+			}
+		}
+		buf.append("])");
 
-        return buf.toString();
-    }
+		return buf.toString();
+	}
 
 }

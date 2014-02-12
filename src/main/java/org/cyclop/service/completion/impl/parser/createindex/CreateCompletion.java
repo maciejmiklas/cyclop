@@ -1,27 +1,25 @@
 package org.cyclop.service.completion.impl.parser.createindex;
 
 import com.google.common.base.Objects;
-import javax.inject.Named;
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
 
-/**
- * @author Maciej Miklas
- */
-@Named("createindex.CreateCompletion")
-class CreateCompletion extends NotSupportedCompletion {
+import javax.inject.Named;
 
-    public CreateCompletion() {
-        super(new CqlNotSupported("create"));
-    }
+/** @author Maciej Miklas */
+@Named("createindex.CreateCompletion") class CreateCompletion extends NotSupportedCompletion {
 
-    @Override
-    protected String getNotSupportedText() {
-        return "create index";
-    }
+	public CreateCompletion() {
+		super(new CqlNotSupported("create"));
+	}
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	protected String getNotSupportedText() {
+		return "create index";
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 }

@@ -3,17 +3,17 @@
 <i>Syntax:</i>
 <pre class="cq-helpCqlSyntax">
 &lt;create-index-stmt&gt; ::= <span class="cq-hintCqlKeyword">CREATE</span> ( <span
-        class="cq-hintCqlKeyword">CUSTOM</span> )? <span class="cq-hintCqlKeyword">INDEX</span> ( <span
-        class="cq-hintCqlKeyword">IF NOT EXISTS</span> )? &lt;<span
-        class="cq-hintCqlColumn">identifier</span>&gt;? <span class="cq-hintCqlKeyword">ON</span> &lt;<span
-        class="cq-hintCqlTable">tablename</span>&gt; '(' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ')'
+		class="cq-hintCqlKeyword">CUSTOM</span> )? <span class="cq-hintCqlKeyword">INDEX</span> ( <span
+		class="cq-hintCqlKeyword">IF NOT EXISTS</span> )? &lt;<span
+		class="cq-hintCqlColumn">identifier</span>&gt;? <span class="cq-hintCqlKeyword">ON</span> &lt;<span
+		class="cq-hintCqlTable">tablename</span>&gt; '(' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ')'
                                         ( <span class="cq-hintCqlKeyword">USING</span> &lt;string&gt; )?
 </pre>
 <i>Sample:</i>
 <pre class="cq-helpCqlSample">
 <span class="cq-hintCqlKeyword">CREATE INDEX</span> userIndex ON <span class="cq-hintCqlTable">NerdMovies</span> (user);
 <span class="cq-hintCqlKeyword">CREATE INDEX ON</span> <span class="cq-hintCqlTable">Mutants</span> (<span
-        class="cq-hintCqlColumn">abilityId</span>);
+		class="cq-hintCqlColumn">abilityId</span>);
 <span class="cq-hintCqlKeyword">CREATE CUSTOM INDEX ON</span> <span class="cq-hintCqlTable">users</span> (<span
-        class="cq-hintCqlColumn">email</span>) <span class="cq-hintCqlKeyword">USING</span> 'path.to.the.IndexClass';
+		class="cq-hintCqlColumn">email</span>) <span class="cq-hintCqlKeyword">USING</span> 'path.to.the.IndexClass';
 </pre>

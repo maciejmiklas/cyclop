@@ -9,47 +9,44 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-/**
- * @author Maciej Miklas
- */
-@Named
-class InsertDecisionListSupport implements DecisionListSupport {
+/** @author Maciej Miklas */
+@Named class InsertDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = CqlKeyword.Def.INSERT_INTO.value;
+	private final CqlKeyword supports = CqlKeyword.Def.INSERT_INTO.value;
 
-    @Inject
-    private TableNameCompletion tableNameCompletion;
+	@Inject
+	private TableNameCompletion tableNameCompletion;
 
-    @Inject
-    private ColumnsCompletion columnsCompletion;
+	@Inject
+	private ColumnsCompletion columnsCompletion;
 
-    @Inject
-    private AfterColumnsCompletion afterColumnsCompletion;
+	@Inject
+	private AfterColumnsCompletion afterColumnsCompletion;
 
-    @Inject
-    private AfterValuesPartCompletion afterValuesPartCompletion;
+	@Inject
+	private AfterValuesPartCompletion afterValuesPartCompletion;
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @PostConstruct
-    public void init() {
-        decisionList = new CqlPartCompletion[][]{{tableNameCompletion}, {columnsCompletion}, {afterColumnsCompletion},
-                {afterValuesPartCompletion}};
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][]{{tableNameCompletion}, {columnsCompletion}, {afterColumnsCompletion},
+				{afterValuesPartCompletion}};
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-        return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword supports() {
-        return supports;
-    }
+	@Override
+	public CqlKeyword supports() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryName queryName() {
-        return CqlQueryName.INSERT;
-    }
+	@Override
+	public CqlQueryName queryName() {
+		return CqlQueryName.INSERT;
+	}
 
 }
