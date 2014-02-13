@@ -8,7 +8,7 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.cassandra.impl.QueryScope;
+import org.cyclop.service.cassandra.QueryScope;
 import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
 
 import javax.annotation.PostConstruct;

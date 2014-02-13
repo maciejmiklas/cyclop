@@ -22,6 +22,7 @@ import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.exception.QueryException;
+import org.cyclop.service.cassandra.QueryScope;
 import org.cyclop.service.cassandra.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,15 +40,12 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 @CassandraVersionQualifier(CassandraVersion.VER_2_x) class QueryServiceImpl implements QueryService {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceImpl.class);
-
 	@Inject
 	protected AppConfig config;
-
 	@Inject
 	protected CassandraSessionImpl session;
-
 	@Inject
-	protected QueryScope queryScope;
+	protected QueryScopeImpl queryScope;
 
 	@Override
 	public boolean checkTableExists(CqlTable table) {
@@ -308,15 +306,6 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 		return findColumnNames(null);
 	}
 
-	private static class MutableInt {
-		public int anInt = 1;
-
-		@Override
-		public String toString() {
-			return Objects.toStringHelper(this).add("anInt", anInt).toString();
-		}
-	}
-
 	protected ResultSet executeSilent(String cql) {
 		LOG.debug("Executing: {}", cql);
 		ResultSet resultSet = null;
@@ -338,6 +327,15 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 			throw new QueryException("Error executing CQL: '" + cql + "', reason: " + e.getMessage(), e);
 		}
 		return resultSet;
+	}
+
+	private static class MutableInt {
+		public int anInt = 1;
+
+		@Override
+		public String toString() {
+			return Objects.toStringHelper(this).add("anInt", anInt).toString();
+		}
 	}
 
 }

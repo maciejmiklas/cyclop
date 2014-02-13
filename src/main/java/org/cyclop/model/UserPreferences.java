@@ -18,7 +18,6 @@ public final class UserPreferences {
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	public boolean showCqlCompletionHint = true;
 
-	// TODO not used yet
 	@XmlElement(name = "e_he")
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	public boolean showCqlHelp = true;

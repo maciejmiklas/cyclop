@@ -2,6 +2,7 @@ package org.cyclop.service.cassandra.impl;
 
 import net.jcip.annotations.NotThreadSafe;
 import org.cyclop.model.CqlKeySpace;
+import org.cyclop.service.cassandra.QueryScope;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
@@ -11,8 +12,7 @@ import javax.inject.Named;
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-// TODO move from impl package because CompletionHelper references it
-public class QueryScope {
+public class QueryScopeImpl implements QueryScope {
 
 	private CqlKeySpace activeKeySpace;
 

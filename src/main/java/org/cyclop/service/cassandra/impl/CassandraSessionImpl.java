@@ -2,6 +2,7 @@ package org.cyclop.service.cassandra.impl;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 import net.jcip.annotations.NotThreadSafe;
 import org.cyclop.common.AppConfig;
@@ -21,12 +22,9 @@ import javax.inject.Named;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 class CassandraSessionImpl implements CassandraSession {
 	private final static Logger LOG = LoggerFactory.getLogger(CassandraSessionImpl.class);
-
 	private Session session;
-
 	@Inject
 	private AppConfig appConfig;
-
 	private CassandraVersion cassandraVersion;
 
 	public void authenticate(String userName, String password) {
@@ -43,12 +41,11 @@ class CassandraSessionImpl implements CassandraSession {
 		if (appConfig.cassandra.useSsl) {
 			builder.withSSL();
 		}
-		builder.withPort(appConfig.cassandra.port);
 
-		// FIXME timeouts
-		// builder.socketOptions().setConnectTimeoutMillis(appConfig.cassandra.timeoutMilis);
-		// builder.socketOptions().setReadTimeoutMillis(appConfig.cassandra.timeoutMilis);
-		Cluster cluster = builder.build();
+		SocketOptions socketOptions = new SocketOptions();
+		socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMilis);
+
+		Cluster cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions).build();
 		session = cluster.connect();
 
 		cassandraVersion = determineVersion(session);
