@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("droptable.DropCompletion") class DropCompletion extends MarkerBasedCompletion {
+@Named("droptable.DropCompletion")
+class DropCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private CompletionHelper completionHelper;
@@ -22,8 +23,8 @@ import javax.inject.Named;
 
 	@Override
 	public CqlCompletion getCompletion(CqlQuery query) {
-		CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query,
-				CqlKeyword.Def.DROP_TABLE.value, CqlKeyword.Def.IF_EXISTS.value);
+		CqlCompletion.Builder completion = completionHelper
+				.computeTableNameCompletion(query, CqlKeyword.Def.DROP_TABLE.value, CqlKeyword.Def.IF_EXISTS.value);
 		completion.all(CqlKeyword.Def.IF_EXISTS.value);
 		return completion.build();
 	}

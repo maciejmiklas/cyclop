@@ -18,7 +18,8 @@ import javax.inject.Named;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
-@Named("update.ColumnsCompletion") class ColumnsCompletion extends MarkerBasedCompletion {
+@Named("update.ColumnsCompletion")
+class ColumnsCompletion extends MarkerBasedCompletion {
 
 	private CqlCompletion.BuilderTemplate builderTemplate;
 

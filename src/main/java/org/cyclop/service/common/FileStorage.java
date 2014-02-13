@@ -103,7 +103,8 @@ public class FileStorage {
 			int written = channel.write(buf);
 			channel.truncate(written);
 		} catch (IOException | SecurityException | IllegalStateException e) {
-			throw new ServiceException("Error storing query history in:" + histPath + " - " + e.getClass() + " - " + e.getMessage(), e);
+			throw new ServiceException(
+					"Error storing query history in:" + histPath + " - " + e.getClass() + " - " + e.getMessage(), e);
 		}
 	}
 
@@ -132,8 +133,9 @@ public class FileStorage {
 	}
 
 	private FileChannel openForWrite(Path histPath) throws IOException {
-		FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.CREATE,
-				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+		FileChannel byteChannel = FileChannel
+				.open(histPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
+						StandardOpenOption.WRITE);
 		byteChannel.force(true);
 		FileChannel lockChannel = lock(histPath, byteChannel);
 		return lockChannel;

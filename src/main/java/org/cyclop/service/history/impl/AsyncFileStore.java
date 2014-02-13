@@ -14,7 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** @author Maciej Miklas */
-@Named class AsyncFileStore {
+@Named
+class AsyncFileStore {
 
 	private final static int FLUSH_MILIS = 300000;
 
@@ -38,9 +39,9 @@ import java.util.Map;
 	}
 
 	/**
-	 * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization
-	 * block on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block
-	 * time is reduced
+	 * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization block
+	 * on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block time is
+	 * reduced
 	 */
 	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
 	@PreDestroy

@@ -34,8 +34,7 @@ public class DataConverter {
 			return null;
 		}
 
-		int limit = embeddedColumn ? appConfig.cqlEditor.maxColumnEmbeddedDisplayChars : appConfig.cqlEditor
-				.maxColumnDisplayChars;
+		int limit = embeddedColumn ? appConfig.cqlEditor.maxColumnEmbeddedDisplayChars : appConfig.cqlEditor.maxColumnDisplayChars;
 		if (content.length() > limit) {
 			return content.trim().substring(0, limit) + ".....";
 		} else {

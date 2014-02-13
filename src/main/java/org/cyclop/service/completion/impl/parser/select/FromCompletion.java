@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("select.FromCompletion") class FromCompletion extends MarkerBasedCompletion {
+@Named("select.FromCompletion")
+class FromCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private CompletionHelper completionHelper;
@@ -22,7 +23,8 @@ import javax.inject.Named;
 
 	@Override
 	public CqlCompletion getCompletion(CqlQuery query) {
-		CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query, CqlKeyword.Def.FROM.value);
+		CqlCompletion.Builder completion = completionHelper
+				.computeTableNameCompletion(query, CqlKeyword.Def.FROM.value);
 		return completion.build();
 	}
 

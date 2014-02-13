@@ -17,7 +17,8 @@ import java.util.SortedSet;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
-@Named("select.OrderByClausePartCompletion") class OrderByClausePartCompletion extends MarkerBasedCompletion {
+@Named("select.OrderByClausePartCompletion")
+class OrderByClausePartCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private QueryService queryService;
@@ -30,9 +31,9 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	@PostConstruct
 	public void init() {
-		builderTemplate = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.ASC.value).all(CqlKeyword.Def.DESC.value)
-				.all(CqlKeyword.Def.LIMIT.value).all(CqlKeyword.Def.ALLOW_FILTERING.value).all(CqlKeyword.Def.TOKEN.value)
-				.template();
+		builderTemplate = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.ASC.value)
+				.all(CqlKeyword.Def.DESC.value).all(CqlKeyword.Def.LIMIT.value)
+				.all(CqlKeyword.Def.ALLOW_FILTERING.value).all(CqlKeyword.Def.TOKEN.value).template();
 	}
 
 	@Override

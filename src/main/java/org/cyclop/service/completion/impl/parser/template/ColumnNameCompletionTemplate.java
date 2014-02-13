@@ -25,10 +25,7 @@ public abstract class ColumnNameCompletionTemplate extends MarkerBasedCompletion
 
 	private CqlKeyword cqlKeyword;
 
-	public ColumnNameCompletionTemplate(
-			CqlCompletion.Builder builder,
-			CqlKeyword cqlKeyword,
-			CqlPart startMarker) {
+	public ColumnNameCompletionTemplate(CqlCompletion.Builder builder, CqlKeyword cqlKeyword, CqlPart startMarker) {
 		super(startMarker);
 		this.builderTemplate = builder.template();
 		this.cqlKeyword = cqlKeyword;

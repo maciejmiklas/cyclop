@@ -19,8 +19,8 @@ public final class CqlCompletion implements Serializable {
 	/** used for hint window */
 	public final ImmutableSortedSet<? extends CqlPart> minCompletion;
 
-	private CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion, ImmutableSortedSet<? extends CqlPart>
-			minCompletion) {
+	private CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion,
+						  ImmutableSortedSet<? extends CqlPart> minCompletion) {
 		if (minCompletion == null) {
 			throw new IllegalArgumentException("Null minCompletion");
 		}

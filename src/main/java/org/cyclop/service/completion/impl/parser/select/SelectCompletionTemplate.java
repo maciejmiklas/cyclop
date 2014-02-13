@@ -8,11 +8,12 @@ import org.cyclop.service.completion.impl.parser.template.ColumnNameCompletionTe
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("select.SelectCompletionTemplate") class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
+@Named("select.SelectCompletionTemplate")
+class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
 
 	private final static CqlCompletion.Builder STATC_PART = CqlCompletion.Builder.naturalOrder()
-			.all(CqlKeyword.Def.COUNT_AST.value).all(CqlKeyword.Def.COUNT_ONE.value)
-			.all(CqlKeyword.Def.WRITETIME.value).all(CqlKeyword.Def.TTL.value).all(CqlKeyword.Def.FROM.value);
+			.all(CqlKeyword.Def.COUNT_AST.value).all(CqlKeyword.Def.COUNT_ONE.value).all(CqlKeyword.Def.WRITETIME.value)
+			.all(CqlKeyword.Def.TTL.value).all(CqlKeyword.Def.FROM.value);
 
 	public SelectCompletionTemplate() {
 		super(STATC_PART, CqlKeyword.Def.FROM.value, CqlKeyword.Def.SELECT.value);

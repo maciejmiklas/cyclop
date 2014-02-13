@@ -10,7 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class UpdateDecisionListSupport implements DecisionListSupport {
+@Named
+class UpdateDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = CqlKeyword.Def.UPDATE.value;
 
@@ -30,8 +31,7 @@ import javax.inject.Named;
 
 	@PostConstruct
 	public void init() {
-		decisionList = new CqlPartCompletion[][]{{tableNameCompletion}, {afterUpdateCompletion}, {columnsCompletion},
-				{whereCompletion}};
+		decisionList = new CqlPartCompletion[][]{{tableNameCompletion}, {afterUpdateCompletion}, {columnsCompletion}, {whereCompletion}};
 	}
 
 	@Override

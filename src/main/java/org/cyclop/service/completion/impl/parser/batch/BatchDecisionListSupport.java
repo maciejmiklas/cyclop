@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class BatchDecisionListSupport implements DecisionListSupport {
+@Named
+class BatchDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = new CqlNotSupported("batch");
 

@@ -40,8 +40,8 @@ public final class UserPreferences {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("showCqlCompletionHint", showCqlCompletionHint).add("showCqlHelp",
-				showCqlHelp).toString();
+		return Objects.toStringHelper(this).add("showCqlCompletionHint", showCqlCompletionHint)
+				.add("showCqlHelp", showCqlHelp).toString();
 	}
 
 
@@ -56,7 +56,7 @@ public final class UserPreferences {
 			return false;
 		}
 		final UserPreferences other = (UserPreferences) obj;
-		return java.util.Objects.equals(showCqlCompletionHint, other.showCqlCompletionHint) && java.util.Objects
-				.equals(showCqlHelp, other.showCqlHelp);
+		return java.util.Objects.equals(showCqlCompletionHint, other.showCqlCompletionHint) &&
+				java.util.Objects.equals(showCqlHelp, other.showCqlHelp);
 	}
 }

@@ -16,15 +16,15 @@ import java.util.Map;
 /** @author Maciej Miklas */
 class MapViewPanel extends Panel {
 
-	MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue, final ImmutableMap<CqlColumnValue,
-			CqlColumnValue> content) {
+	MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue,
+				 final ImmutableMap<CqlColumnValue, CqlColumnValue> content) {
 		super(id);
 
 		List<Map.Entry<CqlColumnValue, CqlColumnValue>> keysList = new ArrayList<>(content.size());
 		keysList.addAll(content.entrySet());
 
-		ListView<Map.Entry<CqlColumnValue, CqlColumnValue>> cqlCollectionListEntry = new ListView<Map
-				.Entry<CqlColumnValue, CqlColumnValue>>("cqlMapEntry", keysList) {
+		ListView<Map.Entry<CqlColumnValue, CqlColumnValue>> cqlCollectionListEntry = new ListView<Map.Entry<CqlColumnValue, CqlColumnValue>>(
+				"cqlMapEntry", keysList) {
 			@Override
 			protected void populateItem(ListItem<Map.Entry<CqlColumnValue, CqlColumnValue>> item) {
 				Map.Entry<CqlColumnValue, CqlColumnValue> entry = item.getModelObject();

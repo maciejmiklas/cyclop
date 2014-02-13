@@ -74,8 +74,8 @@ public class CsvQueryResultExporter {
 	}
 
 	private void appendMap(StringBuilder buf, Row row, CqlExtendedColumnName column) {
-		ImmutableSet<Map.Entry<CqlColumnValue, CqlColumnValue>> displayMap = extractor.extractMap(row,
-				column).entrySet();
+		ImmutableSet<Map.Entry<CqlColumnValue, CqlColumnValue>> displayMap = extractor.extractMap(row, column)
+				.entrySet();
 		Iterator<Map.Entry<CqlColumnValue, CqlColumnValue>> it = displayMap.iterator();
 
 		StringBuilder mapBuf = new StringBuilder();

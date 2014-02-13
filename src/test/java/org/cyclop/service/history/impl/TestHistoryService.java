@@ -79,14 +79,15 @@ public class TestHistoryService extends AbstractTestCase {
 		QueryHistory history = historyService.readHistory();
 
 		for (int i = 0; i < 20; i++) {
-			history.addToHistory(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * " + CR + "from HistoryTest " +
-					"where " + CR + "id=" + i)));
+			history.addToHistory(
+					new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT, "select * " + CR + "from HistoryTest " +
+							"where " + CR + "id=" + i)));
 
-			assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
-					"select * from HistoryStarTest where id=" + i))));
+			assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(
+					new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i))));
 
-			assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
-					"select * from HistoryStarTest where id=" + i))));
+			assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(
+					new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i))));
 
 			historyService.store(history);
 			QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user);
@@ -124,8 +125,8 @@ public class TestHistoryService extends AbstractTestCase {
 
 		{
 			for (int i = 0; i < 20; i++) {
-				QueryHistoryEntry entry = new QueryHistoryEntry(new CqlQuery(CqlQueryName.SELECT,
-						"select * from HistoryStarTest where id=" + i));
+				QueryHistoryEntry entry = new QueryHistoryEntry(
+						new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i));
 				assertTrue(entry.toString(), history.containsFavourite(entry));
 			}
 		}
@@ -213,7 +214,8 @@ public class TestHistoryService extends AbstractTestCase {
 					return null;
 				}
 
-				void verifyHistEntry(QueryHistory history, QueryHistoryEntry histEntry, QueryHistoryEntry starredEntry) {
+				void verifyHistEntry(QueryHistory history, QueryHistoryEntry histEntry,
+									 QueryHistoryEntry starredEntry) {
 					assertNotNull(history);
 					assertTrue("Starred (" + executedCount + "):" + starredEntry + " not found in: " + history,
 							history.containsFavourite(starredEntry));

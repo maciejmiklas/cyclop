@@ -11,7 +11,8 @@ import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @Named("insert.AfterColumnsCompletion")
-@ThreadSafe class AfterColumnsCompletion extends StaticMarkerBasedCompletion {
+@ThreadSafe
+class AfterColumnsCompletion extends StaticMarkerBasedCompletion {
 
 	public AfterColumnsCompletion() {
 		super(new CqlPart(")"), CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).build());

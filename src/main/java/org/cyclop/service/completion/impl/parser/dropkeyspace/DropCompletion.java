@@ -14,7 +14,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("dropkeyspace.DropCompletion") class DropCompletion extends MarkerBasedCompletion {
+@Named("dropkeyspace.DropCompletion")
+class DropCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private QueryService queryService;

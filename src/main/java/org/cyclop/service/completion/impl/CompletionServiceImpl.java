@@ -13,7 +13,8 @@ import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @Named
-@ThreadSafe class CompletionServiceImpl implements CompletionService {
+@ThreadSafe
+class CompletionServiceImpl implements CompletionService {
 
 	@Inject
 	private CqlParser parser;

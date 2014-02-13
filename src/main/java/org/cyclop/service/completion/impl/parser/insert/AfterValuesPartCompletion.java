@@ -11,7 +11,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("insert.AfterValuesPartCompletion") class AfterValuesPartCompletion extends MarkerBasedCompletion {
+@Named("insert.AfterValuesPartCompletion")
+class AfterValuesPartCompletion extends MarkerBasedCompletion {
 
 	private CqlCompletion completion = null;
 

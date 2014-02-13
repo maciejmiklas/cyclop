@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class AlterTableDecisionListSupport implements DecisionListSupport {
+@Named
+class AlterTableDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = new CqlNotSupported("alter table");
 

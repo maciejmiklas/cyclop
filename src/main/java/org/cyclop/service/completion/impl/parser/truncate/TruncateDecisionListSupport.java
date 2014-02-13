@@ -10,7 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class TruncateDecisionListSupport implements DecisionListSupport {
+@Named
+class TruncateDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = CqlKeyword.Def.TRUNCATE.value;
 

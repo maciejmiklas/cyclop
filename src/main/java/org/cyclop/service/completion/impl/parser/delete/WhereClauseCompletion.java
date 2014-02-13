@@ -17,7 +17,8 @@ import java.util.SortedSet;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
-@Named("delete.WhereClauseCompletion") class WhereClauseCompletion extends MarkerBasedCompletion {
+@Named("delete.WhereClauseCompletion")
+class WhereClauseCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private QueryService queryService;
@@ -30,8 +31,8 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	@PostConstruct
 	public void init() {
-		builderTemplate = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.AND.value).full(CqlKeyword.Def.IN_BL.value)
-				.min(CqlKeyword.Def.IN.value).template();
+		builderTemplate = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.AND.value)
+				.full(CqlKeyword.Def.IN_BL.value).min(CqlKeyword.Def.IN.value).template();
 	}
 
 	@Override

@@ -32,6 +32,7 @@ public abstract class AbstractTestCase {
 	private static final EmbeddedCassandra CASSANDRA = new EmbeddedCassandra();
 
 	private static boolean INIT_EXECUTED = false;
+
 	private static boolean INIT_QUERY_EXECUTED = false;
 
 	protected final boolean unixOs = !System.getProperty("os.name", "linux").toLowerCase().contains("windows");

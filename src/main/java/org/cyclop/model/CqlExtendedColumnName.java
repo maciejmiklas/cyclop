@@ -22,8 +22,8 @@ public class CqlExtendedColumnName extends CqlColumnName {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(this).add("columnType", columnType).add("part",
-				part).add("dataType", dataType).toString();
+		return com.google.common.base.Objects.toStringHelper(this).add("columnType", columnType).add("part", part)
+				.add("dataType", dataType).toString();
 	}
 
 	@Override
@@ -42,8 +42,8 @@ public class CqlExtendedColumnName extends CqlColumnName {
 			return false;
 		}
 		final CqlExtendedColumnName other = (CqlExtendedColumnName) obj;
-		return Objects.equals(partLc, other.partLc) && Objects.equals(columnType, other.columnType) && Objects.equals
-				(dataType, other.dataType);
+		return Objects.equals(partLc, other.partLc) && Objects.equals(columnType, other.columnType) &&
+				Objects.equals(dataType, other.dataType);
 	}
 
 }

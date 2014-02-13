@@ -16,7 +16,8 @@ import java.util.SortedSet;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
-@Named("update.WhereCompletion") class WhereCompletion extends MarkerBasedCompletion {
+@Named("update.WhereCompletion")
+class WhereCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private QueryService queryService;

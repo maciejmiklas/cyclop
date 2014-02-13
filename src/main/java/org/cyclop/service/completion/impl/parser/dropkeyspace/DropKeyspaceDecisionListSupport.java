@@ -10,7 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class DropKeyspaceDecisionListSupport implements DecisionListSupport {
+@Named
+class DropKeyspaceDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = CqlKeyword.Def.DROP_KEYSPACE.value;
 

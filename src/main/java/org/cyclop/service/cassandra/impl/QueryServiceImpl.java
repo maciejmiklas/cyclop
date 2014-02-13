@@ -22,7 +22,6 @@ import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.exception.QueryException;
-import org.cyclop.service.cassandra.QueryScope;
 import org.cyclop.service.cassandra.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,18 +36,23 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
 @Named
-@CassandraVersionQualifier(CassandraVersion.VER_2_x) class QueryServiceImpl implements QueryService {
+@CassandraVersionQualifier(CassandraVersion.VER_2_x)
+class QueryServiceImpl implements QueryService {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceImpl.class);
+
 	@Inject
 	protected AppConfig config;
+
 	@Inject
 	protected CassandraSessionImpl session;
+
 	@Inject
 	protected QueryScopeImpl queryScope;
 
 	@Override
 	public boolean checkTableExists(CqlTable table) {
+
 		if (table == null) {
 			return false;
 		}
@@ -62,10 +66,12 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	@Override
 	public ImmutableSortedSet<CqlIndex> findAllIndexes(CqlKeySpace keySpace) {
+
 		StringBuilder cql = new StringBuilder("SELECT index_name FROM system.schema_columns");
 		if (keySpace != null) {
 			cql.append(" where keyspace_name='").append(keySpace.partLc).append("'");
 		}
+
 		ResultSet result = executeSilent(cql.toString());
 		if (result == null) {
 			LOG.debug("No indexes found for keyspace: " + keySpace);
@@ -87,6 +93,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	@Override
 	public ImmutableSortedSet<CqlKeySpace> findAllKeySpaces() {
+
 		ResultSet result = executeSilent("select keyspace_name from system.schema_keyspaces");
 
 		if (result == null) {
@@ -103,6 +110,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	@Override
 	public ImmutableSortedSet<CqlTable> findTableNames(CqlKeySpace keySpace) {
+
 		StringBuilder cql = new StringBuilder("select columnfamily_name from system.schema_columnfamilies");
 		if (keySpace != null) {
 			cql.append(" where keyspace_name='").append(keySpace.partLc).append("'");
@@ -127,12 +135,14 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 	}
 
 	private void setActiveKeySpace(CqlQuery query) {
+
 		CqlKeySpace space = extractSpace(query);
 		queryScope.setActiveKeySpace(space);
 	}
 
 	@Override
 	public CqlSelectResult execute(CqlQuery query) {
+
 		LOG.debug("Executing CQL: {}", query);
 
 		if (query.type == CqlQueryName.USE) {
@@ -231,8 +241,9 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 			return ImmutableMap.of();
 		}
 
-		ResultSet result = executeSilent("select column_name, type from system.schema_columns where " + "columnfamily_name='"
-				+ table.part + "' allow filtering");
+		ResultSet result = executeSilent(
+				"select column_name, type from system.schema_columns where " + "columnfamily_name='" + table.part +
+						"' allow filtering");
 		if (result == null) {
 			LOG.warn("Could not readIdentifier types for columns of table: " + table);
 			return ImmutableMap.of();
@@ -254,6 +265,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	@Override
 	public ImmutableSortedSet<CqlColumnName> findColumnNames(CqlTable table) {
+
 		StringBuilder buf = new StringBuilder("select column_name from system.schema_columns");
 		if (table != null) {
 			buf.append(" where columnfamily_name='");
@@ -287,9 +299,11 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	// required only for cassandra 1.x
 	protected void loadPartitionKeyNames(CqlTable table, ImmutableSortedSet.Builder<CqlColumnName> cqlColumnNames) {
+
 	}
 
 	protected CqlColumnType extractType(String typeText) {
+
 		CqlColumnType type;
 		try {
 			type = CqlColumnType.valueOf(typeText.toUpperCase());
@@ -303,10 +317,12 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 	@Override
 	public ImmutableSortedSet<CqlColumnName> findAllColumnNames() {
+
 		return findColumnNames(null);
 	}
 
 	protected ResultSet executeSilent(String cql) {
+
 		LOG.debug("Executing: {}", cql);
 		ResultSet resultSet = null;
 		try {
@@ -319,6 +335,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 	}
 
 	protected ResultSet execute(String cql) {
+
 		LOG.debug("Executing: {} ", cql);
 		ResultSet resultSet = null;
 		try {
@@ -334,6 +351,7 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 		@Override
 		public String toString() {
+
 			return Objects.toStringHelper(this).add("anInt", anInt).toString();
 		}
 	}

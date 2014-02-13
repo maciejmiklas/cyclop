@@ -16,7 +16,8 @@ import java.util.SortedSet;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
-@Named("delete.DeleteClauseCompletion") class DeleteClauseCompletion extends MarkerBasedCompletion {
+@Named("delete.DeleteClauseCompletion")
+class DeleteClauseCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private QueryService queryService;

@@ -10,7 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
+@Named
+class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = CqlKeyword.Def.CREATE_KEYSPACE.value;
 

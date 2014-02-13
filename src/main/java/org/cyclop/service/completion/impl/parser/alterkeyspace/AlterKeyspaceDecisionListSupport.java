@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class AlterKeyspaceDecisionListSupport implements DecisionListSupport {
+@Named
+class AlterKeyspaceDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = new CqlNotSupported("alter keyspace");
 

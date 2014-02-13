@@ -38,9 +38,7 @@ public class ValidationHelper {
 		completion.cqlCompletion.fullCompletion.contains(new CqlPart(pref + "' is not supported yet....."));
 	}
 
-	public void verifyContainsAllKeyspacesAndTables(
-			ContextCqlCompletion completion,
-			boolean spaceCqlDemoOrSystem) {
+	public void verifyContainsAllKeyspacesAndTables(ContextCqlCompletion completion, boolean spaceCqlDemoOrSystem) {
 		int limt = spaceCqlDemoOrSystem ? 5 : 19;
 		verifyFullAndMinCompletionNotTheSame(completion, limt, limt);
 		verifyContainsAllColumns(completion, false);
@@ -121,10 +119,7 @@ public class ValidationHelper {
 		assertEquals(col.toString(), contains, col.contains(new CqlIndex("mybooks_genre_idx")));
 	}
 
-	public void verifyContainsMybooksColumns(
-			Collection<? extends CqlPart> col,
-			boolean contains,
-			String... prefixes) {
+	public void verifyContainsMybooksColumns(Collection<? extends CqlPart> col, boolean contains, String... prefixes) {
 		col = asHahsCol(col);
 		assertNotNull(col);
 
@@ -141,27 +136,20 @@ public class ValidationHelper {
 		verifyContainsColumns(col, columnNamesBasic, contains, prefixes);
 	}
 
-	private void verifyContainsColumns(
-			Collection<? extends CqlPart> col,
-			List<String> columnNamesBasic,
-			boolean contains,
-			String... prefixes) {
+	private void verifyContainsColumns(Collection<? extends CqlPart> col, List<String> columnNamesBasic,
+									   boolean contains, String... prefixes) {
 		col = asHahsCol(col);
 		assertNotNull(col);
 
 		for (String colNam : columnNamesBasic) {
-			assertEquals(
-					colNam + " not found in: " + col.toString(),
-					contains,
+			assertEquals(colNam + " not found in: " + col.toString(), contains,
 					col.contains(new CqlColumnName(colNam)));
 		}
 
 		for (String prefix : prefixes) {
 			for (String colNam : columnNamesBasic) {
 				String conNamFull = prefix + colNam;
-				assertEquals(
-						conNamFull + " not found in: " + col.toString(),
-						contains,
+				assertEquals(conNamFull + " not found in: " + col.toString(), contains,
 						col.contains(new CqlPart(conNamFull)));
 			}
 		}
@@ -236,10 +224,7 @@ public class ValidationHelper {
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("cqldemo", "compoundtest")));
 	}
 
-	public void verifyFullAndMinCompletionNotTheSame(
-			ContextCqlCompletion completion,
-			int minMinSize,
-			int fullMinSize) {
+	public void verifyFullAndMinCompletionNotTheSame(ContextCqlCompletion completion, int minMinSize, int fullMinSize) {
 
 		assertNotNull(completion);
 		Collection<? extends CqlPart> fullCompletion = asHahsCol(completion.cqlCompletion.fullCompletion);
@@ -248,13 +233,9 @@ public class ValidationHelper {
 		Collection<? extends CqlPart> minCompletion = asHahsCol(completion.cqlCompletion.minCompletion);
 		assertNotNull(minCompletion);
 
-		assertTrue(
-				"minCompletion:" + minCompletion.size() + ">" + minMinSize,
-				minCompletion.size() >= minMinSize);
+		assertTrue("minCompletion:" + minCompletion.size() + ">" + minMinSize, minCompletion.size() >= minMinSize);
 
-		assertTrue(
-				"fullCompletion:" + fullCompletion.size() + ">" + fullMinSize,
-				fullCompletion.size() >= fullMinSize);
+		assertTrue("fullCompletion:" + fullCompletion.size() + ">" + fullMinSize, fullCompletion.size() >= fullMinSize);
 
 		assertFalse(minCompletion.containsAll(fullCompletion));
 	}

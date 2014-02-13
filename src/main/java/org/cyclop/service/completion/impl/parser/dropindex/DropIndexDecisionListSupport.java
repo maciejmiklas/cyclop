@@ -10,7 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class DropIndexDecisionListSupport implements DecisionListSupport {
+@Named
+class DropIndexDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = CqlKeyword.Def.DROP_INDEX.value;
 

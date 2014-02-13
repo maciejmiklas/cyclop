@@ -7,8 +7,8 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
-import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.cassandra.QueryScope;
+import org.cyclop.service.cassandra.QueryService;
 
 import javax.inject.Inject;
 import javax.inject.Named;

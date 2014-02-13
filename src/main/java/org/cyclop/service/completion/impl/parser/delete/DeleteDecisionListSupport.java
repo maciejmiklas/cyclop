@@ -10,7 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class DeleteDecisionListSupport implements DecisionListSupport {
+@Named
+class DeleteDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = CqlKeyword.Def.DELETE.value;
 
@@ -33,8 +34,7 @@ import javax.inject.Named;
 
 	@PostConstruct
 	public void init() {
-		decisionList = new CqlPartCompletion[][]{{deleteClauseCompletion}, {fromClauseCompletion}, {afterFromCompletion},
-				{whereClauseCompletion}, {orderByCompletion}};
+		decisionList = new CqlPartCompletion[][]{{deleteClauseCompletion}, {fromClauseCompletion}, {afterFromCompletion}, {whereClauseCompletion}, {orderByCompletion}};
 	}
 
 	@Override

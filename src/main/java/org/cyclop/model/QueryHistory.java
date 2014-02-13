@@ -136,8 +136,8 @@ public class QueryHistory {
 	}
 
 	/**
-	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing
-	 *         elements can be always replaced - update change date
+	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing elements
+	 *         can be always replaced - update change date
 	 */
 	public boolean addToFavouritesWithSizeCheck(QueryHistoryEntry entry) {
 		lock.lock();

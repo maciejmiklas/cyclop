@@ -153,9 +153,8 @@ public class TestFileStorage extends AbstractTestCase {
 
 		{
 			DateTime executed = new DateTime(2040, 3, 4, 11, 22);
-			QueryHistoryEntry entry = new QueryHistoryEntry(new CqlQuery(
-					CqlQueryName.SELECT,
-					"select * from MyTable where id=13"), executed);
+			QueryHistoryEntry entry = new QueryHistoryEntry(
+					new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=13"), executed);
 
 			assertFalse(history.copyOfFavourites().contains(entry));
 			assertFalse(history.containsHistory(entry));

@@ -27,7 +27,8 @@ public class CookieStorage {
 	private final static Logger LOG = LoggerFactory.getLogger(CookieStorage.class);
 
 	public static enum CookieName {
-		cyclop_prefs, cyclop_userid;
+		cyclop_prefs,
+		cyclop_userid;
 	}
 
 	public void storeCookieAsJson(CookieName cookieName, Object obj) {

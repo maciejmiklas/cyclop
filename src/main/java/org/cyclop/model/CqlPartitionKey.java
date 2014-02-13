@@ -17,7 +17,7 @@ public final class CqlPartitionKey extends CqlExtendedColumnName {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(this).add("columnType", columnType).add("part",
-				part).add("dataType", dataType).toString();
+		return com.google.common.base.Objects.toStringHelper(this).add("columnType", columnType).add("part", part)
+				.add("dataType", dataType).toString();
 	}
 }

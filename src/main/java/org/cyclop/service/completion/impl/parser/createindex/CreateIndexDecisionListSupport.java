@@ -11,7 +11,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class CreateIndexDecisionListSupport implements DecisionListSupport {
+@Named
+class CreateIndexDecisionListSupport implements DecisionListSupport {
 
 	private final CqlKeyword supports = new CqlNotSupported("create index");
 

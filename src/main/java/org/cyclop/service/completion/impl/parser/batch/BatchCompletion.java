@@ -7,7 +7,8 @@ import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("batch.BatchCompletion") class BatchCompletion extends NotSupportedCompletion {
+@Named("batch.BatchCompletion")
+class BatchCompletion extends NotSupportedCompletion {
 
 	public BatchCompletion() {
 		super(new CqlNotSupported("batch"));

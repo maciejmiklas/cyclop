@@ -21,7 +21,7 @@ public class CqlColumnValue {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value).add("columnName",
-				columnName).toString();
+		return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value)
+				.add("columnName", columnName).toString();
 	}
 }

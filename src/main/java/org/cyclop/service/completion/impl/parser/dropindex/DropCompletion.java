@@ -7,8 +7,8 @@ import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.cassandra.QueryScope;
+import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
 
 import javax.annotation.PostConstruct;
@@ -16,7 +16,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("dropindex.DropCompletion") class DropCompletion implements OffsetBasedCompletion {
+@Named("dropindex.DropCompletion")
+class DropCompletion implements OffsetBasedCompletion {
 
 	private CqlCompletion.BuilderTemplate completion;
 

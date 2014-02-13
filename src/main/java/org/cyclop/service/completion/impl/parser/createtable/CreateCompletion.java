@@ -7,7 +7,8 @@ import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("createtable.CreateCompletion") class CreateCompletion extends NotSupportedCompletion {
+@Named("createtable.CreateCompletion")
+class CreateCompletion extends NotSupportedCompletion {
 
 	public CreateCompletion() {
 		super(new CqlNotSupported("create"));

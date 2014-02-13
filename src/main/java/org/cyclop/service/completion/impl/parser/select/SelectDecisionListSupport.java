@@ -10,7 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named class SelectDecisionListSupport implements DecisionListSupport {
+@Named
+class SelectDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
@@ -33,8 +34,7 @@ import javax.inject.Named;
 
 	@PostConstruct
 	public void init() {
-		decisionList = new CqlPartCompletion[][]{{selectCompletion}, {fromCompletion}, {afterFromCompletion},
-				{whereCompletion, orderByClausePartCompletion}, {orderByClausePartCompletion}};
+		decisionList = new CqlPartCompletion[][]{{selectCompletion}, {fromCompletion}, {afterFromCompletion}, {whereCompletion, orderByClausePartCompletion}, {orderByClausePartCompletion}};
 	}
 
 	@Override

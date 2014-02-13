@@ -29,7 +29,8 @@ public class EmbeddedCassandra {
 		session.execute("CREATE KEYSPACE CqlDemo WITH replication = {'class': 'SimpleStrategy', " +
 				"'replication_factor' : 1}");
 		session.execute("USE CqlDemo");
-		session.execute("CREATE TABLE MyBooks (id UUID PRIMARY KEY,title TEXT,genre TEXT,publishDate TIMESTAMP,description TEXT,authors SET<TEXT>,price MAP<TEXT,DOUBLE>,pages INT)");
+		session.execute(
+				"CREATE TABLE MyBooks (id UUID PRIMARY KEY,title TEXT,genre TEXT,publishDate TIMESTAMP,description TEXT,authors SET<TEXT>,price MAP<TEXT,DOUBLE>,pages INT)");
 		session.execute("ALTER TABLE MyBooks ADD paperType varchar");
 		session.execute("ALTER TABLE MyBooks ADD dynamicColumn1 varchar");
 		session.execute("ALTER TABLE MyBooks ADD dynamicColumn2 varchar");
@@ -40,7 +41,8 @@ public class EmbeddedCassandra {
 		session.execute("CREATE INDEX ON MyBooks(genre)");
 		session.execute("CREATE INDEX ON MyBooks(pages)");
 
-		session.execute("create table CompoundTest (id uuid, id2 int, id3 text, deesc text, primary key(id, id2, id3))");
+		session.execute(
+				"create table CompoundTest (id uuid, id2 int, id3 text, deesc text, primary key(id, id2, id3))");
 		session.execute("CREATE INDEX ON CompoundTest(deesc)");
 	}
 

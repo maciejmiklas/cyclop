@@ -10,7 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("select.AfterFromCompletion") class AfterFromCompletion extends AfterTableNameCompletionTemplate {
+@Named("select.AfterFromCompletion")
+class AfterFromCompletion extends AfterTableNameCompletionTemplate {
 
 	private CqlCompletion completion;
 
@@ -20,8 +21,9 @@ import javax.inject.Named;
 
 	@PostConstruct
 	public void init() {
-		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.WHERE.value).all(CqlKeyword.Def.ORDER_BY.value
-		).all(CqlKeyword.Def.LIMIT.value).all(CqlKeyword.Def.ALLOW_FILTERING.value).build();
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.WHERE.value)
+				.all(CqlKeyword.Def.ORDER_BY.value).all(CqlKeyword.Def.LIMIT.value)
+				.all(CqlKeyword.Def.ALLOW_FILTERING.value).build();
 	}
 
 	@Override

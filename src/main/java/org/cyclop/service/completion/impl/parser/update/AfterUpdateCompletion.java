@@ -10,7 +10,8 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("update.AfterUpdateCompletion") class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
+@Named("update.AfterUpdateCompletion")
+class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
 
 	private CqlCompletion completion;
 
@@ -20,8 +21,8 @@ import javax.inject.Named;
 
 	@PostConstruct
 	public void init() {
-		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value).all(CqlKeyword.Def
-				.USING_TIMESTAMP.value).all(CqlKeyword.Def.SET.value).build();
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value)
+				.all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.SET.value).build();
 	}
 
 	@Override

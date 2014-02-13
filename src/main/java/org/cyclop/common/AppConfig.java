@@ -61,11 +61,13 @@ public class AppConfig {
 	}
 
 	@PostConstruct
-	@edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD") void init() {
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+	void init() {
 		instance = this;
 		Set<ConstraintViolation<AppConfig>> validateRes = validator.validate(instance);
 		if (!validateRes.isEmpty()) {
-			throw new ServiceException("Application configuration file (cyclop.properties) contains errors: " + validateRes);
+			throw new ServiceException(
+					"Application configuration file (cyclop.properties) contains errors: " + validateRes);
 		}
 	}
 
@@ -75,7 +77,8 @@ public class AppConfig {
 	}
 
 	@Inject
-	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie, History history) {
+	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie,
+					 History history) {
 		this.cassandra = cassandra;
 		this.cqlEditor = cqlEditor;
 		this.common = common;
@@ -106,10 +109,19 @@ public class AppConfig {
 		public final boolean useSsl;
 
 		@Inject
-		public Cassandra(@Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
-						 @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis,
-						 @Value("${cassandra.rowsLimit}") int rowsLimit,
-						 @Value("${cassandra.columnsLimit}") int columnsLimit) {
+		public Cassandra(
+				@Value("${cassandra.hosts}")
+				String hosts,
+				@Value("${cassandra.useSsl}")
+				boolean useSsl,
+				@Value("${cassandra.port}")
+				int port,
+				@Value("${cassandra.timeoutMilis}")
+				int timeoutMilis,
+				@Value("${cassandra.rowsLimit}")
+				int rowsLimit,
+				@Value("${cassandra.columnsLimit}")
+				int columnsLimit) {
 			this.hosts = hosts;
 			this.useSsl = useSsl;
 			this.port = port;
@@ -120,8 +132,9 @@ public class AppConfig {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("port", port).add("timeoutMilis", timeoutMilis).add("rowsLimit", rowsLimit)
-					.add("columnsLimit", columnsLimit).add("hosts", hosts).add("useSsl", useSsl).toString();
+			return Objects.toStringHelper(this).add("port", port).add("timeoutMilis", timeoutMilis)
+					.add("rowsLimit", rowsLimit).add("columnsLimit", columnsLimit).add("hosts", hosts)
+					.add("useSsl", useSsl).toString();
 		}
 	}
 
@@ -142,10 +155,18 @@ public class AppConfig {
 
 		@Inject
 		public History(
-				@Value("${history.historyLimit}") int historyLimit, @Value("${history.starredLimit}") int starredLimit,
-				@Value("${history.folder}") String folder, @Value("${history.enabled}") boolean enabled,
-				@Value("${history.maxFileSize}") int maxFileSize,
-				@Value("${history.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis) {
+				@Value("${history.historyLimit}")
+				int historyLimit,
+				@Value("${history.starredLimit}")
+				int starredLimit,
+				@Value("${history.folder}")
+				String folder,
+				@Value("${history.enabled}")
+				boolean enabled,
+				@Value("${history.maxFileSize}")
+				int maxFileSize,
+				@Value("${history.lockWaitTimeoutMilis}")
+				int lockWaitTimeoutMilis) {
 			this.historyLimit = historyLimit;
 			this.starredLimit = starredLimit;
 			this.folder = folder;
@@ -167,7 +188,9 @@ public class AppConfig {
 		public final int expirySeconds;
 
 		@Inject
-		public Cookie(@Value("${cookie.expirySeconds}") int expirySeconds) {
+		public Cookie(
+				@Value("${cookie.expirySeconds}")
+				int expirySeconds) {
 			this.expirySeconds = expirySeconds;
 		}
 	}
@@ -189,10 +212,15 @@ public class AppConfig {
 		public final int maxColumnTooltipDisplayChars;
 
 		@Inject
-		protected CqlEditor(@Value("${cqlEditor.rowsPerPage}") int rowsPerPage,
-							@Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
-							@Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
-							@Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
+		protected CqlEditor(
+				@Value("${cqlEditor.rowsPerPage}")
+				int rowsPerPage,
+				@Value("${cqlEditor.maxColumnEmbeddedDisplayChars}")
+				int maxColumnEmbeddedDisplayChars,
+				@Value("${cqlEditor.maxColumnDisplayChars}")
+				int maxColumnDisplayChars,
+				@Value("${cqlEditor.maxColumnTooltipDisplayChars}")
+				int maxColumnTooltipDisplayChars) {
 			this.rowsPerPage = rowsPerPage;
 			this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
 			this.maxColumnDisplayChars = maxColumnDisplayChars;
@@ -251,19 +279,31 @@ public class AppConfig {
 		public final boolean removeCrChars;
 
 		@Inject
-		public CqlExport(@Value("${cqlExport.fileName}") String fileName,
-						 @Value("${cqlExport.fileName.date}") String fileNameDate,
-						 @Value("${cqlExport.querySeparator}") String querySeparator,
-						 @Value("${cqlExport.rowSeparator}") String rowSeparator,
-						 @Value("${cqlExport.columnSeparator}") String columnSeparator,
-						 @Value("${cqlExport.listSeparator}") String listSeparator,
-						 @Value("${cqlExport.mapSeparator}") String mapSeparator,
-						 @Value("${cqlExport.valueBracketStart}") String valueBracketStart,
-						 @Value("${cqlExport.valueBracketEnd}") String valueBracketEnd,
-						 @Value("${cqlExport.crCharCode}") int crCharCode,
-						 @Value("${cqlExport.removeCrChars}") boolean removeCrChars,
-						 @Value("${cqlExport.trim}") boolean trim)
-				throws UnsupportedEncodingException {
+		public CqlExport(
+				@Value("${cqlExport.fileName}")
+				String fileName,
+				@Value("${cqlExport.fileName.date}")
+				String fileNameDate,
+				@Value("${cqlExport.querySeparator}")
+				String querySeparator,
+				@Value("${cqlExport.rowSeparator}")
+				String rowSeparator,
+				@Value("${cqlExport.columnSeparator}")
+				String columnSeparator,
+				@Value("${cqlExport.listSeparator}")
+				String listSeparator,
+				@Value("${cqlExport.mapSeparator}")
+				String mapSeparator,
+				@Value("${cqlExport.valueBracketStart}")
+				String valueBracketStart,
+				@Value("${cqlExport.valueBracketEnd}")
+				String valueBracketEnd,
+				@Value("${cqlExport.crCharCode}")
+				int crCharCode,
+				@Value("${cqlExport.removeCrChars}")
+				boolean removeCrChars,
+				@Value("${cqlExport.trim}")
+				boolean trim) throws UnsupportedEncodingException {
 			this.crCharCode = crCharCode;
 			String crChar = String.valueOf((char) crCharCode);
 			this.querySeparator = crs(crChar, querySeparator);
@@ -282,8 +322,8 @@ public class AppConfig {
 		@Override
 		public String toString() {
 			return Objects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator", rowSeparator)
-					.add("listSeparator", listSeparator).add("mapSeparator", mapSeparator).add("removeCrChars", removeCrChars)
-					.toString();
+					.add("listSeparator", listSeparator).add("mapSeparator", mapSeparator)
+					.add("removeCrChars", removeCrChars).toString();
 		}
 	}
 }

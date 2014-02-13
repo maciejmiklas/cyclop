@@ -90,7 +90,8 @@ public class CqlCommanderPage extends ParentPage {
 	}
 
 	private ButtonsPanel initButtons(final QueryEditorPanel queryEditorPanel,
-									 final QueryResultVerticalPanel queryResultVerticalPanel, boolean completionEnabled) {
+									 final QueryResultVerticalPanel queryResultVerticalPanel,
+									 boolean completionEnabled) {
 		ButtonListener buttonListener = new ButtonListener() {
 
 			@Override

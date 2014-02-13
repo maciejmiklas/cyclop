@@ -111,32 +111,25 @@ public class TestCassandraService extends AbstractTestCase {
 	@Test
 	public void testExecuteCompoundPkNoDynamicColumns() {
 		qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
-		CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from CompoundTest where deesc='TEST_SET_1'"));
+		CqlSelectResult res = qs
+				.execute(new CqlQuery(CqlQueryName.SELECT, "select * from CompoundTest where deesc='TEST_SET_1'"));
 		assertEquals(50, res.rows.size());
 
 		assertEquals(4, res.commonColumns.size());
 		assertEquals(0, res.dynamicColumns.size());
 
 		String comColsStr = res.commonColumns.toString();
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.PARTITION_KEY,
-				DataType.uuid(),
-				"id")));
+		assertTrue(comColsStr, res.commonColumns
+				.contains(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, DataType.uuid(), "id")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.CLUSTERING_KEY,
-				DataType.cint(),
-				"id2")));
+		assertTrue(comColsStr, res.commonColumns
+				.contains(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, DataType.cint(), "id2")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.CLUSTERING_KEY,
-				DataType.varchar(),
-				"id3")));
+		assertTrue(comColsStr, res.commonColumns
+				.contains(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, DataType.varchar(), "id3")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.REGULAR,
-				DataType.varchar(),
-				"deesc")));
+		assertTrue(comColsStr, res.commonColumns
+				.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, DataType.varchar(), "deesc")));
 
 		for (Row row : res.rows) {
 			assertEquals("TEST_SET_1", row.getString("deesc"));
@@ -146,36 +139,25 @@ public class TestCassandraService extends AbstractTestCase {
 	@Test
 	public void testExecuteSimplePkWithDynamicColumn() {
 		qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
-		CqlSelectResult res = qs.execute(new CqlQuery(
-				CqlQueryName.SELECT,
-				"select * from MyBooks where pages=2212"));
+		CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from MyBooks where pages=2212"));
 		assertEquals(100, res.rows.size());
 
-		assertTrue(res.toString(), res.dynamicColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.REGULAR,
-				DataType.varchar(),
-				"genre")));
+		assertTrue(res.toString(), res.dynamicColumns
+				.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, DataType.varchar(), "genre")));
 
 		String comColsStr = res.commonColumns.toString();
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.PARTITION_KEY,
-				DataType.uuid(),
-				"id")));
+		assertTrue(comColsStr, res.commonColumns
+				.contains(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, DataType.uuid(), "id")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.REGULAR,
-				DataType.set(DataType.varchar()),
-				"authors")));
+		assertTrue(comColsStr, res.commonColumns.contains(
+				new CqlExtendedColumnName(CqlColumnType.REGULAR, DataType.set(DataType.varchar()), "authors")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.REGULAR,
-				DataType.cint(),
-				"pages")));
+		assertTrue(comColsStr,
+				res.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, DataType.cint(), "pages")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(
-				CqlColumnType.REGULAR,
-				DataType.map(DataType.varchar(), DataType.cdouble()),
-				"price")));
+		assertTrue(comColsStr, res.commonColumns.contains(
+				new CqlExtendedColumnName(CqlColumnType.REGULAR, DataType.map(DataType.varchar(), DataType.cdouble()),
+						"price")));
 
 		for (Row row : res.rows) {
 			int idx = row.getInt("idx");

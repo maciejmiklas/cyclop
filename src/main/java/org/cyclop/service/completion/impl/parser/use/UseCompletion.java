@@ -13,7 +13,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("use.UsePartCompletion") class UseCompletion extends MarkerBasedCompletion {
+@Named("use.UsePartCompletion")
+class UseCompletion extends MarkerBasedCompletion {
 
 	@Inject
 	private QueryService queryService;

@@ -18,7 +18,8 @@ import java.util.concurrent.atomic.AtomicReference;
 /** @author Maciej Miklas */
 @NotThreadSafe
 @Named
-@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS) class HistoryServiceImpl implements HistoryService {
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+class HistoryServiceImpl implements HistoryService {
 
 	private final static Logger LOG = LoggerFactory.getLogger(HistoryServiceImpl.class);
 

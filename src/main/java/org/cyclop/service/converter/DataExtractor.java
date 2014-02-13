@@ -34,8 +34,8 @@ public class DataExtractor {
 		}
 
 		Class<?> collectionClass = argTypes.get(0).asJavaClass();
-		Collection<?> objCont = dataType.getName() == DataType.Name.SET ? row.getSet(partLc,
-				collectionClass) : row.getList(partLc, collectionClass);
+		Collection<?> objCont = dataType.getName() == DataType.Name.SET ? row.getSet(partLc, collectionClass) : row
+				.getList(partLc, collectionClass);
 
 		ImmutableList.Builder<CqlColumnValue> builder = ImmutableList.builder();
 		for (Object o : objCont) {
@@ -142,7 +142,7 @@ public class DataExtractor {
 	}
 
 	private boolean isString(DataType dataType) {
-		return dataType.equals(DataType.ascii()) || dataType.equals(DataType.text()) || dataType.equals(DataType
-				.varchar());
+		return dataType.equals(DataType.ascii()) || dataType.equals(DataType.text()) ||
+				dataType.equals(DataType.varchar());
 	}
 }

@@ -22,9 +22,12 @@ import javax.inject.Named;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 class CassandraSessionImpl implements CassandraSession {
 	private final static Logger LOG = LoggerFactory.getLogger(CassandraSessionImpl.class);
+
 	private Session session;
+
 	@Inject
 	private AppConfig appConfig;
+
 	private CassandraVersion cassandraVersion;
 
 	public void authenticate(String userName, String password) {
@@ -54,7 +57,7 @@ class CassandraSessionImpl implements CassandraSession {
 	private CassandraVersion determineVersion(Session session) {
 		CassandraVersion ver = CassandraVersion.VER_2_x;
 
-		// this sucks and works at the same time ....
+		// this way to check version sucks and works at the same time ....
 		try {
 			session.execute("select type FROM system.schema_columns LIMIT 1 ALLOW FILTERING");
 		} catch (InvalidQueryException e) {

@@ -7,7 +7,8 @@ import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
 import javax.inject.Named;
 
 /** @author Maciej Miklas */
-@Named("alterkeyspace.AlterCompletion") class AlterCompletion extends NotSupportedCompletion {
+@Named("alterkeyspace.AlterCompletion")
+class AlterCompletion extends NotSupportedCompletion {
 
 	public AlterCompletion() {
 		super(new CqlNotSupported("alter"));

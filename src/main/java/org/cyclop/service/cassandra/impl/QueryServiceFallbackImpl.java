@@ -22,7 +22,8 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
 @Named
-@CassandraVersionQualifier(CassandraVersion.VER_1_x) class QueryServiceFallbackImpl extends QueryServiceImpl {
+@CassandraVersionQualifier(CassandraVersion.VER_1_x)
+class QueryServiceFallbackImpl extends QueryServiceImpl {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceFallbackImpl.class);
 
@@ -78,8 +79,9 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 			types.put(pk, CqlColumnType.PARTITION_KEY);
 		}
 
-		ResultSet result = execute("select column_name from system.schema_columns where columnfamily_name='" + table
-				.part + "' allow filtering");
+		ResultSet result = execute(
+				"select column_name from system.schema_columns where columnfamily_name='" + table.part +
+						"' allow filtering");
 
 		for (Row row : result) {
 			String name = StringUtils.trimToNull(row.getString("column_name"));

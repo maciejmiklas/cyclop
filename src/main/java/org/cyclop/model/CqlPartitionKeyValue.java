@@ -16,7 +16,7 @@ public class CqlPartitionKeyValue extends CqlColumnValue {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value).add("cqlPartitionKey",
-				cqlPartitionKey).toString();
+		return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value)
+				.add("cqlPartitionKey", cqlPartitionKey).toString();
 	}
 }

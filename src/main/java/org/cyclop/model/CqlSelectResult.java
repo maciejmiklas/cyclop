@@ -27,8 +27,9 @@ public final class CqlSelectResult {
 		this.partitionKey = null;
 	}
 
-	public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns, ImmutableList<CqlExtendedColumnName>
-			dynamicColumns, ImmutableList<Row> rows, CqlPartitionKey partitionKey) {
+	public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns,
+						   ImmutableList<CqlExtendedColumnName> dynamicColumns, ImmutableList<Row> rows,
+						   CqlPartitionKey partitionKey) {
 		this.commonColumns = commonColumns;
 		this.dynamicColumns = dynamicColumns;
 		this.rows = rows;
@@ -41,7 +42,7 @@ public final class CqlSelectResult {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("commonColumns", commonColumns).add("dynamicColumns",
-				dynamicColumns).add("rows", rows).add("partitionKey", partitionKey).toString();
+		return Objects.toStringHelper(this).add("commonColumns", commonColumns).add("dynamicColumns", dynamicColumns)
+				.add("rows", rows).add("partitionKey", partitionKey).toString();
 	}
 }

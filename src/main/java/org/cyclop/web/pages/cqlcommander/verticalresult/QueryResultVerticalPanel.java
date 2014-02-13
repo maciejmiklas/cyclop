@@ -76,7 +76,8 @@ public class QueryResultVerticalPanel extends Panel {
 		initColumnList(resultTable, columnsModel, displayedRows);
 	}
 
-	private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel, final List<Row> displayedRows) {
+	private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel,
+								final List<Row> displayedRows) {
 		ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>("columnList", columnsModel) {
 			@Override
 			protected void populateItem(ListItem<CqlExtendedColumnName> item) {
@@ -118,7 +119,8 @@ public class QueryResultVerticalPanel extends Panel {
 					protected void populateItem(ListItem<Row> item) {
 						Row row = item.getModelObject();
 
-						Component component = widgetFactory.createForColumn(row, partitionKey, columnName, "columnValue");
+						Component component = widgetFactory
+								.createForColumn(row, partitionKey, columnName, "columnValue");
 						item.add(component);
 						component.setRenderBodyOnly(true);
 					}
@@ -283,8 +285,8 @@ public class QueryResultVerticalPanel extends Panel {
 			this.result = result;
 			ImmutableList.Builder<CqlExtendedColumnName> allColumnsBuild = ImmutableList.builder();
 			List<CqlExtendedColumnName> allColumns = allColumnsBuild.addAll(result.commonColumns)
-					.add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, DataType.text(), "-")).addAll(result.dynamicColumns)
-					.build();
+					.add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, DataType.text(), "-"))
+					.addAll(result.dynamicColumns).build();
 			setObject(allColumns);
 		}
 

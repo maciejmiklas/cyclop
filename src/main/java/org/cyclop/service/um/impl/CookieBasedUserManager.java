@@ -40,7 +40,8 @@ public class CookieBasedUserManager implements UserManager {
 
 	@Override
 	public UserIdentifier readIdentifier() {
-		UserIdentifier id = cookieStorage.readCookieAsJson(CookieStorage.CookieName.cyclop_userid, UserIdentifier.class);
+		UserIdentifier id = cookieStorage
+				.readCookieAsJson(CookieStorage.CookieName.cyclop_userid, UserIdentifier.class);
 		if (id == null) {
 			LOG.debug("User Identifier not found as cookie - generating new");
 			id = new UserIdentifier();

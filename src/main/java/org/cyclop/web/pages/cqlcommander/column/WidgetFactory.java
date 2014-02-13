@@ -27,11 +27,8 @@ public class WidgetFactory {
 	protected WidgetFactory() {
 	}
 
-	public Component createForColumn(
-			Row row,
-			CqlPartitionKey partitionKey,
-			CqlExtendedColumnName column,
-			String componentId) {
+	public Component createForColumn(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
+									 String componentId) {
 
 		Component component = null;
 		if (column.columnType == CqlColumnType.SEPARATOR) {
@@ -57,11 +54,8 @@ public class WidgetFactory {
 		return component;
 	}
 
-	private Component createForCollection(
-			Row row,
-			CqlPartitionKeyValue cqlPartitionKeyValue,
-			CqlExtendedColumnName column,
-			String componentId) {
+	private Component createForCollection(Row row, CqlPartitionKeyValue cqlPartitionKeyValue,
+										  CqlExtendedColumnName column, String componentId) {
 		ImmutableList<CqlColumnValue> content = extractor.extractCollection(row, column);
 		Component comp;
 		if (content.isEmpty()) {
@@ -73,11 +67,8 @@ public class WidgetFactory {
 		return comp;
 	}
 
-	private Component createForMap(
-			Row row,
-			CqlPartitionKeyValue cqlPartitionKeyValue,
-			CqlExtendedColumnName column,
-			String componentId) {
+	private Component createForMap(Row row, CqlPartitionKeyValue cqlPartitionKeyValue, CqlExtendedColumnName column,
+								   String componentId) {
 		ImmutableMap<CqlColumnValue, CqlColumnValue> displayMap = extractor.extractMap(row, column);
 		Component comp;
 		if (displayMap.isEmpty()) {
@@ -89,21 +80,15 @@ public class WidgetFactory {
 		return comp;
 	}
 
-	private Component createForSingleValue(
-			Row row,
-			CqlPartitionKeyValue cqlPartitionKeyValue,
-			CqlExtendedColumnName column,
-			String componentId) {
+	private Component createForSingleValue(Row row, CqlPartitionKeyValue cqlPartitionKeyValue,
+										   CqlExtendedColumnName column, String componentId) {
 		CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row, column);
 		Component component = new ColumnValuePanel(componentId, cqlPartitionKeyValue, cqlColumnValue, false);
 		return component;
 	}
 
-	private Component createForDataType(
-			Row row,
-			CqlPartitionKey partitionKey,
-			CqlExtendedColumnName column,
-			String componentId) {
+	private Component createForDataType(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
+										String componentId) {
 		String partLc = column.partLc;
 		if (row.isNull(partLc)) {
 			return null;

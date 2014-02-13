@@ -28,13 +28,14 @@ public class JsonMarshaller {
 
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				AnnotationIntrospector introspectorPair = new AnnotationIntrospector.Pair(new JaxbAnnotationIntrospector(),
-						new JacksonAnnotationIntrospector());
+				AnnotationIntrospector introspectorPair = new AnnotationIntrospector.Pair(
+						new JaxbAnnotationIntrospector(), new JacksonAnnotationIntrospector());
 
-				SerializationConfig sc = mapper.getSerializationConfig().withSerializationInclusion(
-						JsonSerialize.Inclusion.NON_NULL);
+				SerializationConfig sc = mapper.getSerializationConfig()
+						.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
 				mapper.setSerializationConfig(sc.withAnnotationIntrospector(introspectorPair));
-				mapper.setDeserializationConfig(mapper.getDeserializationConfig().withAnnotationIntrospector(introspectorPair));
+				mapper.setDeserializationConfig(
+						mapper.getDeserializationConfig().withAnnotationIntrospector(introspectorPair));
 				return mapper;
 			}
 		};
@@ -50,8 +51,8 @@ public class JsonMarshaller {
 		try {
 			unmarshalObj = objectMapper.get().readValue(input, clazz);
 		} catch (IOException e) {
-			throw new ServiceException("Got IOException during json unmarshalling: " + e.getMessage() + " - input:'" + input
-					+ "'", e);
+			throw new ServiceException(
+					"Got IOException during json unmarshalling: " + e.getMessage() + " - input:'" + input + "'", e);
 		}
 		return unmarshalObj;
 	}
@@ -64,15 +65,16 @@ public class JsonMarshaller {
 		try {
 			marshalBytes = objectMapper.get().writeValueAsBytes(obj);
 		} catch (IOException e) {
-			throw new ServiceException("Gout IOException during json marshalling: " + e.getMessage() + " - input:'" + obj + "'",
-					e);
+			throw new ServiceException(
+					"Gout IOException during json marshalling: " + e.getMessage() + " - input:'" + obj + "'", e);
 		}
 
 		try {
 			return new String(marshalBytes, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new ServiceException("UnsupportedEncodingException marshalling Json stream: " + e.getMessage() + " - input:'"
-					+ obj + "'", e);
+			throw new ServiceException(
+					"UnsupportedEncodingException marshalling Json stream: " + e.getMessage() + " - input:'" + obj +
+							"'", e);
 		}
 
 	}
