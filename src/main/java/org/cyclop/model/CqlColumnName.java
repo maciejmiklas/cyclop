@@ -22,7 +22,7 @@ public class CqlColumnName extends CqlPart {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof CqlColumnName)) {
+		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
 		final CqlColumnName other = (CqlColumnName) obj;

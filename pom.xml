@@ -165,6 +165,11 @@
 
 		<!-- ### Test ### -->
 		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava-testlib</artifactId>
+			<version>15.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.cassandraunit</groupId>
 			<artifactId>cassandra-unit</artifactId>
 			<version>2.0.2.0</version>

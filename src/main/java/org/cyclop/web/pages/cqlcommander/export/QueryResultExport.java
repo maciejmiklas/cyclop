@@ -57,7 +57,7 @@ public class QueryResultExport {
 				return new StringResourceStream("No Data");
 			}
 
-			String csv = exporter.createCsv(query, lastQueryResult);
+			String csv = exporter.exportAsCsv(query, lastQueryResult);
 			return new StringResourceStream(csv);
 
 		}

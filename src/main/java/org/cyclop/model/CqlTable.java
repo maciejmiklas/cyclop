@@ -45,7 +45,7 @@ public final class CqlTable extends CqlPart {
 
 	@Override
 	public int compareTo(CqlPart o) {
-		if (!(o instanceof CqlTable)) {
+		if (o == null || getClass() != o.getClass()) {
 			return -1;
 		}
 		CqlTable table = (CqlTable) o;

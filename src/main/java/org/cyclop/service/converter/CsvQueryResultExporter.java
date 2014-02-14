@@ -30,7 +30,7 @@ public class CsvQueryResultExporter {
 	@Inject
 	private AppConfig.CqlExport conf;
 
-	public String createCsv(CqlQuery query, CqlSelectResult result) {
+	public String exportAsCsv(CqlQuery query, CqlSelectResult result) {
 		StringBuilder buf = new StringBuilder();
 
 		// header

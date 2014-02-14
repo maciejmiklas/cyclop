@@ -62,4 +62,19 @@ public class CqlQuery extends CqlPart {
 			return jaxb;
 		}
 	}
+
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		CqlQuery cqlObj = (CqlQuery) obj;
+		return partLc.equals(cqlObj.partLc) && type.equals(cqlObj.type);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(partLc, type);
+	}
 }
