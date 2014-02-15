@@ -19,6 +19,7 @@ function initButtons() {
 	$(".cq-clqExecuteButton").click(function () {
 		$(".cq-queryProgressBar").show();
 		$(".cq-queryResult").hide();
+		$(".cq-cqlInfoHint").hide();
 		$(".cq-clqExecuteButton").addClass("disabled");
 	});
 

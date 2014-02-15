@@ -21,7 +21,7 @@ $(function () {
 			$linkNameToDisable.removeClass('cq-disableLink');
 		}
 	});
-
+	$dialog.scrollTop("0")
 	$dialog.dialog("open");
 });
 

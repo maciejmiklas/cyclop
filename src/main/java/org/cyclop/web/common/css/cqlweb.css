@@ -95,7 +95,7 @@ pre.cq-helpCqlSyntax {
 }
 
 .cq-cqlInfoHint {
-	position: fixed;
+	position: absolute;
 	z-index: 2;
 	margin: 0 1em 0 0;
 }
