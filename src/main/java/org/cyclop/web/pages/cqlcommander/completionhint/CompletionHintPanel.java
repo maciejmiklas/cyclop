@@ -95,6 +95,9 @@ public class CompletionHintPanel extends Panel {
 					case NOT_SUPPORTED:
 						css = "cq-hintCqlNotSupported";
 						break;
+					case KEYWORD_VALUE:
+						css = "cq-hintCqlKeywordValue";
+						break;
 
 					default:
 						css = null;

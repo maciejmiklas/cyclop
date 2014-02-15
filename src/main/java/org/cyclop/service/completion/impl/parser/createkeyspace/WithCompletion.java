@@ -14,9 +14,9 @@ class WithCompletion extends StaticMarkerBasedCompletion {
 
 	public WithCompletion() {
 		super(CqlKeyword.Def.WITH.value,
-				CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).all(CqlKeyword.Def.AND.value)
-						.all(CqlKeyword.Def.REPLICATION.value).all(CqlKeywordValue.Def.DURABLE_WRITES.value)
-						.prefix(CqlKeywordValue.Def.CLASS.value).prefix(CqlKeywordValue.Def.SIMPLE_STRATEGY.value)
+				CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.AND.value).all(CqlKeyword.Def.REPLICATION.value)
+						.all(CqlKeywordValue.Def.DURABLE_WRITES.value).prefix(CqlKeywordValue.Def.CLASS.value)
+						.prefix(CqlKeywordValue.Def.SIMPLE_STRATEGY.value)
 						.prefix(CqlKeywordValue.Def.REPLICATION_FACTOR.value)
 						.prefix(CqlKeywordValue.Def.NETWORK_TOPOLOGY_STRATEGY.value)
 						.prefix(CqlKeywordValue.Def.DURABLE_WRITES.value).all(CqlKeywordValue.Def.TRUE.value)
