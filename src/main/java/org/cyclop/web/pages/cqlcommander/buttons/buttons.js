@@ -2,9 +2,9 @@ function initButtons() {
 
 	// clqHelpExpandSupportBody
 	$(".cq-clqHelpExpandSupportBody").hide();
-	$(".cq-clqHelpExpandSupportLink").click(function () {
+	$(".cq-CqlHelpButton").click(function () {
 		var $bodyToHide = $(".cq-clqHelpExpandSupportBody");
-		var $button = $(".cq-clqHelpExpandSupportLink");
+		var $button = $(".cq-CqlHelpButton");
 
 		if ($bodyToHide.is(":hidden")) {
 			$bodyToHide.slideDown("fast");
@@ -16,15 +16,15 @@ function initButtons() {
 	});
 
 	// clqExecuteButton
-	$(".cq-clqExecuteButton").click(function () {
+	$(".cq-ExecuteQueryButton").click(function () {
 		$(".cq-queryProgressBar").show();
 		$(".cq-queryResult").hide();
 		$(".cq-cqlInfoHint").hide();
-		$(".cq-clqExecuteButton").addClass("disabled");
+		$(".cq-ExecuteQueryButton").addClass("disabled");
 	});
 
-	// cq-clqBookmark
-	$(".cq-clqBookmark").click(function () {
+	// cq-BookmarkButton
+	$(".cq-BookmarkButton").click(function () {
 			var $area = $(".cq-textareaCql");
 			var text = $area.val();
 			if (text.isEmpty()) {
@@ -58,5 +58,5 @@ function initButtons() {
 
 function cqlQuerySuccessResponse() {
 	$(".cq-queryProgressBar").hide();
-	$(".cq-clqExecuteButton").removeClass("disabled");
+	$(".cq-ExecuteQueryButton").removeClass("disabled");
 }

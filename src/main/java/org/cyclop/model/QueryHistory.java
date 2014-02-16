@@ -24,7 +24,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Favorites are sorted by change date, favorites are queued.
+ * Favorites are sorted by change date, history is queued.
  *
  * @author Maciej Miklas
  */
@@ -40,7 +40,7 @@ public class QueryHistory {
 
 
 	public QueryHistory() {
-		history = new CircularFifoQueue<QueryHistoryEntry>(AppConfig.get().history.historyLimit);
+		history = new CircularFifoQueue<>(AppConfig.get().history.historyLimit);
 		favourites = new HashSet<>(AppConfig.get().history.starredLimit);
 	}
 

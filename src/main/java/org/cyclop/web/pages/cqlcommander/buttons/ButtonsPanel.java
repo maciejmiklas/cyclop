@@ -21,22 +21,46 @@ public class ButtonsPanel extends Panel {
 		super(id);
 		setRenderBodyOnly(true);
 
-		AjaxFallbackLink<CqlQuery> executeQueryLink = new AjaxFallbackLink<CqlQuery>("execCql") {
+		AjaxFallbackLink<CqlQuery> addToFavourites = new AjaxFallbackLink<CqlQuery>("addToFavourites") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				//buttonListener.onClickExecCql(target);
+			}
+		};
+		add(addToFavourites);
+
+		AjaxFallbackLink<CqlQuery> queryHistory = new AjaxFallbackLink<CqlQuery>("queryHistory") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				//buttonListener.onClickExecCql(target);
+			}
+		};
+		add(queryHistory);
+
+		AjaxFallbackLink<CqlQuery> queryFavourites = new AjaxFallbackLink<CqlQuery>("queryFavourites") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				//buttonListener.onClickExecCql(target);
+			}
+		};
+		add(queryFavourites);
+
+		AjaxFallbackLink<CqlQuery> execQuery = new AjaxFallbackLink<CqlQuery>("execQuery") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				buttonListener.onClickExecCql(target);
 				target.appendJavaScript("cqlQuerySuccessResponse()");
 			}
 		};
-		add(executeQueryLink);
+		add(execQuery);
 
-		AjaxFallbackLink<CqlQuery> exportCqlResult = new AjaxFallbackLink<CqlQuery>("exportCqlResult") {
+		AjaxFallbackLink<CqlQuery> exportQueryResult = new AjaxFallbackLink<CqlQuery>("exportQueryResult") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				buttonListener.onClickQueryResultExport(target);
 			}
 		};
-		add(exportCqlResult);
+		add(exportQueryResult);
 
 		Link<CqlQuery> logOut = new Link<CqlQuery>("logOut") {
 
