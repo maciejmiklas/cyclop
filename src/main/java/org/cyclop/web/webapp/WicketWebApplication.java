@@ -3,6 +3,7 @@ package org.cyclop.web.webapp;
 import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.markup.html.SecurePackageResourceGuard;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -28,10 +29,17 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
 
 		initBookmarks();
+		initSecurity();
 	}
 
 	private void initBookmarks() {
 		mountPage("/ced", MainPage.class);
+	}
+
+	private void initSecurity() {
+		SecurePackageResourceGuard guard = (SecurePackageResourceGuard) getResourceSettings()
+				.getPackageResourceGuard();
+		guard.addPattern("+*.map");
 	}
 
 	@Override

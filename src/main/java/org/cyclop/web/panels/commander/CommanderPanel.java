@@ -29,7 +29,7 @@ import javax.inject.Inject;
 
 /** @author Maciej Miklas */
 @AuthorizeInstantiation(Roles.ADMIN)
-public class CqlCommanderPanel extends Panel {
+public class CommanderPanel extends Panel {
 
 	private final CqlHelpPanel cqlHelpPanel;
 
@@ -37,7 +37,7 @@ public class CqlCommanderPanel extends Panel {
 
 	private boolean queryRunning = false;
 
-	private final static Logger LOG = LoggerFactory.getLogger(CqlCommanderPanel.class);
+	private final static Logger LOG = LoggerFactory.getLogger(CommanderPanel.class);
 
 	private CqlSelectResult lastQueryResult;
 
@@ -51,7 +51,7 @@ public class CqlCommanderPanel extends Panel {
 	@Inject
 	private UserManager userManager;
 
-	public CqlCommanderPanel(String id, PageParameters params) {
+	public CommanderPanel(String id, PageParameters params) {
 		super(id);
 		Injector.get().inject(this);
 		setRenderBodyOnly(true);
