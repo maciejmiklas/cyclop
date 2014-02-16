@@ -4,6 +4,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.injection.Injector;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.cyclop.model.ContextCqlCompletion;
@@ -28,7 +30,7 @@ import javax.inject.Inject;
 
 /** @author Maciej Miklas */
 @AuthorizeInstantiation(Roles.ADMIN)
-public class CqlCommanderPage extends ParentPage {
+public class CqlCommanderPanel extends Panel {
 
 	private final CqlHelpPanel cqlHelpPanel;
 
@@ -36,7 +38,7 @@ public class CqlCommanderPage extends ParentPage {
 
 	private boolean queryRunning = false;
 
-	private final static Logger LOG = LoggerFactory.getLogger(CqlCommanderPage.class);
+	private final static Logger LOG = LoggerFactory.getLogger(CqlCommanderPanel.class);
 
 	private CqlSelectResult lastQueryResult;
 
@@ -50,7 +52,11 @@ public class CqlCommanderPage extends ParentPage {
 	@Inject
 	private UserManager userManager;
 
-	public CqlCommanderPage(PageParameters params) {
+	public CqlCommanderPanel(String id, PageParameters params) {
+		super(id);
+		Injector.get().inject(this);
+		setRenderBodyOnly(true);
+
 		cqlHelpPanel = new CqlHelpPanel("cqlHelp");
 		add(cqlHelpPanel);
 

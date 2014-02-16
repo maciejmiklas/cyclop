@@ -7,14 +7,14 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.cyclop.web.pages.authenticate.AuthenticatePage;
-import org.cyclop.web.pages.cqlcommander.CqlCommanderPage;
+import org.cyclop.web.pages.main.MainPage;
 
 /** @author Maciej Miklas */
 public class WicketWebApplication extends AuthenticatedWebApplication {
 
 	@Override
 	public Class<? extends Page> getHomePage() {
-		return CqlCommanderPage.class;
+		return MainPage.class;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 	}
 
 	private void initBookmarks() {
-		mountPage("/ced", CqlCommanderPage.class);
+		mountPage("/ced", MainPage.class);
 	}
 
 	@Override
