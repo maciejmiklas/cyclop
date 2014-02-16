@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander.verticalresult;
+package org.cyclop.web.panels.commander.verticalresult;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
@@ -22,7 +22,7 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
-import org.cyclop.web.pages.cqlcommander.column.WidgetFactory;
+import org.cyclop.web.panels.commander.column.WidgetFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

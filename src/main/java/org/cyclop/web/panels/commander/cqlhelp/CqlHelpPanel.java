@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander.cqlhelp;
+package org.cyclop.web.panels.commander.cqlhelp;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -40,7 +40,7 @@ public class CqlHelpPanel extends Panel {
 			String name = "help_" + currentCompletion.queryName.name().toLowerCase() + ".html";
 			try {
 
-				URL url = Resources.getResource("/org/cyclop/web/pages/cqlcommander/cqlhelp/help/" + name);
+				URL url = Resources.getResource("/org/cyclop/web/panels/commander/cqlhelp/help/" + name);
 
 				String text = Resources.toString(url, Charsets.UTF_8);
 				return text;

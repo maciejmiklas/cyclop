@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander;
+package org.cyclop.web.panels.commander;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,15 +14,14 @@ import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.converter.CsvQueryResultExporter;
 import org.cyclop.service.um.UserManager;
-import org.cyclop.web.pages.cqlcommander.buttons.ButtonListener;
-import org.cyclop.web.pages.cqlcommander.buttons.ButtonsPanel;
-import org.cyclop.web.pages.cqlcommander.completionhint.CompletionHintPanel;
-import org.cyclop.web.pages.cqlcommander.cqlhelp.CqlHelpPanel;
-import org.cyclop.web.pages.cqlcommander.editor.CompletionChangeListener;
-import org.cyclop.web.pages.cqlcommander.editor.QueryEditorPanel;
-import org.cyclop.web.pages.cqlcommander.export.QueryResultExport;
-import org.cyclop.web.pages.cqlcommander.verticalresult.QueryResultVerticalPanel;
-import org.cyclop.web.pages.parent.ParentPage;
+import org.cyclop.web.panels.commander.buttons.ButtonListener;
+import org.cyclop.web.panels.commander.buttons.ButtonsPanel;
+import org.cyclop.web.panels.commander.completionhint.CompletionHintPanel;
+import org.cyclop.web.panels.commander.cqlhelp.CqlHelpPanel;
+import org.cyclop.web.panels.commander.editor.CompletionChangeListener;
+import org.cyclop.web.panels.commander.editor.QueryEditorPanel;
+import org.cyclop.web.panels.commander.export.QueryResultExport;
+import org.cyclop.web.panels.commander.verticalresult.QueryResultVerticalPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

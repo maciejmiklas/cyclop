@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander.buttons;
+package org.cyclop.web.panels.commander.buttons;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -21,7 +21,7 @@ public class ButtonsPanel extends Panel {
 		super(id);
 		setRenderBodyOnly(true);
 
-		AjaxFallbackLink<CqlQuery> addToFavourites = new AjaxFallbackLink<CqlQuery>("addToFavourites") {
+		AjaxFallbackLink<Void> addToFavourites = new AjaxFallbackLink<Void>("addToFavourites") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				//buttonListener.onClickExecCql(target);
@@ -29,7 +29,7 @@ public class ButtonsPanel extends Panel {
 		};
 		add(addToFavourites);
 
-		AjaxFallbackLink<CqlQuery> queryHistory = new AjaxFallbackLink<CqlQuery>("queryHistory") {
+		AjaxFallbackLink<Void> queryHistory = new AjaxFallbackLink<Void>("queryHistory") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				//buttonListener.onClickExecCql(target);
@@ -37,7 +37,7 @@ public class ButtonsPanel extends Panel {
 		};
 		add(queryHistory);
 
-		AjaxFallbackLink<CqlQuery> queryFavourites = new AjaxFallbackLink<CqlQuery>("queryFavourites") {
+		AjaxFallbackLink<Void> queryFavourites = new AjaxFallbackLink<Void>("queryFavourites") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				//buttonListener.onClickExecCql(target);
@@ -45,7 +45,7 @@ public class ButtonsPanel extends Panel {
 		};
 		add(queryFavourites);
 
-		AjaxFallbackLink<CqlQuery> execQuery = new AjaxFallbackLink<CqlQuery>("execQuery") {
+		AjaxFallbackLink<Void> execQuery = new AjaxFallbackLink<Void>("execQuery") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				buttonListener.onClickExecCql(target);
@@ -54,7 +54,7 @@ public class ButtonsPanel extends Panel {
 		};
 		add(execQuery);
 
-		AjaxFallbackLink<CqlQuery> exportQueryResult = new AjaxFallbackLink<CqlQuery>("exportQueryResult") {
+		AjaxFallbackLink<Void> exportQueryResult = new AjaxFallbackLink<Void>("exportQueryResult") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				buttonListener.onClickQueryResultExport(target);
@@ -62,7 +62,7 @@ public class ButtonsPanel extends Panel {
 		};
 		add(exportQueryResult);
 
-		Link<CqlQuery> logOut = new Link<CqlQuery>("logOut") {
+		Link<Void> logOut = new Link<Void>("logOut") {
 
 			@Override
 			public void onClick() {

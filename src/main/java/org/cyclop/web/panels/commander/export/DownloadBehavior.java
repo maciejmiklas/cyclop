@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander.export;
+package org.cyclop.web.panels.commander.export;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AbstractAjaxBehavior;

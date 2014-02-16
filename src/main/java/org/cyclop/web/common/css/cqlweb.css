@@ -182,3 +182,11 @@ ul.cq-cqlCollectionList {
 	cursor: default;
 }
 
+.cq-nav {
+	margin-bottom: 10px !important;
+}
+
+.cq-nav > li > a {
+	padding: 5px 10px !important;
+}
+

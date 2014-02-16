@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander.completionhint;
+package org.cyclop.web.panels.commander.completionhint;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;

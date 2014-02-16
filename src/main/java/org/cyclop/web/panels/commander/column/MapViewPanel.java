@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander.column;
+package org.cyclop.web.panels.commander.column;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.wicket.Component;

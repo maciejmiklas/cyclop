@@ -1,4 +1,4 @@
-package org.cyclop.web.pages.cqlcommander.editor;
+package org.cyclop.web.panels.commander.editor;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
