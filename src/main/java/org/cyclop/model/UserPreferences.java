@@ -14,12 +14,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class UserPreferences {
 
-	@XmlElement(name = "e_hi")
-	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
+	@XmlElement(name = "e_hi") @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	public boolean showCqlCompletionHint = true;
 
-	@XmlElement(name = "e_he")
-	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
+	@XmlElement(name = "e_he") @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	public boolean showCqlHelp = true;
 
 	public boolean getShowCqlCompletionHint() {

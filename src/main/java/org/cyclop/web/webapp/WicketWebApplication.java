@@ -37,8 +37,7 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 	}
 
 	private void initSecurity() {
-		SecurePackageResourceGuard guard = (SecurePackageResourceGuard) getResourceSettings()
-				.getPackageResourceGuard();
+		SecurePackageResourceGuard guard = (SecurePackageResourceGuard) getResourceSettings().getPackageResourceGuard();
 		guard.addPattern("+*.map");
 	}
 

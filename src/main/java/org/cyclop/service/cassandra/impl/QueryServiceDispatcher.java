@@ -18,12 +18,10 @@ import javax.inject.Named;
 @Primary
 public class QueryServiceDispatcher implements QueryService {
 
-	@Inject
-	@CassandraVersionQualifier(CassandraVersion.VER_2_x)
+	@Inject @CassandraVersionQualifier(CassandraVersion.VER_2_x)
 	private QueryService defaultQs;
 
-	@Inject
-	@CassandraVersionQualifier(CassandraVersion.VER_1_x)
+	@Inject @CassandraVersionQualifier(CassandraVersion.VER_1_x)
 	private QueryService fallbackQs;
 
 	@Inject

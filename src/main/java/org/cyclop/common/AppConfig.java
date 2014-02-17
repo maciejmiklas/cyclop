@@ -22,36 +22,48 @@ import java.util.Set;
 @Named
 public class AppConfig {
 
-	@NotNull
-	@Valid
+	@NotNull @Valid
+	private static AppConfig instance = null;
+
+	@NotNull @Valid
 	public final Cassandra cassandra;
 
-	@NotNull
-	@Valid
+	@NotNull @Valid
 	public final CqlEditor cqlEditor;
 
-	@NotNull
-	@Valid
+	@NotNull @Valid
 	public final Common common;
 
-	@NotNull
-	@Valid
+	@NotNull @Valid
 	public final History history;
 
-	@NotNull
-	@Valid
+	@NotNull @Valid
+	public final FileStore fileStore;
+
+	@NotNull @Valid
+	public final Favourites favourites;
+
+	@NotNull @Valid
 	public final CqlExport cqlExport;
 
-	@NotNull
-	@Valid
+	@NotNull @Valid
 	public final Cookie cookie;
-
-	@NotNull
-	@Valid
-	private static AppConfig instance = null;
 
 	@Inject
 	private Validator validator;
+
+	@Inject
+	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie,
+					 History history, Favourites favourites, FileStore fileStore) {
+		this.cassandra = cassandra;
+		this.cqlEditor = cqlEditor;
+		this.common = common;
+		this.cqlExport = cqlExport;
+		this.cookie = cookie;
+		this.history = history;
+		this.favourites = favourites;
+		this.fileStore = fileStore;
+	}
 
 	public static AppConfig get() {
 		if (instance == null) {
@@ -60,8 +72,12 @@ public class AppConfig {
 		return instance;
 	}
 
-	@PostConstruct
-	@edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+	private static String crs(String cr, String str) throws UnsupportedEncodingException {
+		String replaced = str.replaceAll("CR", String.valueOf((char) 10));
+		return replaced;
+	}
+
+	@PostConstruct @edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 	void init() {
 		instance = this;
 		Set<ConstraintViolation<AppConfig>> validateRes = validator.validate(instance);
@@ -71,20 +87,9 @@ public class AppConfig {
 		}
 	}
 
-	private static String crs(String cr, String str) throws UnsupportedEncodingException {
-		String replaced = str.replaceAll("CR", String.valueOf((char) 10));
-		return replaced;
-	}
-
-	@Inject
-	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie,
-					 History history) {
-		this.cassandra = cassandra;
-		this.cqlEditor = cqlEditor;
-		this.common = common;
-		this.cqlExport = cqlExport;
-		this.cookie = cookie;
-		this.history = history;
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("cassandra", cassandra).add("cqlEditor", cqlEditor).toString();
 	}
 
 	@Named
@@ -109,19 +114,10 @@ public class AppConfig {
 		public final boolean useSsl;
 
 		@Inject
-		public Cassandra(
-				@Value("${cassandra.hosts}")
-				String hosts,
-				@Value("${cassandra.useSsl}")
-				boolean useSsl,
-				@Value("${cassandra.port}")
-				int port,
-				@Value("${cassandra.timeoutMilis}")
-				int timeoutMilis,
-				@Value("${cassandra.rowsLimit}")
-				int rowsLimit,
-				@Value("${cassandra.columnsLimit}")
-				int columnsLimit) {
+		public Cassandra(@Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
+						 @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis,
+						 @Value("${cassandra.rowsLimit}") int rowsLimit,
+						 @Value("${cassandra.columnsLimit}") int columnsLimit) {
 			this.hosts = hosts;
 			this.useSsl = useSsl;
 			this.port = port;
@@ -140,41 +136,52 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static class History {
-		public final int historyLimit;
-
-		public final int starredLimit;
-
-		public final boolean enabled;
-
-		public final String folder;
+	public static class FileStore {
 
 		public final int maxFileSize;
 
 		public final int lockWaitTimeoutMilis;
 
+		public final String folder;
+
 		@Inject
-		public History(
-				@Value("${history.historyLimit}")
-				int historyLimit,
-				@Value("${history.starredLimit}")
-				int starredLimit,
-				@Value("${history.folder}")
-				String folder,
-				@Value("${history.enabled}")
-				boolean enabled,
-				@Value("${history.maxFileSize}")
-				int maxFileSize,
-				@Value("${history.lockWaitTimeoutMilis}")
-				int lockWaitTimeoutMilis) {
-			this.historyLimit = historyLimit;
-			this.starredLimit = starredLimit;
-			this.folder = folder;
-			this.enabled = enabled;
+		public FileStore(@Value("${fileStore.maxFileSize}") int maxFileSize,
+						 @Value("${fileStore.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis,
+						 @Value("${fileStore.folder}") String folder) {
 			this.maxFileSize = maxFileSize;
 			this.lockWaitTimeoutMilis = lockWaitTimeoutMilis;
+			this.folder = folder;
 		}
+	}
 
+	@Named
+	@Immutable
+	public static class History {
+		public final int entriesLimit;
+
+		public final boolean enabled;
+
+		@Inject
+		public History(@Value("${history.entriesLimit}") int entriesLimit,
+					   @Value("${history.enabled}") boolean enabled) {
+			this.entriesLimit = entriesLimit;
+			this.enabled = enabled;
+		}
+	}
+
+	@Named
+	@Immutable
+	public static class Favourites {
+		public final int entriesLimit;
+
+		public final boolean enabled;
+
+		@Inject
+		public Favourites(@Value("${favourites.entriesLimit}") int entriesLimit,
+						  @Value("${favourites.enabled}") boolean enabled) {
+			this.entriesLimit = entriesLimit;
+			this.enabled = enabled;
+		}
 	}
 
 	@Named
@@ -188,9 +195,7 @@ public class AppConfig {
 		public final int expirySeconds;
 
 		@Inject
-		public Cookie(
-				@Value("${cookie.expirySeconds}")
-				int expirySeconds) {
+		public Cookie(@Value("${cookie.expirySeconds}") int expirySeconds) {
 			this.expirySeconds = expirySeconds;
 		}
 	}
@@ -212,15 +217,10 @@ public class AppConfig {
 		public final int maxColumnTooltipDisplayChars;
 
 		@Inject
-		protected CqlEditor(
-				@Value("${cqlEditor.rowsPerPage}")
-				int rowsPerPage,
-				@Value("${cqlEditor.maxColumnEmbeddedDisplayChars}")
-				int maxColumnEmbeddedDisplayChars,
-				@Value("${cqlEditor.maxColumnDisplayChars}")
-				int maxColumnDisplayChars,
-				@Value("${cqlEditor.maxColumnTooltipDisplayChars}")
-				int maxColumnTooltipDisplayChars) {
+		protected CqlEditor(@Value("${cqlEditor.rowsPerPage}") int rowsPerPage,
+							@Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
+							@Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
+							@Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
 			this.rowsPerPage = rowsPerPage;
 			this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
 			this.maxColumnDisplayChars = maxColumnDisplayChars;
@@ -234,11 +234,6 @@ public class AppConfig {
 					.add("maxColumnDisplayChars", maxColumnDisplayChars)
 					.add("maxColumnTooltipDisplayChars", maxColumnTooltipDisplayChars).toString();
 		}
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).add("cassandra", cassandra).add("cqlEditor", cqlEditor).toString();
 	}
 
 	@Named
@@ -279,31 +274,18 @@ public class AppConfig {
 		public final boolean removeCrChars;
 
 		@Inject
-		public CqlExport(
-				@Value("${cqlExport.fileName}")
-				String fileName,
-				@Value("${cqlExport.fileName.date}")
-				String fileNameDate,
-				@Value("${cqlExport.querySeparator}")
-				String querySeparator,
-				@Value("${cqlExport.rowSeparator}")
-				String rowSeparator,
-				@Value("${cqlExport.columnSeparator}")
-				String columnSeparator,
-				@Value("${cqlExport.listSeparator}")
-				String listSeparator,
-				@Value("${cqlExport.mapSeparator}")
-				String mapSeparator,
-				@Value("${cqlExport.valueBracketStart}")
-				String valueBracketStart,
-				@Value("${cqlExport.valueBracketEnd}")
-				String valueBracketEnd,
-				@Value("${cqlExport.crCharCode}")
-				int crCharCode,
-				@Value("${cqlExport.removeCrChars}")
-				boolean removeCrChars,
-				@Value("${cqlExport.trim}")
-				boolean trim) throws UnsupportedEncodingException {
+		public CqlExport(@Value("${cqlExport.fileName}") String fileName,
+						 @Value("${cqlExport.fileName.date}") String fileNameDate,
+						 @Value("${cqlExport.querySeparator}") String querySeparator,
+						 @Value("${cqlExport.rowSeparator}") String rowSeparator,
+						 @Value("${cqlExport.columnSeparator}") String columnSeparator,
+						 @Value("${cqlExport.listSeparator}") String listSeparator,
+						 @Value("${cqlExport.mapSeparator}") String mapSeparator,
+						 @Value("${cqlExport.valueBracketStart}") String valueBracketStart,
+						 @Value("${cqlExport.valueBracketEnd}") String valueBracketEnd,
+						 @Value("${cqlExport.crCharCode}") int crCharCode,
+						 @Value("${cqlExport.removeCrChars}") boolean removeCrChars,
+						 @Value("${cqlExport.trim}") boolean trim) throws UnsupportedEncodingException {
 			this.crCharCode = crCharCode;
 			String crChar = String.valueOf((char) crCharCode);
 			this.querySeparator = crs(crChar, querySeparator);

@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSortedSet;
 import net.jcip.annotations.NotThreadSafe;
 import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
@@ -14,12 +13,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,125 +28,56 @@ import java.util.concurrent.locks.ReentrantLock;
 @XmlJavaTypeAdapter(QueryHistory.Adapter.class)
 public class QueryHistory {
 
-	private final CircularFifoQueue<QueryHistoryEntry> history;
-
-	private final Set<QueryHistoryEntry> favourites;
+	private final CircularFifoQueue<QueryEntry> history;
 
 	private final Lock lock = new ReentrantLock();
 
-
 	public QueryHistory() {
-		history = new CircularFifoQueue<>(AppConfig.get().history.historyLimit);
-		favourites = new HashSet<>(AppConfig.get().history.starredLimit);
+		history = new CircularFifoQueue<>(AppConfig.get().history.entriesLimit);
 	}
 
-	public void clearHistory() {
-		clear(history);
-	}
-
-	public void clearFavourite() {
-		clear(favourites);
-	}
-
-	private void clear(Collection<QueryHistoryEntry> queue) {
+	public void clear() {
 		lock.lock();
 		try {
-			queue.clear();
+			history.clear();
 		} finally {
 			lock.unlock();
 		}
 	}
 
 	/** CALL CLOSE ON ITERATOR BECAUSE IT HOLDS READ-LOCK */
-	public HistoryIterator historyIterator() {
+	public HistoryIterator iterator() {
 		return new HistoryIterator(lock, history);
 	}
 
-	public ImmutableSortedSet<QueryHistoryEntry> copyOfFavourites() {
+	public int size() {
 		lock.lock();
 		try {
-			ImmutableSortedSet.Builder<QueryHistoryEntry> builder = ImmutableSortedSet.naturalOrder();
-			builder.addAll(favourites);
-			ImmutableSortedSet<QueryHistoryEntry> sortedFav = builder.build();
-			return sortedFav;
+			return history.size();
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	public int historySize() {
-		return size(history);
-	}
-
-	public int favouritesSize() {
-		return size(favourites);
-	}
-
-	private int size(Collection<QueryHistoryEntry> queue) {
-		lock.lock();
-		try {
-			return queue.size();
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	public boolean containsHistory(QueryHistoryEntry entry) {
-		return contains(entry, history);
-	}
-
-	public boolean containsFavourite(QueryHistoryEntry entry) {
-		return contains(entry, favourites);
 	}
 
 	/** Implementation is very slow (o(n)) - but it's not being used very often */
-	private boolean contains(QueryHistoryEntry entry, Collection<QueryHistoryEntry> queue) {
+	public boolean contains(QueryEntry entry) {
 		lock.lock();
 		try {
-			return queue.contains(entry);
+			return history.contains(entry);
 		} finally {
 			lock.unlock();
 		}
 	}
 
-	public void addToHistory(QueryHistoryEntry entry) {
+	// TODO on add actualize favorites date
+	/*
+	 * history.add(entry); if (favourites.contains(entry)) {
+     * favourites.remove(entry); favourites.add(entry); }
+     */
+	public void add(QueryEntry entry) {
 		lock.lock();
 		try {
 			history.add(entry);
-			if (favourites.contains(entry)) {
-				favourites.remove(entry);
-				favourites.add(entry);
-			}
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	public boolean removeFavourite(QueryHistoryEntry entry) {
-		lock.lock();
-		try {
-			return favourites.remove(entry);
-		} finally {
-			lock.unlock();
-		}
-	}
-
-	/**
-	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing elements
-	 *         can be always replaced - update change date
-	 */
-	public boolean addToFavouritesWithSizeCheck(QueryHistoryEntry entry) {
-		lock.lock();
-		try {
-			if (favourites.contains(entry)) {
-				favourites.remove(entry);
-				favourites.add(entry);
-
-			} else if (favourites.size() >= AppConfig.get().history.starredLimit) {
-				return false;
-			}
-			favourites.add(entry);
-			return true;
 		} finally {
 			lock.unlock();
 		}
@@ -161,13 +88,11 @@ public class QueryHistory {
 	@NotThreadSafe
 	public final static class QueryHistoryJaxb {
 
-		private List<QueryHistoryEntry> history;
-
-		private List<QueryHistoryEntry> starred;
+		private List<QueryEntry> history;
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("history", history).add("favourites", starred).toString();
+			return Objects.toStringHelper(this).add("history", history).toString();
 		}
 	}
 
@@ -175,7 +100,7 @@ public class QueryHistory {
 	public String toString() {
 		lock.lock();
 		try {
-			return Objects.toStringHelper(this).add("history", history).add("favourites", favourites).toString();
+			return Objects.toStringHelper(this).add("history", history).toString();
 		} finally {
 			lock.unlock();
 		}
@@ -196,9 +121,6 @@ public class QueryHistory {
 				history.history.addAll(jaxb.history);
 			}
 
-			if (jaxb.starred != null) {
-				history.favourites.addAll(jaxb.starred);
-			}
 			return history;
 		}
 
@@ -211,13 +133,10 @@ public class QueryHistory {
 
 			histObj.lock.lock();
 			try {
-				List<QueryHistoryEntry> historyList = new ArrayList<>(histObj.history.size());
+				List<QueryEntry> historyList = new ArrayList<>(histObj.history.size());
 				historyList.addAll(histObj.history);
 				jaxb.history = historyList;
 
-				List<QueryHistoryEntry> starredList = new ArrayList<>(histObj.favourites.size());
-				starredList.addAll(histObj.favourites);
-				jaxb.starred = starredList;
 			} finally {
 				histObj.lock.unlock();
 			}
@@ -231,15 +150,15 @@ public class QueryHistory {
 	 */
 	@XmlTransient
 	@ThreadSafe
-	public final static class HistoryIterator implements Iterator<QueryHistoryEntry>, AutoCloseable {
+	public final static class HistoryIterator implements Iterator<QueryEntry>, AutoCloseable {
 
 		private Lock lock;
 
 		private int position;
 
-		private CircularFifoQueue<QueryHistoryEntry> queue;
+		private CircularFifoQueue<QueryEntry> queue;
 
-		private HistoryIterator(Lock lock, CircularFifoQueue<QueryHistoryEntry> queue) {
+		private HistoryIterator(Lock lock, CircularFifoQueue<QueryEntry> queue) {
 			this.queue = queue;
 			this.position = queue.size() - 1;
 			this.lock = lock;
@@ -252,7 +171,7 @@ public class QueryHistory {
 		}
 
 		@Override
-		public QueryHistoryEntry next() {
+		public QueryEntry next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException("Current index is on:" + position);
 			}

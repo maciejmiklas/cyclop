@@ -18,8 +18,7 @@ class AlterTableDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	AlterCompletion alterCompletion;
+	@Inject AlterCompletion alterCompletion;
 
 	@PostConstruct
 	public void init() {

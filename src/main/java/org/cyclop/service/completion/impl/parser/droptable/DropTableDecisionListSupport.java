@@ -19,8 +19,7 @@ class DropTableDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	DropCompletion dropCompletion;
+	@Inject DropCompletion dropCompletion;
 
 	@PostConstruct
 	public void init() {

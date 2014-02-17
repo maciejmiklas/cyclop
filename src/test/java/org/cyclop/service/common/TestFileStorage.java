@@ -1,14 +1,13 @@
 package org.cyclop.service.common;
 
-import com.google.common.collect.ImmutableSortedSet;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.QueryEntry;
+import org.cyclop.model.QueryFavourites;
 import org.cyclop.model.QueryHistory;
-import org.cyclop.model.QueryHistoryEntry;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.test.AbstractTestCase;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +36,7 @@ public class TestFileStorage extends AbstractTestCase {
 
 	@Before
 	public void init() throws Exception {
-		File histFolder = new File(config.history.folder);
+		File histFolder = new File(config.fileStore.folder);
 		histFolder.setWritable(true);
 		assertTrue("History folder not writable:" + histFolder, histFolder.canWrite());
 	}
@@ -55,7 +54,7 @@ public class TestFileStorage extends AbstractTestCase {
 		if (!unixOs) {
 			return;
 		}
-		File histFolder = new File(config.history.folder);
+		File histFolder = new File(config.fileStore.folder);
 		histFolder.setWritable(false);
 
 		assertTrue(storage.supported());
@@ -63,57 +62,62 @@ public class TestFileStorage extends AbstractTestCase {
 	}
 
 	@Test
-	public void testRead_FileNotFound() throws Exception {
-		QueryHistory readHistory = storage.readHistory(new UserIdentifier(UUID.randomUUID()));
+	public void testRead_FileNotFound() {
+		QueryHistory readHistory = storage.read(new UserIdentifier(UUID.randomUUID()), QueryHistory.class);
 		assertNull(readHistory);
 	}
 
 	@Test
-	public void testEmptyHistory() throws Exception {
+	public void testEmptyHistory() {
 		QueryHistory hist = new QueryHistory();
-		assertEquals(0, hist.historySize());
-		assertEquals(0, hist.favouritesSize());
-		assertFalse(hist.historyIterator().hasNext());
-		assertFalse(hist.copyOfFavourites().iterator().hasNext());
+		assertEquals(0, hist.size());
+		assertFalse(hist.iterator().hasNext());
 
 		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
-		QueryHistoryEntry histEntry = new QueryHistoryEntry(query);
-		assertFalse(hist.containsFavourite(histEntry));
-		assertFalse(hist.containsHistory(histEntry));
+		QueryEntry histEntry = new QueryEntry(query);
+		assertFalse(hist.contains(histEntry));
 		try {
-			hist.historyIterator().next();
+			hist.iterator().next();
 			fail();
 		} catch (NoSuchElementException e) {
 			// OK
 		}
-
-		try {
-			hist.copyOfFavourites().iterator().next();
-			fail();
-		} catch (NoSuchElementException e) {
-			// OK
-		}
-
 	}
 
 	@Test
-	public void testCreateAndRead_SingleHistoryEntry() throws Exception {
+	public void testEmptyFavourites() {
+		QueryFavourites hist = new QueryFavourites();
+		assertEquals(0, hist.size());
+		assertFalse(hist.copyAsSortedSet().iterator().hasNext());
+
+		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
+		QueryEntry histEntry = new QueryEntry(query);
+		assertFalse(hist.contains(histEntry));
+		try {
+			hist.copyAsSortedSet().iterator().next();
+			fail();
+		} catch (NoSuchElementException e) {
+			// OK
+		}
+	}
+
+	@Test
+	public void testCreateAndRead_SingleHistoryEntry() {
 		UserIdentifier userId = new UserIdentifier(UUID.randomUUID());
 		QueryHistory newHistory = new QueryHistory();
 
 		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
-		QueryHistoryEntry histEntry = new QueryHistoryEntry(query);
-		newHistory.addToHistory(histEntry);
+		QueryEntry histEntry = new QueryEntry(query);
+		newHistory.add(histEntry);
 
-		storage.storeHistory(userId, newHistory);
+		storage.store(userId, newHistory);
 
-		QueryHistory readHistory = storage.readHistory(userId);
+		QueryHistory readHistory = storage.read(userId, QueryHistory.class);
 		assertNotNull(readHistory);
-		assertEquals(0, readHistory.favouritesSize());
-		assertEquals(1, readHistory.historySize());
-		try (QueryHistory.HistoryIterator historyIterator = readHistory.historyIterator()) {
+		assertEquals(1, readHistory.size());
+		try (QueryHistory.HistoryIterator historyIterator = readHistory.iterator()) {
 			assertTrue(historyIterator.hasNext());
-			QueryHistoryEntry readEntry = historyIterator.next();
+			QueryEntry readEntry = historyIterator.next();
 			assertEquals(query, readEntry.query);
 			assertEquals(histEntry.executedOnUtc.toString(), readEntry.executedOnUtc.toString());
 
@@ -122,15 +126,36 @@ public class TestFileStorage extends AbstractTestCase {
 	}
 
 	@Test
-	public void testLimitFavourites() throws Exception {
+	public void testCreateAndRead_SingleFavouritesEntry() {
 		UserIdentifier userId = new UserIdentifier(UUID.randomUUID());
-		QueryHistory history = new QueryHistory();
+		QueryFavourites newHistory = new QueryFavourites();
+
+		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
+		QueryEntry favEntry = new QueryEntry(query);
+		newHistory.addWithSizeCheck(favEntry);
+
+		storage.store(userId, newHistory);
+
+		QueryFavourites readHistory = storage.read(userId, QueryFavourites.class);
+		assertNotNull(readHistory);
+		assertEquals(1, readHistory.size());
+		assertTrue(readHistory.copyAsSortedSet().iterator().hasNext());
+		QueryEntry readEntry = readHistory.copyAsSortedSet().iterator().next();
+		assertEquals(query, readEntry.query);
+		assertEquals(favEntry.executedOnUtc.toString(), readEntry.executedOnUtc.toString());
+		assertEquals(0, storage.getLockRetryCount());
+	}
+
+	@Test
+	public void testLimitFavourites() {
+		UserIdentifier userId = new UserIdentifier(UUID.randomUUID());
+		QueryFavourites history = new QueryFavourites();
 		{
 			for (int i = 0; i < 50; i++) {
 				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=" + i);
-				assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(query)));
+				assertTrue(history.addWithSizeCheck(new QueryEntry(query)));
 			}
-			assertEquals(50, history.favouritesSize());
+			assertEquals(50, history.size());
 		}
 
 		checkFavLimitContent(history);
@@ -138,7 +163,7 @@ public class TestFileStorage extends AbstractTestCase {
 		{
 			for (int i = 0; i < 10; i++) {
 				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTableA where id=" + i);
-				assertFalse(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(query)));
+				assertFalse(history.addWithSizeCheck(new QueryEntry(query)));
 			}
 			checkFavLimitContent(history);
 		}
@@ -146,55 +171,34 @@ public class TestFileStorage extends AbstractTestCase {
 		{
 			for (int i = 0; i < 20; i++) {
 				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=" + i);
-				assertTrue(history.addToFavouritesWithSizeCheck(new QueryHistoryEntry(query)));
+				assertTrue(history.addWithSizeCheck(new QueryEntry(query)));
 			}
 			checkFavLimitContent(history);
 		}
 
 		{
-			DateTime executed = new DateTime(2040, 3, 4, 11, 22);
-			QueryHistoryEntry entry = new QueryHistoryEntry(
-					new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=13"), executed);
-
-			assertFalse(history.copyOfFavourites().contains(entry));
-			assertFalse(history.containsHistory(entry));
-			assertTrue(history.containsFavourite(entry));
-
-			history.addToHistory(entry);
-
-			assertTrue(history.containsHistory(entry));
-			assertTrue(history.containsFavourite(entry));
-			ImmutableSortedSet<QueryHistoryEntry> favs = history.copyOfFavourites();
-			assertTrue(favs.contains(entry));
-			QueryHistoryEntry firstFav = favs.iterator().next();
-			assertEquals(entry, firstFav);
-			assertEquals(entry.executedOnUtc, firstFav.executedOnUtc);
-		}
-
-		{
-			storage.storeHistory(userId, history);
-
-			QueryHistory readHistory = storage.readHistory(userId);
+			storage.store(userId, history);
+			QueryFavourites readHistory = storage.read(userId, QueryFavourites.class);
 			checkFavLimitContent(readHistory);
 			checkFavLimitContent(history);
 		}
 	}
 
-	private void checkFavLimitContent(QueryHistory history) {
-		Set<QueryHistoryEntry> fav = history.copyOfFavourites();
-		Iterator<QueryHistoryEntry> favIt = fav.iterator();
+	private void checkFavLimitContent(QueryFavourites history) {
+		Set<QueryEntry> fav = history.copyAsSortedSet();
+		Iterator<QueryEntry> favIt = fav.iterator();
 		assertEquals(50, fav.size());
-		assertEquals(50, history.favouritesSize());
+		assertEquals(50, history.size());
 		for (int i = 0; i < 50; i++) {
 			assertTrue(favIt.hasNext());
 			CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=" + i);
-			assertTrue(history.containsFavourite(new QueryHistoryEntry(query)));
-			assertTrue(history.containsFavourite(favIt.next()));
+			assertTrue(history.contains(new QueryEntry(query)));
+			assertTrue(history.contains(favIt.next()));
 		}
 	}
 
 	@Test
-	public void testEvictHistory() throws Exception {
+	public void testEvictHistory() {
 		UserIdentifier userId = new UserIdentifier(UUID.randomUUID());
 
 		{
@@ -202,32 +206,32 @@ public class TestFileStorage extends AbstractTestCase {
 
 			for (int i = 0; i < 600; i++) {
 				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable1 where id=" + i);
-				history.addToHistory(new QueryHistoryEntry(query));
+				history.add(new QueryEntry(query));
 			}
-			assertEquals(500, history.historySize());
+			assertEquals(500, history.size());
 
-			try (QueryHistory.HistoryIterator hit = history.historyIterator()) {
+			try (QueryHistory.HistoryIterator hit = history.iterator()) {
 				for (int i = 499; i >= 0; i--) {
 					assertTrue(hit.hasNext());
-					QueryHistoryEntry entry = hit.next();
-					assertTrue(history.containsHistory(entry));
+					QueryEntry entry = hit.next();
+					assertTrue(history.contains(entry));
 					assertNotNull(entry.executedOnUtc);
 					assertEquals("select * from MyTable1 where id=" + (i + 100), entry.query.part);
 				}
 			}
 
-			storage.storeHistory(userId, history);
+			storage.store(userId, history);
 		}
 
 		{
-			QueryHistory history = storage.readHistory(userId);
+			QueryHistory history = storage.read(userId, QueryHistory.class);
 			assertNotNull(history);
-			assertEquals(500, history.historySize());
-			try (QueryHistory.HistoryIterator hit = history.historyIterator()) {
+			assertEquals(500, history.size());
+			try (QueryHistory.HistoryIterator hit = history.iterator()) {
 				for (int i = 499; i > 0; i--) {
 					assertTrue(hit.hasNext());
-					QueryHistoryEntry entry = hit.next();
-					assertTrue(history.containsHistory(entry));
+					QueryEntry entry = hit.next();
+					assertTrue(history.contains(entry));
 					assertNotNull(entry.executedOnUtc);
 					assertEquals("select * from MyTable1 where id=" + (i + 100), entry.query.part);
 				}
@@ -235,28 +239,28 @@ public class TestFileStorage extends AbstractTestCase {
 
 			for (int i = 0; i < 10; i++) {
 				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable2 where id=" + i);
-				history.addToHistory(new QueryHistoryEntry(query));
+				history.add(new QueryEntry(query));
 			}
-			storage.storeHistory(userId, history);
+			storage.store(userId, history);
 		}
 
 		{
-			QueryHistory history = storage.readHistory(userId);
+			QueryHistory history = storage.read(userId, QueryHistory.class);
 			assertNotNull(history);
-			assertEquals(500, history.historySize());
+			assertEquals(500, history.size());
 
-			try (QueryHistory.HistoryIterator hit = history.historyIterator()) {
+			try (QueryHistory.HistoryIterator hit = history.iterator()) {
 				for (int i = 499; i > 489; i--) {
 					assertTrue(hit.hasNext());
-					QueryHistoryEntry entry = hit.next();
-					assertTrue(history.containsHistory(entry));
+					QueryEntry entry = hit.next();
+					assertTrue(history.contains(entry));
 					assertNotNull(entry.executedOnUtc);
 					assertEquals("select * from MyTable2 where id=" + (i - 490), entry.query.part);
 				}
 				for (int i = 489; i > 0; i--) {
 					assertTrue(hit.hasNext());
-					QueryHistoryEntry entry = hit.next();
-					assertTrue(history.containsHistory(entry));
+					QueryEntry entry = hit.next();
+					assertTrue(history.contains(entry));
 					assertNotNull(entry.executedOnUtc);
 					assertEquals("select * from MyTable1 where id=" + (i + 110), entry.query.part);
 				}

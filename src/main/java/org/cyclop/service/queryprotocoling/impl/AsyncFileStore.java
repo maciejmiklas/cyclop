@@ -1,4 +1,4 @@
-package org.cyclop.service.history.impl;
+package org.cyclop.service.queryprotocoling.impl;
 
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 /** @author Maciej Miklas */
 @Named
-class AsyncFileStore {
+class AsyncFileStore<H> {
 
 	private final static int FLUSH_MILIS = 300000;
 
@@ -24,17 +24,17 @@ class AsyncFileStore {
 
 	private final static Logger LOG = LoggerFactory.getLogger(AsyncFileStore.class);
 
-	private final Map<UserIdentifier, QueryHistory> historyMap = new HashMap<>();
+	private final Map<UserIdentifier, H> diskQueue = new HashMap<>();
 
-	public void store(UserIdentifier identifier, QueryHistory history) {
-		synchronized (historyMap) {
-			historyMap.put(identifier, history);
+	public void store(UserIdentifier identifier, H history) {
+		synchronized (diskQueue) {
+			diskQueue.put(identifier, history);
 		}
 	}
 
-	public QueryHistory getFromWriteQueue(UserIdentifier identifier) {
-		synchronized (historyMap) {
-			return historyMap.get(identifier);
+	public H getFromWriteQueue(UserIdentifier identifier) {
+		synchronized (diskQueue) {
+			return diskQueue.get(identifier);
 		}
 	}
 
@@ -43,23 +43,23 @@ class AsyncFileStore {
 	 * on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block time is
 	 * reduced
 	 */
-	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
-	@PreDestroy
+	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS) @PreDestroy
 	public synchronized void flush() {
 		while (true) {
 			UserIdentifier identifier;
-			QueryHistory history;
+			H history;
 
-			// synchronize #historyMap only for short time to not block store(...) function by file operation
-			synchronized (historyMap) {
-				if (historyMap.isEmpty()) {
+			// synchronize #historyMap only for short time to not block
+			// store(...) function by file operation
+			synchronized (diskQueue) {
+				if (diskQueue.isEmpty()) {
 					LOG.debug("Flush done - no more entries found");
 					return;
 				}
-				identifier = historyMap.keySet().iterator().next();
-				history = historyMap.remove(identifier);
+				identifier = diskQueue.keySet().iterator().next();
+				history = diskQueue.remove(identifier);
 			}
-			fileStorage.storeHistory(identifier, history);
+			fileStorage.store(identifier, history);
 		}
 	}
 

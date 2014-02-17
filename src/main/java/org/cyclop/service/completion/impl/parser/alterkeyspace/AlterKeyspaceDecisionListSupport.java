@@ -18,8 +18,7 @@ class AlterKeyspaceDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	AlterCompletion alterCompletion;
+	@Inject AlterCompletion alterCompletion;
 
 	@PostConstruct
 	public void init() {

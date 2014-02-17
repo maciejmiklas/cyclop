@@ -55,10 +55,10 @@ public class TestBeans {
 		et.addEqualityGroup(new CqlTable("cqldemo"));
 		et.addEqualityGroup(new CqlTable("mybooks"));
 
-		et.addEqualityGroup(new QueryHistoryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks")),
-				new QueryHistoryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks"), new DateTime()));
-		et.addEqualityGroup(new QueryHistoryEntry(new CqlQuery(CqlQueryName.CREATE_INDEX, "cqldemo.mybooks")));
-		et.addEqualityGroup(new QueryHistoryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo")));
+		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks")),
+				new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks"), new DateTime()));
+		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryName.CREATE_INDEX, "cqldemo.mybooks")));
+		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo")));
 
 		et.addEqualityGroup(new UserIdentifier(UUID.randomUUID()));
 		et.addEqualityGroup(new UserIdentifier(UUID.randomUUID()));

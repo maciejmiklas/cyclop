@@ -18,8 +18,7 @@ class BatchDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	BatchCompletion batchCompletion;
+	@Inject BatchCompletion batchCompletion;
 
 	@PostConstruct
 	public void init() {

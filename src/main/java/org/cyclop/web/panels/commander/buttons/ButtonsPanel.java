@@ -8,7 +8,6 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.cyclop.model.CqlQuery;
 import org.cyclop.web.components.buttons.StateButton;
 
 /** @author Maciej Miklas */

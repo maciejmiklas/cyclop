@@ -17,8 +17,7 @@ class UseDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	UseCompletion useCompletion;
+	@Inject UseCompletion useCompletion;
 
 	@PostConstruct
 	public void init() {

@@ -2,7 +2,6 @@ package org.cyclop.service.common;
 
 import net.jcip.annotations.NotThreadSafe;
 import org.cyclop.common.AppConfig;
-import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.exception.ServiceException;
 import org.cyclop.service.converter.JsonMarshaller;
@@ -81,7 +80,7 @@ public class FileStorage {
 			return false;
 		}
 
-		File histFolder = new File(config.history.folder);
+		File histFolder = new File(config.fileStore.folder);
 		if (!histFolder.exists()) {
 			LOG.warn("Query history is enabled, but configured folder does not exists:{}", histFolder);
 			return false;
@@ -95,10 +94,10 @@ public class FileStorage {
 		return true;
 	}
 
-	public void storeHistory(UserIdentifier userId, QueryHistory history) throws ServiceException {
-		Path histPath = getPath(userId);
+	public void store(UserIdentifier userId, Object entity) throws ServiceException {
+		Path histPath = getPath(userId, entity.getClass());
 		try (FileChannel channel = openForWrite(histPath)) {
-			String jsonText = jsonMarshaller.marshal(history);
+			String jsonText = jsonMarshaller.marshal(entity);
 			ByteBuffer buf = encoder.get().encode(CharBuffer.wrap(jsonText));
 			int written = channel.write(buf);
 			channel.truncate(written);
@@ -108,23 +107,23 @@ public class FileStorage {
 		}
 	}
 
-	public QueryHistory readHistory(UserIdentifier userId) throws ServiceException {
-		Path histPath = getPath(userId);
+	public <T> T read(UserIdentifier userId, Class<T> clazz) throws ServiceException {
+		Path histPath = getPath(userId, clazz);
 		try (FileChannel channel = openForRead(histPath)) {
 			if (channel == null) {
 				LOG.debug("History file not found: {}", histPath);
 				return null;
 			}
 			int fileSize = (int) channel.size();
-			if (fileSize > config.history.maxFileSize) {
+			if (fileSize > config.fileStore.maxFileSize) {
 				LOG.info("History file: {} too large: {} - skipping it", histPath, fileSize);
-				return new QueryHistory();
+				return null;
 			}
 			ByteBuffer buf = ByteBuffer.allocate(fileSize);
 			channel.read(buf);
 			buf.flip();
 			String decoded = decoder.get().decode(buf).toString();
-			QueryHistory history = jsonMarshaller.unmarshal(QueryHistory.class, decoded);
+			T history = jsonMarshaller.unmarshal(clazz, decoded);
 			return history;
 		} catch (IOException | SecurityException | IllegalStateException e) {
 			throw new ServiceException("Error reading query history from:" + histPath + " - " + e.getMessage(), e);
@@ -157,7 +156,7 @@ public class FileStorage {
 		long start = System.currentTimeMillis();
 		String lastExMessage = null;
 		FileChannel lockChannel = null;
-		while (lockChannel == null && System.currentTimeMillis() - start < config.history.lockWaitTimeoutMilis) {
+		while (lockChannel == null && System.currentTimeMillis() - start < config.fileStore.lockWaitTimeoutMilis) {
 			try {
 				FileLock lock = channel.lock();
 				lockChannel = lock.channel();
@@ -179,8 +178,9 @@ public class FileStorage {
 		return lockChannel;
 	}
 
-	private Path getPath(UserIdentifier userId) {
-		Path histPath = Paths.get(config.history.folder, "history-" + userId.id + ".json");
+	private Path getPath(UserIdentifier userId, Class<?> entity) {
+		String fileName = entity.getClass().getName() + "-" + userId.id + ".json";
+		Path histPath = Paths.get(config.fileStore.folder, fileName);
 		return histPath;
 	}
 

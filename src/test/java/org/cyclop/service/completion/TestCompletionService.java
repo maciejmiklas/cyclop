@@ -656,11 +656,11 @@ public class TestCompletionService extends AbstractTestCase {
 	private void verifyCreateKeyspaceWith(String cql) {
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, cql));
 
-		vh.verifyFullAndMinCompletionNotTheSame(completion, 11, 35);
+		vh.verifyFullAndMinCompletionNotTheSame(completion, 10, 34);
 
 		{
 			ImmutableSortedSet<? extends CqlPart> mcmp = completion.cqlCompletion.minCompletion;
-			vh.verifyContainsOnlyKeywords(mcmp, CqlKeywordValue.Def.TRUE.value, CqlKeyword.Def.VALUES.value,
+			vh.verifyContainsOnlyKeywords(mcmp, CqlKeywordValue.Def.TRUE.value,
 					CqlKeywordValue.Def.SIMPLE_STRATEGY.value, CqlKeywordValue.Def.REPLICATION_FACTOR.value,
 					CqlKeyword.Def.REPLICATION.value, CqlKeywordValue.Def.OLD_NETWORK_TOPOLOGY_STRATEGY.value,
 					CqlKeywordValue.Def.NETWORK_TOPOLOGY_STRATEGY.value, CqlKeywordValue.Def.FALSE.value,

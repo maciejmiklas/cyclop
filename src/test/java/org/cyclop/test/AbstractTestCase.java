@@ -53,7 +53,7 @@ public abstract class AbstractTestCase {
 		Path tempPath = FileSystems.getDefault().getPath("target", "cyclop-history-test");
 		rmdir(tempPath);
 		Files.createDirectory(tempPath);
-		System.getProperties().setProperty("history.folder", tempPath.toString());
+		System.getProperties().setProperty("fileStore.folder", tempPath.toString());
 	}
 
 	private static void setupCassandra() throws Exception {

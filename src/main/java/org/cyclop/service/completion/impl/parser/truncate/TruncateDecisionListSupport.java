@@ -17,8 +17,7 @@ class TruncateDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	TruncateCompletion truncateCompletion;
+	@Inject TruncateCompletion truncateCompletion;
 
 	@PostConstruct
 	public void init() {

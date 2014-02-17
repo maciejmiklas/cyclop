@@ -48,8 +48,7 @@ public class CompletionHintPanel extends Panel {
 		@Override
 		public String getObject() {
 
-			String css = lastCssSwitch ? "cq-cqlInfoHint alert alert-dismissable cq-hintBodyA" :
-					"cq-cqlInfoHint alert alert-dismissable cq-hintBodyB";
+			String css = lastCssSwitch ? "cq-cqlInfoHint alert alert-dismissable cq-hintBodyA" : "cq-cqlInfoHint alert alert-dismissable cq-hintBodyB";
 			return css;
 		}
 

@@ -18,18 +18,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @author Maciej Miklas
  */
 @Immutable
-@XmlJavaTypeAdapter(QueryHistoryEntry.Adapter.class)
-public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
+@XmlJavaTypeAdapter(QueryEntry.Adapter.class)
+public final class QueryEntry implements Comparable<QueryEntry> {
 
 	public final CqlQuery query;
 
 	public final DateTime executedOnUtc;
 
-	public QueryHistoryEntry(CqlQuery query) {
+	public QueryEntry(CqlQuery query) {
 		this(query, new DateTime().toDateTime(DateTimeZone.UTC));
 	}
 
-	public QueryHistoryEntry(CqlQuery query, DateTime executedOnUtc) {
+	public QueryEntry(CqlQuery query, DateTime executedOnUtc) {
 		this.query = query;
 		this.executedOnUtc = executedOnUtc;
 	}
@@ -51,15 +51,15 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
 			return false;
 		}
 
-		final QueryHistoryEntry other = (QueryHistoryEntry) obj;
+		final QueryEntry other = (QueryEntry) obj;
 		return java.util.Objects.equals(query, other.query);
 	}
 
 	@Override
-	public int compareTo(QueryHistoryEntry o) {
+	public int compareTo(QueryEntry o) {
 		int compRes = o.executedOnUtc.compareTo(executedOnUtc);
 
-		// just make sure that entries with the same date are not removed if query is different
+		// make sure that entries with the same date are not removed if query is different
 		if (compRes == 0) {
 			compRes = query.compareTo(o.query);
 		}
@@ -80,20 +80,20 @@ public final class QueryHistoryEntry implements Comparable<QueryHistoryEntry> {
 	}
 
 	@XmlTransient
-	public final static class Adapter extends XmlAdapter<QueryHistoryEntryJaxb, QueryHistoryEntry> {
+	public final static class Adapter extends XmlAdapter<QueryHistoryEntryJaxb, QueryEntry> {
 
 		@Override
-		public QueryHistoryEntry unmarshal(QueryHistoryEntryJaxb jaxb) throws Exception {
+		public QueryEntry unmarshal(QueryHistoryEntryJaxb jaxb) throws Exception {
 			if (jaxb == null) {
 				return null;
 			}
 
-			QueryHistoryEntry entry = new QueryHistoryEntry(jaxb.query, jaxb.executedOn);
+			QueryEntry entry = new QueryEntry(jaxb.query, jaxb.executedOn);
 			return entry;
 		}
 
 		@Override
-		public QueryHistoryEntryJaxb marshal(QueryHistoryEntry histObj) throws Exception {
+		public QueryHistoryEntryJaxb marshal(QueryEntry histObj) throws Exception {
 			if (histObj == null) {
 				return null;
 			}

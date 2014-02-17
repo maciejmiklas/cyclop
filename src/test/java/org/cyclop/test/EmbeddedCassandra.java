@@ -81,6 +81,7 @@ public class EmbeddedCassandra {
 
 	private void executeScript(Session session, String scriptName) throws Exception {
 		URL scriptURL = getClass().getResource(scriptName);
+		assertNotNull(scriptName, scriptURL);
 		Path scriptPath = Paths.get(scriptURL.toURI());
 		List<String> lines = Files.readAllLines(scriptPath, Charset.forName("UTF-8"));
 		for (String line : lines) {
