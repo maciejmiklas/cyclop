@@ -43,12 +43,12 @@ public class MainPage extends ParentPage {
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 		response.render(JavaScriptReferenceHeaderItem.forReference(JS_MAIN));
-		String initHistoryCallbackJs = generateSuggests("initHistoryCallback", historyPanel.getBrowserCallbackUrl(),
+		String initHistoryCallbackJs = generateInit("initHistoryCallback", historyPanel.getBrowserCallbackUrl(),
 				historyPanel.getMarkupId());
 		response.render(OnDomReadyHeaderItem.forScript(initHistoryCallbackJs));
 	}
 
-	private String generateSuggests(String function, String callbackLink, String component) {
+	private String generateInit(String function, String callbackLink, String component) {
 		StringBuilder buf = new StringBuilder(function);
 		buf.append("(");
 		buf.append(escapeParam(callbackLink));
