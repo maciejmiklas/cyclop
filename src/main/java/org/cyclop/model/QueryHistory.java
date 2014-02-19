@@ -50,6 +50,20 @@ public class QueryHistory {
 		return new HistoryIterator(lock, history);
 	}
 
+	public List<QueryEntry> asList() {
+		lock.lock();
+		try (HistoryIterator iter = iterator()) {
+			List<QueryEntry> histList = new ArrayList<>(history.size());
+			while (iter.hasNext()) {
+				histList.add(iter.next());
+			}
+			return histList;
+		} finally {
+			lock.unlock();
+		}
+
+	}
+
 	public int size() {
 		lock.lock();
 		try {

@@ -14,6 +14,7 @@ import org.junit.Test;
 import javax.inject.Inject;
 import java.io.File;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
@@ -115,9 +116,12 @@ public class TestFileStorage extends AbstractTestCase {
 		QueryHistory readHistory = storage.read(userId, QueryHistory.class);
 		assertNotNull(readHistory);
 		assertEquals(1, readHistory.size());
+		int idx = 0;
+		List<QueryEntry> histList = readHistory.asList();
 		try (QueryHistory.HistoryIterator historyIterator = readHistory.iterator()) {
 			assertTrue(historyIterator.hasNext());
 			QueryEntry readEntry = historyIterator.next();
+			assertEquals(histList.get(idx++), readEntry);
 			assertEquals(query, readEntry.query);
 			assertEquals(histEntry.executedOnUtc.toString(), readEntry.executedOnUtc.toString());
 

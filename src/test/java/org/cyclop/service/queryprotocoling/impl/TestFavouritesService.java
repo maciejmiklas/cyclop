@@ -63,7 +63,7 @@ public class TestFavouritesService extends AbstractTestCase {
 	public void setup() {
 		asyncFileStore.flush();
 
-		QueryFavourites favs = favService.readHistory();
+		QueryFavourites favs = favService.read();
 		assertNotNull(favs);
 		favs.clear();
 
@@ -76,7 +76,7 @@ public class TestFavouritesService extends AbstractTestCase {
 
 	@Test
 	public void testCreateReadAndClear() throws Exception {
-		QueryFavourites favourites = favService.readHistory();
+		QueryFavourites favourites = favService.read();
 
 		for (int i = 0; i < 20; i++) {
 			assertTrue(favourites.addWithSizeCheck(
@@ -99,7 +99,7 @@ public class TestFavouritesService extends AbstractTestCase {
 		asyncFileStore.flush();
 		assertNull(asyncFileStore.getFromWriteQueue(user));
 
-		assertSame(favourites, favService.readHistory());
+		assertSame(favourites, favService.read());
 
 		QueryFavourites readFavs = storage.read(user, QueryFavourites.class);
 		assertNotSame(favourites, readFavs);
@@ -150,7 +150,7 @@ public class TestFavouritesService extends AbstractTestCase {
 				@Override
 				public Void call() throws Exception {
 					for (int i = 0; i < repeatInTest; i++) {
-						QueryFavourites readFavs = favService.readHistory();
+						QueryFavourites readFavs = favService.read();
 						favs.add(readFavs);
 
 						QueryEntry fav = new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
@@ -176,7 +176,7 @@ public class TestFavouritesService extends AbstractTestCase {
 							asyncFileStore.flush();
 						}
 
-						QueryFavourites readHist = favService.readHistory();
+						QueryFavourites readHist = favService.read();
 						verifyHistEntry(readHist, fav);
 
 						executedCount.incrementAndGet();

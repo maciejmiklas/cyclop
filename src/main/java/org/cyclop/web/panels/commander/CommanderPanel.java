@@ -141,10 +141,6 @@ public class CommanderPanel extends Panel {
 				userManager.storePreferences(preferences);
 			}
 
-			@Override
-			public void onClickLogOut() {
-				getSession().invalidate();
-			}
 		};
 
 		ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", buttonListener, completionEnabled);

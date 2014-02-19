@@ -15,9 +15,9 @@ public class ParentPage extends WebPage {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
 		response.render(JavaScriptHeaderItem.forReference(JQUERY_UI));
 		response.render(JavaScriptHeaderItem.forReference(JQUERY_TOOLS));
+		response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
 		response.render(JavaScriptHeaderItem.forReference(COMMON));
 	}
 }

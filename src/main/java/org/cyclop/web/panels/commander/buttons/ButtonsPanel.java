@@ -5,7 +5,6 @@ import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.web.components.buttons.StateButton;
@@ -28,22 +27,6 @@ public class ButtonsPanel extends Panel {
 		};
 		add(addToFavourites);
 
-		AjaxFallbackLink<Void> queryHistory = new AjaxFallbackLink<Void>("queryHistory") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				//buttonListener.onClickExecCql(target);
-			}
-		};
-		add(queryHistory);
-
-		AjaxFallbackLink<Void> queryFavourites = new AjaxFallbackLink<Void>("queryFavourites") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				//buttonListener.onClickExecCql(target);
-			}
-		};
-		add(queryFavourites);
-
 		AjaxFallbackLink<Void> execQuery = new AjaxFallbackLink<Void>("execQuery") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
@@ -61,15 +44,6 @@ public class ButtonsPanel extends Panel {
 		};
 		add(exportQueryResult);
 
-		Link<Void> logOut = new Link<Void>("logOut") {
-
-			@Override
-			public void onClick() {
-				buttonListener.onClickLogOut();
-			}
-		};
-		add(logOut);
-
 		AjaxFallbackLink<Void> completion = new StateButton("completion", completionPressed, "btn btn-sm btn-primary",
 				"btn btn-sm btn-primary active") {
 			@Override
@@ -82,6 +56,7 @@ public class ButtonsPanel extends Panel {
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
 		response.render(JavaScriptReferenceHeaderItem.forReference(JS_EXPAND));
 		response.render(OnDomReadyHeaderItem.forScript("initButtons()"));
 	}

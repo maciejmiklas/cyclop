@@ -132,6 +132,7 @@ public class QueryEditorPanel extends Panel {
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
 		response.render(JavaScriptReferenceHeaderItem.forReference(SUGGEST));
 
 		ContextCqlCompletion cqlCompletion = completionService.findInitialCompletion();

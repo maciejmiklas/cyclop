@@ -159,13 +159,16 @@ public class AppConfig {
 	public static class History {
 		public final int entriesLimit;
 
+		public final int queriesPerPage;
+
 		public final boolean enabled;
 
 		@Inject
-		public History(@Value("${history.entriesLimit}") int entriesLimit,
-					   @Value("${history.enabled}") boolean enabled) {
+		public History(@Value("${history.entriesLimit}") int entriesLimit, @Value("${history.enabled}") boolean enabled,
+					   @Value("${history.queriesPerPage}") int queriesPerPage) {
 			this.entriesLimit = entriesLimit;
 			this.enabled = enabled;
+			this.queriesPerPage = queriesPerPage;
 		}
 	}
 

@@ -60,7 +60,7 @@ public class TestHistoryService extends AbstractTestCase {
 	@Before
 	public void setup() {
 		asyncFileStore.flush();
-		QueryHistory history = historyService.readHistory();
+		QueryHistory history = historyService.read();
 		assertNotNull(history);
 		history.clear();
 
@@ -73,7 +73,7 @@ public class TestHistoryService extends AbstractTestCase {
 
 	@Test
 	public void testCreateReadAndClear() throws Exception {
-		QueryHistory history = historyService.readHistory();
+		QueryHistory history = historyService.read();
 
 		for (int i = 0; i < 600; i++) {
 			history.add(new QueryEntry(
@@ -92,7 +92,7 @@ public class TestHistoryService extends AbstractTestCase {
 		asyncFileStore.flush();
 		assertNull(asyncFileStore.getFromWriteQueue(user));
 
-		assertSame(history, historyService.readHistory());
+		assertSame(history, historyService.read());
 
 		QueryHistory readHist = storage.read(user, QueryHistory.class);
 		assertNotSame(history, readHist);
@@ -140,7 +140,7 @@ public class TestHistoryService extends AbstractTestCase {
 				@Override
 				public Void call() throws Exception {
 					for (int i = 0; i < repeatInTest; i++) {
-						QueryHistory history = historyService.readHistory();
+						QueryHistory history = historyService.read();
 						histories.add(history);
 
 						QueryEntry histEntry = new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
@@ -154,7 +154,7 @@ public class TestHistoryService extends AbstractTestCase {
 							asyncFileStore.flush();
 						}
 
-						QueryHistory readHist = historyService.readHistory();
+						QueryHistory readHist = historyService.read();
 						verifyHistEntry(readHist, histEntry);
 
 						executedCount.incrementAndGet();

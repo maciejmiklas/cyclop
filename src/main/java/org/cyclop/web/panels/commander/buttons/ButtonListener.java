@@ -10,6 +10,4 @@ public interface ButtonListener {
 	void onClickQueryResultExport(AjaxRequestTarget target);
 
 	void onClickCompletion(AjaxRequestTarget target, boolean pressed);
-
-	void onClickLogOut();
 }

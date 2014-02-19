@@ -71,7 +71,7 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 	}
 
 	@Override
-	public H readHistory() {
+	public H read() {
 		if (history.get() == null) {
 			synchronized (asyncFileStore) {
 				if (history.get() == null) {

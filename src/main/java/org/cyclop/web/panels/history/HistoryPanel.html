@@ -4,7 +4,26 @@
 </head>
 <body>
 <wicket:panel>
-	<div wicket:id="counter"></div>
+	<div wicket:id="historyGridContainer">
+		<div wicket:id="historyGrid">
+			<!-- 			<div wicket:id="historyPager"></div> -->
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+				<tr>
+					<td>Executed on</td>
+					<td>Query</td>
+				</tr>
+				</thead>
+
+				<tbody>
+				<tr wicket:id="row">
+					<td wicket:id="executedOn"></td>
+					<td wicket:id="query"></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </wicket:panel>
 </body>
 

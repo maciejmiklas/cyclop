@@ -64,7 +64,7 @@ pre.cq-helpCqlSyntax {
 	background-color: #fafaff;
 }
 
-.cq-clqHelpExpandSupportBody > div {
+.cq-clqHelpExpandSupportBody>div {
 	font-size: 90%;
 	padding: 1em;
 	border: 1px solid #cccccc;
@@ -106,12 +106,11 @@ pre.cq-helpCqlSyntax {
 	border-bottom: 1px solid #282828;
 }
 
-.table-hover > tbody > tr.cq-tableRowSeparator:hover > td {
+.table-hover>tbody>tr.cq-tableRowSeparator:hover>td {
 	background-color: #0a39b3;
 }
 
-.table-hover > tbody > tr.cq-tableRowSeparator,
-.table-hover > tbody > tr.cq-tableRowSeparator > td {
+.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -145,8 +144,11 @@ ul.cq-cqlCollectionList {
 	max-width: 40em;
 }
 
-.cq-btns-right {
-	float: right !important;
+.cq-right-up {
+	/* 	float: right !important; */
+	position: absolute;
+	top: 7px;
+	right: 20px;
 }
 
 .cq-page-center {
@@ -186,7 +188,6 @@ ul.cq-cqlCollectionList {
 	margin-bottom: 10px !important;
 }
 
-.cq-nav > li > a {
+.cq-nav>li>a {
 	padding: 5px 10px !important;
 }
-

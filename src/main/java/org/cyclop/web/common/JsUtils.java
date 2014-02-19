@@ -7,7 +7,7 @@ public class JsUtils {
 		if (param == null) {
 			return null;
 		}
-		return "\"" + param + "\"";
+		return "'" + param + "'";
 	}
 
 	public static String escapeParamLower(String param) {
