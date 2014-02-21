@@ -3,9 +3,11 @@ package org.cyclop.model;
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
 
+import java.io.Serializable;
+
 /** @author Maciej Miklas */
 @Immutable
-public class CqlColumnValue {
+public class CqlColumnValue implements Serializable {
 
 	public final Class<?> valueClass;
 

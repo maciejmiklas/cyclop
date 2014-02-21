@@ -1,6 +1,7 @@
 package org.cyclop.model;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 import net.jcip.annotations.NotThreadSafe;
 import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
@@ -12,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,10 +28,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @ThreadSafe
 @XmlJavaTypeAdapter(QueryHistory.Adapter.class)
-public class QueryHistory {
+public class QueryHistory implements Serializable {
 
 	private final CircularFifoQueue<QueryEntry> history;
 
+	// TODO serialize and test if null
 	private final Lock lock = new ReentrantLock();
 
 	public QueryHistory() {
@@ -50,18 +53,14 @@ public class QueryHistory {
 		return new HistoryIterator(lock, history);
 	}
 
-	public List<QueryEntry> asList() {
+	// TODO test list
+	public ImmutableList<QueryEntry> asList() {
 		lock.lock();
 		try (HistoryIterator iter = iterator()) {
-			List<QueryEntry> histList = new ArrayList<>(history.size());
-			while (iter.hasNext()) {
-				histList.add(iter.next());
-			}
-			return histList;
+			return ImmutableList.copyOf(iter);
 		} finally {
 			lock.unlock();
 		}
-
 	}
 
 	public int size() {
@@ -85,7 +84,7 @@ public class QueryHistory {
 
 	// TODO on add actualize favorites date
 	/*
-	 * history.add(entry); if (favourites.contains(entry)) {
+     * history.add(entry); if (favourites.contains(entry)) {
      * favourites.remove(entry); favourites.add(entry); }
      */
 	public void add(QueryEntry entry) {

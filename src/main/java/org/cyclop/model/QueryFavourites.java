@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,11 +27,12 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @ThreadSafe
 @XmlJavaTypeAdapter(QueryFavourites.Adapter.class)
-public class QueryFavourites {
+public class QueryFavourites implements Serializable {
 
 	private final Set<QueryEntry> favourites;
 
-	private final Lock lock = new ReentrantLock();
+	// TODO serialize and test if null
+	private final transient Lock lock = new ReentrantLock();
 
 	public QueryFavourites() {
 		favourites = new HashSet<>(AppConfig.get().favourites.entriesLimit);
@@ -86,8 +88,8 @@ public class QueryFavourites {
 	}
 
 	/**
-	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing elements
-	 *         can be always replaced - update change date
+	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing
+	 *         elements can be always replaced - update change date
 	 */
 	public boolean addWithSizeCheck(QueryEntry entry) {
 		lock.lock();

@@ -6,12 +6,13 @@ import net.jcip.annotations.Immutable;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
 import java.util.UUID;
 
 /** @author Maciej Miklas */
 @Immutable
 @XmlJavaTypeAdapter(value = UserIdentifier.Adapter.class)
-public final class UserIdentifier {
+public final class UserIdentifier implements Serializable {
 
 	public final UUID id;
 

@@ -27,8 +27,7 @@ public class CookieStorage {
 	private final static Logger LOG = LoggerFactory.getLogger(CookieStorage.class);
 
 	public static enum CookieName {
-		cyclop_prefs,
-		cyclop_userid;
+		cyclop_prefs, cyclop_userid;
 	}
 
 	public void storeCookieAsJson(CookieName cookieName, Object obj) {
@@ -37,16 +36,22 @@ public class CookieStorage {
 	}
 
 	public <T> T readCookieAsJson(CookieName cookieName, Class<T> clazz) {
-		Cookie cookie = readCookie(cookieName);
-		if (cookie == null) {
+		try {
+			Cookie cookie = readCookie(cookieName);
+			if (cookie == null) {
+				return null;
+			}
+			String cookieValue = StringUtils.trimToNull(cookie.getValue());
+			if (cookieValue == null) {
+				return null;
+			}
+			T obj = marshaller.unmarshal(clazz, cookieValue);
+			return obj;
+		} catch (Exception e) {
+			LOG.warn("Error reading cookie {}, Reason: {}", cookieName, e.getMessage());
+			LOG.debug(e.getMessage(), e);
 			return null;
 		}
-		String cookieValue = StringUtils.trimToNull(cookie.getValue());
-		if (cookieValue == null) {
-			return null;
-		}
-		T obj = marshaller.unmarshal(clazz, cookieValue);
-		return obj;
 	}
 
 	public void storeCookie(CookieName name, String value) {
@@ -62,24 +67,30 @@ public class CookieStorage {
 	}
 
 	public Cookie readCookie(CookieName name) {
-		RequestCycle requestCycle = RequestCycle.get();
-		if (requestCycle == null) {
-			LOG.warn("RequestCycle is null - cannot read cookies");
-			return null;
-		}
-		WebRequest request = (WebRequest) requestCycle.getRequest();
-		List<Cookie> cookies = request.getCookies();
-		LOG.debug("Found cookies {} for {}", cookies, request);
-		if (cookies == null || cookies.isEmpty()) {
-			return null;
-		}
-		for (Cookie cookie : cookies) {
-			if (name.name().equals(cookie.getName())) {
-				LOG.debug("Found cookie: {}", cookie);
-				return cookie;
+		try {
+			RequestCycle requestCycle = RequestCycle.get();
+			if (requestCycle == null) {
+				LOG.warn("RequestCycle is null - cannot read cookies");
+				return null;
 			}
+			WebRequest request = (WebRequest) requestCycle.getRequest();
+			List<Cookie> cookies = request.getCookies();
+			LOG.debug("Found cookies {} for {}", cookies, request);
+			if (cookies == null || cookies.isEmpty()) {
+				return null;
+			}
+			for (Cookie cookie : cookies) {
+				if (name.name().equals(cookie.getName())) {
+					LOG.debug("Found cookie: {}", cookie);
+					return cookie;
+				}
+			}
+			return null;
+		} catch (Exception e) {
+			LOG.warn("Error reading cookie {}, Reason: {}", name, e.getMessage());
+			LOG.debug(e.getMessage(), e);
+			return null;
 		}
-		return null;
 	}
 
 }

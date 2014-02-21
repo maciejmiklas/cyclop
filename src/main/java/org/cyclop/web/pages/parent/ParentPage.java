@@ -10,7 +10,11 @@ import static org.cyclop.web.common.ScriptsRef.JQUERY_TOOLS;
 import static org.cyclop.web.common.ScriptsRef.JQUERY_UI;
 
 /** @author Maciej Miklas */
-public class ParentPage extends WebPage {
+public abstract class ParentPage extends WebPage {
+
+	public ParentPage() {
+		setVersioned(false);
+	}
 
 	@Override
 	public void renderHead(IHeaderResponse response) {

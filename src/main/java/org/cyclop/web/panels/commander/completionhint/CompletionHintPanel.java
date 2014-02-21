@@ -19,7 +19,6 @@ public class CompletionHintPanel extends Panel {
 
 	public CompletionHintPanel(String id, String headerText) {
 		super(id);
-		setOutputMarkupId(true);
 		setOutputMarkupPlaceholderTag(true);
 
 		WebMarkupContainer cqlInfoHint = new WebMarkupContainer("infoHint");

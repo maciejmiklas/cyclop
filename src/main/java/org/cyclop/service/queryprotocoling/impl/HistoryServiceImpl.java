@@ -23,5 +23,4 @@ class HistoryServiceImpl extends AbstractQueryProtocolingService<QueryHistory> i
 	protected QueryHistory createEmpty() {
 		return new QueryHistory();
 	}
-
 }

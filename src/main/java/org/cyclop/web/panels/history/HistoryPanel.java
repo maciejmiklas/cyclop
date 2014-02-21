@@ -1,6 +1,6 @@
 package org.cyclop.web.panels.history;
 
-import org.apache.wicket.Component;
+import com.google.common.collect.ImmutableList;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -8,47 +8,92 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.cyclop.common.AppConfig;
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.QueryEntry;
+import org.cyclop.model.QueryHistory;
 import org.cyclop.service.queryprotocoling.HistoryService;
+import org.cyclop.web.common.AjaxRefreshSupport;
+import org.cyclop.web.common.ImmutableListModel;
+import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.UUID;
 
 /** @author Maciej Miklas */
-public class HistoryPanel extends Panel {
+public class HistoryPanel extends Panel implements AjaxRefreshSupport {
 
 	private AbstractDefaultAjaxBehavior browserCallback;
+
+	private BootstrapPagingNavigator pager;
 
 	@Inject
 	private HistoryService historyService;
 
+	private PageableListView<QueryEntry> historyTable;
+
+	private ImmutableListModel<QueryEntry> model;
+
 	public HistoryPanel(String id) {
 		super(id);
-
-		PageableListView<QueryEntry> grid = initHistoryTable();
-		WebMarkupContainer gridContainer = new WebMarkupContainer("historyGridContainer");
-		gridContainer.add(grid);
-		gridContainer.setOutputMarkupId(true);
-		add(gridContainer);
-
-		browserCallback = initBrowserCallback(gridContainer);
-		add(browserCallback);//TODO remove add() calls from init methods in whole project - like here
+		WebMarkupContainer historyContainer = initHistoryContainer();
+		model = initHistoryTable(historyContainer);
+		browserCallback = initBrowserCallback(model, historyContainer);
 	}
 
-	private AbstractDefaultAjaxBehavior initBrowserCallback(final Component comp) {
+	private WebMarkupContainer initHistoryContainer() {
+		WebMarkupContainer historyContainer = new WebMarkupContainer("historyContainer");
+		historyContainer.setOutputMarkupPlaceholderTag(true);
+		historyContainer.setVisible(false);
+		add(historyContainer);
+		return historyContainer;
+	}
+
+	private AbstractDefaultAjaxBehavior initBrowserCallback(final ImmutableListModel<QueryEntry> model,
+															final WebMarkupContainer historyContainer) {
+
 		AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
+
+			@Override
 			protected void respond(final AjaxRequestTarget target) {
-				target.add(comp);
+				// TODO !!
+				ImmutableList<QueryEntry> historyList = createHist().asList();// historyService.read().asList();
+				model.setObject(historyList);
+
+				resetHistoryTable();
+
+				historyContainer.setVisible(true);
+				target.add(historyContainer);
 			}
 		};
+		add(browserCallback);
 		return browserCallback;
 	}
 
-	private PageableListView<QueryEntry> initHistoryTable() {
-		PageableListView<QueryEntry> grid = new PageableListView<QueryEntry>("historyGrid", new QueryHistoryModel(),
-				AppConfig.get().history.queriesPerPage) {
+	private void resetHistoryTable() {
+		historyTable.removeAll();
+		pager.getPageable().setCurrentPage(0);
+	}
+
+	// TODO !!
+	static int a = 10;
+
+	// TODO !!
+	private QueryHistory createHist() {
+		a += 10;
+		QueryHistory qh = new QueryHistory();
+		for (int i = 0; i < 100; i++) {
+			qh.add(new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
+					a + "select myfil, " + UUID.randomUUID() + ", bsefef, afsf f,e from cqldemo.books where id=" + i)));
+		}
+		return qh;
+	}
+
+	private ImmutableListModel<QueryEntry> initHistoryTable(final WebMarkupContainer historyContainer) {
+		ImmutableListModel<QueryEntry> model = new ImmutableListModel<>();
+
+		historyTable = new PageableListView<QueryEntry>("historyRow", model, AppConfig.get().history.queriesPerPage) {
 
 			@Override
 			protected void populateItem(ListItem<QueryEntry> item) {
@@ -60,29 +105,26 @@ public class HistoryPanel extends Panel {
 				Label query = new Label("query", entry.query.part);
 				item.add(query);
 			}
-
 		};
-		grid.setOutputMarkupId(true);
-		return grid;
+		historyContainer.add(historyTable);
+		pager = new BootstrapPagingNavigator("historyPager", historyTable);
+		historyContainer.add(pager);
+
+		return model;
 	}
 
 	public String getRefreshContentCallbackUrl() {
 		return browserCallback.getCallbackUrl().toString();
 	}
 
-	private class QueryHistoryModel implements IModel<List<QueryEntry>> {
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public List<QueryEntry> getObject() {
-			return historyService.read().asList();
-		}
-
-		@Override
-		public void setObject(List<QueryEntry> history) {
-		}
-
+	@Override
+	public String getRefreshLinkCssClass() {
+		return ".cq-tabHistory";
 	}
+
+	@Override
+	public String getContentCssClass() {
+		return ".cq-historyPanel";
+	}
+
 }

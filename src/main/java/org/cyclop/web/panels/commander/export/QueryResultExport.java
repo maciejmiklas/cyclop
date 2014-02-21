@@ -11,11 +11,12 @@ import org.cyclop.service.converter.CsvQueryResultExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /** @author Maciej Miklas */
-public class QueryResultExport {
+public class QueryResultExport implements Serializable {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryResultExport.class);
 

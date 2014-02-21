@@ -27,7 +27,6 @@ public class InfoDialog extends Panel {
 		super(id);
 		infoDialog = new WebMarkupContainer("infoDialog");
 		infoDialog.setVisible(false);
-		infoDialog.setOutputMarkupId(true);
 		infoDialog.setOutputMarkupPlaceholderTag(true);
 		titleModel = new StringModel();
 		infoDialog.add(new AttributeModifier("title", titleModel));

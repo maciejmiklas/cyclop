@@ -1,12 +1,13 @@
-var historyCallbackLink;
-
-function initTabCallback(cssComponentId, link) {
+function initCallbackTab(cssComponentId, link, removeContentArray) {
 	historyCallbackLink = link;
 
 	$(cssComponentId).on("click", function () {
 		Wicket.Ajax.get({
 			"u": historyCallbackLink
 		});
-		console.log("TAB CLICK:" + historyCallbackLink);
 	});
+};
+
+function initStaticTab(removeContentArray) {
+
 }

@@ -9,7 +9,7 @@ import net.jcip.annotations.Immutable;
  * @author Maciej Miklas
  */
 @Immutable
-public final class CqlTable extends CqlPart {
+public final class CqlTable extends CqlPart implements DisplaySupport {
 
 	/** can be null */
 	public final CqlKeySpace keySpace;

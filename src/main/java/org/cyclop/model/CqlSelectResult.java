@@ -5,9 +5,12 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import net.jcip.annotations.Immutable;
 
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+
 /** @author Maciej Miklas */
 @Immutable
-public final class CqlSelectResult {
+public final class CqlSelectResult implements Serializable {
 
 	/** List of columns that can be found in every row returned by the query */
 	public final ImmutableList<CqlExtendedColumnName> commonColumns;
@@ -15,7 +18,7 @@ public final class CqlSelectResult {
 	/** List of columns that can be found is particular rows */
 	public final ImmutableList<CqlExtendedColumnName> dynamicColumns;
 
-	public final ImmutableList<Row> rows;
+	public final transient ImmutableList<Row> rows;
 
 	/** could be null, it not found in result, or in case of error while reading meta data info */
 	public final CqlPartitionKey partitionKey;
@@ -25,6 +28,11 @@ public final class CqlSelectResult {
 		this.dynamicColumns = ImmutableList.of();
 		this.rows = ImmutableList.of();
 		this.partitionKey = null;
+	}
+
+	// TODO add serialize test
+	private void readObject(ObjectInputStream in) {
+		SerializationUtil.setFiled(this, "rows", ImmutableList.of());
 	}
 
 	public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns,

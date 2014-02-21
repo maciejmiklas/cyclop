@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
 
 /** @author Maciej Miklas */
+// TODO smaller border around pager
 public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
 	public BootstrapPagingNavigator(String id, IPageable pageable) {
@@ -24,6 +25,7 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 	@Override
 	protected PagingNavigation newNavigation(String id, IPageable pageable, IPagingLabelProvider labelProvider) {
 		return new AjaxPagingNavigation(id, pageable, labelProvider) {
+
 			@Override
 			protected LoopItem newItem(int iteration) {
 				LoopItem item = super.newItem(iteration);

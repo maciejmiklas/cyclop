@@ -8,12 +8,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
 
 /** @author Maciej Miklas */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class UserPreferences {
+public final class UserPreferences implements Serializable {
 
+	// TODO break annotations
 	@XmlElement(name = "e_hi") @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	public boolean showCqlCompletionHint = true;
 

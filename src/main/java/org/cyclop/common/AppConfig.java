@@ -15,12 +15,13 @@ import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 /** @author Maciej Miklas */
 @Named
-public class AppConfig {
+public class AppConfig implements Serializable {
 
 	@NotNull @Valid
 	private static AppConfig instance = null;
@@ -94,7 +95,7 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static class Cassandra {
+	public static class Cassandra implements Serializable {
 
 		@Min(0)
 		public final int port;
@@ -136,7 +137,7 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static class FileStore {
+	public static class FileStore implements Serializable {
 
 		public final int maxFileSize;
 
@@ -156,7 +157,7 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static class History {
+	public static class History implements Serializable {
 		public final int entriesLimit;
 
 		public final int queriesPerPage;
@@ -174,7 +175,7 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static class Favourites {
+	public static class Favourites implements Serializable {
 		public final int entriesLimit;
 
 		public final boolean enabled;
@@ -189,12 +190,12 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static class Common {
+	public static class Common implements Serializable {
 	}
 
 	@Named
 	@Immutable
-	public static class Cookie {
+	public static class Cookie implements Serializable {
 		public final int expirySeconds;
 
 		@Inject
@@ -205,7 +206,7 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static class CqlEditor {
+	public static class CqlEditor implements Serializable {
 
 		@Min(1)
 		public final int rowsPerPage;
@@ -241,7 +242,7 @@ public class AppConfig {
 
 	@Named
 	@Immutable
-	public static final class CqlExport {
+	public static final class CqlExport implements Serializable {
 
 		@NotEmpty
 		public final String querySeparator;

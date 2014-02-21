@@ -18,14 +18,13 @@ import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.CompletionService;
+import org.cyclop.web.common.JsFunctionBuilder;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
-import static org.cyclop.web.common.JsUtils.escapeParam;
 import static org.cyclop.web.common.ScriptsRef.SUGGEST;
 
 /** @author Maciej Miklas */
@@ -152,21 +151,9 @@ public class QueryEditorPanel extends Panel {
 
 	private String generateSuggests(String function, String editorMarkupId,
 									SortedSet<? extends CqlPart> suggestValues) {
-		StringBuilder buf = new StringBuilder(function);
-		buf.append("(");
-		buf.append(escapeParam(editorMarkupId));
-		buf.append(",[");
 
-		Iterator<? extends CqlPart> suggestValuesIt = suggestValues.iterator();
-		while (suggestValuesIt.hasNext()) {
-			buf.append(escapeParam(suggestValuesIt.next().toDisplayString()));
-			if (suggestValuesIt.hasNext()) {
-				buf.append(",");
-			}
-		}
-		buf.append("])");
-
-		return buf.toString();
+		String js = JsFunctionBuilder.function(function).param(editorMarkupId).array(suggestValues).build();
+		return js;
 	}
 
 }

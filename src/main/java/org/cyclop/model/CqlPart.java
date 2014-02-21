@@ -3,14 +3,12 @@ package org.cyclop.model;
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
 
-/**
- * Cql part
- *
- * @author Maciej Miklas
- */
+import java.io.Serializable;
+
+/** @author Maciej Miklas */
 @Immutable
 @SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
-public class CqlPart implements Comparable<CqlPart> {
+public class CqlPart implements Comparable<CqlPart>, Serializable, DisplaySupport {
 
 	public final String partLc;
 

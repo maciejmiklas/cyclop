@@ -57,15 +57,12 @@ public class QueryResultVerticalPanel extends Panel {
 		cqlResultText = new Label("cqlResultText", cqlResultTextModel);
 		cqlResultText.setVisible(false);
 		cqlResultText.setOutputMarkupPlaceholderTag(true);
-		cqlResultText.setOutputMarkupId(true);
 		add(cqlResultText);
 
 		resultTable = new WebMarkupContainer("resultTable");
 		resultTable.setOutputMarkupPlaceholderTag(true);
-		resultTable.setOutputMarkupId(true);
 
 		setOutputMarkupPlaceholderTag(true);
-		setOutputMarkupId(true);
 		add(resultTable);
 
 		resultTable.setVisible(false);
@@ -214,6 +211,7 @@ public class QueryResultVerticalPanel extends Panel {
 		columnsModel.updateResult(result);
 	}
 
+	// TODO replace with ImmutableListModel
 	private final static class RowsModel implements IModel<List<Row>> {
 
 		private List<Row> content;
@@ -257,6 +255,7 @@ public class QueryResultVerticalPanel extends Panel {
 		}
 	}
 
+	// TODO replace with ImmutableListModel
 	private final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
 		private CqlSelectResult result;
 
