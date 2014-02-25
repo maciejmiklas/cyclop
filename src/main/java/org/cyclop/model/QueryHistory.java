@@ -84,7 +84,7 @@ public class QueryHistory implements Serializable {
 
 	// TODO on add actualize favorites date
 	/*
-     * history.add(entry); if (favourites.contains(entry)) {
+	 * history.add(entry); if (favourites.contains(entry)) {
      * favourites.remove(entry); favourites.add(entry); }
      */
 	public void add(QueryEntry entry) {

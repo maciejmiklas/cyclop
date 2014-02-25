@@ -2,8 +2,7 @@ package org.cyclop.web.pages.main;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.cyclop.web.common.AjaxRefreshSupport;
+import org.cyclop.web.common.AjaxReloadSupport;
 import org.cyclop.web.common.JsFunctionBuilder;
 
 import java.util.ArrayList;
@@ -13,49 +12,76 @@ import java.util.Set;
 
 class TabSupport {
 
-	private final List<Panel> tabs = new ArrayList<>();
+	private final List<FullRefreshData> refreshTabs = new ArrayList<>();
 
-	private final List<String> contentCssClasses = new ArrayList<>();
+	private final List<String> removableContentCssRefs = new ArrayList<>();
 
-	public void registerTab(Panel tab) {
-		tabs.add(tab);
+	/** CSS class name that can be used to find link activating static tab */
+	private final List<String> staticTabLinkCssRefs = new ArrayList<>();
 
-		if (tab instanceof AjaxRefreshSupport) {
-			AjaxRefreshSupport atab = (AjaxRefreshSupport) tab;
-			contentCssClasses.add(atab.getContentCssClass());
-		}
+	/**
+	 * Registers tab which content will be reloaded when user selects this tab.
+	 *
+	 * @param tabClikcLinkCssRef
+	 * 		CSS class used by jquery to find link to register content-refresh-callback-ajax-request
+	 */
+	public void registerReloadableTab(AjaxReloadSupport tab, String tabClikcLinkCssRef) {
+		refreshTabs.add(new FullRefreshData(tab, tabClikcLinkCssRef));
+		removableContentCssRefs.add(tab.getReloadableContentCssRef());
+	}
 
+	/**
+	 * Registers tab which content will not be reloaded when user selects it.
+	 *
+	 * @param tabClikcLinkCssClass
+	 * 		this class will be used by jquery to register on-click-handler. It will remove content of all other tabs that
+	 * 		support ajax reload.
+	 */
+	public void registerSaticTab(String tabClikcLinkCssClass) {
+		staticTabLinkCssRefs.add(tabClikcLinkCssClass);
 	}
 
 	public void renderHead(IHeaderResponse response) {
-		for (Panel tab : tabs) {
-			if (tab instanceof AjaxRefreshSupport) {
-				initCallbackTab(response, (AjaxRefreshSupport) tab);
-			} else {
-				initStaticTab(response);
-			}
+		for (FullRefreshData tab : refreshTabs) {
+			initReloadableTab(response, tab);
+		}
+
+		for (String tab : staticTabLinkCssRefs) {
+			initStaticTab(response, tab);
 		}
 	}
 
-	private void initStaticTab(IHeaderResponse response) {
-		String callbackJs = JsFunctionBuilder.function("initStaticTab").arrayStr(contentCssClasses).build();
+	private void initStaticTab(IHeaderResponse response, String staticTabLinkCssRef) {
+		String callbackJs = JsFunctionBuilder.function("initStaticTab").param(staticTabLinkCssRef)
+				.arrayStr(removableContentCssRefs).build();
 
 		response.render(OnDomReadyHeaderItem.forScript(callbackJs));
 	}
 
-	private void initCallbackTab(IHeaderResponse response, AjaxRefreshSupport reloadSupport) {
-		Set<String> removeContentList = generateRemoveContentList(reloadSupport);
+	private void initReloadableTab(IHeaderResponse response, FullRefreshData data) {
+		Set<String> removeContentList = generateRemoveContentList(data);
 
-		String callbackJs = JsFunctionBuilder.function("initCallbackTab").param(reloadSupport.getRefreshLinkCssClass())
-				.param(reloadSupport.getRefreshContentCallbackUrl()).arrayStr(removeContentList).build();
+		String callbackJs = JsFunctionBuilder.function("initReloadableTab").param(data.tabClikcLinkCssRef)
+				.param(data.panel.getReloadCallbackUrl()).arrayStr(removeContentList).build();
 
 		response.render(OnDomReadyHeaderItem.forScript(callbackJs));
 	}
 
-	private Set<String> generateRemoveContentList(AjaxRefreshSupport reloadSupport) {
-		Set<String> removeContentList = new HashSet<>(contentCssClasses);
-		removeContentList.remove(reloadSupport.getContentCssClass());
+	private Set<String> generateRemoveContentList(FullRefreshData data) {
+		Set<String> removeContentList = new HashSet<>(removableContentCssRefs);
+		removeContentList.remove(data.panel.getReloadableContentCssRef());
 		return removeContentList;
+	}
+
+	private class FullRefreshData {
+		private final AjaxReloadSupport panel;
+
+		private final String tabClikcLinkCssRef;
+
+		public FullRefreshData(AjaxReloadSupport panel, String tabClikcLinkCssRef) {
+			this.panel = panel;
+			this.tabClikcLinkCssRef = tabClikcLinkCssRef;
+		}
 	}
 
 }

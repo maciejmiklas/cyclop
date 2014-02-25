@@ -2,12 +2,43 @@ package org.cyclop.model;
 
 import com.datastax.driver.core.DataType;
 import com.google.common.testing.EqualsTester;
+import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.test.AbstractTestCase;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import javax.inject.Inject;
+import java.io.NotSerializableException;
 import java.util.UUID;
 
-public class TestBeans {
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+public class TestBeans extends AbstractTestCase {
+	@Inject
+	private QueryService qs;
+
+	@Test(expected = NotSerializableException.class)
+	public void testCqlSelectResult_Serialize() throws Exception {
+		CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"));
+		assertNotNull(res);
+		assertNotNull(res.rows);
+		assertNotNull(res.commonColumns);
+		assertNotNull(res.dynamicColumns);
+		assertTrue(res.rows.size() > 0);
+
+		serialize(res);
+	}
+
+	@Test(expected = NotSerializableException.class)
+	public void testCqlColumnName_Serialize() throws Exception {
+		serialize(new CqlColumnName(DataType.text(), "myColumn"));
+	}
+
+	@Test(expected = NotSerializableException.class)
+	public void testCqlPartitionKey_Serialize() throws Exception {
+		serialize(new CqlPartitionKey(DataType.text(), "myColumn"));
+	}
 
 	@Test
 	public void testEquals() {

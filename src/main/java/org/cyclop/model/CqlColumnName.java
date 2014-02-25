@@ -3,16 +3,20 @@ package org.cyclop.model;
 import com.datastax.driver.core.DataType;
 import net.jcip.annotations.Immutable;
 
+import java.io.NotSerializableException;
 import java.util.Objects;
 
 /** @author Maciej Miklas */
 @Immutable
 public class CqlColumnName extends CqlPart {
 
-	public final DataType dataType;
+	public transient final DataType dataType;
 
 	public CqlColumnName(DataType dataType, String columnName) {
 		super(columnName);
+		if (dataType == null) {
+			throw new IllegalArgumentException("Null DataType");
+		}
 		this.dataType = dataType;
 	}
 
@@ -43,5 +47,9 @@ public class CqlColumnName extends CqlPart {
 	@Override
 	public CqlType type() {
 		return CqlType.COLUMN;
+	}
+
+	private void writeObject(java.io.ObjectOutputStream out) throws NotSerializableException {
+		throw new NotSerializableException("Serialization not supported due to non-serializable field: DataType");
 	}
 }

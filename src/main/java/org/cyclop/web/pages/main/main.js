@@ -1,13 +1,21 @@
-function initCallbackTab(cssComponentId, link, removeContentArray) {
-	historyCallbackLink = link;
-
-	$(cssComponentId).on("click", function () {
+function initReloadableTab(tabLinkCssRef, reloacCallbackLink, removeContentArray) {
+	$(tabLinkCssRef).on("click", function () {
 		Wicket.Ajax.get({
-			"u": historyCallbackLink
+			"u": reloacCallbackLink
 		});
+		removeContent(removeContentArray);
 	});
 };
 
-function initStaticTab(removeContentArray) {
+function initStaticTab(tabLinkCssRef, removeContentArray) {
+	$(tabLinkCssRef).on("click", function () {
+		removeContent(removeContentArray);
+	});
+}
 
+function removeContent(removeContentArray) {
+	removeContentArray.map(function (item) {
+		$(item).empty();
+		console.log("Empty: " + item);
+	});
 }

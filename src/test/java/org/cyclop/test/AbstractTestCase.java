@@ -11,8 +11,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,5 +74,20 @@ public abstract class AbstractTestCase {
 	public Session getCassandraSession() {
 		assertNotNull("Cassandra session is null", CASSANDRA.getSession());
 		return CASSANDRA.getSession();
+	}
+
+	public byte[] serialize(Object obj) throws IOException {
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		ObjectOutputStream out = new ObjectOutputStream(bout);
+		out.writeObject(obj);
+		out.close();
+		return bout.toByteArray();
+	}
+
+	public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {
+		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(serialized));
+		T des = (T) in.readObject();
+		in.close();
+		return des;
 	}
 }

@@ -14,7 +14,7 @@ import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
 import org.cyclop.service.queryprotocoling.HistoryService;
-import org.cyclop.web.common.AjaxRefreshSupport;
+import org.cyclop.web.common.AjaxReloadSupport;
 import org.cyclop.web.common.ImmutableListModel;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 
@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import java.util.UUID;
 
 /** @author Maciej Miklas */
-public class HistoryPanel extends Panel implements AjaxRefreshSupport {
+public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private AbstractDefaultAjaxBehavior browserCallback;
 
@@ -33,12 +33,10 @@ public class HistoryPanel extends Panel implements AjaxRefreshSupport {
 
 	private PageableListView<QueryEntry> historyTable;
 
-	private ImmutableListModel<QueryEntry> model;
-
 	public HistoryPanel(String id) {
 		super(id);
 		WebMarkupContainer historyContainer = initHistoryContainer();
-		model = initHistoryTable(historyContainer);
+		ImmutableListModel<QueryEntry> model = initHistoryTable(historyContainer);
 		browserCallback = initBrowserCallback(model, historyContainer);
 	}
 
@@ -113,18 +111,14 @@ public class HistoryPanel extends Panel implements AjaxRefreshSupport {
 		return model;
 	}
 
-	public String getRefreshContentCallbackUrl() {
+	@Override
+	public String getReloadCallbackUrl() {
 		return browserCallback.getCallbackUrl().toString();
 	}
 
 	@Override
-	public String getRefreshLinkCssClass() {
-		return ".cq-tabHistory";
-	}
-
-	@Override
-	public String getContentCssClass() {
-		return ".cq-historyPanel";
+	public String getReloadableContentCssRef() {
+		return ".cq-historyContainer";
 	}
 
 }

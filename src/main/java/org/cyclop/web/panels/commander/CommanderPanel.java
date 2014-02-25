@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+// TODO rename to QueryEditorPanel
+
 /** @author Maciej Miklas */
 @AuthorizeInstantiation(Roles.ADMIN)
 public class CommanderPanel extends Panel {
