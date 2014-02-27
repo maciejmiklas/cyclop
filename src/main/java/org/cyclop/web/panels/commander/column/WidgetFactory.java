@@ -8,6 +8,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlColumnValue;
+import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlPartitionKeyValue;
@@ -100,11 +101,11 @@ public class WidgetFactory {
 		}
 
 		Component component = null;
-		DataType dataType = column.dataType;
-		if (dataType.getName() == DataType.Name.SET || dataType.getName() == DataType.Name.LIST) {
+		CqlDataType dataType = column.dataType;
+		if (dataType.name == DataType.Name.SET || dataType.name == DataType.Name.LIST) {
 			component = createForCollection(row, cqlPartitionKeyValue, column, componentId);
 
-		} else if (dataType.getName() == DataType.Name.MAP) {
+		} else if (dataType.name == DataType.Name.MAP) {
 			component = createForMap(row, cqlPartitionKeyValue, column, componentId);
 
 		} else {

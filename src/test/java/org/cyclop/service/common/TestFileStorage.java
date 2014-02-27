@@ -117,7 +117,7 @@ public class TestFileStorage extends AbstractTestCase {
 		assertNotNull(readHistory);
 		assertEquals(1, readHistory.size());
 		int idx = 0;
-		List<QueryEntry> histList = readHistory.asList();
+		List<QueryEntry> histList = readHistory.copyAsList();
 		try (QueryHistory.HistoryIterator historyIterator = readHistory.iterator()) {
 			assertTrue(historyIterator.hasNext());
 			QueryEntry readEntry = historyIterator.next();

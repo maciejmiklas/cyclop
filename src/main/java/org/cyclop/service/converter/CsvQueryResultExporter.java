@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlColumnValue;
+import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlSelectResult;
@@ -56,12 +57,12 @@ public class CsvQueryResultExporter {
 		Iterator<CqlExtendedColumnName> it = cols.iterator();
 		while (it.hasNext()) {
 			CqlExtendedColumnName column = it.next();
-			DataType dataType = column.dataType;
+			CqlDataType dataType = column.dataType;
 
-			if (dataType.getName() == DataType.Name.SET || dataType.getName() == DataType.Name.LIST) {
+			if (dataType.name == DataType.Name.SET || dataType.name == DataType.Name.LIST) {
 				appendCollection(buf, row, column);
 
-			} else if (dataType.getName() == DataType.Name.MAP) {
+			} else if (dataType.name == DataType.Name.MAP) {
 				appendMap(buf, row, column);
 			} else {
 				appendSingleValue(buf, row, column);

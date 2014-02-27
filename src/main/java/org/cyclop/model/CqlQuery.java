@@ -2,7 +2,10 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
+import org.cyclop.validation.BeanValidator;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,16 +16,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 /** @author Maciej Miklas */
 @Immutable
 @XmlJavaTypeAdapter(CqlQuery.Adapter.class)
-public class CqlQuery extends CqlPart {
+public final class CqlQuery extends CqlPart {
 
+	@NotNull @Valid
 	public final CqlQueryName type;
 
 	public CqlQuery(CqlQueryName type, String cql) {
 		super(cql);
-		if (type == null) {
-			throw new IllegalArgumentException("Null type");
-		}
 		this.type = type;
+		BeanValidator.create(this).validate();
 	}
 
 	@Override

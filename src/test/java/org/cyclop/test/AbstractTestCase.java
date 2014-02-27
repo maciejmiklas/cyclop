@@ -81,13 +81,17 @@ public abstract class AbstractTestCase {
 		ObjectOutputStream out = new ObjectOutputStream(bout);
 		out.writeObject(obj);
 		out.close();
-		return bout.toByteArray();
+		byte[] serialized = bout.toByteArray();
+		assertNotNull(serialized);
+		return serialized;
 	}
 
 	public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {
 		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(serialized));
-		T des = (T) in.readObject();
+
+		@SuppressWarnings("unchecked") T des = (T) in.readObject();
 		in.close();
+		assertNotNull(des);
 		return des;
 	}
 }

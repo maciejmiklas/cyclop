@@ -2,6 +2,9 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
+import org.cyclop.validation.BeanValidator;
+
+import javax.validation.Valid;
 
 /**
  * Cql keyword
@@ -12,6 +15,7 @@ import net.jcip.annotations.Immutable;
 public final class CqlTable extends CqlPart implements DisplaySupport {
 
 	/** can be null */
+	@Valid
 	public final CqlKeySpace keySpace;
 
 	public CqlTable(String keySpace, String table) {
@@ -22,8 +26,8 @@ public final class CqlTable extends CqlPart implements DisplaySupport {
 		} else {
 			this.keySpace = new CqlKeySpace(keySpace);
 		}
+		BeanValidator.create(this).validate();
 	}
-
 
 	@Override
 	public int hashCode() {

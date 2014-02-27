@@ -5,19 +5,21 @@
 <body>
 <wicket:panel>
 	<div wicket:id="historyContainer" class="cq-historyContainer">
-		<div wicket:id="historyPager"></div>
+		<wicket:container wicket:id="historyPager"></wicket:container>
 		<table class="table table-striped table-bordered table-hover">
 			<thead>
 			<tr>
-				<td>Executed on</td>
-				<td>Query</td>
+				<th>Executed on</th>
+				<th>Query</th>
 			</tr>
 			</thead>
 
 			<tbody>
 			<tr wicket:id="historyRow">
-				<td wicket:id="executedOn"></td>
-				<td wicket:id="query"></td>
+				<td wicket:id="executedOn" style="white-space:nowrap; width:1%"></td>
+				<td><a href="#" wicket:id="queryLink" title="Query Link"><span
+						class="glyphicon glyphicon-new-window"></span></a>&nbsp;&nbsp;<span wicket:id="query"></span>
+				</td>
 			</tr>
 			</tbody>
 		</table>

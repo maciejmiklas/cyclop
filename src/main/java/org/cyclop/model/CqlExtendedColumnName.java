@@ -1,8 +1,9 @@
 package org.cyclop.model;
 
-import com.datastax.driver.core.DataType;
 import net.jcip.annotations.Immutable;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
@@ -13,9 +14,10 @@ import java.util.Objects;
 @Immutable
 public class CqlExtendedColumnName extends CqlColumnName {
 
+	@NotNull @Valid
 	public final CqlColumnType columnType;
 
-	public CqlExtendedColumnName(CqlColumnType columnType, DataType dataType, String columnName) {
+	public CqlExtendedColumnName(CqlColumnType columnType, CqlDataType dataType, String columnName) {
 		super(dataType, columnName);
 		this.columnType = columnType;
 	}

@@ -2,7 +2,9 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
+import org.cyclop.validation.BeanValidator;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @XmlJavaTypeAdapter(value = UserIdentifier.Adapter.class)
 public final class UserIdentifier implements Serializable {
 
+	@NotNull
 	public final UUID id;
 
 	public UserIdentifier() {
@@ -22,9 +25,7 @@ public final class UserIdentifier implements Serializable {
 
 	public UserIdentifier(UUID id) {
 		this.id = id;
-		if (id == null) {
-			throw new IllegalArgumentException();
-		}
+		BeanValidator.create(this).validate();
 	}
 
 	@Override

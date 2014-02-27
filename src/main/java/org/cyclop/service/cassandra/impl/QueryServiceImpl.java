@@ -12,6 +12,7 @@ import org.apache.commons.lang.StringUtils;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
+import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
@@ -218,7 +219,8 @@ class QueryServiceImpl implements QueryService {
 				columnType = CqlColumnType.REGULAR;
 				LOG.debug("Column type not found for: {} - using regular", columnNameText);
 			}
-			CqlExtendedColumnName columnName = new CqlExtendedColumnName(columnType, dataType, columnNameText);
+			CqlExtendedColumnName columnName = new CqlExtendedColumnName(columnType, CqlDataType.create(dataType),
+					columnNameText);
 			if (columnType == CqlColumnType.PARTITION_KEY) {
 				partitionKey = CqlPartitionKey.fromColumn(columnName);
 			}
@@ -289,7 +291,7 @@ class QueryServiceImpl implements QueryService {
 				continue;
 			}
 			// TODO DataType is hardcoded to text
-			cqlColumnNames.add(new CqlColumnName(DataType.text(), name));
+			cqlColumnNames.add(new CqlColumnName(CqlDataType.create(DataType.text()), name));
 		}
 
 		loadPartitionKeyNames(table, cqlColumnNames);

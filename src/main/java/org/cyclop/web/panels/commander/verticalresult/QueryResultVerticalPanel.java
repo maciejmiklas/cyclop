@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlColumnType;
+import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
@@ -125,7 +126,6 @@ public class QueryResultVerticalPanel extends Panel {
 				columnListRow.add(columnValueList);
 			}
 		};
-		columnList.setRenderBodyOnly(true);
 		resultTable.add(columnList);
 	}
 
@@ -284,7 +284,7 @@ public class QueryResultVerticalPanel extends Panel {
 			this.result = result;
 			ImmutableList.Builder<CqlExtendedColumnName> allColumnsBuild = ImmutableList.builder();
 			List<CqlExtendedColumnName> allColumns = allColumnsBuild.addAll(result.commonColumns)
-					.add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, DataType.text(), "-"))
+					.add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, CqlDataType.create(DataType.text()), "-"))
 					.addAll(result.dynamicColumns).build();
 			setObject(allColumns);
 		}

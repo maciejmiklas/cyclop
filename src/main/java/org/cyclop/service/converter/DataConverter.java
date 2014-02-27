@@ -1,6 +1,9 @@
 package org.cyclop.service.converter;
 
 import org.cyclop.common.AppConfig;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +16,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+// TODO test
+
 /** @author Maciej Miklas */
 @Named
 public class DataConverter {
+
+	private final ThreadLocal<SimpleDateFormat> dateFomrat;
+
+	private final DateTimeFormatter timeFormatter;
+
 	public final static String EMPTY_COL_VALUE = "";
 
 	private final static Logger LOG = LoggerFactory.getLogger(DataConverter.class);
@@ -26,7 +36,14 @@ public class DataConverter {
 	private AppConfig appConfig;
 
 	protected DataConverter() {
+		dateFomrat = new ThreadLocal<SimpleDateFormat>() {
+			@Override
+			protected SimpleDateFormat initialValue() {
+				return new SimpleDateFormat(DATE_PATTERN);
+			}
+		};
 
+		timeFormatter = DateTimeFormat.forPattern(DATE_PATTERN);
 	}
 
 	public String trimColumnContent(String content, boolean embeddedColumn) {
@@ -69,8 +86,10 @@ public class DataConverter {
 			converted = val.toString();
 
 		} else if (val instanceof Date) {
-			SimpleDateFormat formatter = new SimpleDateFormat(DATE_PATTERN);
-			converted = formatter.format(val);
+			converted = dateFomrat.get().format(val);
+
+		} else if (val instanceof DateTime) {
+			converted = timeFormatter.print((DateTime) val);
 
 		} else if (val instanceof BigInteger) {
 			converted = val.toString();

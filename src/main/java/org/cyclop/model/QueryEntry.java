@@ -2,15 +2,19 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
+import org.cyclop.validation.BeanValidator;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.Serializable;
 
 /**
  * Unique by query, sorted by date
@@ -19,10 +23,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @Immutable
 @XmlJavaTypeAdapter(QueryEntry.Adapter.class)
-public final class QueryEntry implements Comparable<QueryEntry> {
+public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
+	@NotNull @Valid
 	public final CqlQuery query;
 
+	@NotNull
 	public final DateTime executedOnUtc;
 
 	public QueryEntry(CqlQuery query) {
@@ -32,6 +38,7 @@ public final class QueryEntry implements Comparable<QueryEntry> {
 	public QueryEntry(CqlQuery query, DateTime executedOnUtc) {
 		this.query = query;
 		this.executedOnUtc = executedOnUtc;
+		BeanValidator.create(this).validate();
 	}
 
 	@Override
@@ -59,7 +66,8 @@ public final class QueryEntry implements Comparable<QueryEntry> {
 	public int compareTo(QueryEntry o) {
 		int compRes = o.executedOnUtc.compareTo(executedOnUtc);
 
-		// make sure that entries with the same date are not removed if query is different
+		// make sure that entries with the same date are not removed if query is
+		// different
 		if (compRes == 0) {
 			compRes = query.compareTo(o.query);
 		}
