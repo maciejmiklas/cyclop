@@ -1,27 +1,26 @@
 package org.cyclop.model;
 
 import net.jcip.annotations.Immutable;
+import org.cyclop.validation.BeanValidator;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
 /** @author Maciej Miklas */
 @Immutable
 public final class ContextCqlCompletion implements Serializable {
+	@NotNull @Valid
 	public final CqlQueryName queryName;
 
+	@NotNull @Valid
 	public final CqlCompletion cqlCompletion;
 
 	public ContextCqlCompletion(CqlQueryName queryName, CqlCompletion cqlCompletion) {
-		if (queryName == null) {
-			throw new IllegalArgumentException("Null queryName set");
-		}
-
-		if (cqlCompletion == null) {
-			throw new IllegalArgumentException("Null cqlCompletion set");
-		}
 		this.queryName = queryName;
 		this.cqlCompletion = cqlCompletion;
+		BeanValidator.create(this).validate();
 	}
 
 	@Override

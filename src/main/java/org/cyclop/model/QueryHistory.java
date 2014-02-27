@@ -7,6 +7,8 @@ import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.cyclop.common.AppConfig;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,11 +30,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @ThreadSafe
 @XmlJavaTypeAdapter(QueryHistory.Adapter.class)
-public class QueryHistory implements Serializable {
+public final class QueryHistory implements Serializable {
 
+	@NotNull @Valid
 	private final CircularFifoQueue<QueryEntry> history;
 
-	// TODO serialize and test if null
 	private final Lock lock = new ReentrantLock();
 
 	public QueryHistory() {
@@ -53,8 +55,7 @@ public class QueryHistory implements Serializable {
 		return new HistoryIterator(lock, history);
 	}
 
-	// TODO test list
-	public ImmutableList<QueryEntry> asList() {
+	public ImmutableList<QueryEntry> copyAsList() {
 		lock.lock();
 		try (HistoryIterator iter = iterator()) {
 			return ImmutableList.copyOf(iter);
@@ -84,7 +85,7 @@ public class QueryHistory implements Serializable {
 
 	// TODO on add actualize favorites date
 	/*
-	 * history.add(entry); if (favourites.contains(entry)) {
+     * history.add(entry); if (favourites.contains(entry)) {
      * favourites.remove(entry); favourites.add(entry); }
      */
 	public void add(QueryEntry entry) {

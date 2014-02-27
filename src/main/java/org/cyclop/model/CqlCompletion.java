@@ -2,7 +2,10 @@ package org.cyclop.model;
 
 import com.google.common.collect.ImmutableSortedSet;
 import net.jcip.annotations.Immutable;
+import org.cyclop.validation.BeanValidator;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
@@ -14,23 +17,18 @@ public final class CqlCompletion implements Serializable {
 	private final static String[] VALUE_PREF = {"'", "(", ",", ":"};
 
 	/** used during typing, contains all possible combinations that will be suggested when pressing TAB */
+	@NotNull @Valid
 	public final ImmutableSortedSet<? extends CqlPart> fullCompletion;
 
 	/** used for hint window */
+	@NotNull @Valid
 	public final ImmutableSortedSet<? extends CqlPart> minCompletion;
 
 	private CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion,
 						  ImmutableSortedSet<? extends CqlPart> minCompletion) {
-		if (minCompletion == null) {
-			throw new IllegalArgumentException("Null minCompletion");
-		}
-
-		if (fullCompletion == null) {
-			throw new IllegalArgumentException("Null fullCompletion");
-		}
-
 		this.fullCompletion = fullCompletion;
 		this.minCompletion = minCompletion;
+		BeanValidator.create(this).validate();
 	}
 
 	private CqlCompletion() {

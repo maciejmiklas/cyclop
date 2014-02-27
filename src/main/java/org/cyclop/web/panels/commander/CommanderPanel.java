@@ -68,7 +68,7 @@ public class CommanderPanel extends Panel {
 		QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
 		UserPreferences preferences = userManager.readPreferences();
-		boolean completionEnabled = preferences.getShowCqlCompletionHint();
+		boolean completionEnabled = preferences.isShowCqlCompletionHint();
 		cqlCompletionHintPanel.setVisible(completionEnabled);
 		initButtons(queryEditorPanel, queryResultVerticalPanel, completionEnabled);
 

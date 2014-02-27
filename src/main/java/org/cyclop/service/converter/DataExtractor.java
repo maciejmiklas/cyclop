@@ -5,6 +5,7 @@ import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.cyclop.model.CqlColumnValue;
+import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlPartitionKeyValue;
@@ -13,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /** @author Maciej Miklas */
@@ -23,23 +23,21 @@ public class DataExtractor {
 
 	public ImmutableList<CqlColumnValue> extractCollection(Row row, CqlExtendedColumnName column) {
 		String partLc = column.partLc;
-		DataType dataType = column.dataType;
-		if (dataType.getName() != DataType.Name.SET && dataType.getName() != DataType.Name.LIST) {
+		CqlDataType dataType = column.dataType;
+		if (dataType.name != DataType.Name.SET && dataType.name != DataType.Name.LIST) {
 			throw new IllegalArgumentException("Only Collection type is supported");
 		}
 
-		List<DataType> argTypes = dataType.getTypeArguments();
-		if (argTypes == null || argTypes.isEmpty()) {
+		if (dataType.keyClass == null) {
 			return ImmutableList.of();
 		}
 
-		Class<?> collectionClass = argTypes.get(0).asJavaClass();
-		Collection<?> objCont = dataType.getName() == DataType.Name.SET ? row.getSet(partLc, collectionClass) : row
-				.getList(partLc, collectionClass);
+		Collection<?> objCont = dataType.name == DataType.Name.SET ? row.getSet(partLc, dataType.keyClass) : row
+				.getList(partLc, dataType.keyClass);
 
 		ImmutableList.Builder<CqlColumnValue> builder = ImmutableList.builder();
 		for (Object o : objCont) {
-			CqlColumnValue dob = new CqlColumnValue(collectionClass, o, column);
+			CqlColumnValue dob = new CqlColumnValue(dataType.keyClass, o, column);
 			builder.add(dob);
 
 		}
@@ -49,24 +47,21 @@ public class DataExtractor {
 
 	public ImmutableMap<CqlColumnValue, CqlColumnValue> extractMap(Row row, CqlExtendedColumnName column) {
 		String partLc = column.partLc;
-		DataType dataType = column.dataType;
-		if (dataType.getName() != DataType.Name.MAP) {
+		CqlDataType dataType = column.dataType;
+		if (dataType.name != DataType.Name.MAP) {
 			throw new IllegalArgumentException("Only Map type is supported");
 		}
 
-		List<DataType> argTypes = dataType.getTypeArguments();
-		if (argTypes.size() != 2) {
+		if (dataType.keyClass == null || dataType.valueClass == null) {
 			return ImmutableMap.of();
 		}
 
-		Class<?> keyClass = argTypes.get(0).asJavaClass();
-		Class<?> valueClass = argTypes.get(1).asJavaClass();
-		Map<?, ?> unconverted = row.getMap(partLc, keyClass, valueClass);
+		Map<?, ?> unconverted = row.getMap(partLc, dataType.keyClass, dataType.valueClass);
 
 		ImmutableMap.Builder<CqlColumnValue, CqlColumnValue> builder = ImmutableMap.builder();
 		for (Map.Entry<?, ?> entry : unconverted.entrySet()) {
-			CqlColumnValue dk = new CqlColumnValue(keyClass, entry.getKey(), column);
-			CqlColumnValue dv = new CqlColumnValue(valueClass, entry.getValue(), column);
+			CqlColumnValue dk = new CqlColumnValue(dataType.keyClass, entry.getKey(), column);
+			CqlColumnValue dv = new CqlColumnValue(dataType.valueClass, entry.getValue(), column);
 			builder.put(dk, dv);
 		}
 
@@ -82,45 +77,46 @@ public class DataExtractor {
 
 	public CqlColumnValue extractSingleValue(Row row, CqlExtendedColumnName column) {
 		String partLc = column.partLc;
-		DataType dataType = column.dataType;
+		CqlDataType dataType = column.dataType;
 		if (dataType.isCollection()) {
 			throw new IllegalArgumentException("Collection type is not supported");
 		}
 
 		Object extracted = null;
-		if (isUUID(dataType)) {
+		if (dataType.isUUID()) {
 			extracted = row.getUUID(partLc);
 
-		} else if (isString(dataType)) {
+		} else if (dataType.isString()) {
 			extracted = row.getString(partLc);
 
-		} else if (isLong(dataType)) {
+		} else if (dataType.isLong()) {
 			extracted = row.getLong(partLc);
 
-		} else if (dataType.equals(DataType.cfloat())) {
+		} else if (dataType.name == DataType.cfloat().getName()) {
 			extracted = row.getFloat(partLc);
 
-		} else if (dataType.equals(DataType.cint())) {
+		} else if (dataType.name == DataType.cint().getName()) {
 			extracted = row.getInt(partLc);
 
-		} else if (dataType.equals(DataType.cboolean())) {
+		} else if (dataType.name == DataType.cboolean().getName()) {
 			extracted = row.getBool(partLc);
 
-		} else if (dataType.equals(DataType.decimal())) {
+		} else if (dataType.name == DataType.decimal().getName()) {
 			extracted = row.getDecimal(partLc);
 
-		} else if (dataType.equals(DataType.cdouble())) {
+		} else if (dataType.name == DataType.cdouble().getName()) {
 			extracted = row.getDouble(partLc);
 
-		} else if (dataType.equals(DataType.varint())) {
+		} else if (dataType.name == DataType.varint().getName()) {
 			extracted = row.getVarint(partLc);
 
-		} else if (dataType.equals(DataType.timestamp())) {
+		} else if (dataType.name == DataType.timestamp().getName()) {
 			extracted = row.getDate(partLc);
 
-		} else if (dataType.equals(DataType.inet())) {
+		} else if (dataType.name == DataType.inet().getName()) {
 			extracted = row.getInet(partLc);
 		} else {
+			extracted = "?? " + column.part + " ??";
 			LOG.warn("Type: " + dataType + " not supported by data converter");
 		}
 
@@ -133,16 +129,4 @@ public class DataExtractor {
 		return cqlColumnValue;
 	}
 
-	private boolean isUUID(DataType dataType) {
-		return dataType.equals(DataType.uuid()) || dataType.equals(DataType.timeuuid());
-	}
-
-	private boolean isLong(DataType dataType) {
-		return dataType.equals(DataType.bigint()) || dataType.equals(DataType.counter());
-	}
-
-	private boolean isString(DataType dataType) {
-		return dataType.equals(DataType.ascii()) || dataType.equals(DataType.text()) ||
-				dataType.equals(DataType.varchar());
-	}
 }

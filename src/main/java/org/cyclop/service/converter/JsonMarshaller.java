@@ -11,6 +11,7 @@ import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.cyclop.model.exception.ServiceException;
 
 import javax.inject.Named;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
@@ -57,7 +58,7 @@ public class JsonMarshaller {
 		return unmarshalObj;
 	}
 
-	public String marshal(Object obj) {
+	public String marshal(@Valid Object obj) {
 		if (obj == null) {
 			return null;
 		}

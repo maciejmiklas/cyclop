@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
+import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
@@ -29,8 +30,9 @@ class QueryServiceFallbackImpl extends QueryServiceImpl {
 
 	private ImmutableSet<String> findPartitionKeyNamesLc(CqlTable table) {
 
-		ResultSet result = executeSilent("select key_aliases FROM system.schema_columnfamilies where " +
-				"columnfamily_name='" + table.part + "' allow filtering");
+		ResultSet result = executeSilent(
+				"select key_aliases FROM system.schema_columnfamilies where " + "columnfamily_name='" + table.part +
+						"' allow filtering");
 		if (result == null) {
 			LOG.warn("Cannot find partition key info");
 			return ImmutableSet.of();
@@ -61,7 +63,7 @@ class QueryServiceFallbackImpl extends QueryServiceImpl {
 		}
 		ImmutableSet<String> partitionKeys = findPartitionKeyNamesLc(table);
 		for (String partitionKey : partitionKeys) {
-			cqlColumnNames.add(new CqlColumnName(DataType.text(), partitionKey));
+			cqlColumnNames.add(new CqlColumnName(CqlDataType.create(DataType.text()), partitionKey));
 		}
 	}
 

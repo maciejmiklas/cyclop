@@ -305,12 +305,6 @@ public class TestCompletionService extends AbstractTestCase {
 	}
 
 	@Test
-	public void testFindCompletion_CreateKeyspace_StartWithSpace() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, " "));
-		vh.verifyIsEmpty(completion);
-	}
-
-	@Test
 	public void testFindCompletion_Delete_AfterDelete() {
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete "));
 

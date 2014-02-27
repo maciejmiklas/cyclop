@@ -17,12 +17,12 @@ public final class UserPreferences implements Serializable {
 
 	// TODO break annotations
 	@XmlElement(name = "e_hi") @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
-	public boolean showCqlCompletionHint = true;
+	private boolean showCqlCompletionHint = true;
 
 	@XmlElement(name = "e_he") @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
-	public boolean showCqlHelp = true;
+	private boolean showCqlHelp = true;
 
-	public boolean getShowCqlCompletionHint() {
+	public boolean isShowCqlCompletionHint() {
 		return showCqlCompletionHint;
 	}
 
@@ -30,7 +30,7 @@ public final class UserPreferences implements Serializable {
 		this.showCqlCompletionHint = showCqlCompletionHint;
 	}
 
-	public boolean getShowCqlHelp() {
+	public boolean isShowCqlHelp() {
 		return showCqlHelp;
 	}
 
@@ -43,7 +43,6 @@ public final class UserPreferences implements Serializable {
 		return Objects.toStringHelper(this).add("showCqlCompletionHint", showCqlCompletionHint)
 				.add("showCqlHelp", showCqlHelp).toString();
 	}
-
 
 	@Override
 	public int hashCode() {

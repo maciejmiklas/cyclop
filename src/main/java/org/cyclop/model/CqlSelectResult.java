@@ -4,37 +4,44 @@ import com.datastax.driver.core.Row;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import net.jcip.annotations.Immutable;
+import org.cyclop.common.SerializationUtil;
+import org.cyclop.validation.BeanValidator;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 
 /** @author Maciej Miklas */
 @Immutable
-public final class CqlSelectResult {
+public final class CqlSelectResult implements Serializable {
 
 	/** List of columns that can be found in every row returned by the query */
+	@NotNull @Valid
 	public final ImmutableList<CqlExtendedColumnName> commonColumns;
 
 	/** List of columns that can be found is particular rows */
+	@NotNull @Valid
 	public final ImmutableList<CqlExtendedColumnName> dynamicColumns;
 
-	public final ImmutableList<Row> rows;
+	@NotNull @Valid
+	public final transient ImmutableList<Row> rows;
 
 	/** could be null, it not found in result, or in case of error while reading meta data info */
-	public final CqlPartitionKey partitionKey;
+	public final transient CqlPartitionKey partitionKey;
 
 	public CqlSelectResult() {
 		this.commonColumns = ImmutableList.of();
 		this.dynamicColumns = ImmutableList.of();
 		this.rows = ImmutableList.of();
 		this.partitionKey = null;
+		BeanValidator.create(this).validate();
 	}
 
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		in.defaultReadObject();
 		SerializationUtil.setFiled(this, "rows", ImmutableList.of());
-		SerializationUtil.setFiled(this, "commonColumns", ImmutableList.of());
-		SerializationUtil.setFiled(this, "dynamicColumns", ImmutableList.of());
 	}
 
 	public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns,

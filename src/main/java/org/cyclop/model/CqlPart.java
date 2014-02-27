@@ -2,6 +2,7 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
@@ -10,14 +11,13 @@ import java.io.Serializable;
 @SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
 public class CqlPart implements Comparable<CqlPart>, Serializable, DisplaySupport {
 
+	@NotEmpty
 	public final String partLc;
 
+	@NotEmpty
 	public final String part;
 
 	public CqlPart(String part) {
-		if (part == null || part.isEmpty()) {
-			throw new IllegalArgumentException("Empty cqlPart");
-		}
 		this.part = part.replaceAll("\\p{Cc}", "");
 		this.partLc = this.part.trim().toLowerCase();
 	}

@@ -6,6 +6,8 @@ import net.jcip.annotations.NotThreadSafe;
 import net.jcip.annotations.ThreadSafe;
 import org.cyclop.common.AppConfig;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -27,12 +29,12 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @ThreadSafe
 @XmlJavaTypeAdapter(QueryFavourites.Adapter.class)
-public class QueryFavourites implements Serializable {
+public final class QueryFavourites implements Serializable {
 
+	@NotNull @Valid
 	private final Set<QueryEntry> favourites;
 
-	// TODO serialize and test if null
-	private final transient Lock lock = new ReentrantLock();
+	private final Lock lock = new ReentrantLock();
 
 	public QueryFavourites() {
 		favourites = new HashSet<>(AppConfig.get().favourites.entriesLimit);
@@ -88,8 +90,8 @@ public class QueryFavourites implements Serializable {
 	}
 
 	/**
-	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing elements
-	 *         can be always replaced - update change date
+	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing
+	 *         elements can be always replaced - update change date
 	 */
 	public boolean addWithSizeCheck(QueryEntry entry) {
 		lock.lock();

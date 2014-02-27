@@ -2,7 +2,7 @@ package org.cyclop.common;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
-import org.cyclop.model.exception.ServiceException;
+import org.cyclop.validation.BeanValidator;
 import org.cyclop.validation.SimpleDate;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,14 +10,11 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.util.Set;
 
 /** @author Maciej Miklas */
 @Named
@@ -51,9 +48,6 @@ public class AppConfig implements Serializable {
 	public final Cookie cookie;
 
 	@Inject
-	private Validator validator;
-
-	@Inject
 	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie,
 					 History history, Favourites favourites, FileStore fileStore) {
 		this.cassandra = cassandra;
@@ -81,11 +75,7 @@ public class AppConfig implements Serializable {
 	@PostConstruct @edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 	void init() {
 		instance = this;
-		Set<ConstraintViolation<AppConfig>> validateRes = validator.validate(instance);
-		if (!validateRes.isEmpty()) {
-			throw new ServiceException(
-					"Application configuration file (cyclop.properties) contains errors: " + validateRes);
-		}
+		BeanValidator.create(this).validate();
 	}
 
 	@Override

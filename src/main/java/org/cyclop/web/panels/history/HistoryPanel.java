@@ -5,18 +5,22 @@ import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
+import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.web.common.AjaxReloadSupport;
 import org.cyclop.web.common.ImmutableListModel;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
+import org.cyclop.web.pages.main.MainPage;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -30,6 +34,9 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	@Inject
 	private HistoryService historyService;
+
+	@Inject
+	private DataConverter converter;
 
 	private PageableListView<QueryEntry> historyTable;
 
@@ -56,7 +63,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 			@Override
 			protected void respond(final AjaxRequestTarget target) {
 				// TODO !!
-				ImmutableList<QueryEntry> historyList = createHist().asList();// historyService.read().asList();
+				ImmutableList<QueryEntry> historyList = createHist().copyAsList();// historyService.read().asList();
 				model.setObject(historyList);
 
 				resetHistoryTable();
@@ -97,11 +104,8 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 			protected void populateItem(ListItem<QueryEntry> item) {
 				QueryEntry entry = item.getModel().getObject();
 
-				Label executedOn = new Label("executedOn", entry.executedOnUtc);
-				item.add(executedOn);
-
-				Label query = new Label("query", entry.query.part);
-				item.add(query);
+				populateExecutedOn(item, entry);
+				populateQuery(item, entry);
 			}
 		};
 		historyContainer.add(historyTable);
@@ -109,6 +113,21 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 		historyContainer.add(pager);
 
 		return model;
+	}
+
+	private void populateQuery(ListItem<QueryEntry> item, QueryEntry entry) {
+		PageParameters queryLinkParams = new PageParameters();
+		queryLinkParams.add("cql", entry.query.part);
+		BookmarkablePageLink<Void> link = new BookmarkablePageLink<>("queryLink", MainPage.class, queryLinkParams);
+		item.add(link);
+
+		item.add(new Label("query", entry.query.part));
+	}
+
+	private void populateExecutedOn(ListItem<QueryEntry> item, QueryEntry entry) {
+		String dateStr = converter.convert(entry.executedOnUtc);
+		Label executedOn = new Label("executedOn", dateStr);
+		item.add(executedOn);
 	}
 
 	@Override

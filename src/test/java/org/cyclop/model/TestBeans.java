@@ -1,16 +1,19 @@
 package org.cyclop.model;
 
 import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.DataType.Name;
 import com.google.common.testing.EqualsTester;
 import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.completion.CompletionService;
 import org.cyclop.test.AbstractTestCase;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import java.io.NotSerializableException;
+import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -18,43 +21,204 @@ public class TestBeans extends AbstractTestCase {
 	@Inject
 	private QueryService qs;
 
-	@Test(expected = NotSerializableException.class)
-	public void testCqlSelectResult_Serialize() throws Exception {
+	@Inject
+	private CompletionService cs;
+
+	@Test
+	public void testSerialize_CqlDataType() throws Exception {
+		CqlDataType obj = new CqlDataType(Name.ASCII, String.class, List.class, false);
+		execSerializeEquals(obj, CqlDataType.class);
+	}
+
+	@Test
+	public void testSerialize_CqlColumnValue() throws Exception {
+		CqlColumnValue obj = new CqlColumnValue(Long.class, new Long(11),
+				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol"));
+		execSerializeEquals(obj, CqlColumnValue.class);
+	}
+
+	@Test
+	public void testSerialize_CqlExtendedColumnName() throws Exception {
+		CqlExtendedColumnName obj = new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.TEXT, "testcol");
+		execSerializeEquals(obj, CqlExtendedColumnName.class);
+	}
+
+	@Test
+	public void testSerialize_CqlIndex() throws Exception {
+		CqlIndex obj = new CqlIndex("idx1");
+		execSerializeEquals(obj, CqlIndex.class);
+	}
+
+	@Test
+	public void testSerialize_UserIdentifier() throws Exception {
+		UserIdentifier obj = new UserIdentifier(UUID.randomUUID());
+		execSerializeEquals(obj, UserIdentifier.class);
+	}
+
+	@Test
+	public void testSerialize_UserPreferences() throws Exception {
+		UserPreferences obj = new UserPreferences();
+		obj.setShowCqlCompletionHint(true);
+		execSerializeEquals(obj, UserPreferences.class);
+	}
+
+	@Test
+	public void testSerialize_QueryFavourites() throws Exception {
+		QueryFavourites obj = new QueryFavourites();
+		obj.addWithSizeCheck(
+				new QueryEntry(new CqlQuery(CqlQueryName.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now()));
+		obj.addWithSizeCheck(
+				new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
+						DateTime.now()));
+		obj.addWithSizeCheck(
+				new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), DateTime.now()));
+
+		byte[] serialized = serialize(obj);
+
+		QueryFavourites des = deserialize(serialized, QueryFavourites.class);
+		assertTrue(des.copyAsSortedSet().containsAll(obj.copyAsSortedSet()));
+
+		// check whether lock has been deserialized
+		des.addWithSizeCheck(
+				new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), DateTime.now()));
+	}
+
+	@Test
+	public void testSerialize_QueryHistory() throws Exception {
+		QueryHistory obj = new QueryHistory();
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now()));
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
+				DateTime.now()));
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), DateTime.now()));
+
+		byte[] serialized = serialize(obj);
+
+		QueryHistory des = deserialize(serialized, QueryHistory.class);
+		assertTrue(des.copyAsList().containsAll(obj.copyAsList()));
+
+	}
+
+
+	@Test
+	public void testSerialize_QueryEntry() throws Exception {
+		QueryEntry obj = new QueryEntry(new CqlQuery(CqlQueryName.ALTER_TABLE, "alter cqldemo.mybooks ...."),
+				DateTime.now());
+		execSerializeEquals(obj, QueryEntry.class);
+	}
+
+	@Test
+	public void testSerialize_CqlTable() throws Exception {
+		{
+			CqlTable obj = new CqlTable("mytable");
+			execSerializeEquals(obj, CqlTable.class);
+		}
+
+		{
+			CqlTable obj = new CqlTable("space", "mytable");
+			execSerializeEquals(obj, CqlTable.class);
+		}
+
+	}
+
+	@Test
+	public void testSerialize_CqlKeySpace() throws Exception {
+		CqlKeySpace obj = new CqlKeySpace("testSpace");
+		execSerializeEquals(obj, CqlKeySpace.class);
+	}
+
+	@Test
+	public void testSerialize_CqlKeyword() throws Exception {
+		CqlKeyword obj = CqlKeyword.Def.ALLOW_FILTERING.value;
+		execSerializeEquals(obj, CqlKeyword.class);
+	}
+
+	@Test
+	public void testSerialize_CqlKeywordValue() throws Exception {
+		CqlKeywordValue obj = CqlKeywordValue.Def.NETWORK_TOPOLOGY_STRATEGY.value;
+		execSerializeEquals(obj, CqlKeywordValue.class);
+	}
+
+	@Test
+	public void testSerialize_CqlNotSupported() throws Exception {
+		CqlNotSupported obj = new CqlNotSupported("abx.....");
+		execSerializeEquals(obj, CqlNotSupported.class);
+	}
+
+	@Test
+	public void testSerialize_CqlPart() throws Exception {
+		CqlPart obj = new CqlPart("abx.....");
+		execSerializeEquals(obj, CqlPart.class);
+	}
+
+	@Test
+	public void testSerialize_ContextCqlCompletion() throws Exception {
+		ContextCqlCompletion obj = cs.findInitialCompletion();
+		execSerializeEquals(obj, ContextCqlCompletion.class);
+	}
+
+	@Test
+	public void testSerialize_CqlQuery() throws Exception {
+		CqlQuery obj = new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks");
+		execSerializeEquals(obj, CqlQuery.class);
+	}
+
+	@Test
+	public void testSerialize_CqlSelectResult() throws Exception {
 		CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"));
 		assertNotNull(res);
 		assertNotNull(res.rows);
 		assertNotNull(res.commonColumns);
 		assertNotNull(res.dynamicColumns);
 		assertTrue(res.rows.size() > 0);
+		assertTrue(res.commonColumns.size() > 0);
 
-		serialize(res);
+		byte[] serBytes = serialize(res);
+		CqlSelectResult des = deserialize(serBytes, CqlSelectResult.class);
+		assertNotNull(des);
+		assertNotNull(des.rows);
+		assertNotNull(des.commonColumns);
+		assertNotNull(des.dynamicColumns);
+		assertEquals(0, des.rows.size());
+		assertTrue(des.commonColumns.size() > 0);
+		assertTrue(res.commonColumns.containsAll(des.commonColumns));
 	}
 
-	@Test(expected = NotSerializableException.class)
-	public void testCqlColumnName_Serialize() throws Exception {
-		serialize(new CqlColumnName(DataType.text(), "myColumn"));
+	@Test
+	public void testSerialize_CqlColumnName() throws Exception {
+		CqlColumnName obj = new CqlColumnName(CqlDataType.TEXT, "myColumn");
+		execSerializeEquals(obj, CqlColumnName.class);
 	}
 
-	@Test(expected = NotSerializableException.class)
-	public void testCqlPartitionKey_Serialize() throws Exception {
-		serialize(new CqlPartitionKey(DataType.text(), "myColumn"));
+	@Test
+	public void testSerialize_CqlPartitionKey() throws Exception {
+		CqlPartitionKey obj = new CqlPartitionKey(CqlDataType.create(DataType.cfloat()), "myColumn");
+		execSerializeEquals(obj, CqlPartitionKey.class);
+	}
+
+	@Test
+	public void testSerialize_CqlPartitionKeyValue() throws Exception {
+		CqlPartitionKeyValue obj = new CqlPartitionKeyValue(Long.class, new Long(11),
+				new CqlPartitionKey(CqlDataType.TEXT, "abc"));
+		execSerializeEquals(obj, CqlPartitionKeyValue.class);
 	}
 
 	@Test
 	public void testEquals() {
 		EqualsTester et = new EqualsTester();
 
-		et.addEqualityGroup(new CqlColumnName(DataType.text(), "mybooks"));
-		et.addEqualityGroup(new CqlColumnName(DataType.text(), "cqldemo"));
-		et.addEqualityGroup(new CqlColumnName(DataType.text(), "cqldemo.mybooks"));
-		et.addEqualityGroup(new CqlColumnName(DataType.ascii(), "cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlColumnName(CqlDataType.TEXT, "mybooks"));
+		et.addEqualityGroup(new CqlColumnName(CqlDataType.TEXT, "cqldemo"));
+		et.addEqualityGroup(new CqlColumnName(CqlDataType.TEXT, "cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlColumnName(CqlDataType.create(DataType.ascii()), "cqldemo.mybooks"));
 
 		et.addEqualityGroup();
-		et.addEqualityGroup(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, DataType.text(), "cqldemo.mybooks"));
 		et.addEqualityGroup(
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, DataType.text(), "cqldemo.mybooks"));
+				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.TEXT, "cqldemo.mybooks"));
 		et.addEqualityGroup(
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, DataType.ascii(), "cqldemo.mybooks"));
+				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "cqldemo.mybooks"));
+		et.addEqualityGroup(
+				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.ascii()),
+						"cqldemo.mybooks"));
 
 		et.addEqualityGroup(new CqlIndex("cqldemo"));
 		et.addEqualityGroup(new CqlIndex("cqldemo.mybooks"));
@@ -73,10 +237,10 @@ public class TestBeans extends AbstractTestCase {
 		et.addEqualityGroup(new CqlPart("cqldemo"));
 		et.addEqualityGroup(new CqlPart("cqldemo.mybooks"));
 
-		et.addEqualityGroup(new CqlPartitionKey(DataType.text(), "cqldemo.mybooks"), CqlPartitionKey.fromColumn(
-				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, DataType.text(), "cqldemo.mybooks")));
-		et.addEqualityGroup(new CqlPartitionKey(DataType.text(), "cqldemo"));
-		et.addEqualityGroup(new CqlPartitionKey(DataType.counter(), "cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.TEXT, "cqldemo.mybooks"), CqlPartitionKey.fromColumn(
+				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.TEXT, "cqldemo.mybooks")));
+		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.TEXT, "cqldemo"));
+		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.create(DataType.counter()), "cqldemo.mybooks"));
 
 		et.addEqualityGroup(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks"));
 		et.addEqualityGroup(new CqlQuery(CqlQueryName.SELECT, "cqldemo.mybooks"));
@@ -109,6 +273,19 @@ public class TestBeans extends AbstractTestCase {
 		userPreferences.setShowCqlCompletionHint(true);
 		userPreferences.setShowCqlHelp(true);
 		et.addEqualityGroup(new UserPreferences(), userPreferences);
+
+		et.addEqualityGroup(new CqlColumnValue(Long.class, new Long(11),
+				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol")),
+				new CqlColumnValue(Long.class, 11L,
+						new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol")));
 		et.testEquals();
+	}
+
+	private <T> T execSerializeEquals(T obj, Class<T> clazz) throws Exception {
+		byte[] serialized = serialize(obj);
+
+		T ddt = deserialize(serialized, clazz);
+		assertEquals(obj, ddt);
+		return ddt;
 	}
 }

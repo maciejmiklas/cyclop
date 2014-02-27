@@ -1,7 +1,7 @@
 package org.cyclop.model;
 
-import com.datastax.driver.core.DataType;
 import net.jcip.annotations.Immutable;
+import org.cyclop.validation.BeanValidator;
 
 import java.util.Objects;
 
@@ -9,8 +9,9 @@ import java.util.Objects;
 @Immutable
 public final class CqlPartitionKey extends CqlExtendedColumnName {
 
-	protected CqlPartitionKey(DataType dataType, String columnName) {
+	protected CqlPartitionKey(CqlDataType dataType, String columnName) {
 		super(CqlColumnType.PARTITION_KEY, dataType, columnName);
+		BeanValidator.create(this).validate();
 	}
 
 	public static CqlPartitionKey fromColumn(CqlExtendedColumnName col) {

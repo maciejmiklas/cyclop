@@ -6,24 +6,24 @@
 	<div wicket:id="resultTable">
 		<table class="table table-striped table-bordered table-hover">
 			<thead>
-			<div wicket:id="rowNamesListPager"></div>
+			<wicket:container wicket:id="rowNamesListPager"></wicket:container>
 			<tr>
 				<td></td>
-				<td wicket:id="rowNamesList">
-					<div wicket:id="rowName"></div>
-				</td>
+				<th wicket:id="rowNamesList">
+					<wicket:container wicket:id="rowName"></wicket:container>
+				</th>
 			</tr>
 			</thead>
 
 			<tbody>
-			<div wicket:id="columnList">
+			<wicket:container wicket:id="columnList">
 				<tr wicket:id="columnListRow">
-					<td wicket:id="columnName"></td>
+					<th wicket:id="columnName"></th>
 					<td class="cq-columnValue" wicket:id="columnValueList">
-						<div wicket:id="columnValue"></div>
+						<wicket:container wicket:id="columnValue"></wicket:container>
 					</td>
 				</tr>
-			</div>
+			</wicket:container>
 			</tbody>
 		</table>
 	</div>
