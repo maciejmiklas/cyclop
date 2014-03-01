@@ -31,7 +31,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @XmlJavaTypeAdapter(QueryFavourites.Adapter.class)
 public final class QueryFavourites implements Serializable {
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	private final Set<QueryEntry> favourites;
 
 	private final Lock lock = new ReentrantLock();
@@ -90,8 +91,8 @@ public final class QueryFavourites implements Serializable {
 	}
 
 	/**
-	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing
-	 *         elements can be always replaced - update change date
+	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing elements
+	 *         can be always replaced - update change date
 	 */
 	public boolean addWithSizeCheck(QueryEntry entry) {
 		lock.lock();

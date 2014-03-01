@@ -10,10 +10,12 @@ import java.util.Objects;
 /** @author Maciej Miklas */
 @Immutable
 public final class ContextCqlCompletion implements Serializable {
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlQueryName queryName;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlCompletion cqlCompletion;
 
 	public ContextCqlCompletion(CqlQueryName queryName, CqlCompletion cqlCompletion) {

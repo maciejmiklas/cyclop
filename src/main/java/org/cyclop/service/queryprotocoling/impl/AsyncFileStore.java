@@ -43,7 +43,8 @@ class AsyncFileStore<H> {
 	 * on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block time is
 	 * reduced
 	 */
-	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS) @PreDestroy
+	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
+	@PreDestroy
 	public synchronized void flush() {
 		while (true) {
 			UserIdentifier identifier;

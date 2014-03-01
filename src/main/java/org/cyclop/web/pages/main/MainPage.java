@@ -9,9 +9,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.web.pages.authenticate.AuthenticatePage;
 import org.cyclop.web.pages.parent.ParentPage;
-import org.cyclop.web.panels.queryeditor.QueryEditorPanel;
 import org.cyclop.web.panels.favourites.FavouritesPanel;
 import org.cyclop.web.panels.history.HistoryPanel;
+import org.cyclop.web.panels.queryeditor.QueryEditorPanel;
 
 /** @author Maciej Miklas */
 @AuthorizeInstantiation(Roles.ADMIN)

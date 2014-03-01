@@ -24,7 +24,8 @@ import java.io.Serializable;
 @XmlJavaTypeAdapter(QueryEntry.Adapter.class)
 public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlQuery query;
 
 	@NotNull

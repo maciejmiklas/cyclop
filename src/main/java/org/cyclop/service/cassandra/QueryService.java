@@ -13,17 +13,23 @@ import javax.validation.constraints.NotNull;
 /** @author Maciej Miklas */
 public interface QueryService {
 
-	@NotNull ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull CqlTable table);
+	@NotNull
+	ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull CqlTable table);
 
 	boolean checkTableExists(CqlTable table);
 
-	@NotNull ImmutableSortedSet<CqlColumnName> findAllColumnNames();
+	@NotNull
+	ImmutableSortedSet<CqlColumnName> findAllColumnNames();
 
-	@NotNull ImmutableSortedSet<CqlIndex> findAllIndexes(@NotNull CqlKeySpace keySpace);
+	@NotNull
+	ImmutableSortedSet<CqlIndex> findAllIndexes(@NotNull CqlKeySpace keySpace);
 
-	@NotNull ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
+	@NotNull
+	ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
 
-	@NotNull CqlSelectResult execute(@NotNull CqlQuery query);
+	@NotNull
+	CqlSelectResult execute(@NotNull CqlQuery query);
 
-	@NotNull ImmutableSortedSet<CqlTable> findTableNames(@NotNull CqlKeySpace keySpace);
+	@NotNull
+	ImmutableSortedSet<CqlTable> findTableNames(@NotNull CqlKeySpace keySpace);
 }

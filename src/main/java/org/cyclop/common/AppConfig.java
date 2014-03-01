@@ -20,31 +20,40 @@ import java.io.UnsupportedEncodingException;
 @Named
 public class AppConfig implements Serializable {
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	private static AppConfig instance = null;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final Cassandra cassandra;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlEditor cqlEditor;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final Common common;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final History history;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final FileStore fileStore;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final Favourites favourites;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlExport cqlExport;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final Cookie cookie;
 
 	@Inject
@@ -72,7 +81,8 @@ public class AppConfig implements Serializable {
 		return replaced;
 	}
 
-	@PostConstruct @edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
+	@PostConstruct
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD")
 	void init() {
 		instance = this;
 		BeanValidator.create(this).validate();

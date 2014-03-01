@@ -16,10 +16,12 @@ import java.io.Serializable;
 public final class UserPreferences implements Serializable {
 
 	// TODO break annotations
-	@XmlElement(name = "e_hi") @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
+	@XmlElement(name = "e_hi")
+	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean showCqlCompletionHint = true;
 
-	@XmlElement(name = "e_he") @XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
+	@XmlElement(name = "e_he")
+	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean showCqlHelp = true;
 
 	public boolean isShowCqlCompletionHint() {

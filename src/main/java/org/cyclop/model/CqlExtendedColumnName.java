@@ -14,7 +14,8 @@ import java.util.Objects;
 @Immutable
 public class CqlExtendedColumnName extends CqlColumnName {
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlColumnType columnType;
 
 	public CqlExtendedColumnName(CqlColumnType columnType, CqlDataType dataType, String columnName) {

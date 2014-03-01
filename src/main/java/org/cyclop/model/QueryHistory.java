@@ -32,7 +32,8 @@ import java.util.concurrent.locks.ReentrantLock;
 @XmlJavaTypeAdapter(QueryHistory.Adapter.class)
 public final class QueryHistory implements Serializable {
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	private final CircularFifoQueue<QueryEntry> history;
 
 	private final Lock lock = new ReentrantLock();
@@ -85,7 +86,7 @@ public final class QueryHistory implements Serializable {
 
 	// TODO on add actualize favorites date
 	/*
-     * history.add(entry); if (favourites.contains(entry)) {
+	 * history.add(entry); if (favourites.contains(entry)) {
      * favourites.remove(entry); favourites.add(entry); }
      */
 	public void add(QueryEntry entry) {

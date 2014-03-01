@@ -11,7 +11,8 @@ import java.util.Objects;
 @Immutable
 public class CqlColumnName extends CqlPart {
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public CqlDataType dataType;
 
 	public CqlColumnName(CqlDataType dataType, String columnName) {

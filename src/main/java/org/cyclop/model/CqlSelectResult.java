@@ -17,14 +17,17 @@ import java.io.Serializable;
 public final class CqlSelectResult implements Serializable {
 
 	/** List of columns that can be found in every row returned by the query */
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final ImmutableList<CqlExtendedColumnName> commonColumns;
 
 	/** List of columns that can be found is particular rows */
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final ImmutableList<CqlExtendedColumnName> dynamicColumns;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final transient ImmutableList<Row> rows;
 
 	/** could be null, it not found in result, or in case of error while reading meta data info */

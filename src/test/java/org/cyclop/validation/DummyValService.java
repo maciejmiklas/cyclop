@@ -8,11 +8,14 @@ import javax.validation.constraints.NotNull;
 
 public interface DummyValService {
 
-	@NotNull String singleStringParam(@NotNull String a);
+	@NotNull
+	String singleStringParam(@NotNull String a);
 
-	@NotNull CqlKeySpace mixedParams(@Valid CqlKeySpace space, @Valid CqlTable table, @NotNull String param);
+	@NotNull
+	CqlKeySpace mixedParams(@Valid CqlKeySpace space, @Valid CqlTable table, @NotNull String param);
 
-	@Valid CqlKeySpace returnOptional(CqlKeySpace space);
+	@Valid
+	CqlKeySpace returnOptional(CqlKeySpace space);
 
 	CqlKeySpace novalidation(CqlKeySpace space);
 

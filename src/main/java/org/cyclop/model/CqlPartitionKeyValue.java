@@ -10,7 +10,8 @@ import javax.validation.constraints.NotNull;
 @Immutable
 public final class CqlPartitionKeyValue extends CqlColumnValue {
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlPartitionKey cqlPartitionKey;
 
 	public CqlPartitionKeyValue(Class<?> valueClass, Object value, CqlPartitionKey cqlPartitionKey) {

@@ -91,7 +91,8 @@ public abstract class AbstractTestCase {
 	public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {
 		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(serialized));
 
-		@SuppressWarnings("unchecked") T des = (T) in.readObject();
+		@SuppressWarnings("unchecked")
+		T des = (T) in.readObject();
 		in.close();
 		assertNotNull(des);
 		return des;

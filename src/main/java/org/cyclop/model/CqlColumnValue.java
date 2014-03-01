@@ -17,7 +17,8 @@ public class CqlColumnValue implements Serializable {
 	@NotNull
 	public final Object value;
 
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final CqlExtendedColumnName columnName;
 
 	public CqlColumnValue(Class<?> valueClass, Object value, CqlExtendedColumnName columnName) {

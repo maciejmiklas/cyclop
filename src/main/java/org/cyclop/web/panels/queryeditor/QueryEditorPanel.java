@@ -83,7 +83,8 @@ public class QueryEditorPanel extends Panel {
 		StringValue editorContentVal = params.get("cql");
 		String editorContent = editorContentVal == null ? null : editorContentVal.toString();
 
-		org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel = new org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel("queryEditorPanel", editorContent);
+		org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel = new org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel(
+				"queryEditorPanel", editorContent);
 		add(queryEditorPanel);
 		queryEditorPanel.setOutputMarkupPlaceholderTag(true);
 		queryEditorPanel.setOutputMarkupId(true);

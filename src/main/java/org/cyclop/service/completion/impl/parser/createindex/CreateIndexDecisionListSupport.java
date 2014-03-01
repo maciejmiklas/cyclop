@@ -18,7 +18,8 @@ class CreateIndexDecisionListSupport implements DecisionListSupport {
 
 	private CqlPartCompletion[][] decisionList;
 
-	@Inject CreateCompletion createCompletion;
+	@Inject
+	CreateCompletion createCompletion;
 
 	@PostConstruct
 	public void init() {

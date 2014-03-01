@@ -16,11 +16,13 @@ public final class CqlCompletion implements Serializable {
 	private final static String[] VALUE_PREF = {"'", "(", ",", ":"};
 
 	/** used during typing, contains all possible combinations that will be suggested when pressing TAB */
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final ImmutableSortedSet<? extends CqlPart> fullCompletion;
 
 	/** used for hint window */
-	@NotNull @Valid
+	@NotNull
+	@Valid
 	public final ImmutableSortedSet<? extends CqlPart> minCompletion;
 
 	private CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion,
