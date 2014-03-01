@@ -13,6 +13,7 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
+import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /** @author Maciej Miklas */
-public class TestCassandraService extends AbstractTestCase {
+public class TestQueryService extends AbstractTestCase {
 
 	@Inject
 	private QueryService qs;
@@ -39,6 +40,11 @@ public class TestCassandraService extends AbstractTestCase {
 		vh.verifyIsEmpty(col);
 	}
 
+	@Test(expected = BeanValidationException.class)
+	public void testCassandraSession_NullData() {
+		cassandraSession.authenticate(null, null);
+	}
+
 	@Test
 	public void testFindColumnNames_KeyspaceWithTable() {
 		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("cqldemo", "MyBooks"));
@@ -47,6 +53,11 @@ public class TestCassandraService extends AbstractTestCase {
 		vh.verifyContainsMybooksColumns(resp, true);
 		vh.verifyContainsSystemColumns(resp, false);
 		vh.verifyContainsCompoundTestColumns(resp, false);
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindTableNames_SpaceCqlDemo_Violation() {
+		qs.findTableNames(new CqlKeySpace(" "));
 	}
 
 	@Test
@@ -87,6 +98,16 @@ public class TestCassandraService extends AbstractTestCase {
 		vh.verifyIsEmpty(index);
 	}
 
+	@Test(expected = BeanValidationException.class)
+	public void testFindColumnNames_ViolationEmpty() {
+		qs.execute(new CqlQuery(CqlQueryName.USE, " "));
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindColumnNames_ViolationNull() {
+		qs.execute(null);
+	}
+
 	@Test
 	public void testFindColumnNames_KeyspaceInSession() {
 		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
@@ -110,7 +131,7 @@ public class TestCassandraService extends AbstractTestCase {
 	}
 
 	@Test
-	public void testExecuteCompoundPkNoDynamicColumns() {
+	public void testExecute_CompoundPkNoDynamicColumns() {
 		qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
 		CqlSelectResult res = qs
 				.execute(new CqlQuery(CqlQueryName.SELECT, "select * from CompoundTest where deesc='TEST_SET_1'"));
@@ -138,8 +159,13 @@ public class TestCassandraService extends AbstractTestCase {
 		}
 	}
 
+	@Test(expected = BeanValidationException.class)
+	public void testExecute_Violation() {
+		qs.execute(new CqlQuery(null, null));
+	}
+
 	@Test
-	public void testExecuteSimplePkWithDynamicColumn() {
+	public void testExecute_SimplePkWithDynamicColumn() {
 		qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
 		CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from MyBooks where pages=2212"));
 		assertEquals(100, res.rows.size());

@@ -18,8 +18,13 @@ public class CqlPart implements Comparable<CqlPart>, Serializable, DisplaySuppor
 	public final String part;
 
 	public CqlPart(String part) {
-		this.part = part.replaceAll("\\p{Cc}", "");
-		this.partLc = this.part.trim().toLowerCase();
+		if (part != null) {
+			this.part = part.replaceAll("\\p{Cc}", "");
+			this.partLc = this.part.trim().toLowerCase();
+		} else {
+			this.part = null;
+			this.partLc = null;
+		}
 	}
 
 	@Override

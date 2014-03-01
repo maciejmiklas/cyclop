@@ -2,7 +2,6 @@ package org.cyclop.model;
 
 import com.google.common.collect.ImmutableSortedSet;
 import net.jcip.annotations.Immutable;
-import org.cyclop.validation.BeanValidator;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -28,7 +27,6 @@ public final class CqlCompletion implements Serializable {
 						  ImmutableSortedSet<? extends CqlPart> minCompletion) {
 		this.fullCompletion = fullCompletion;
 		this.minCompletion = minCompletion;
-		BeanValidator.create(this).validate();
 	}
 
 	private CqlCompletion() {

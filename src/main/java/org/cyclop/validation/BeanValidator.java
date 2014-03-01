@@ -1,16 +1,17 @@
 package org.cyclop.validation;
 
+import com.google.common.collect.ImmutableSet;
 import org.cyclop.model.exception.BeanValidationException;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Path;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.metadata.ConstraintDescriptor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
-// TODO add tests
 
 /** @author Maciej Miklas */
 public final class BeanValidator {
@@ -52,7 +53,8 @@ public final class BeanValidator {
 		for (Map.Entry<String, Object> obj : objMap.entrySet()) {
 			Object value = obj.getValue();
 			if (value.toString().equals(NULL_MARKER)) {
-				value = null;
+				violations.put(obj.getKey(), createViolationForNullRoot());
+				continue;
 			}
 			Set<ConstraintViolation<Object>> violation = VALIDATOR.validate(value);
 			if (!violation.isEmpty()) {
@@ -63,5 +65,62 @@ public final class BeanValidator {
 		if (!violations.isEmpty()) {
 			throw new BeanValidationException(violations);
 		}
+	}
+
+	private Set<ConstraintViolation<Object>> createViolationForNullRoot() {
+		ConstraintViolation<Object> viol = new NullRootViolation();
+		Set<ConstraintViolation<Object>> violSet = ImmutableSet.of(viol);
+		return violSet;
+	}
+
+	public final class NullRootViolation implements ConstraintViolation<Object> {
+		private String message = "NULL_ROOT_OBJECT";
+
+		@Override
+		public ConstraintDescriptor<?> getConstraintDescriptor() {
+			return null;
+		}
+
+		@Override
+		public Object getInvalidValue() {
+			return null;
+		}
+
+		@Override
+		public Object getLeafBean() {
+			return null;
+		}
+
+		@Override
+		public String getMessage() {
+			return message;
+		}
+
+		@Override
+		public String getMessageTemplate() {
+			return message;
+		}
+
+		@Override
+		public Path getPropertyPath() {
+			return null;
+		}
+
+		@Override
+		public Object getRootBean() {
+			return null;
+		}
+
+		@Override
+		public Class<Object> getRootBeanClass() {
+			return null;
+		}
+
+		@Override
+		public String toString() {
+			return message;
+		}
+
+
 	}
 }

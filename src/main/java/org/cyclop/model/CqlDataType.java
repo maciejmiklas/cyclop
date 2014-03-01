@@ -2,7 +2,6 @@ package org.cyclop.model;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.DataType.Name;
-import org.cyclop.validation.BeanValidator;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -29,7 +28,6 @@ public final class CqlDataType implements Serializable {
 		this.keyClass = keyClass;
 		this.valueClass = valueClass;
 		this.collection = collection;
-		BeanValidator.create(this).validate();
 	}
 
 	public boolean isCollection() {

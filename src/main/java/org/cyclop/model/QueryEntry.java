@@ -2,7 +2,6 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
-import org.cyclop.validation.BeanValidator;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -38,7 +37,6 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 	public QueryEntry(CqlQuery query, DateTime executedOnUtc) {
 		this.query = query;
 		this.executedOnUtc = executedOnUtc;
-		BeanValidator.create(this).validate();
 	}
 
 	@Override

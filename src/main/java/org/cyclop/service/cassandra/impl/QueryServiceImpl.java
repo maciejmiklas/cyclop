@@ -24,6 +24,7 @@ import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,7 @@ import static org.cyclop.common.QueryHelper.extractSpace;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
+@EnableValidation
 @Named
 @CassandraVersionQualifier(CassandraVersion.VER_2_x)
 class QueryServiceImpl implements QueryService {
@@ -53,7 +55,6 @@ class QueryServiceImpl implements QueryService {
 
 	@Override
 	public boolean checkTableExists(CqlTable table) {
-
 		if (table == null) {
 			return false;
 		}
@@ -143,7 +144,6 @@ class QueryServiceImpl implements QueryService {
 
 	@Override
 	public CqlSelectResult execute(CqlQuery query) {
-
 		LOG.debug("Executing CQL: {}", query);
 
 		if (query.type == CqlQueryName.USE) {

@@ -8,6 +8,7 @@ import net.jcip.annotations.NotThreadSafe;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.exception.ServiceException;
 import org.cyclop.service.cassandra.CassandraSession;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,12 +16,14 @@ import org.springframework.context.annotation.ScopedProxyMode;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-class CassandraSessionImpl implements CassandraSession {
+@EnableValidation
+public class CassandraSessionImpl implements CassandraSession {
 	private final static Logger LOG = LoggerFactory.getLogger(CassandraSessionImpl.class);
 
 	private Session session;
@@ -30,11 +33,7 @@ class CassandraSessionImpl implements CassandraSession {
 
 	private CassandraVersion cassandraVersion;
 
-	public void authenticate(String userName, String password) {
-		if (userName == null || password == null) {
-			throw new IllegalArgumentException("provide user name and password");
-		}
-
+	public void authenticate(@NotNull String userName, @NotNull String password) {
 		Cluster.Builder builder = Cluster.builder();
 		for (String host : appConfig.cassandra.hosts.split("[,]")) {
 			builder.addContactPoint(host);

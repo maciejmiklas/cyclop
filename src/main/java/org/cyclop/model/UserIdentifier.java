@@ -2,7 +2,6 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
-import org.cyclop.validation.BeanValidator;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
@@ -25,7 +24,6 @@ public final class UserIdentifier implements Serializable {
 
 	public UserIdentifier(UUID id) {
 		this.id = id;
-		BeanValidator.create(this).validate();
 	}
 
 	@Override

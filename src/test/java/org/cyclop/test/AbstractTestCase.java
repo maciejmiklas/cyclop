@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
@@ -27,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {TestProps.TEST_CONTEXT})
 @WebAppConfiguration
+@EnableWebMvc
 public abstract class AbstractTestCase {
 
 	private static final EmbeddedCassandra CASSANDRA = new EmbeddedCassandra();

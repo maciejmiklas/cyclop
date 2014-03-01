@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 import net.jcip.annotations.Immutable;
-import org.cyclop.validation.BeanValidator;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -20,7 +19,6 @@ public final class ContextCqlCompletion implements Serializable {
 	public ContextCqlCompletion(CqlQueryName queryName, CqlCompletion cqlCompletion) {
 		this.queryName = queryName;
 		this.cqlCompletion = cqlCompletion;
-		BeanValidator.create(this).validate();
 	}
 
 	@Override

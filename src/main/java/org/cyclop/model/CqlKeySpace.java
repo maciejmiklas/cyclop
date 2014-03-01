@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 import net.jcip.annotations.Immutable;
-import org.cyclop.validation.BeanValidator;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -9,7 +8,6 @@ public final class CqlKeySpace extends CqlPart {
 
 	public CqlKeySpace(String part) {
 		super(part);
-		BeanValidator.create(this).validate();
 	}
 
 	@Override

@@ -8,20 +8,22 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
 
+import javax.validation.constraints.NotNull;
+
 /** @author Maciej Miklas */
 public interface QueryService {
 
-	ImmutableSortedSet<CqlColumnName> findColumnNames(CqlTable table);
+	@NotNull ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull CqlTable table);
 
 	boolean checkTableExists(CqlTable table);
 
-	ImmutableSortedSet<CqlColumnName> findAllColumnNames();
+	@NotNull ImmutableSortedSet<CqlColumnName> findAllColumnNames();
 
-	ImmutableSortedSet<CqlIndex> findAllIndexes(CqlKeySpace keySpace);
+	@NotNull ImmutableSortedSet<CqlIndex> findAllIndexes(@NotNull CqlKeySpace keySpace);
 
-	ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
+	@NotNull ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
 
-	CqlSelectResult execute(CqlQuery query);
+	@NotNull CqlSelectResult execute(@NotNull CqlQuery query);
 
-	ImmutableSortedSet<CqlTable> findTableNames(CqlKeySpace keySpace);
+	@NotNull ImmutableSortedSet<CqlTable> findTableNames(@NotNull CqlKeySpace keySpace);
 }

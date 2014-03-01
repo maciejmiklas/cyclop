@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 import net.jcip.annotations.Immutable;
-import org.cyclop.validation.BeanValidator;
 
 import java.util.Objects;
 
@@ -11,7 +10,6 @@ public final class CqlPartitionKey extends CqlExtendedColumnName {
 
 	protected CqlPartitionKey(CqlDataType dataType, String columnName) {
 		super(CqlColumnType.PARTITION_KEY, dataType, columnName);
-		BeanValidator.create(this).validate();
 	}
 
 	public static CqlPartitionKey fromColumn(CqlExtendedColumnName col) {

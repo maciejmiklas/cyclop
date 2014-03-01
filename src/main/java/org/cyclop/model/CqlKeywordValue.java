@@ -1,7 +1,6 @@
 package org.cyclop.model;
 
 import net.jcip.annotations.Immutable;
-import org.cyclop.validation.BeanValidator;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -26,7 +25,6 @@ public final class CqlKeywordValue extends CqlKeyword {
 
 	protected CqlKeywordValue(String val) {
 		super(val);
-		BeanValidator.create(this).validate();
 	}
 
 	@Override

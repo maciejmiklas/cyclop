@@ -5,7 +5,6 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import net.jcip.annotations.Immutable;
 import org.cyclop.common.SerializationUtil;
-import org.cyclop.validation.BeanValidator;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -36,7 +35,6 @@ public final class CqlSelectResult implements Serializable {
 		this.dynamicColumns = ImmutableList.of();
 		this.rows = ImmutableList.of();
 		this.partitionKey = null;
-		BeanValidator.create(this).validate();
 	}
 
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
