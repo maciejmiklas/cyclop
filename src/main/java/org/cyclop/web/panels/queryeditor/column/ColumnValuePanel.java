@@ -1,4 +1,4 @@
-package org.cyclop.web.panels.commander.column;
+package org.cyclop.web.panels.queryeditor.column;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;

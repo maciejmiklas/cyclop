@@ -9,7 +9,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.web.pages.authenticate.AuthenticatePage;
 import org.cyclop.web.pages.parent.ParentPage;
-import org.cyclop.web.panels.commander.CommanderPanel;
+import org.cyclop.web.panels.queryeditor.QueryEditorPanel;
 import org.cyclop.web.panels.favourites.FavouritesPanel;
 import org.cyclop.web.panels.history.HistoryPanel;
 
@@ -44,7 +44,7 @@ public class MainPage extends ParentPage {
 	}
 
 	private void initQueryEditorTab(PageParameters params) {
-		CommanderPanel queryEditorPanel = new CommanderPanel("queryEditorPanel", params);
+		QueryEditorPanel queryEditorPanel = new QueryEditorPanel("queryEditorPanel", params);
 		add(queryEditorPanel);
 		tabSupport.registerSaticTab(".cq-tabQueryEditor");
 	}

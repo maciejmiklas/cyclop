@@ -1,4 +1,4 @@
-package org.cyclop.web.panels.commander.editor;
+package org.cyclop.web.panels.queryeditor.editor;
 
 import org.apache.wicket.Component;
 import org.cyclop.model.ContextCqlCompletion;

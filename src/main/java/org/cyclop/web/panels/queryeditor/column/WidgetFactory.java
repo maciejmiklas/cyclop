@@ -1,4 +1,4 @@
-package org.cyclop.web.panels.commander.column;
+package org.cyclop.web.panels.queryeditor.column;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;

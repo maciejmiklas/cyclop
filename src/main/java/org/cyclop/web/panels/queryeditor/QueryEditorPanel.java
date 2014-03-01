@@ -1,4 +1,4 @@
-package org.cyclop.web.panels.commander;
+package org.cyclop.web.panels.queryeditor;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -14,24 +14,21 @@ import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.converter.CsvQueryResultExporter;
 import org.cyclop.service.um.UserManager;
-import org.cyclop.web.panels.commander.buttons.ButtonListener;
-import org.cyclop.web.panels.commander.buttons.ButtonsPanel;
-import org.cyclop.web.panels.commander.completionhint.CompletionHintPanel;
-import org.cyclop.web.panels.commander.cqlhelp.CqlHelpPanel;
-import org.cyclop.web.panels.commander.editor.CompletionChangeListener;
-import org.cyclop.web.panels.commander.editor.QueryEditorPanel;
-import org.cyclop.web.panels.commander.export.QueryResultExport;
-import org.cyclop.web.panels.commander.verticalresult.QueryResultVerticalPanel;
+import org.cyclop.web.panels.queryeditor.buttons.ButtonListener;
+import org.cyclop.web.panels.queryeditor.buttons.ButtonsPanel;
+import org.cyclop.web.panels.queryeditor.completionhint.CompletionHintPanel;
+import org.cyclop.web.panels.queryeditor.cqlhelp.CqlHelpPanel;
+import org.cyclop.web.panels.queryeditor.editor.CompletionChangeListener;
+import org.cyclop.web.panels.queryeditor.export.QueryResultExport;
+import org.cyclop.web.panels.queryeditor.verticalresult.QueryResultVerticalPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-// TODO rename to QueryEditorPanel
-
 /** @author Maciej Miklas */
 @AuthorizeInstantiation(Roles.ADMIN)
-public class CommanderPanel extends Panel {
+public class QueryEditorPanel extends Panel {
 
 	private final CqlHelpPanel cqlHelpPanel;
 
@@ -39,7 +36,7 @@ public class CommanderPanel extends Panel {
 
 	private boolean queryRunning = false;
 
-	private final static Logger LOG = LoggerFactory.getLogger(CommanderPanel.class);
+	private final static Logger LOG = LoggerFactory.getLogger(QueryEditorPanel.class);
 
 	private CqlSelectResult lastQueryResult;
 
@@ -53,7 +50,7 @@ public class CommanderPanel extends Panel {
 	@Inject
 	private UserManager userManager;
 
-	public CommanderPanel(String id, PageParameters params) {
+	public QueryEditorPanel(String id, PageParameters params) {
 		super(id);
 		Injector.get().inject(this);
 		setRenderBodyOnly(true);
@@ -65,7 +62,7 @@ public class CommanderPanel extends Panel {
 		add(cqlCompletionHintPanel);
 
 		QueryResultVerticalPanel queryResultVerticalPanel = initQueryResultPanel();
-		QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
+		org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
 		UserPreferences preferences = userManager.readPreferences();
 		boolean completionEnabled = preferences.isShowCqlCompletionHint();
@@ -81,12 +78,12 @@ public class CommanderPanel extends Panel {
 		return queryResultVerticalPanel;
 	}
 
-	private QueryEditorPanel initQueryEditorPanel(PageParameters params) {
+	private org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel initQueryEditorPanel(PageParameters params) {
 
 		StringValue editorContentVal = params.get("cql");
 		String editorContent = editorContentVal == null ? null : editorContentVal.toString();
 
-		QueryEditorPanel queryEditorPanel = new QueryEditorPanel("queryEditorPanel", editorContent);
+		org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel = new org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel("queryEditorPanel", editorContent);
 		add(queryEditorPanel);
 		queryEditorPanel.setOutputMarkupPlaceholderTag(true);
 		queryEditorPanel.setOutputMarkupId(true);
@@ -96,7 +93,7 @@ public class CommanderPanel extends Panel {
 		return queryEditorPanel;
 	}
 
-	private ButtonsPanel initButtons(final QueryEditorPanel queryEditorPanel,
+	private ButtonsPanel initButtons(final org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel,
 									 final QueryResultVerticalPanel queryResultVerticalPanel,
 									 boolean completionEnabled) {
 		ButtonListener buttonListener = new ButtonListener() {

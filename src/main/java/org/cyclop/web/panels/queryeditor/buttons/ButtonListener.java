@@ -1,4 +1,4 @@
-package org.cyclop.web.panels.commander.buttons;
+package org.cyclop.web.panels.queryeditor.buttons;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 

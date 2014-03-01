@@ -1,4 +1,4 @@
-package org.cyclop.web.panels.commander.column;
+package org.cyclop.web.panels.queryeditor.column;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.wicket.Component;
