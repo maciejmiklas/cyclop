@@ -8,13 +8,14 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlSelectResult;
 import org.cyclop.model.CqlTable;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 /** @author Maciej Miklas */
 public interface QueryService {
 
 	@NotNull
-	ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull CqlTable table);
+	ImmutableSortedSet<CqlColumnName> findColumnNames(@Valid CqlTable table);
 
 	boolean checkTableExists(CqlTable table);
 
@@ -22,7 +23,7 @@ public interface QueryService {
 	ImmutableSortedSet<CqlColumnName> findAllColumnNames();
 
 	@NotNull
-	ImmutableSortedSet<CqlIndex> findAllIndexes(@NotNull CqlKeySpace keySpace);
+	ImmutableSortedSet<CqlIndex> findAllIndexes(@Valid CqlKeySpace keySpace);
 
 	@NotNull
 	ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
@@ -31,5 +32,5 @@ public interface QueryService {
 	CqlSelectResult execute(@NotNull CqlQuery query);
 
 	@NotNull
-	ImmutableSortedSet<CqlTable> findTableNames(@NotNull CqlKeySpace keySpace);
+	ImmutableSortedSet<CqlTable> findTableNames(@Valid CqlKeySpace keySpace);
 }

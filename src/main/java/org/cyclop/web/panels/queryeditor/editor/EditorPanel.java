@@ -28,7 +28,7 @@ import java.util.SortedSet;
 import static org.cyclop.web.common.ScriptsRef.SUGGEST;
 
 /** @author Maciej Miklas */
-public class QueryEditorPanel extends Panel {
+public class EditorPanel extends Panel {
 
 	private final String editorMarkupIdJq;
 
@@ -43,7 +43,7 @@ public class QueryEditorPanel extends Panel {
 
 	private TextArea<String> editor;
 
-	public QueryEditorPanel(String id, String editorContent) {
+	public EditorPanel(String id, String editorContent) {
 		super(id);
 		Injector.get().inject(this);
 

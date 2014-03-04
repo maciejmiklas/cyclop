@@ -5,6 +5,7 @@ import org.cyclop.model.QueryFavourites;
 import org.cyclop.service.queryprotocoling.FavouritesService;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.validation.annotation.Validated;
 
 import javax.inject.Named;
 
@@ -12,6 +13,7 @@ import javax.inject.Named;
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Validated
 class FavouritesServiceImpl extends AbstractQueryProtocolingService<QueryFavourites> implements FavouritesService {
 
 	@Override

@@ -7,6 +7,7 @@ import org.cyclop.model.CqlKeywordValue;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
@@ -30,6 +31,47 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Inject
 	private CompletionService cs;
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Position_Validation_EmptyQuery() {
+		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, " "), 1);
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Position_Validation_NullType() {
+		cs.findCompletion(new CqlQuery(null, "efqerfqef"), 1);
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Position_Validation_NullQuery() {
+		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, null), 1);
+	}
+
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Position_Validation_NullAll() {
+		cs.findCompletion(null, -1);
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Validation_EmptyQuery() {
+		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, " "));
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Validation_NullType() {
+		cs.findCompletion(new CqlQuery(null, "efqerfqef"));
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Validation_NullQuery() {
+		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, null));
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindCompletion_Validation_NullAll() {
+		cs.findCompletion(null);
+	}
 
 	@Test
 	public void testFindCompletion_CreateTable_Start() {

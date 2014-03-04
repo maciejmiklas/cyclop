@@ -169,7 +169,6 @@ public class QueryResultVerticalPanel extends Panel {
 
 	public CqlSelectResult executeQuery(CqlQuery query, AjaxRequestTarget target) {
 		target.add(this);
-
 		CqlSelectResult result = null;
 		try {
 			result = queryService.execute(query);

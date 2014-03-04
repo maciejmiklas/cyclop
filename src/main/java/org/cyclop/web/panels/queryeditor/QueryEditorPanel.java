@@ -62,7 +62,7 @@ public class QueryEditorPanel extends Panel {
 		add(cqlCompletionHintPanel);
 
 		QueryResultVerticalPanel queryResultVerticalPanel = initQueryResultPanel();
-		org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel = initQueryEditorPanel(params);
+		org.cyclop.web.panels.queryeditor.editor.EditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
 		UserPreferences preferences = userManager.readPreferences();
 		boolean completionEnabled = preferences.isShowCqlCompletionHint();
@@ -78,12 +78,12 @@ public class QueryEditorPanel extends Panel {
 		return queryResultVerticalPanel;
 	}
 
-	private org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel initQueryEditorPanel(PageParameters params) {
+	private org.cyclop.web.panels.queryeditor.editor.EditorPanel initQueryEditorPanel(PageParameters params) {
 
 		StringValue editorContentVal = params.get("cql");
 		String editorContent = editorContentVal == null ? null : editorContentVal.toString();
 
-		org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel = new org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel(
+		org.cyclop.web.panels.queryeditor.editor.EditorPanel queryEditorPanel = new org.cyclop.web.panels.queryeditor.editor.EditorPanel(
 				"queryEditorPanel", editorContent);
 		add(queryEditorPanel);
 		queryEditorPanel.setOutputMarkupPlaceholderTag(true);
@@ -94,7 +94,7 @@ public class QueryEditorPanel extends Panel {
 		return queryEditorPanel;
 	}
 
-	private ButtonsPanel initButtons(final org.cyclop.web.panels.queryeditor.editor.QueryEditorPanel queryEditorPanel,
+	private ButtonsPanel initButtons(final org.cyclop.web.panels.queryeditor.editor.EditorPanel queryEditorPanel,
 									 final QueryResultVerticalPanel queryResultVerticalPanel,
 									 boolean completionEnabled) {
 		ButtonListener buttonListener = new ButtonListener() {

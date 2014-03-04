@@ -16,8 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-// TODO test
-
 /** @author Maciej Miklas */
 @Named
 public class DataConverter {

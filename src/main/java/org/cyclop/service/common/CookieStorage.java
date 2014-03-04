@@ -6,16 +6,20 @@ import org.apache.wicket.request.http.WebRequest;
 import org.apache.wicket.request.http.WebResponse;
 import org.cyclop.common.AppConfig;
 import org.cyclop.service.converter.JsonMarshaller;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Cookie;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /** @author Maciej Miklas */
 @Named
+@EnableValidation
 public class CookieStorage {
 
 	@Inject
@@ -30,12 +34,14 @@ public class CookieStorage {
 		cyclop_prefs, cyclop_userid;
 	}
 
-	public void storeCookieAsJson(CookieName cookieName, Object obj) {
+	public void storeCookieAsJson(@NotNull CookieName cookieName, @NotNull Object obj) {
 		String objStr = marshaller.marshal(obj);
 		storeCookie(cookieName, objStr);
 	}
 
-	public <T> T readCookieAsJson(CookieName cookieName, Class<T> clazz) {
+	public
+	@Valid
+	<T> T readCookieAsJson(@NotNull CookieName cookieName, @NotNull Class<T> clazz) {
 		try {
 			Cookie cookie = readCookie(cookieName);
 			if (cookie == null) {
@@ -54,7 +60,7 @@ public class CookieStorage {
 		}
 	}
 
-	public void storeCookie(CookieName name, String value) {
+	public void storeCookie(@NotNull CookieName name, @NotNull String value) {
 		RequestCycle requestCycle = RequestCycle.get();
 		if (requestCycle == null) {
 			LOG.warn("RequestCycle is null - cannot read cookies");
@@ -66,7 +72,9 @@ public class CookieStorage {
 		response.addCookie(cookie);
 	}
 
-	public Cookie readCookie(CookieName name) {
+	public
+	@Valid
+	Cookie readCookie(@NotNull CookieName name) {
 		try {
 			RequestCycle requestCycle = RequestCycle.get();
 			if (requestCycle == null) {

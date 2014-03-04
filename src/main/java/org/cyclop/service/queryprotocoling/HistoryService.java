@@ -1,6 +1,9 @@
 package org.cyclop.service.queryprotocoling;
 
+import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * HTTP session scoped history service.
@@ -9,4 +12,6 @@ import org.cyclop.model.QueryHistory;
  */
 public interface HistoryService extends QueryProtocolingService<QueryHistory> {
 
+	// TODO validation test
+	void addAndStore(@NotNull QueryEntry entry);
 }

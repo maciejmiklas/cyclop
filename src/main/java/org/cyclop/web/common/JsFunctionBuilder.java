@@ -9,8 +9,7 @@ import static org.cyclop.web.common.JsUtils.escape;
 import static org.cyclop.web.common.JsUtils.escapeArray;
 import static org.cyclop.web.common.JsUtils.escapeStrArray;
 
-// TODO tests
-public class JsFunctionBuilder {
+public final class JsFunctionBuilder {
 
 	private final StringBuilder buf;
 
@@ -19,33 +18,51 @@ public class JsFunctionBuilder {
 	private boolean build = false;
 
 	public static JsFunctionBuilder function(String functionName) {
+		if (functionName == null) {
+			throw new IllegalArgumentException("Null functionName");
+		}
 		return new JsFunctionBuilder(functionName);
 	}
 
 	private JsFunctionBuilder(String functionName) {
+		if (functionName == null) {
+			throw new IllegalArgumentException("Null functionName");
+		}
 		buf = new StringBuilder(functionName);
 		buf.append("(");
 	}
 
 	public JsFunctionBuilder param(String param) {
+		if (param == null) {
+			throw new IllegalArgumentException("Null param");
+		}
 		sep();
 		buf.append(escape(param));
 		return this;
 	}
 
 	public JsFunctionBuilder array(Collection<? extends DisplaySupport> col) {
+		if (col == null) {
+			throw new IllegalArgumentException("Null col");
+		}
 		sep();
 		buf.append(escapeArray(col));
 		return this;
 	}
 
 	public JsFunctionBuilder arrayStr(Collection<String> col) {
+		if (col == null) {
+			throw new IllegalArgumentException("col");
+		}
 		sep();
 		buf.append(escapeStrArray(col));
 		return this;
 	}
 
 	public <T> JsFunctionBuilder array(Collection<T> col, ObjPrinter<T> printer) {
+		if (col == null || printer == null) {
+			throw new IllegalArgumentException("Null col or printer");
+		}
 		sep();
 		buf.append(escapeArray(col, printer));
 		return this;

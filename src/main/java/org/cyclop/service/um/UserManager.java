@@ -3,14 +3,18 @@ package org.cyclop.service.um;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.UserPreferences;
 
+import javax.validation.constraints.NotNull;
+
 /** @author Maciej Miklas */
 public interface UserManager {
 
-	void registerIdentifier(UserIdentifier id);
+	void registerIdentifier(@NotNull UserIdentifier id);
 
+	@NotNull
 	UserIdentifier readIdentifier();
 
-	void storePreferences(UserPreferences preferences);
+	void storePreferences(@NotNull UserPreferences preferences);
 
+	@NotNull
 	UserPreferences readPreferences();
 }

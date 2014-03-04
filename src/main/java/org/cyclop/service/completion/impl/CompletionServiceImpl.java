@@ -7,6 +7,7 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.service.completion.CompletionService;
 import org.cyclop.service.completion.impl.parser.CqlParser;
+import org.cyclop.validation.EnableValidation;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,6 +15,7 @@ import javax.inject.Named;
 /** @author Maciej Miklas */
 @Named
 @ThreadSafe
+@EnableValidation
 class CompletionServiceImpl implements CompletionService {
 
 	@Inject

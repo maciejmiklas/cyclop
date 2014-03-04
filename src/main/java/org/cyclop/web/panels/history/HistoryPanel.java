@@ -62,8 +62,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 			@Override
 			protected void respond(final AjaxRequestTarget target) {
-				// TODO !!
-				ImmutableList<QueryEntry> historyList = createHist().copyAsList();// historyService.read().asList();
+				ImmutableList<QueryEntry> historyList = historyService.read().copyAsList();
 				model.setObject(historyList);
 
 				resetHistoryTable();
@@ -90,7 +89,8 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 		QueryHistory qh = new QueryHistory();
 		for (int i = 0; i < 100; i++) {
 			qh.add(new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
-					a + "select myfil, " + UUID.randomUUID() + ", bsefef, afsf f,e from cqldemo.books where id=" + i)));
+					a + "select myfil, " + UUID.randomUUID() + ", bsefef, afsf f,e from cqldemo.books where id=" + i),
+					i, i * 3));
 		}
 		return qh;
 	}
@@ -105,6 +105,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 				QueryEntry entry = item.getModel().getObject();
 
 				populateExecutedOn(item, entry);
+				populateRuntime(item, entry);
 				populateQuery(item, entry);
 			}
 		};
@@ -127,6 +128,12 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 	private void populateExecutedOn(ListItem<QueryEntry> item, QueryEntry entry) {
 		String dateStr = converter.convert(entry.executedOnUtc);
 		Label executedOn = new Label("executedOn", dateStr);
+		item.add(executedOn);
+	}
+
+	private void populateRuntime(ListItem<QueryEntry> item, QueryEntry entry) {
+		String dateStr = Long.toString(entry.runTime);
+		Label executedOn = new Label("runtime", dateStr);
 		item.add(executedOn);
 	}
 

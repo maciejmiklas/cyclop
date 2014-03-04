@@ -9,19 +9,24 @@ import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlPartitionKeyValue;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Map;
 
 /** @author Maciej Miklas */
 @Named
+@EnableValidation
 public class DataExtractor {
 	private final static Logger LOG = LoggerFactory.getLogger(DataExtractor.class);
 
-	public ImmutableList<CqlColumnValue> extractCollection(Row row, CqlExtendedColumnName column) {
+	public
+	@NotNull
+	ImmutableList<CqlColumnValue> extractCollection(@NotNull Row row, @NotNull CqlExtendedColumnName column) {
 		String partLc = column.partLc;
 		CqlDataType dataType = column.dataType;
 		if (dataType.name != DataType.Name.SET && dataType.name != DataType.Name.LIST) {
@@ -45,7 +50,9 @@ public class DataExtractor {
 		return collection;
 	}
 
-	public ImmutableMap<CqlColumnValue, CqlColumnValue> extractMap(Row row, CqlExtendedColumnName column) {
+	public
+	@NotNull
+	ImmutableMap<CqlColumnValue, CqlColumnValue> extractMap(@NotNull Row row, @NotNull CqlExtendedColumnName column) {
 		String partLc = column.partLc;
 		CqlDataType dataType = column.dataType;
 		if (dataType.name != DataType.Name.MAP) {
@@ -69,13 +76,17 @@ public class DataExtractor {
 		return map;
 	}
 
-	public CqlPartitionKeyValue extractPartitionKey(Row row, CqlPartitionKey partitionKey) {
+	public
+	@NotNull
+	CqlPartitionKeyValue extractPartitionKey(@NotNull Row row, @NotNull CqlPartitionKey partitionKey) {
 		CqlColumnValue colSv = extractSingleValue(row, partitionKey);
 		CqlPartitionKeyValue key = new CqlPartitionKeyValue(colSv.valueClass, colSv.value, partitionKey);
 		return key;
 	}
 
-	public CqlColumnValue extractSingleValue(Row row, CqlExtendedColumnName column) {
+	public
+	@NotNull
+	CqlColumnValue extractSingleValue(@NotNull Row row, @NotNull CqlExtendedColumnName column) {
 		String partLc = column.partLc;
 		CqlDataType dataType = column.dataType;
 		if (dataType.isCollection()) {

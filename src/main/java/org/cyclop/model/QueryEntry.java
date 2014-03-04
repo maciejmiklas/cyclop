@@ -31,13 +31,21 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 	@NotNull
 	public final DateTime executedOnUtc;
 
-	public QueryEntry(CqlQuery query) {
-		this(query, new DateTime().toDateTime(DateTimeZone.UTC));
+	// TODO test
+	public final long runTime;
+
+	// TODO test
+	public final int resultsSize;
+
+	public QueryEntry(CqlQuery query, long runTime, int resultsSize) {
+		this(query, new DateTime().toDateTime(DateTimeZone.UTC), runTime, resultsSize);
 	}
 
-	public QueryEntry(CqlQuery query, DateTime executedOnUtc) {
+	public QueryEntry(CqlQuery query, DateTime executedOnUtc, long runTime, int resultsSize) {
 		this.query = query;
 		this.executedOnUtc = executedOnUtc;
+		this.runTime = runTime;
+		this.resultsSize = resultsSize;
 	}
 
 	@Override
@@ -80,9 +88,14 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
 		private DateTime executedOn;
 
+		public long runTime;
+
+		public int resultsSize;
+
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("query", query).add("executedOn", executedOn).toString();
+			return Objects.toStringHelper(this).add("query", query).add("executedOn", executedOn)
+					.add("runTime", runTime).add("resultsSize", resultsSize).toString();
 		}
 	}
 
@@ -95,7 +108,7 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 				return null;
 			}
 
-			QueryEntry entry = new QueryEntry(jaxb.query, jaxb.executedOn);
+			QueryEntry entry = new QueryEntry(jaxb.query, jaxb.executedOn, jaxb.runTime, jaxb.resultsSize);
 			return entry;
 		}
 

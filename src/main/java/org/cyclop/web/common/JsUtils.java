@@ -5,19 +5,20 @@ import org.cyclop.model.DisplaySupport;
 import java.util.Collection;
 import java.util.Iterator;
 
-// TODO add tests
-
 /** @author Maciej Miklas */
-public class JsUtils {
+public final class JsUtils {
 
 	public static String escape(String param) {
 		if (param == null) {
-			return null;
+			throw new IllegalArgumentException("Null param");
 		}
 		return "'" + param + "'";
 	}
 
 	public static <T extends DisplaySupport> String escapeArray(Collection<T> col) {
+		if (col == null) {
+			throw new IllegalArgumentException("Null param");
+		}
 		return escapeArray(col, new DisplayObjPrinter<T>());
 	}
 
@@ -26,8 +27,8 @@ public class JsUtils {
 	}
 
 	public static <T> String escapeArray(Collection<T> col, ObjPrinter<T> printer) {
-		if (col == null) {
-			return null;
+		if (col == null || printer == null) {
+			throw new IllegalArgumentException("Null param");
 		}
 
 		StringBuilder buf = new StringBuilder();

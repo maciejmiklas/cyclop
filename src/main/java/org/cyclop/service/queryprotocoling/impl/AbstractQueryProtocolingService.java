@@ -7,14 +7,17 @@ import org.cyclop.service.queryprotocoling.QueryProtocolingService;
 import org.cyclop.service.um.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 import java.util.concurrent.atomic.AtomicReference;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
 @Named
+@Validated
 abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingService<H> {
 
 	private final static Logger LOG = LoggerFactory.getLogger(AbstractQueryProtocolingService.class);
@@ -53,12 +56,9 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 		return identifier;
 	}
 
+	// TODO add validation test
 	@Override
-	public void store(H newHistory) {
-		if (newHistory == null) {
-			throw new IllegalArgumentException("History cannot be null");
-		}
-
+	public void store(@NotNull H newHistory) {
 		history.set(newHistory);
 		UserIdentifier user = getUser();
 
@@ -70,8 +70,11 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 		}
 	}
 
+	// TODO remove break line
 	@Override
-	public H read() {
+	public
+	@NotNull
+	H read() {
 		if (history.get() == null) {
 			synchronized (asyncFileStore) {
 				if (history.get() == null) {

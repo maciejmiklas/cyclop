@@ -191,3 +191,7 @@ ul.cq-cqlCollectionList {
 .cq-nav>li>a {
 	padding: 5px 10px !important;
 }
+
+.table th {
+	background-color: #1D1D18 !important;
+}

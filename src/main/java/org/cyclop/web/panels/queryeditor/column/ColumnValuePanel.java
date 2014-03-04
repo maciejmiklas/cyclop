@@ -1,12 +1,11 @@
 package org.cyclop.web.panels.queryeditor.column;
 
 import org.apache.wicket.AttributeModifier;
-import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -41,7 +40,7 @@ class ColumnValuePanel extends Panel {
 		infoDialog.setVisible(trimmed);
 		add(infoDialog);
 
-		MarkupContainer fullContentLink;
+		Component fullContentLink;
 		Label columnContent;
 		if (trimmed) {
 			fullContentLink = new AjaxFallbackLink<Object>("columnContentLink") {
@@ -58,7 +57,8 @@ class ColumnValuePanel extends Panel {
 
 				@Override
 				public String getObject() {
-					return converter.trimColumnTooltipContent(convertedValueNotNull);
+					String conv = converter.trimColumnTooltipContent(convertedValueNotNull);
+					return conv;
 				}
 
 				@Override
@@ -71,7 +71,7 @@ class ColumnValuePanel extends Panel {
 			}));
 
 		} else {
-			fullContentLink = new WebMarkupContainer("columnContentLink") {
+			fullContentLink = new Label("columnContentLink", "") {
 				@Override
 				protected void onComponentTag(ComponentTag tag) {
 					if ("a".equalsIgnoreCase(tag.getName())) {
@@ -83,9 +83,8 @@ class ColumnValuePanel extends Panel {
 			columnContent = new Label("columnContent", convertedValueNotNull);
 			fullContentLink.setRenderBodyOnly(true);
 		}
-		columnContent.setRenderBodyOnly(true);
 		add(fullContentLink);
-		fullContentLink.add(columnContent);
+		add(columnContent);
 	}
 
 	private String crateInfoDialogTitle(CqlPartitionKeyValue cqlPartitionKeyValue, CqlExtendedColumnName columnName) {

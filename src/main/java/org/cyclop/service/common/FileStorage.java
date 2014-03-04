@@ -5,12 +5,15 @@ import org.cyclop.common.AppConfig;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.exception.ServiceException;
 import org.cyclop.service.converter.JsonMarshaller;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -30,6 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /** @author Maciej Miklas */
 @Named
 @NotThreadSafe
+@EnableValidation
 public class FileStorage {
 	private final static Logger LOG = LoggerFactory.getLogger(FileStorage.class);
 
@@ -94,7 +98,7 @@ public class FileStorage {
 		return true;
 	}
 
-	public void store(UserIdentifier userId, Object entity) throws ServiceException {
+	public void store(@NotNull UserIdentifier userId, @NotNull Object entity) throws ServiceException {
 		Path histPath = getPath(userId, entity.getClass());
 		try (FileChannel channel = openForWrite(histPath)) {
 			String jsonText = jsonMarshaller.marshal(entity);
@@ -107,7 +111,9 @@ public class FileStorage {
 		}
 	}
 
-	public <T> T read(UserIdentifier userId, Class<T> clazz) throws ServiceException {
+	public
+	@Valid
+	<T> T read(@NotNull UserIdentifier userId, @NotNull Class<T> clazz) throws ServiceException {
 		Path histPath = getPath(userId, clazz);
 		try (FileChannel channel = openForRead(histPath)) {
 			if (channel == null) {

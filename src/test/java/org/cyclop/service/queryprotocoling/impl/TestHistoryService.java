@@ -77,7 +77,8 @@ public class TestHistoryService extends AbstractTestCase {
 
 		for (int i = 0; i < 600; i++) {
 			history.add(new QueryEntry(
-					new CqlQuery(CqlQueryName.SELECT, "select * " + CR + "from HistoryTest where " + CR + "id=" + i)));
+					new CqlQuery(CqlQueryName.SELECT, "select * " + CR + "from HistoryTest where " + CR + "id=" + i),
+					1000 + i));
 			historyService.store(history);
 			QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user);
 			assertNotNull(historyQueue);
@@ -99,7 +100,7 @@ public class TestHistoryService extends AbstractTestCase {
 
 		for (int i = 100; i < 600; i++) {
 			QueryEntry tofind = new QueryEntry(
-					new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id=" + i));
+					new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id=" + i), 2000 + i);
 			assertTrue(tofind + " NOT FOUND IN: " + readHist, readHist.contains(tofind));
 		}
 
@@ -144,7 +145,7 @@ public class TestHistoryService extends AbstractTestCase {
 						histories.add(history);
 
 						QueryEntry histEntry = new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
-								"select * from MyTable2 where id=" + UUID.randomUUID()));
+								"select * from MyTable2 where id=" + UUID.randomUUID()), 4000 + i);
 						history.add(histEntry);
 
 						verifyHistEntry(history, histEntry);

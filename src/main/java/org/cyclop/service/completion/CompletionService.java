@@ -3,16 +3,22 @@ package org.cyclop.service.completion;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlQuery;
 
+import javax.validation.constraints.NotNull;
+
 /** @author Maciej Miklas */
 public interface CompletionService {
+
 	/** @return cql markers are: "alter table", "select" or "create keyspace" - columnType of cql query */
+	@NotNull
 	ContextCqlCompletion findInitialCompletion();
 
 	/**
 	 * @param cursorPosition
 	 * 		starts from 0
 	 */
-	ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition);
+	@NotNull
+	ContextCqlCompletion findCompletion(@NotNull CqlQuery cqlQuery, int cursorPosition);
 
-	ContextCqlCompletion findCompletion(CqlQuery cqlQuery);
+	@NotNull
+	ContextCqlCompletion findCompletion(@NotNull CqlQuery cqlQuery);
 }

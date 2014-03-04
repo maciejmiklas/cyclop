@@ -4,9 +4,11 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.cyclop.common.AppConfig;
 import org.cyclop.web.pages.authenticate.AuthenticatePage;
 import org.cyclop.web.pages.parent.ParentPage;
 import org.cyclop.web.panels.favourites.FavouritesPanel;
@@ -21,8 +23,6 @@ public class MainPage extends ParentPage {
 
 	private static final JavaScriptResourceReference JS_MAIN = new JavaScriptResourceReference(MainPage.class,
 			"main.js");
-
-	// TODO enable/disable history from properties
 
 	public MainPage(PageParameters params) {
 		tabSupport = new TabSupport();
@@ -50,13 +50,20 @@ public class MainPage extends ParentPage {
 	}
 
 	private void initFavouritesTab() {
+		if (!AppConfig.get().favourites.enabled) {
+			add(new Label("favouritesPanel", "Favourites are disabled in application-configuration"));
+			return;
+		}
 		FavouritesPanel favourites = new FavouritesPanel("favouritesPanel");
 		add(favourites);
 		tabSupport.registerReloadableTab(favourites, ".cq-tabFavourites");
 	}
 
-
 	private void initHistoryTab() {
+		if (!AppConfig.get().history.enabled) {
+			add(new Label("historyPanel", "History is disabled in application-configuration"));
+			return;
+		}
 		HistoryPanel historyPanel = new HistoryPanel("historyPanel");
 		add(historyPanel);
 		tabSupport.registerReloadableTab(historyPanel, ".cq-tabHistory");
