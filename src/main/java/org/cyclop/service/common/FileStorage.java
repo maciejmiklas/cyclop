@@ -185,7 +185,7 @@ public class FileStorage {
 	}
 
 	private Path getPath(UserIdentifier userId, Class<?> entity) {
-		String fileName = entity.getClass().getName() + "-" + userId.id + ".json";
+		String fileName = entity.getSimpleName() + "-" + userId.id + ".json";
 		Path histPath = Paths.get(config.fileStore.folder, fileName);
 		return histPath;
 	}

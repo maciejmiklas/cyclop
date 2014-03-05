@@ -81,11 +81,11 @@ public class TestFavouritesService extends AbstractTestCase {
 		for (int i = 0; i < 20; i++) {
 			assertTrue(favourites.addWithSizeCheck(
 					new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i),
-							1000 + i)));
+							1000 + i, 34)));
 
 			assertTrue(favourites.addWithSizeCheck(
 					new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i),
-							2000 + i)));
+							2000 + i, 34)));
 
 			favService.store(favourites);
 			QueryFavourites favQueue = asyncFileStore.getFromWriteQueue(user);
@@ -109,7 +109,7 @@ public class TestFavouritesService extends AbstractTestCase {
 		{
 			for (int i = 0; i < 20; i++) {
 				QueryEntry entry = new QueryEntry(
-						new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i), 4000 + i);
+						new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i), 4000 + i, 34);
 				assertTrue(entry.toString(), readFavs.contains(entry));
 			}
 		}
@@ -156,7 +156,7 @@ public class TestFavouritesService extends AbstractTestCase {
 						favs.add(readFavs);
 
 						QueryEntry fav = new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
-								"select * from MyTable2 where id=" + UUID.randomUUID()), 5000 + i);
+								"select * from MyTable2 where id=" + UUID.randomUUID()), 5000 + i, 34);
 						int retry = 0;
 						while (!readFavs.addWithSizeCheck(fav)) {
 							retry++;

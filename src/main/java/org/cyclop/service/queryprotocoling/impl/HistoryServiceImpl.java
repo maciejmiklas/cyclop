@@ -25,8 +25,6 @@ class HistoryServiceImpl extends AbstractQueryProtocolingService<QueryHistory> i
 		return new QueryHistory();
 	}
 
-	// TODO tests
-	// TODO do we need synchronization here?
 	@Override
 	public void addAndStore(QueryEntry entry) {
 		QueryHistory hist = read();

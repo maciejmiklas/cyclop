@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
-import static org.cyclop.web.common.ScriptsRef.SUGGEST;
+import static org.cyclop.web.resources.ScriptsRef.SUGGEST;
 
 /** @author Maciej Miklas */
 public class EditorPanel extends Panel {

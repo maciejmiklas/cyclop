@@ -31,10 +31,8 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 	@NotNull
 	public final DateTime executedOnUtc;
 
-	// TODO test
 	public final long runTime;
 
-	// TODO test
 	public final int resultsSize;
 
 	public QueryEntry(CqlQuery query, long runTime, int resultsSize) {
@@ -120,6 +118,8 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 			QueryHistoryEntryJaxb jaxb = new QueryHistoryEntryJaxb();
 			jaxb.executedOn = histObj.executedOnUtc;
 			jaxb.query = histObj.query;
+			jaxb.runTime = histObj.runTime;
+			jaxb.resultsSize = histObj.resultsSize;
 			return jaxb;
 		}
 	}
