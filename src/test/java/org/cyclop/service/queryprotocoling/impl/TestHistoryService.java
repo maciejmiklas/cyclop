@@ -1,5 +1,6 @@
 package org.cyclop.service.queryprotocoling.impl;
 
+import com.google.common.collect.ImmutableList;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.QueryEntry;
@@ -76,10 +77,9 @@ public class TestHistoryService extends AbstractTestCase {
 		QueryHistory history = historyService.read();
 
 		for (int i = 0; i < 600; i++) {
-			history.add(new QueryEntry(
+			historyService.addAndStore(new QueryEntry(
 					new CqlQuery(CqlQueryName.SELECT, "select * " + CR + "from HistoryTest where " + CR + "id=" + i),
-					1000 + i));
-			historyService.store(history);
+					1000 + i, 300 + i));
 			QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user);
 			assertNotNull(historyQueue);
 
@@ -87,8 +87,6 @@ public class TestHistoryService extends AbstractTestCase {
 			assertSame(history, historyQueue);
 		}
 		assertEquals(500, history.size());
-
-		assertNull(storage.read(user, QueryHistory.class));
 
 		asyncFileStore.flush();
 		assertNull(asyncFileStore.getFromWriteQueue(user));
@@ -100,8 +98,16 @@ public class TestHistoryService extends AbstractTestCase {
 
 		for (int i = 100; i < 600; i++) {
 			QueryEntry tofind = new QueryEntry(
-					new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id=" + i), 2000 + i);
+					new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id=" + i), 2000 + i, 300 + i);
 			assertTrue(tofind + " NOT FOUND IN: " + readHist, readHist.contains(tofind));
+
+			ImmutableList<QueryEntry> readList = readHist.copyAsList();
+			int index = readList.indexOf(tofind);
+			assertTrue(index >= 0);
+			QueryEntry read = readList.get(index);
+			assertNotNull(read.executedOnUtc);
+			assertEquals(2000 + i, read.runTime);
+			assertEquals(300 + i, read.resultsSize);
 		}
 
 		{
@@ -145,7 +151,7 @@ public class TestHistoryService extends AbstractTestCase {
 						histories.add(history);
 
 						QueryEntry histEntry = new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
-								"select * from MyTable2 where id=" + UUID.randomUUID()), 4000 + i);
+								"select * from MyTable2 where id=" + UUID.randomUUID()), 4000 + i, 34);
 						history.add(histEntry);
 
 						verifyHistEntry(history, histEntry);

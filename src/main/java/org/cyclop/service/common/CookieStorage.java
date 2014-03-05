@@ -60,7 +60,7 @@ public class CookieStorage {
 		}
 	}
 
-	public void storeCookie(@NotNull CookieName name, @NotNull String value) {
+	protected void storeCookie(@NotNull CookieName name, @NotNull String value) {
 		RequestCycle requestCycle = RequestCycle.get();
 		if (requestCycle == null) {
 			LOG.warn("RequestCycle is null - cannot read cookies");
@@ -72,7 +72,7 @@ public class CookieStorage {
 		response.addCookie(cookie);
 	}
 
-	public
+	protected
 	@Valid
 	Cookie readCookie(@NotNull CookieName name) {
 		try {

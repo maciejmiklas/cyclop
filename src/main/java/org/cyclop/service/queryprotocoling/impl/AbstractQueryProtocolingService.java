@@ -70,6 +70,7 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 		}
 	}
 
+	// TODO validation does not work on abstract methods
 	// TODO remove break line
 	@Override
 	public
@@ -88,8 +89,9 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 						read = storage.read(user, getClazz());
 					}
 					if (read == null) {
-						history.set(createEmpty());
+						read = createEmpty();
 					}
+					history.set(read);
 				}
 			}
 		}

@@ -17,7 +17,7 @@ import java.util.Map;
 @Named
 class AsyncFileStore<H> {
 
-	private final static int FLUSH_MILIS = 300000;
+	private final static int FLUSH_MILIS = 30000;
 
 	@Inject
 	private FileStorage fileStorage;
