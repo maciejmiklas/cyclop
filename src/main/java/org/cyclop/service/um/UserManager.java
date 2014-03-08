@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 /** @author Maciej Miklas */
 public interface UserManager {
 
-	void registerIdentifier(@NotNull UserIdentifier id);
+	void storeIdentifier(@NotNull UserIdentifier id);
 
 	@NotNull
 	UserIdentifier readIdentifier();

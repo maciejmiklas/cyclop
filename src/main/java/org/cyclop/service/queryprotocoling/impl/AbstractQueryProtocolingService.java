@@ -7,6 +7,8 @@ import org.cyclop.service.queryprotocoling.QueryProtocolingService;
 import org.cyclop.service.um.UserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.validation.annotation.Validated;
 
 import javax.inject.Inject;
@@ -18,6 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @NotThreadSafe
 @Named
 @Validated
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingService<H> {
 
 	private final static Logger LOG = LoggerFactory.getLogger(AbstractQueryProtocolingService.class);
@@ -50,7 +53,7 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 			// if it's not the case overwrite new one with existing one
 			if (!fromCookie.equals(identifier)) {
 				LOG.debug("Replacing {} with {}", fromCookie, identifier);
-				um.registerIdentifier(identifier);
+				um.storeIdentifier(identifier);
 			}
 		}
 		return identifier;

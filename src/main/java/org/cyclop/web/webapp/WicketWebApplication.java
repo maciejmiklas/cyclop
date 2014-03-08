@@ -21,22 +21,38 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 	@Override
 	protected void init() {
 		super.init();
-		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
-		setPageManagerProvider(new NoSerializationPageManagerProvider(this));
-		getMarkupSettings().setStripWicketTags(true);
 
-		// disable page visioning
-		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
-
-		initBookmarks();
-		initSecurity();
+		setupWicket();
+		setupSpring();
+		setupBookmarks();
+		setupSecurity();
+		setupExceptionHandler();
 	}
 
-	private void initBookmarks() {
+	private void setupExceptionHandler() {
+		// show login page on session timeout
+		getApplicationSettings().setPageExpiredErrorPage(AuthenticatePage.class);
+
+		getRequestCycleListeners().add(new GlobalExceptionHandler());
+	}
+
+	private void setupSpring() {
+		getComponentInstantiationListeners().add(new SpringComponentInjector(this));
+	}
+
+	private void setupWicket() {
+		getMarkupSettings().setStripWicketTags(true);
+		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
+		getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+		setPageManagerProvider(new NoSerializationPageManagerProvider(this));
+		getRequestCycleSettings().setRenderStrategy(IRequestCycleSettings.RenderStrategy.ONE_PASS_RENDER);
+	}
+
+	private void setupBookmarks() {
 		mountPage("/ced", MainPage.class);
 	}
 
-	private void initSecurity() {
+	private void setupSecurity() {
 		SecurePackageResourceGuard guard = (SecurePackageResourceGuard) getResourceSettings().getPackageResourceGuard();
 		guard.addPattern("+*.map");
 	}

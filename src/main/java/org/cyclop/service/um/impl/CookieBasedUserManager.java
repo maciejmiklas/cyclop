@@ -36,7 +36,7 @@ public class CookieBasedUserManager implements UserManager {
 	}
 
 	@Override
-	public void registerIdentifier(UserIdentifier id) {
+	public void storeIdentifier(UserIdentifier id) {
 		cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_userid, new UserIdentifierCookie(id));
 	}
 
@@ -48,7 +48,7 @@ public class CookieBasedUserManager implements UserManager {
 		if (cookie == null) {
 			LOG.debug("User Identifier not found as cookie - generating new");
 			id = new UserIdentifier();
-			cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_userid, id);
+			storeIdentifier(id);
 		} else {
 			id = cookie.getId();
 		}

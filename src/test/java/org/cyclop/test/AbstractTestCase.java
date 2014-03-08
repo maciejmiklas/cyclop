@@ -3,6 +3,7 @@ package org.cyclop.test;
 import com.datastax.driver.core.Session;
 import org.apache.cassandra.io.util.FileUtils;
 import org.cyclop.service.cassandra.CassandraSession;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 /** @author Maciej Miklas */
@@ -40,9 +42,22 @@ public abstract class AbstractTestCase {
 	@Inject
 	protected CassandraSession cassandraSession;
 
-	@Before
-	public void setup() {
-		cassandraSession.authenticate("test", "test1234");
+	private static void rmdir(Path dir) throws IOException {
+		File dirFile = dir.toFile();
+		if (dirFile.exists()) {
+			FileUtils.deleteRecursive(dirFile);
+		}
+	}
+
+	private static void setupCassandra() throws Exception {
+		CASSANDRA.start();
+	}
+
+	private static void setupHistory() throws Exception {
+		Path tempPath = FileSystems.getDefault().getPath("target", "cyclop-history-test");
+		rmdir(tempPath);
+		Files.createDirectory(tempPath);
+		System.getProperties().setProperty("fileStore.folder", tempPath.toString());
 	}
 
 	@BeforeClass
@@ -55,22 +70,14 @@ public abstract class AbstractTestCase {
 		setupCassandra();
 	}
 
-	private static void setupHistory() throws Exception {
-		Path tempPath = FileSystems.getDefault().getPath("target", "cyclop-history-test");
-		rmdir(tempPath);
-		Files.createDirectory(tempPath);
-		System.getProperties().setProperty("fileStore.folder", tempPath.toString());
-	}
+	public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {
+		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(serialized));
 
-	private static void setupCassandra() throws Exception {
-		CASSANDRA.start();
-	}
-
-	private static void rmdir(Path dir) throws IOException {
-		File dirFile = dir.toFile();
-		if (dirFile.exists()) {
-			FileUtils.deleteRecursive(dirFile);
-		}
+		@SuppressWarnings("unchecked")
+		T des = (T) in.readObject();
+		in.close();
+		assertNotNull(des);
+		return des;
 	}
 
 	public Session getCassandraSession() {
@@ -88,13 +95,14 @@ public abstract class AbstractTestCase {
 		return serialized;
 	}
 
-	public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {
-		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(serialized));
+	@Before
+	public void setup() {
+		cassandraSession.authenticate("test", "test1234");
+	}
 
-		@SuppressWarnings("unchecked")
-		T des = (T) in.readObject();
-		in.close();
-		assertNotNull(des);
-		return des;
+	@After
+	public void cleanUp() {
+		cassandraSession.close();
+		assertFalse(cassandraSession.isOpen());
 	}
 }

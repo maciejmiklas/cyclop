@@ -3,12 +3,17 @@ package org.cyclop.web.webapp;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
+import org.apache.wicket.protocol.http.servlet.ServletWebRequest;
 import org.apache.wicket.request.Request;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.cyclop.common.AppConfig;
 import org.cyclop.service.cassandra.CassandraSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /** @author Maciej Miklas */
 public class CqlWebSession extends AuthenticatedWebSession {
@@ -16,6 +21,8 @@ public class CqlWebSession extends AuthenticatedWebSession {
 
 	@Inject
 	private CassandraSession cassandraSession;
+
+	private AppConfig conf = AppConfig.get();
 
 	private boolean authenticated = false;
 
@@ -30,6 +37,8 @@ public class CqlWebSession extends AuthenticatedWebSession {
 	public boolean authenticate(String username, String password) {
 		try {
 			cassandraSession.authenticate(username, password);
+			bindExpirationListener();
+
 			authenticated = true;
 			lastLoginError = null;
 		} catch (Exception e) {
@@ -41,6 +50,14 @@ public class CqlWebSession extends AuthenticatedWebSession {
 		}
 
 		return authenticated;
+	}
+
+	private void bindExpirationListener() {
+		ServletWebRequest webRequest = (ServletWebRequest) RequestCycle.get().getRequest();
+		HttpServletRequest servRequest = webRequest.getContainerRequest();
+		HttpSession session = servRequest.getSession();
+		session.setMaxInactiveInterval(conf.httpSession.expirySeconds);
+
 	}
 
 	public String getLastLoginError() {
@@ -57,4 +74,5 @@ public class CqlWebSession extends AuthenticatedWebSession {
 		cassandraSession.close();
 		super.invalidate();
 	}
+
 }

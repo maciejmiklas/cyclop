@@ -163,7 +163,7 @@ ul.cq-cqlCollectionList {
 	left: 120%;
 	overflow: hidden;
 	position: fixed;
-	width: 70%;
+	width: 50%;
 	opacity: 0.9;
 	z-index: 10000;
 	transition: left 0.3s ease-out 0s;
@@ -171,7 +171,7 @@ ul.cq-cqlCollectionList {
 }
 
 .cq-notify.in {
-	left: 70%;
+	left: 50%;
 }
 
 .feedbackPanelERROR {
@@ -193,5 +193,5 @@ ul.cq-cqlCollectionList {
 }
 
 .table th {
-	background-color: #1D1D18 !important;
+	background-color: #310019 !important;
 }

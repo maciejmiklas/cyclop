@@ -1,6 +1,5 @@
 package org.cyclop.common;
 
-import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
 import org.cyclop.validation.BeanValidator;
 import org.cyclop.validation.SimpleDate;
@@ -17,6 +16,10 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 /** @author Maciej Miklas */
+
+/**
+ *
+ */
 @Named
 public class AppConfig implements Serializable {
 
@@ -54,11 +57,15 @@ public class AppConfig implements Serializable {
 
 	@NotNull
 	@Valid
-	public final Cookie cookie;
+	public final HttpSession httpSession;
+
+	@NotNull
+	@Valid
+	public final Cookies cookie;
 
 	@Inject
-	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookie cookie,
-					 History history, Favourites favourites, FileStore fileStore) {
+	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookies cookie,
+					 History history, Favourites favourites, FileStore fileStore, HttpSession httpSession) {
 		this.cassandra = cassandra;
 		this.cqlEditor = cqlEditor;
 		this.common = common;
@@ -67,6 +74,7 @@ public class AppConfig implements Serializable {
 		this.history = history;
 		this.favourites = favourites;
 		this.fileStore = fileStore;
+		this.httpSession = httpSession;
 	}
 
 	public static AppConfig get() {
@@ -90,7 +98,9 @@ public class AppConfig implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("cassandra", cassandra).add("cqlEditor", cqlEditor).toString();
+		return "AppConfig [cassandra=" + cassandra + ", cqlEditor=" + cqlEditor + ", common=" + common + ", history=" +
+				history + ", fileStore=" + fileStore + ", favourites=" + favourites + ", cqlExport=" + cqlExport +
+				", httpSession=" + httpSession + ", cookie=" + cookie + "]";
 	}
 
 	@Named
@@ -112,27 +122,34 @@ public class AppConfig implements Serializable {
 		@NotEmpty
 		public final String hosts;
 
+		@Min(1)
+		public final int maxConnectionsProSession;
+
 		public final boolean useSsl;
 
 		@Inject
 		public Cassandra(@Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
 						 @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis,
 						 @Value("${cassandra.rowsLimit}") int rowsLimit,
-						 @Value("${cassandra.columnsLimit}") int columnsLimit) {
+						 @Value("${cassandra.columnsLimit}") int columnsLimit,
+						 @Value("${cassandra.maxConnectionsProSession}") int maxConnectionsProSession) {
 			this.hosts = hosts;
 			this.useSsl = useSsl;
 			this.port = port;
 			this.timeoutMilis = timeoutMilis;
 			this.rowsLimit = rowsLimit;
 			this.columnsLimit = columnsLimit;
+			this.maxConnectionsProSession = maxConnectionsProSession;
 		}
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("port", port).add("timeoutMilis", timeoutMilis)
-					.add("rowsLimit", rowsLimit).add("columnsLimit", columnsLimit).add("hosts", hosts)
-					.add("useSsl", useSsl).toString();
+			return "Cassandra [port=" + port + ", timeoutMilis=" + timeoutMilis + ", rowsLimit=" + rowsLimit +
+					", columnsLimit=" + columnsLimit + ", hosts=" + hosts + ", maxConnectionsProSession=" +
+					maxConnectionsProSession + ", useSsl=" + useSsl + "]";
 		}
+
+
 	}
 
 	@Named
@@ -153,6 +170,14 @@ public class AppConfig implements Serializable {
 			this.lockWaitTimeoutMilis = lockWaitTimeoutMilis;
 			this.folder = folder;
 		}
+
+		@Override
+		public String toString() {
+			return "FileStore [maxFileSize=" + maxFileSize + ", lockWaitTimeoutMilis=" + lockWaitTimeoutMilis +
+					", folder=" + folder + "]";
+		}
+
+
 	}
 
 	@Named
@@ -171,6 +196,13 @@ public class AppConfig implements Serializable {
 			this.enabled = enabled;
 			this.queriesPerPage = queriesPerPage;
 		}
+
+		@Override
+		public String toString() {
+			return "History [entriesLimit=" + entriesLimit + ", queriesPerPage=" + queriesPerPage + ", enabled=" +
+					enabled + "]";
+		}
+
 	}
 
 	@Named
@@ -186,6 +218,12 @@ public class AppConfig implements Serializable {
 			this.entriesLimit = entriesLimit;
 			this.enabled = enabled;
 		}
+
+		@Override
+		public String toString() {
+			return "Favourites [entriesLimit=" + entriesLimit + ", enabled=" + enabled + "]";
+		}
+
 	}
 
 	@Named
@@ -195,13 +233,36 @@ public class AppConfig implements Serializable {
 
 	@Named
 	@Immutable
-	public static class Cookie implements Serializable {
+	public static class Cookies implements Serializable {
 		public final int expirySeconds;
 
 		@Inject
-		public Cookie(@Value("${cookie.expirySeconds}") int expirySeconds) {
+		public Cookies(@Value("${cookies.expirySeconds}") int expirySeconds) {
 			this.expirySeconds = expirySeconds;
 		}
+
+		@Override
+		public String toString() {
+			return "Cookies [expirySeconds=" + expirySeconds + "]";
+		}
+
+	}
+
+	@Named
+	@Immutable
+	public static class HttpSession implements Serializable {
+		public final int expirySeconds;
+
+		@Inject
+		public HttpSession(@Value("${httpSession.expirySeconds}") int expirySeconds) {
+			this.expirySeconds = expirySeconds;
+		}
+
+		@Override
+		public String toString() {
+			return "HttpSession [expirySeconds=" + expirySeconds + "]";
+		}
+
 	}
 
 	@Named
@@ -233,11 +294,12 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("pageLimit", rowsPerPage)
-					.add("maxColumnEmbeddedDisplayChars", maxColumnEmbeddedDisplayChars)
-					.add("maxColumnDisplayChars", maxColumnDisplayChars)
-					.add("maxColumnTooltipDisplayChars", maxColumnTooltipDisplayChars).toString();
+			return "CqlEditor [rowsPerPage=" + rowsPerPage + ", maxColumnEmbeddedDisplayChars=" +
+					maxColumnEmbeddedDisplayChars + ", maxColumnDisplayChars=" + maxColumnDisplayChars +
+					", maxColumnTooltipDisplayChars=" + maxColumnTooltipDisplayChars + "]";
 		}
+
+
 	}
 
 	@Named
@@ -307,9 +369,15 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator", rowSeparator)
-					.add("listSeparator", listSeparator).add("mapSeparator", mapSeparator)
-					.add("removeCrChars", removeCrChars).toString();
+			return "CqlExport [querySeparator=" + querySeparator + ", rowSeparator=" + rowSeparator +
+					", listSeparator=" + listSeparator + ", mapSeparator=" + mapSeparator + ", columnSeparator=" +
+					columnSeparator + ", crCharCode=" + crCharCode + ", valueBracketStart=" + valueBracketStart +
+					", fileName=" + fileName + ", fileNameDate=" + fileNameDate + ", valueBracketEnd=" +
+					valueBracketEnd + ", trim=" + trim + ", removeCrChars=" + removeCrChars + "]";
 		}
+
+
 	}
+
+
 }

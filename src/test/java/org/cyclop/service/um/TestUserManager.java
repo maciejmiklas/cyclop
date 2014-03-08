@@ -15,7 +15,7 @@ public class TestUserManager extends AbstractTestCase {
 
 	@Test(expected = BeanValidationException.class)
 	public void testRegisterIdentifier_Validation() {
-		um.registerIdentifier(new UserIdentifier(null));
+		um.storeIdentifier(new UserIdentifier(null));
 	}
 
 	@Test(expected = BeanValidationException.class)

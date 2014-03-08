@@ -6,11 +6,13 @@ import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.service.common.FileStorage;
 import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ThreadTestScope;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -106,7 +108,7 @@ public class TestHistoryService extends AbstractTestCase {
 			assertTrue(index >= 0);
 			QueryEntry read = readList.get(index);
 			assertNotNull(read.executedOnUtc);
-			assertEquals(2000 + i, read.runTime);
+			assertEquals(1000 + i, read.runTime);
 			assertEquals(300 + i, read.resultsSize);
 		}
 
@@ -117,6 +119,18 @@ public class TestHistoryService extends AbstractTestCase {
 			asyncFileStore.flush();
 			assertEquals(0, storage.read(user, QueryHistory.class).size());
 		}
+	}
+
+	@Ignore
+	@Test(expected = BeanValidationException.class)
+	public void testAddAndStore_NullParams() {
+		historyService.addAndStore(null);
+	}
+
+	@Ignore
+	@Test(expected = BeanValidationException.class)
+	public void testAddAndStore_InvalidParams() {
+		historyService.addAndStore(new QueryEntry(new CqlQuery(null, null), 1, 2));
 	}
 
 	@Test

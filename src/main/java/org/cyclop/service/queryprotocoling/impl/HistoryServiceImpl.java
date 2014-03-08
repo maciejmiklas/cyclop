@@ -6,14 +6,20 @@ import org.cyclop.model.QueryHistory;
 import org.cyclop.service.queryprotocoling.HistoryService;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.validation.annotation.Validated;
 
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-class HistoryServiceImpl extends AbstractQueryProtocolingService<QueryHistory> implements HistoryService {
+@Validated
+public class HistoryServiceImpl extends AbstractQueryProtocolingService<QueryHistory> implements HistoryService {
+
+	protected HistoryServiceImpl() {
+	}
 
 	@Override
 	protected Class<QueryHistory> getClazz() {
@@ -26,7 +32,7 @@ class HistoryServiceImpl extends AbstractQueryProtocolingService<QueryHistory> i
 	}
 
 	@Override
-	public void addAndStore(QueryEntry entry) {
+	public void addAndStore(@NotNull QueryEntry entry) {
 		QueryHistory hist = read();
 		hist.add(entry);
 		store(hist);

@@ -56,6 +56,10 @@ class ColumnValuePanel extends Panel {
 			fullContentLink.add(new AttributeModifier("title", new IModel<String>() {
 
 				@Override
+				public void detach() {
+				}
+
+				@Override
 				public String getObject() {
 					String conv = converter.trimColumnTooltipContent(convertedValueNotNull);
 					return conv;
@@ -63,10 +67,6 @@ class ColumnValuePanel extends Panel {
 
 				@Override
 				public void setObject(String object) {
-				}
-
-				@Override
-				public void detach() {
 				}
 			}));
 

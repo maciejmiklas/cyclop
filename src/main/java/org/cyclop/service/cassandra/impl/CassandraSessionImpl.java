@@ -1,12 +1,15 @@
 package org.cyclop.service.cassandra.impl;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.HostDistance;
+import com.datastax.driver.core.PoolingOptions;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.ShutdownFuture;
 import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 import net.jcip.annotations.NotThreadSafe;
 import org.cyclop.common.AppConfig;
-import org.cyclop.model.exception.ServiceException;
+import org.cyclop.model.exception.AuthenticationRequiredException;
 import org.cyclop.service.cassandra.CassandraSession;
 import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
@@ -33,7 +37,9 @@ public class CassandraSessionImpl implements CassandraSession {
 
 	private CassandraVersion cassandraVersion;
 
-	public void authenticate(@NotNull String userName, @NotNull String password) {
+	private Cluster cluster;
+
+	public synchronized void authenticate(@NotNull String userName, @NotNull String password) {
 		Cluster.Builder builder = Cluster.builder();
 		for (String host : appConfig.cassandra.hosts.split("[,]")) {
 			builder.addContactPoint(host);
@@ -47,7 +53,19 @@ public class CassandraSessionImpl implements CassandraSession {
 		SocketOptions socketOptions = new SocketOptions();
 		socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMilis);
 
-		Cluster cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions).build();
+		PoolingOptions pooling = new PoolingOptions();
+		pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, 1);
+		pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, 1);
+		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, 1);
+		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, 1);
+
+		pooling.setMaxConnectionsPerHost(HostDistance.REMOTE, 1);
+		pooling.setCoreConnectionsPerHost(HostDistance.REMOTE, 1);
+		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.REMOTE, 1);
+		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.REMOTE, 1);
+
+		cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions)
+				.withPoolingOptions(pooling).build();
 		session = cluster.connect();
 
 		cassandraVersion = determineVersion(session);
@@ -75,19 +93,38 @@ public class CassandraSessionImpl implements CassandraSession {
 		return session;
 	}
 
-	public void close() {
-		if (session != null) {
+	public synchronized void close() {
+		if (cluster != null) {
 			try {
-				session.shutdown();
+				ShutdownFuture shf = cluster.shutdown();
+
+				// wait for cluster shutdown without timeout.
+				// This will prevent cyclop for opening to many cluster
+				// connections
+				shf.get();
 			} catch (Exception e) {
-				LOG.warn("Error closing session", e);
+				LOG.warn("Error while shutting down the cluster", e);
 			}
+			cluster = null;
+			session = null;
 		}
 	}
 
 	private void checkAuthenticated() {
-		if (session == null) {
-			throw new ServiceException("Cassandra session not found");
+		if (!isOpen()) {
+			throw new AuthenticationRequiredException("Cassandra session not found");
 		}
 	}
+
+	@Override
+	public synchronized boolean isOpen() {
+		return session != null;
+
+	}
+
+	@PreDestroy
+	public void cleanup() {
+		close();
+	}
+
 }
