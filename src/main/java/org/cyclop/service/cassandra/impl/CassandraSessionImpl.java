@@ -4,7 +4,6 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.HostDistance;
 import com.datastax.driver.core.PoolingOptions;
 import com.datastax.driver.core.Session;
-import com.datastax.driver.core.ShutdownFuture;
 import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 import net.jcip.annotations.NotThreadSafe;
@@ -96,12 +95,7 @@ public class CassandraSessionImpl implements CassandraSession {
 	public synchronized void close() {
 		if (cluster != null) {
 			try {
-				ShutdownFuture shf = cluster.shutdown();
-
-				// wait for cluster shutdown without timeout.
-				// This will prevent cyclop for opening to many cluster
-				// connections
-				shf.get();
+				cluster.close();
 			} catch (Exception e) {
 				LOG.warn("Error while shutting down the cluster", e);
 			}

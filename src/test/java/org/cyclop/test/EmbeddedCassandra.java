@@ -103,7 +103,7 @@ public class EmbeddedCassandra {
 	}
 
 	public void stop() throws Exception {
-		cluster.shutdown();
+		cluster.close();
 	}
 
 	public Session getSession() {
