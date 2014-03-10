@@ -72,7 +72,6 @@ public class TestFileStorage extends AbstractTestCase {
 	@Test
 	public void testSupported_OnReadOnlyFolder() {
 
-		// TODO could be provided as annotation @LinuxOnlyTest
 		if (!unixOs) {
 			return;
 		}

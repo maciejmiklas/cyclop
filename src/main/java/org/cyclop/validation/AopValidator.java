@@ -1,4 +1,4 @@
-package org.cyclop.validation.aop;
+package org.cyclop.validation;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -6,7 +6,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.cyclop.model.exception.BeanValidationException;
-import org.cyclop.validation.BeanValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +17,9 @@ import java.lang.reflect.Method;
 
 @Aspect
 @Named
-public class ValidationAspect {
+public class AopValidator {
 
-	private final static Logger LOG = LoggerFactory.getLogger(ValidationAspect.class);
+	private final static Logger LOG = LoggerFactory.getLogger(AopValidator.class);
 
 	@Pointcut("execution(* org.cyclop..*.*(..)) && @within(org.cyclop.validation.EnableValidation)")
 	protected void validate() {

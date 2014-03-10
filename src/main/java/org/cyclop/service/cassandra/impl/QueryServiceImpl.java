@@ -290,7 +290,6 @@ class QueryServiceImpl implements QueryService {
 			if (name == null) {
 				continue;
 			}
-			// TODO DataType is hardcoded to text
 			cqlColumnNames.add(new CqlColumnName(CqlDataType.create(DataType.text()), name));
 		}
 

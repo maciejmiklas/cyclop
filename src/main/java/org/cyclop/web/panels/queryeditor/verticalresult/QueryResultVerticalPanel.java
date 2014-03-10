@@ -210,7 +210,6 @@ public class QueryResultVerticalPanel extends Panel {
 		columnsModel.updateResult(result);
 	}
 
-	// TODO replace with ImmutableListModel
 	private final static class RowsModel implements IModel<List<Row>> {
 
 		private List<Row> content;
@@ -254,7 +253,6 @@ public class QueryResultVerticalPanel extends Panel {
 		}
 	}
 
-	// TODO replace with ImmutableListModel
 	private final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
 		private CqlSelectResult result;
 

@@ -121,17 +121,21 @@ public class TestHistoryService extends AbstractTestCase {
 		}
 	}
 
-	@Ignore
 	@Test(expected = BeanValidationException.class)
 	public void testAddAndStore_NullParams() {
 		historyService.addAndStore(null);
 	}
 
-	@Ignore
 	@Test(expected = BeanValidationException.class)
 	public void testAddAndStore_InvalidParams() {
 		historyService.addAndStore(new QueryEntry(new CqlQuery(null, null), 1, 2));
 	}
+	
+	@Test(expected = BeanValidationException.class)
+	public void testStore_InvalidParams() {
+		historyService.store(null);
+	}
+	
 
 	@Test
 	public void testMultiThreadForMultipleUsers() throws Exception {

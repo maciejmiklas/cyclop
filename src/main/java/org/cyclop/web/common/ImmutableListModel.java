@@ -16,7 +16,7 @@ public class ImmutableListModel<T> extends GenericBaseModel<ImmutableList<? exte
 	}
 
 	@Override
-	protected ImmutableList<? extends T> createSerializableVersionOf(ImmutableList<? extends T> object) {
+	protected final ImmutableList<? extends T> createSerializableVersionOf(ImmutableList<? extends T> object) {
 		return object;
 	}
 }

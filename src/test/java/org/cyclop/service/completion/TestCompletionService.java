@@ -409,7 +409,6 @@ public class TestCompletionService extends AbstractTestCase {
 		{
 			Collection<? extends CqlPart> mcmp = vh.asHahsCol(completion.cqlCompletion.minCompletion);
 			vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.IN.value, CqlKeyword.Def.AND.value);
-			// TODO more tests
 		}
 
 		{

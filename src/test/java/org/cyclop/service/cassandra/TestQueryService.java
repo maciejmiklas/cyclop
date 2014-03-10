@@ -66,8 +66,6 @@ public class TestQueryService extends AbstractTestCase {
 		vh.verifyContainsTableNamesCqlDemo(col, true);
 	}
 
-	// TODO why does it contain NodeInfo - it's not valid table
-	// TODO add "select * from xxx" test case on returned tables
 	@Test
 	public void testFindTableNames_SpaceSystem() {
 		ImmutableSortedSet<CqlTable> col = qs.findTableNames(new CqlKeySpace("system"));
