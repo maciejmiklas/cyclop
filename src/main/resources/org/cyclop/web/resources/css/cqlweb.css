@@ -110,7 +110,7 @@ pre.cq-helpCqlSyntax {
 	background-color: #0a39b3;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
+.table-hover>tbody>tr.cq-tableRowSeparator,.table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -145,7 +145,6 @@ ul.cq-cqlCollectionList {
 }
 
 .cq-right-up {
-	/* 	float: right !important; */
 	position: absolute;
 	top: 7px;
 	right: 20px;
@@ -194,4 +193,8 @@ ul.cq-cqlCollectionList {
 
 .table th {
 	background-color: #310019 !important;
+}
+
+.cq-historyFilterField {
+	float: right;
 }
