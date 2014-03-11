@@ -1,10 +1,13 @@
 package org.cyclop.web.panels.history;
 
-import com.google.common.collect.ImmutableList;
+import javax.inject.Inject;
+
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
@@ -16,123 +19,158 @@ import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.web.common.AjaxReloadSupport;
 import org.cyclop.web.common.ImmutableListModel;
+import org.cyclop.web.common.TextModel;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.pages.main.MainPage;
 
-import javax.inject.Inject;
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
-	private AbstractDefaultAjaxBehavior browserCallback;
+    private AbstractDefaultAjaxBehavior browserCallback;
 
-	private BootstrapPagingNavigator pager;
+    private BootstrapPagingNavigator pager;
 
-	@Inject
-	private HistoryService historyService;
+    @Inject
+    private HistoryService historyService;
 
-	@Inject
-	private DataConverter converter;
+    @Inject
+    private DataConverter converter;
 
-	private PageableListView<QueryEntry> historyTable;
+    private PageableListView<QueryEntry> historyTable;
 
-	public HistoryPanel(String id) {
-		super(id);
-		WebMarkupContainer historyContainer = initHistoryContainer();
-		ImmutableListModel<QueryEntry> model = initHistoryTable(historyContainer);
-		browserCallback = initBrowserCallback(model, historyContainer);
-	}
+    private ImmutableListModel<QueryEntry> historyModel;
 
-	private WebMarkupContainer initHistoryContainer() {
-		WebMarkupContainer historyContainer = new WebMarkupContainer("historyContainer");
-		historyContainer.setOutputMarkupPlaceholderTag(true);
-		historyContainer.setVisible(false);
-		add(historyContainer);
-		return historyContainer;
-	}
+    public HistoryPanel(String id) {
+	super(id);
+	WebMarkupContainer historyContainer = initHistoryContainer();
+	historyModel = initHistoryTable(historyContainer);
+	browserCallback = initBrowserCallback(historyContainer);
+	initFilter(historyContainer);
+    }
 
-	private AbstractDefaultAjaxBehavior initBrowserCallback(final ImmutableListModel<QueryEntry> model,
-															final WebMarkupContainer historyContainer) {
+    private WebMarkupContainer initHistoryContainer() {
+	WebMarkupContainer historyContainer = new WebMarkupContainer("historyContainer");
+	historyContainer.setOutputMarkupPlaceholderTag(true);
+	historyContainer.setVisible(false);
+	add(historyContainer);
+	return historyContainer;
+    }
 
-		AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
+    private AbstractDefaultAjaxBehavior initBrowserCallback(final WebMarkupContainer historyContainer) {
 
-			@Override
-			protected void respond(final AjaxRequestTarget target) {
-				ImmutableList<QueryEntry> historyList = historyService.read().copyAsList();
-				model.setObject(historyList);
+	AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
 
-				resetHistoryTable();
+	    @Override
+	    protected void respond(final AjaxRequestTarget target) {
+		ImmutableList<QueryEntry> historyList = historyService.read().copyAsList();
+		resetHistoryTable(historyList);
 
-				historyContainer.setVisible(true);
-				target.add(historyContainer);
-			}
-		};
-		add(browserCallback);
-		return browserCallback;
-	}
+		historyContainer.setVisible(true);
+		target.add(historyContainer);
+	    }
+	};
+	add(browserCallback);
+	return browserCallback;
+    }
 
-	private void resetHistoryTable() {
-		historyTable.removeAll();
-		pager.getPageable().setCurrentPage(0);
-	}
+    private void resetHistoryTable(ImmutableList<QueryEntry> historyList) {
+	historyModel.setObject(historyList);
+	historyTable.removeAll();
+	pager.getPageable().setCurrentPage(0);
+    }
 
-	private ImmutableListModel<QueryEntry> initHistoryTable(final WebMarkupContainer historyContainer) {
-		ImmutableListModel<QueryEntry> model = new ImmutableListModel<>();
+    private ImmutableListModel<QueryEntry> initHistoryTable(final WebMarkupContainer historyContainer) {
+	ImmutableListModel<QueryEntry> model = new ImmutableListModel<>();
 
-		historyTable = new PageableListView<QueryEntry>("historyRow", model, AppConfig.get().history.queriesPerPage) {
+	historyTable = new PageableListView<QueryEntry>(
+		"historyRow",
+		model,
+		AppConfig.get().history.queriesPerPage) {
 
-			@Override
-			protected void populateItem(ListItem<QueryEntry> item) {
-				QueryEntry entry = item.getModel().getObject();
+	    @Override
+	    protected void populateItem(ListItem<QueryEntry> item) {
+		QueryEntry entry = item.getModel().getObject();
 
-				populateExecutedOn(item, entry);
-				populateRuntime(item, entry);
-				populateResultsSize(item, entry);
-				populateQuery(item, entry);
-			}
-		};
-		historyContainer.add(historyTable);
-		pager = new BootstrapPagingNavigator("historyPager", historyTable);
-		historyContainer.add(pager);
+		populateExecutedOn(item, entry);
+		populateRuntime(item, entry);
+		populateResultsSize(item, entry);
+		populateQuery(item, entry);
+	    }
+	};
+	historyContainer.add(historyTable);
+	pager = new BootstrapPagingNavigator("historyPager", historyTable);
+	historyContainer.add(pager);
 
-		return model;
-	}
+	return model;
+    }
 
-	private void populateQuery(ListItem<QueryEntry> item, QueryEntry entry) {
-		PageParameters queryLinkParams = new PageParameters();
-		queryLinkParams.add("cql", entry.query.part);
-		BookmarkablePageLink<Void> link = new BookmarkablePageLink<>("queryLink", MainPage.class, queryLinkParams);
-		item.add(link);
+    private void populateQuery(ListItem<QueryEntry> item, QueryEntry entry) {
+	PageParameters queryLinkParams = new PageParameters();
+	queryLinkParams.add("cql", entry.query.part);
+	BookmarkablePageLink<Void> link = new BookmarkablePageLink<>(
+		"queryLink",
+		MainPage.class,
+		queryLinkParams);
+	item.add(link);
 
-		item.add(new Label("query", entry.query.part));
-	}
+	item.add(new Label("query", entry.query.part));
+    }
 
-	private void populateExecutedOn(ListItem<QueryEntry> item, QueryEntry entry) {
-		String dateStr = converter.convert(entry.executedOnUtc);
-		Label executedOn = new Label("executedOn", dateStr);
-		item.add(executedOn);
-	}
+    private void populateExecutedOn(ListItem<QueryEntry> item, QueryEntry entry) {
+	String dateStr = converter.convert(entry.executedOnUtc);
+	Label executedOn = new Label("executedOn", dateStr);
+	item.add(executedOn);
+    }
 
-	private void populateRuntime(ListItem<QueryEntry> item, QueryEntry entry) {
-		String dateStr = Long.toString(entry.runTime);
-		Label executedOn = new Label("runtime", dateStr);
-		item.add(executedOn);
-	}
+    private void populateRuntime(ListItem<QueryEntry> item, QueryEntry entry) {
+	String dateStr = Long.toString(entry.runTime);
+	Label executedOn = new Label("runtime", dateStr);
+	item.add(executedOn);
+    }
 
-	private void populateResultsSize(ListItem<QueryEntry> item, QueryEntry entry) {
-		String dateStr = Long.toString(entry.resultsSize);
-		Label executedOn = new Label("resultsSize", dateStr);
-		item.add(executedOn);
+    private void populateResultsSize(ListItem<QueryEntry> item, QueryEntry entry) {
+	String dateStr = Long.toString(entry.resultsSize);
+	Label executedOn = new Label("resultsSize", dateStr);
+	item.add(executedOn);
+    }
+
+    @Override
+    public String getReloadCallbackUrl() {
+	return browserCallback.getCallbackUrl().toString();
+    }
+
+    @Override
+    public String getReloadableContentCssRef() {
+	return ".cq-historyContainer";
+    }
+
+    private void initFilter(WebMarkupContainer historyContainer) {
+	TextModel filterFieldModel = new TextModel();
+	TextField<String> filterField = new TextField<String>("filterField", filterFieldModel);
+
+	filterField.add(new FilterBehaviour(filterFieldModel, historyContainer));
+	add(filterField);
+    }
+
+    private final class FilterBehaviour extends OnChangeAjaxBehavior {
+
+	private TextModel filterFieldModel;
+	private WebMarkupContainer historyContainer;
+
+	public FilterBehaviour(TextModel filterFieldModel, WebMarkupContainer historyContainer) {
+	    this.filterFieldModel = filterFieldModel;
+	    this.historyContainer = historyContainer;
 	}
 
 	@Override
-	public String getReloadCallbackUrl() {
-		return browserCallback.getCallbackUrl().toString();
+	protected void onUpdate(AjaxRequestTarget target) {
+	    String filterValue = filterFieldModel.getObject();
+	    ImmutableList<QueryEntry> historyList = historyService.read().copyAsList();
+	    resetHistoryTable(historyList);
+	    target.add(historyContainer);
 	}
 
-	@Override
-	public String getReloadableContentCssRef() {
-		return ".cq-historyContainer";
-	}
-
+    }
 }
