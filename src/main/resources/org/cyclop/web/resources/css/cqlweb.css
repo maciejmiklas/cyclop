@@ -198,3 +198,7 @@ ul.cq-cqlCollectionList {
 .cq-historyFilterField {
 	float: right;
 }
+
+.cq-pagination {
+	margin: 0 !important;
+}

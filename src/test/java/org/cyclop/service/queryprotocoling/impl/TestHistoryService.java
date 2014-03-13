@@ -1,21 +1,12 @@
 package org.cyclop.service.queryprotocoling.impl;
 
-import com.google.common.collect.ImmutableList;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
-import org.cyclop.model.QueryEntry;
-import org.cyclop.model.QueryHistory;
-import org.cyclop.model.UserIdentifier;
-import org.cyclop.model.exception.BeanValidationException;
-import org.cyclop.service.common.FileStorage;
-import org.cyclop.test.AbstractTestCase;
-import org.cyclop.test.ThreadTestScope;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,12 +20,22 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import javax.inject.Inject;
+
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.QueryEntry;
+import org.cyclop.model.QueryHistory;
+import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.exception.BeanValidationException;
+import org.cyclop.service.common.FileStorage;
+import org.cyclop.test.AbstractTestCase;
+import org.cyclop.test.ThreadTestScope;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 public class TestHistoryService extends AbstractTestCase {
