@@ -1,8 +1,6 @@
 # Overview
 Cassandra has already a few CQL3 editors, but Cyclop is a bit different. It’s a lightweight  web based  editor - once installed you can access it from web browser and still enjoy native application feeling.
 
-The whole application consists of two pages - authorization and editor itself.
-
 # Authorization
 ![Login](/doc/img/login.png)
 
