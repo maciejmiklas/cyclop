@@ -10,10 +10,10 @@ public class FilterResult<T> implements Serializable {
 
     public final ImmutableList<T> result;
 
+    /** trimmed, lower case */
     public final ImmutableSet<String> normalizedKeywords;
 
     public FilterResult(ImmutableList<T> result, ImmutableSet<String> normalizedKeywords) {
-	super();
 	this.result = result;
 	this.normalizedKeywords = normalizedKeywords;
     }

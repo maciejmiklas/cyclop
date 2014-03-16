@@ -63,6 +63,7 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 	return resList.build();
     }
 
+    // TODO !!!! remove larger keywords if they contain shorter ones
     private ImmutableSet<String> normalize(String... strArray) {
 	ImmutableSet.Builder<String> resSet = ImmutableSet.builder();
 	for (int idx = 0; idx < strArray.length; idx++) {
@@ -118,7 +119,6 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 	    }
 	    return compRes;
 	}
-
     }
 
 }

@@ -2,6 +2,7 @@ package org.cyclop.web.panels.history;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
@@ -13,10 +14,16 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.Strings;
 import org.cyclop.common.AppConfig;
+import org.cyclop.common.StringHelper;
+import org.cyclop.common.StringHelper.StringDecorator;
+import org.cyclop.model.FilterResult;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.queryprotocoling.HistoryService;
+import org.cyclop.service.search.FilterFieldAccessor;
+import org.cyclop.service.search.SearchService;
 import org.cyclop.web.common.AjaxReloadSupport;
 import org.cyclop.web.common.ImmutableListModel;
 import org.cyclop.web.common.TextModel;
@@ -24,6 +31,7 @@ import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.pages.main.MainPage;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /** @author Maciej Miklas */
 public class HistoryPanel extends Panel implements AjaxReloadSupport {
@@ -38,7 +46,16 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
     @Inject
     private DataConverter converter;
 
+    @Inject
+    private SearchService<QueryEntry> searchService;
+
     private PageableListView<QueryEntry> historyTable;
+
+    private ImmutableSet<String> filterKeywords;
+
+    private final static QueryEntryFilterFieldAccessor FILTER_ACCESSOR = new QueryEntryFilterFieldAccessor();
+
+    private final static KeywordDecorator KEYWORD_DECORATOR = new KeywordDecorator();
 
     private ImmutableListModel<QueryEntry> historyModel;
 
@@ -115,7 +132,20 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 		queryLinkParams);
 	item.add(link);
 
-	item.add(new Label("query", entry.query.part));
+	Label queryLabel = new Label("query", decorateQueryWithFilter(entry));
+	queryLabel.setEscapeModelStrings(false);
+	item.add(queryLabel);
+    }
+
+    private String decorateQueryWithFilter(QueryEntry entry) {
+	String query = Strings.escapeMarkup(entry.query.part).toString();
+	if (filterKeywords != null) {
+	    query = StringHelper.decorate(
+		    query,
+		    KEYWORD_DECORATOR,
+		    filterKeywords.toArray(new String[filterKeywords.size()]));
+	}
+	return query;
     }
 
     private void populateExecutedOn(ListItem<QueryEntry> item, QueryEntry entry) {
@@ -166,11 +196,42 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	@Override
 	protected void onUpdate(AjaxRequestTarget target) {
+	    ImmutableList<QueryEntry> historyToUpdate = historyService.read().copyAsList();
+	    filterKeywords = null;
+
 	    String filterValue = filterFieldModel.getObject();
-	    ImmutableList<QueryEntry> historyList = historyService.read().copyAsList();
-	    resetHistoryTable(historyList);
+	    filterValue = StringUtils.trimToNull(filterValue);
+	    if (filterValue != null) {
+		String[] kwordsArr = filterValue.split(" ");
+		FilterResult<QueryEntry> filterResult = searchService.filter(
+			historyToUpdate,
+			FILTER_ACCESSOR,
+			kwordsArr);
+		if (filterResult != null) {
+		    historyToUpdate = filterResult.result;
+		    filterKeywords = filterResult.normalizedKeywords;
+		}
+	    }
+
+	    resetHistoryTable(historyToUpdate);
 	    target.add(historyContainer);
 	}
 
     }
+
+    private final static class QueryEntryFilterFieldAccessor implements FilterFieldAccessor<QueryEntry> {
+	@Override
+	public String getText(QueryEntry obj) {
+	    return obj.query.partLc;
+	}
+    }
+
+    private final static class KeywordDecorator implements StringDecorator {
+	@Override
+	public String decorate(String in) {
+	    return "<span class='cq-filterKeyword'>" + in + "</span>";
+	}
+
+    }
+
 }

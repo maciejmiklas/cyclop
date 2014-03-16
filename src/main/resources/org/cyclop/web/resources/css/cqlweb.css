@@ -202,3 +202,7 @@ ul.cq-cqlCollectionList {
 .cq-pagination {
 	margin: 0 !important;
 }
+
+.cq-filterKeyword {
+	color: red;
+}
