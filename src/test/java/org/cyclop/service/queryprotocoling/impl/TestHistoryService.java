@@ -1,27 +1,6 @@
 package org.cyclop.service.queryprotocoling.impl;
 
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.inject.Inject;
-
+import com.google.common.collect.ImmutableList;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryName;
 import org.cyclop.model.QueryEntry;
@@ -35,7 +14,26 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /** @author Maciej Miklas */
 public class TestHistoryService extends AbstractTestCase {
@@ -131,12 +129,12 @@ public class TestHistoryService extends AbstractTestCase {
 	public void testAddAndStore_InvalidParams() {
 		historyService.addAndStore(new QueryEntry(new CqlQuery(null, null), 1, 2));
 	}
-	
+
 	@Test(expected = BeanValidationException.class)
 	public void testStore_InvalidParams() {
 		historyService.store(null);
 	}
-	
+
 
 	@Test
 	public void testMultiThreadForMultipleUsers() throws Exception {

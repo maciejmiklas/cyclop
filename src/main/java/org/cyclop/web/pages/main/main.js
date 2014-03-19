@@ -16,6 +16,5 @@ function initStaticTab(tabLinkCssRef, removeContentArray) {
 function removeContent(removeContentArray) {
 	removeContentArray.map(function (item) {
 		$(item).empty();
-		console.log("Empty: " + item);
 	});
 }

@@ -110,7 +110,7 @@ pre.cq-helpCqlSyntax {
 	background-color: #0a39b3;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator,.table-hover>tbody>tr.cq-tableRowSeparator>td {
+.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -195,7 +195,7 @@ ul.cq-cqlCollectionList {
 	background-color: #310019 !important;
 }
 
-.cq-historyFilterField {
+.cq-historyFilterCont {
 	float: right;
 }
 

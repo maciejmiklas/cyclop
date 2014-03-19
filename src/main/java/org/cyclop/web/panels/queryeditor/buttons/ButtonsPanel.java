@@ -7,13 +7,16 @@ import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.cyclop.common.AppConfig;
 import org.cyclop.web.components.buttons.StateButton;
 
 /** @author Maciej Miklas */
 public class ButtonsPanel extends Panel {
 
-	private static final JavaScriptResourceReference JS_EXPAND = new JavaScriptResourceReference(ButtonsPanel.class,
+	private static final JavaScriptResourceReference JS_BUTTONS = new JavaScriptResourceReference(ButtonsPanel.class,
 			"buttons.js");
+
+	private AppConfig conf = AppConfig.get();
 
 	public ButtonsPanel(String id, final ButtonListener buttonListener, boolean completionPressed) {
 		super(id);
@@ -26,6 +29,7 @@ public class ButtonsPanel extends Panel {
 			}
 		};
 		add(addToFavourites);
+		addToFavourites.setVisible(conf.favourites.enabled);
 
 		AjaxFallbackLink<Void> execQuery = new AjaxFallbackLink<Void>("execQuery") {
 			@Override
@@ -57,7 +61,7 @@ public class ButtonsPanel extends Panel {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		response.render(JavaScriptReferenceHeaderItem.forReference(JS_EXPAND));
+		response.render(JavaScriptReferenceHeaderItem.forReference(JS_BUTTONS));
 		response.render(OnDomReadyHeaderItem.forScript("initButtons()"));
 	}
 }
