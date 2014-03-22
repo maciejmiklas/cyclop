@@ -6,7 +6,7 @@
 
 	<groupId>org.cyclop</groupId>
 	<artifactId>cyclop</artifactId>
-	<version>1.3.0</version>
+	<version>1.4.0</version>
 	<packaging>war</packaging>
 	<description>Cyclop - Cassandra-CQL3 lightweight web edtor</description>
 	<url>https://github.com/maciejmiklas/cyclop</url>
