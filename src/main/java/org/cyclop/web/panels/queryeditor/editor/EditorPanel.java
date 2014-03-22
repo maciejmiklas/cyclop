@@ -63,7 +63,7 @@ public class EditorPanel extends Panel {
 	public CqlQuery getEditorContent() {
 		String editorValue = editor.getDefaultModelObjectAsString();
 		editorValue = StringUtils.trimToNull(editorValue);
-		if (editorValue == null) {
+		if (editorValue == null || currentCompletion == null) {
 			return null;
 		}
 		CqlQuery cq = new CqlQuery(currentCompletion.queryName, editorValue);
