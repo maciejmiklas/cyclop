@@ -50,6 +50,8 @@ public class QueryResultVerticalPanel extends Panel {
 
 	private AppConfig appConfig = AppConfig.get();
 
+	private BootstrapPagingNavigator pager;
+
 	public QueryResultVerticalPanel(String id) {
 		super(id);
 		Injector.get().inject(this);
@@ -161,7 +163,7 @@ public class QueryResultVerticalPanel extends Panel {
 		};
 		resultTable.add(rowNamesList);
 
-		BootstrapPagingNavigator pager = new BootstrapPagingNavigator("rowNamesListPager", rowNamesList);
+		pager = new BootstrapPagingNavigator("rowNamesListPager", rowNamesList);
 		resultTable.add(pager);
 
 		return displayedRows;
@@ -205,6 +207,7 @@ public class QueryResultVerticalPanel extends Panel {
 
 	private void showResultsTable(CqlSelectResult result) {
 		hideCqlResultText();
+		pager.getPageable().setCurrentPage(0);
 		resultTable.setVisible(true);
 		rowsModel.updateResult(result);
 		columnsModel.updateResult(result);
@@ -280,9 +283,15 @@ public class QueryResultVerticalPanel extends Panel {
 		public void updateResult(CqlSelectResult result) {
 			this.result = result;
 			ImmutableList.Builder<CqlExtendedColumnName> allColumnsBuild = ImmutableList.builder();
-			List<CqlExtendedColumnName> allColumns = allColumnsBuild.addAll(result.commonColumns)
-					.add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, CqlDataType.create(DataType.text()), "-"))
-					.addAll(result.dynamicColumns).build();
+			allColumnsBuild.addAll(result.commonColumns);
+			if (!result.commonColumns.isEmpty() && !result.dynamicColumns.isEmpty()) {
+				allColumnsBuild
+						.add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, CqlDataType.create(DataType.text()),
+								"-"));
+			}
+			allColumnsBuild.addAll(result.dynamicColumns);
+
+			List<CqlExtendedColumnName> allColumns = allColumnsBuild.build();
 			setObject(allColumns);
 		}
 

@@ -46,9 +46,9 @@ public class CookieBasedUserManager implements UserManager {
 		UserIdentifierCookie cookie = cookieStorage
 				.readCookieAsJson(CookieStorage.CookieName.cyclop_userid, UserIdentifierCookie.class);
 		if (cookie == null) {
-			LOG.debug("User Identifier not found as cookie - generating new");
 			id = new UserIdentifier();
 			storeIdentifier(id);
+			LOG.info("Generated new User Identifier: " + id.id);
 		} else {
 			id = cookie.getId();
 		}

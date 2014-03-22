@@ -56,6 +56,10 @@ public class EditorPanel extends Panel {
 		completionChangeListeners.add(list);
 	}
 
+	public void resetCompletion() {
+		currentCompletion = null;
+	}
+
 	public CqlQuery getEditorContent() {
 		String editorValue = editor.getDefaultModelObjectAsString();
 		editorValue = StringUtils.trimToNull(editorValue);

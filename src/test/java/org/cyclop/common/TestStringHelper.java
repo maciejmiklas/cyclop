@@ -16,8 +16,7 @@ public class TestStringHelper {
 						"from", "fromsto", "112", "demo", "not");
 
 		assertEquals(
-				"select * +++++from-- cql+++++demo--.mybooks where id=+++++112--2 and some value is +++++not-- .... " +
-						"+++++fromsto--ne",
+				"select * +++++from-- cql+++++demo--.mybooks where id=+++++112--2 and some value is +++++not-- .... +++++fromsto--ne",
 				decorated);
 	}
 

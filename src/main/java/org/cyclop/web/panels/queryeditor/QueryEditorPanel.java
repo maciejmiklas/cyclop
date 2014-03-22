@@ -19,6 +19,7 @@ import org.cyclop.web.panels.queryeditor.buttons.ButtonsPanel;
 import org.cyclop.web.panels.queryeditor.completionhint.CompletionHintPanel;
 import org.cyclop.web.panels.queryeditor.cqlhelp.CqlHelpPanel;
 import org.cyclop.web.panels.queryeditor.editor.CompletionChangeListener;
+import org.cyclop.web.panels.queryeditor.editor.EditorPanel;
 import org.cyclop.web.panels.queryeditor.export.QueryResultExport;
 import org.cyclop.web.panels.queryeditor.verticalresult.QueryResultVerticalPanel;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class QueryEditorPanel extends Panel {
 		return queryEditorPanel;
 	}
 
-	private ButtonsPanel initButtons(final org.cyclop.web.panels.queryeditor.editor.EditorPanel queryEditorPanel,
+	private ButtonsPanel initButtons(final EditorPanel editorPanel,
 									 final QueryResultVerticalPanel queryResultVerticalPanel,
 									 boolean completionEnabled) {
 		ButtonListener buttonListener = new ButtonListener() {
@@ -107,7 +108,8 @@ public class QueryEditorPanel extends Panel {
 			@Override
 			public void onClickExecCql(AjaxRequestTarget target) {
 
-				// this cannot happen, because java script disables execute button - it's DOS prevention
+				// this cannot happen, because java script disables execute
+				// button - it's DOS prevention
 				if (queryRunning) {
 					LOG.warn("Query still running - cannot execute second one");
 					return;
@@ -115,7 +117,8 @@ public class QueryEditorPanel extends Panel {
 
 				queryResultVerticalPanel.setVisible(true);
 				target.add(queryResultVerticalPanel);
-				CqlQuery query = queryEditorPanel.getEditorContent();
+				CqlQuery query = editorPanel.getEditorContent();
+
 				if (query == null) {
 					return;
 				}
@@ -129,6 +132,7 @@ public class QueryEditorPanel extends Panel {
 				} finally {
 					queryRunning = false;
 				}
+				editorPanel.resetCompletion();
 			}
 
 			@Override

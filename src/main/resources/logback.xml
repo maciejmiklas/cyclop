@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+	<timestamp key="time" datePattern="yyyy-MM-dd_HH-mm-ss"/>
+
+	<appender
+			name="CONSOLE"
+			class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{"HH:mm:ss,SSS"} [%thread] %-5level %class::%method - %msg%n
-			</pattern>
+			<pattern>%d{"HH:mm:ss,SSS"} [%thread] %-5level %class::%method - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender
+			name="FILE" class="ch.qos.logback.core.FileAppender">
+		<file>/tmp/cyclop-${time}.log</file>
+		<append>true</append>
+		<encoder>
+			<pattern>%d{"HH:mm:ss,SSS"} [%thread] %-5level %class::%method - %msg%n</pattern>
 		</encoder>
 	</appender>
 

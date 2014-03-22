@@ -51,7 +51,7 @@ function initButtons() {
 
 			window.history.replaceState({}, "cql", urlBookmark);
 
-			notify("Page Address in browser has been updated - now you can bookmark it :)");
+			notify("Page address in browser has been updated - now you can bookmark it :)");
 		}
 	)
 }

@@ -45,10 +45,11 @@ public class CqlWebSession extends AuthenticatedWebSession {
 			lastLoginError = e.getMessage();
 			authenticated = false;
 
-			LOG.info("Sing-in failed:" + e.getMessage(), e);
+			LOG.info("Log-in failed:" + e.getMessage(), e);
 			LOG.debug(e.getMessage(), e);
 		}
 
+		LOG.info("Log-in succesfull: " + username);
 		return authenticated;
 	}
 
