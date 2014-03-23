@@ -19,7 +19,7 @@ User name and password are used to create Cassandra session,  which is bind to a
 * completion hint - the green pop up on the right side shows all possible completion values. Font has different colors for table, keyspace, column, type and keyword.
 * query syntax help - contains CQL syntax help copied from original Cassandra documentation. It is decorated with color highlighting matching "completion hint" colors.
 
-#### Result Table
+#### Results Table
 * results table is column-oriented, it’s reversed when compared to traditional SQL editors - rows are displayed horizontally, and columns vertically. When scrolling page from left to right you will switch between rows, scrolling from top to bottom will show follow up columns.
 * columns are displayed in order returned by the query, but additionally they are grouped into two sections divided by separator line. The top of the table contains "static columns" - their values are not empty in multiple rows returned by the query. The second section contains columns, which value is not empty only for single row. Cassandra supports dynamic columns, and the idea is to have "static" columns at the top of the table, and "dynamic" ones on the bottom.
 * table header for each row displays partition key value, assuming that query returns it
