@@ -41,6 +41,11 @@ supports dynamic columns, and the idea is to have "static" columns at the top of
 ![Popup Display](/doc/img/large_content.png)
 
 # Query History
+Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has been opened, it’s being stored in HTTP session, and that’s it.
+Providing support for query history gets a bit tricky, if there is no such thing as user.  We could use credentials used to open Cassandra session, but its common use case that many users share them – like “read only user for IT on third third floor”.
+This is a common knowledge that UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie and stores it in browser, it’s being used to recognize browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. This mechanism is used to store all kind of user related data.
+The history itself is stored on server in configured folder (fileStore.folder), in file: [fileStore.folder]\QueryHistory-[User-UUID].json.  The file itself contains serialized history object as json.
+The solution is also secure, so you can use Cyclop from any computer without restrictions. Random cookie is the only information stored in browser – but this does not matter, because history can be viewed only by authenticated users. 
 
 # Bookmarks
 * CQL query can be bookmarked. This is convenient for frequently used queries, or if you like to share it with somebody else.
