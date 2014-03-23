@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-	<timestamp key="time" datePattern="yyyy-MM-dd_HH-mm-ss"/>
+	<timestamp key="time" datePattern="yyyy-MM-dd_HH-mm"/>
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
@@ -9,7 +9,7 @@
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>/tmp/cyclop-${time}.log</file>
+		<file>/var/lib/tomcat7/logs/cyclop-${time}.log</file>
 		<append>true</append>
 		<encoder>
 			<pattern>%d{"HH:mm:ss,SSS"} [%thread] %-5level %msg%n</pattern>
