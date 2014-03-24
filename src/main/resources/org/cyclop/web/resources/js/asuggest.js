@@ -47,7 +47,7 @@ function replaceSuggests(editorId, suggests) {
 (function ($) {
 	// workaround for Opera browser
 	if (navigator.userAgent.match(/opera/i)) {
-		$(document).keypress(function (e) {
+		$(document).on("keypress", function (e) {
 			if ($.asuggestFocused) {
 				$.asuggestFocused.focus();
 				$.asuggestFocused = null;
@@ -280,7 +280,7 @@ function replaceSuggests(editorId, suggests) {
 			$area.setSelection(selectionStart, selectionEnd);
 		};
 
-		$area.keydown(function (e) {
+		$area.on("keydown", function (e) {
 			if (e.keyCode === KEY.TAB) {
 				var chunk = $area.getSuggestChunkBeforeCursor();
 				if (chunk.length >= $area.options.minChunkSize) {
@@ -313,8 +313,7 @@ function replaceSuggests(editorId, suggests) {
 			return true;
 		});
 
-		$area
-			.keyup(function (e) {
+		$area.on("keyup", function (e) {
 				var hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey, hasSpecialKeysOrShift = hasSpecialKeys
 					|| e.shiftKey;
 				switch (e.keyCode) {
