@@ -28,7 +28,7 @@ public class MainPage extends ParentPage {
 		tabSupport = new TabSupport();
 		initQueryEditorTab(params);
 		initHistoryTab();
-		initFavouritesTab();
+		//initFavouritesTab();
 		initLogout();
 	}
 
