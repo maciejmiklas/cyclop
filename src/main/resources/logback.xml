@@ -4,7 +4,7 @@
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{"HH:mm:ss,SSS"} [%thread] %-5level %class::%method - %msg%n</pattern>
+			<pattern>>%d{"HH:mm:ss,SSS"} [%thread] %-5level %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -18,7 +18,7 @@
 
 	<root>
 		<level value="INFO"/>
-		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="FILE"/>
 	</root>
 
 </configuration>
