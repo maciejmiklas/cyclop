@@ -314,42 +314,42 @@ function replaceSuggests(editorId, suggests) {
 		});
 
 		$area.on("keyup", function (e) {
-				var hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey, hasSpecialKeysOrShift = hasSpecialKeys
-					|| e.shiftKey;
-				switch (e.keyCode) {
-					case KEY.UNKNOWN: // Special key released
-					case KEY.SHIFT:
-					case KEY.CTRL:
-					case KEY.ALT:
-					case KEY.RETURN:
-						if (e.ctrlKey) {
-							$(".cq-ExecuteQueryButton").click();
-						}
+			var hasSpecialKeys = e.altKey || e.metaKey || e.ctrlKey, hasSpecialKeysOrShift = hasSpecialKeys
+				|| e.shiftKey;
+			switch (e.keyCode) {
+				case KEY.UNKNOWN: // Special key released
+				case KEY.SHIFT:
+				case KEY.CTRL:
+				case KEY.ALT:
+				case KEY.RETURN:
+					if (e.ctrlKey) {
+						$(".cq-ExecuteQueryButton").click();
+					}
+					break;
+				case KEY.TAB:
+					if (!hasSpecialKeysOrShift) {
 						break;
-					case KEY.TAB:
-						if (!hasSpecialKeysOrShift) {
-							break;
-						}
-					case KEY.ESC:
-					case KEY.BACKSPACE:
-					case KEY.DEL:
-					case KEY.UP:
-					case KEY.DOWN:
-					case KEY.LEFT:
-					case KEY.RIGHT:
-						if (!hasSpecialKeysOrShift) {
-							$area.replaceSelection("");
-						}
-						break;
-					default:
-						if (!hasSpecialKeys) {
-							var completion = $area.getCompletionForInput();
-							$area.updateCompletion(completion);
-						}
-						break;
-				}
-				$area.lastSuggestActive = $area.checkSuggestActive();
-			});
+					}
+				case KEY.ESC:
+				case KEY.BACKSPACE:
+				case KEY.DEL:
+				case KEY.UP:
+				case KEY.DOWN:
+				case KEY.LEFT:
+				case KEY.RIGHT:
+					if (!hasSpecialKeysOrShift) {
+						$area.replaceSelection("");
+					}
+					break;
+				default:
+					if (!hasSpecialKeys) {
+						var completion = $area.getCompletionForInput();
+						$area.updateCompletion(completion);
+					}
+					break;
+			}
+			$area.lastSuggestActive = $area.checkSuggestActive();
+		});
 		return $area;
 	};
 }(jQuery));

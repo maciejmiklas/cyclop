@@ -11,6 +11,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.common.AppConfig;
 import org.cyclop.web.pages.authenticate.AuthenticatePage;
 import org.cyclop.web.pages.parent.ParentPage;
+import org.cyclop.web.panels.about.AboutPanel;
 import org.cyclop.web.panels.favourites.FavouritesPanel;
 import org.cyclop.web.panels.history.HistoryPanel;
 import org.cyclop.web.panels.queryeditor.QueryEditorPanel;
@@ -29,6 +30,7 @@ public class MainPage extends ParentPage {
 		initQueryEditorTab(params);
 		initHistoryTab();
 		//initFavouritesTab();
+		initAboutTab();
 		initLogout();
 	}
 
@@ -57,6 +59,12 @@ public class MainPage extends ParentPage {
 		FavouritesPanel favourites = new FavouritesPanel("favouritesPanel");
 		add(favourites);
 		tabSupport.registerReloadableTab(favourites, ".cq-tabFavourites");
+	}
+
+	private void initAboutTab() {
+		AboutPanel panel = new AboutPanel("aboutPanel");
+		add(panel);
+		tabSupport.registerReloadableTab(panel, ".cq-tabAbout");
 	}
 
 	private void initHistoryTab() {

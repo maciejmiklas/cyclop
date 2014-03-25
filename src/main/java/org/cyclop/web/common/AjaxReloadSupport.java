@@ -11,6 +11,6 @@ public interface AjaxReloadSupport {
 	 *         in browser, when user switches to another tab. Main reason to do that is performance improvements - we try
 	 *         to keep dom tree as small as possible
 	 */
-	String getReloadableContentCssRef();
+	String getRemovableContentCssRef();
 
 }

@@ -96,8 +96,8 @@ public final class QueryFavourites implements Serializable, Synchronizable {
 	}
 
 	/**
-	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing
-	 *         elements can be always replaced - update change date
+	 * @return true if add was successful, otherwise false - meaning that size limit is reached. Already existing elements
+	 *         can be always replaced - update change date
 	 */
 	public boolean addWithSizeCheck(QueryEntry entry) {
 		lock.lock();
