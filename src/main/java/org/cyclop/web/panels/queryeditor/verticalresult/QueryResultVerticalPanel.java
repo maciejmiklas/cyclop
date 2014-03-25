@@ -184,7 +184,6 @@ public class QueryResultVerticalPanel extends Panel {
 		} else {
 			showResultsTable(result);
 		}
-
 		return result;
 	}
 

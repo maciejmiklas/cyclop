@@ -27,7 +27,7 @@ class TabSupport {
 	 */
 	public void registerReloadableTab(AjaxReloadSupport tab, String tabClikcLinkCssRef) {
 		refreshTabs.add(new FullRefreshData(tab, tabClikcLinkCssRef));
-		removableContentCssRefs.add(tab.getReloadableContentCssRef());
+		removableContentCssRefs.add(tab.getRemovableContentCssRef());
 	}
 
 	/**
@@ -69,7 +69,7 @@ class TabSupport {
 
 	private Set<String> generateRemoveContentList(FullRefreshData data) {
 		Set<String> removeContentList = new HashSet<>(removableContentCssRefs);
-		removeContentList.remove(data.panel.getReloadableContentCssRef());
+		removeContentList.remove(data.panel.getRemovableContentCssRef());
 		return removeContentList;
 	}
 

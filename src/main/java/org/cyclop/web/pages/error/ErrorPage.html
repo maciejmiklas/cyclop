@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+</head>
+<body>
+<wicket:extend>
+	<div class="row">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4">
+			<div class="panel panel-danger">
+				<div class="panel-heading">
+					<h3 class="panel-title">Ups... something went wrong</h3>
+				</div>
+				<div class="panel-body">
+					Error ID:
+					<wicket:container wicket:id="errorRef"></wicket:container>
+				</div>
+			</div>
+
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<h3 class="panel-title">What next?</h3>
+				</div>
+				<div class="panel-body">
+					<a href="/cyclop">Go to start page</a>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-lg-4"></div>
+	</div>
+</wicket:extend>
+</body>
+
+</html>

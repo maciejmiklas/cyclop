@@ -171,7 +171,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 	}
 
 	@Override
-	public String getReloadableContentCssRef() {
+	public String getRemovableContentCssRef() {
 		return ".cq-historyContainer";
 	}
 
