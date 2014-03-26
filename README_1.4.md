@@ -3,6 +3,7 @@ There are already few Cassandra Query Language editors available, but Cyclop is 
 
 # User Management
 ![Login](/doc/img/login.png)
+
 Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has
 been opened, it's being stored in HTTP session, and that's it. From now on, each CQL it being passed to Cassandra over its active session, and the query result is successful or not - based on access rights defined in Cassandra for this particular user.
 Providing support for things like query history gets a bit tricky, if there is no such thing as user.  We could use credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
