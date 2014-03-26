@@ -3,32 +3,35 @@ There are already few Cassandra Query Language editors available, but Cyclop is 
 
 # User Management
 ![Login](/doc/img/login.png)
-Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has been opened, it's being stored in HTTP session, and that's it. From now on, each CQL it being passed to Cassandra over its active session, and the query result is successful or not - based on access rights defined in Cassandra for this particular user.
+Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has
+been opened, it's being stored in HTTP session, and that's it. From now on, each CQL it being passed to Cassandra over its active session, and the query result is successful or not - based on access rights defined in Cassandra for this particular user.
 Providing support for things like query history gets a bit tricky, if there is no such thing as user.  We could use credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.
 
 # Query Editor
-* supports context completion for CQL3 syntax. For example:
-   * if the keyspace has been set ("use myKespace"), the completion contains only tables from specified keyspace, or
-   * completion contains only tables that belong to keyspace that has been provided in the query (select * from
- myKespace.xyz...), or
-![CQL Completion](/doc/img/completion_space_tables.png)
-   * completion contains only columns of a table that has been provided in the query (insert into myTable values .... )
-![CQL Completion Colors](/doc/img/completion_colors.png)
-
-* keyboard navigation:
-   * Enter - confirms currently highlighted completion
-   * Tab - next completion value
-   * Ctrl+Enter - executes query
-   * ESC - cancel completion
-* completion hint - the green pop up on the right top corner shows all possible completion values. Font has different colors
-for table, keyspace, column, type and keyword. Also the keywords are grouped together, and then sorted. Groups are build for: table, column and eyspace names
-* query syntax help - contains CQL syntax help copied from original Cassandra documentation. It is decorated with color
-highlighting matching "completion hint" colors
+### Query Completion
+![CQL Completion](/doc/img/colors.png)
+* CQL keyword completion is supported for almost whole CQL3 syntax
+* Completion Hint shows all possible completion values, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color.
+* if the keyspace has been set in previous query ("use myKespace"), the completion for the following queries
+will be narrowed to tables from this keysapce, assuming that keyspace is not explicitly provided in query
+![CQL Completion](/doc/img/completion_tables_from_global_keyspace.png)
+* completion contains only tables that belong to keyspace that has been provided in current query
+![CQL Completion](/doc/img/completion_system_tables.png)
+* completion contains only columns of a table that has been provided in current query
+![CQL Completion](/doc/img/completion_table_columns.png)
+* query syntax help has been copied from Cassandra documentation. It is decorated with color highlighting
+matching Completion Hint colors
 ![CQL Syntax Help](/doc/img/cql_syntax_help.png)
 
-## Query Editor Configuration
-<code>cyclop/src/main/resources/cyclop.properties</code>:
+### Keyboard Navigation
+* Enter - confirms currently highlighted completion
+* Tab - next completion value
+* Ctrl+Enter - executes query
+* ESC - cancel completion
+
+### Query Editor Configuration
+<code>cyclop/src/main/resources/cyclop.properties</code>
 
 ``` properties
 cqlEditor.rowsPerPage: 5
@@ -62,12 +65,12 @@ supports dynamic columns, and the idea is to have "static" columns at the top of
 ![Query History Filter](/doc/img/query_history_filter.png)
 * pressing Enter resets filter, you can also click on "clean" icon
 
-## Query History on the Server
+### Query History on the Server
 The history itself is stored on server in configured folder (fileStore.folder), in file: [fileStore.folder]\QueryHistory-[User-UUID].json.  The file itself contains serialized history in json form.
 The solution is also secure, so you can use Cyclop from any computer without restrictions. Random cookie is the only information stored in browser - but this does not matter, because history can be viewed only by authenticated users.
 
-## Query History Configuration
-<code>cyclop/src/main/resources/cyclop.properties</code>:
+### Query History Configuration
+<code>cyclop/src/main/resources/cyclop.properties</code>
 
 ``` properties
 history.entriesLimit: 500
@@ -87,8 +90,8 @@ CQL query can be bookmarked. This is convenient for frequently used queries, or 
 
 Query result can be exported to CSV file.
 
-## Configuration
-<code>cyclop/src/main/resources/cyclop.properties</code>:
+### Configuration
+<code>cyclop/src/main/resources/cyclop.properties</code>
 
 ``` properties
 cqlExport.querySeparator:CR====CR
