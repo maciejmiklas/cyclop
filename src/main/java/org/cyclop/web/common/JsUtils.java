@@ -12,7 +12,7 @@ public final class JsUtils {
 		if (param == null) {
 			throw new IllegalArgumentException("Null param");
 		}
-		return "'" + param + "'";
+		return "\"" + param + "\"";
 	}
 
 	public static <T extends DisplaySupport> String escapeArray(Collection<T> col) {

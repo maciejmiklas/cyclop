@@ -17,7 +17,7 @@ public class TestJsUtils {
 
 	@Test
 	public void testEscape() {
-		assertEquals("'test value to escape .... ;)'", JsUtils.escape("test value to escape .... ;)"));
+		assertEquals("\"test value to escape .... ;)'\"", JsUtils.escape("test value to escape .... ;)'"));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -32,14 +32,14 @@ public class TestJsUtils {
 
 	@Test
 	public void testEscapeArray() {
-		assertEquals("['col 1','col 1231','2col 41']", JsUtils.escapeArray(ImmutableSet
+		assertEquals("[\"col 1\",\"col 1231\",\"2col 41\"]", JsUtils.escapeArray(ImmutableSet
 				.of(new CqlColumnName("col 1"), new CqlColumnName("col 1"), new CqlColumnName("col 1231"),
 						new CqlColumnName("2col 41"))));
 	}
 
 	@Test
 	public void testEscapeStrArray() {
-		assertEquals("['123123','param two']", JsUtils.escapeStrArray(ImmutableSet.of("123123", "param two")));
+		assertEquals("[\"123123\",\"param two\"]", JsUtils.escapeStrArray(ImmutableSet.of("123123", "param two")));
 	}
 
 }

@@ -16,7 +16,8 @@ public class TestJsFunctionBuilder {
 
 	@Test
 	public void testMixedParameters() {
-		assertEquals("refreshPage(['123123','param two'],'param 1','param 2',['col 1','col 1231','2col 41'],'param 4')",
+		assertEquals(
+				"refreshPage([\"123123\",\"param two\"],\"param 1\",\"param 2\",[\"col 1\",\"col 1231\",\"2col 41\"],\"param 4\")",
 				JsFunctionBuilder.function("refreshPage").arrayStr(ImmutableSet.of("123123", "param two"))
 						.param("param 1").param("param 2").array(ImmutableSet
 						.of(new CqlColumnName("col 1"), new CqlColumnName("col 1"), new CqlColumnName("col 1231"),
@@ -25,7 +26,7 @@ public class TestJsFunctionBuilder {
 
 	@Test
 	public void tesSimpleParameters() {
-		assertEquals("refreshPage('param 1','param 2')",
+		assertEquals("refreshPage(\"param 1\",\"param 2\")",
 				JsFunctionBuilder.function("refreshPage").param("param 1").param("param 2").build());
 	}
 }

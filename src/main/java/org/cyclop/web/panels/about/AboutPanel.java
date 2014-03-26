@@ -26,10 +26,9 @@ public class AboutPanel extends Panel implements AjaxReloadSupport {
 			public void detach() {
 			}
 
-			// TODO read version from manifest file
 			@Override
 			public String getObject() {
-				return "1.4";
+				return "1.4.0";
 			}
 
 			@Override
