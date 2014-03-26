@@ -9,10 +9,11 @@ As you might noticed, the UUID is a solution to all our problems, and this time 
 
 # Query Editor
 * supports context completion for CQL3 syntax. For example:
-** if the keyspace has been set ("use myKespace"), the completion contains only tables from specified keyspace, or
-** completion contains only tables that belong to keyspace that has been provided in the query (select * from myKespace.xyz...), or
+   * if the keyspace has been set ("use myKespace"), the completion contains only tables from specified keyspace, or
+   * completion contains only tables that belong to keyspace that has been provided in the query (select * from
+ myKespace.xyz...), or
 ![CQL Completion](/doc/img/completion_space_tables.png)
-** completion contains only columns of a table that has been provided in the query (insert into myTable values .... )
+   * completion contains only columns of a table that has been provided in the query (insert into myTable values .... )
 ![CQL Completion Colors](/doc/img/completion_colors.png)
 
 * keyboard navigation:
