@@ -10,7 +10,7 @@ As you might noticed, the UUID is a solution to all our problems, and this time 
 
 # Query Editor
 ### Query Completion
-![CQL Completion](/doc/img/colors.png)
+![CQL Completion](/doc/img/completion_colors.png)
 * CQL keyword completion is supported for almost whole CQL3 syntax
 * Completion Hint shows all possible completion values, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color.
 * if the keyspace has been set in previous query ("use myKespace"), the completion for the following queries
