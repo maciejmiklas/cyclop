@@ -5,9 +5,13 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 public class QueryHelper {
+
+	private final static Logger LOG = LoggerFactory.getLogger(QueryHelper.class);
 
 	public static CqlKeySpace extractSpace(CqlQuery query) {
 		String cqlLc = query.partLc.replaceAll("[;]", "");
@@ -20,7 +24,9 @@ public class QueryHelper {
 		if (space == null) {
 			return null;
 		}
-		return new CqlKeySpace(space);
+		CqlKeySpace exspace = new CqlKeySpace(space);
+		LOG.debug("Extrancted space {} from {}", exspace, query);
+		return exspace;
 	}
 
 	public static CqlTable extractTableName(CqlKeyword cqlKeyword, CqlQuery query) {
@@ -61,6 +67,8 @@ public class QueryHelper {
 		} else {
 			result = new CqlTable(candidate);
 		}
+
+		LOG.debug("Extracted table {} from {}, {}", result, cqlKeyword, query);
 		return result;
 	}
 
@@ -68,12 +76,12 @@ public class QueryHelper {
 		for (CqlKeyword kw : cqlKeyword) {
 			CqlKeySpace keySpace = extractKeyspaceSingle(query, kw);
 			if (keySpace != null) {
+				LOG.debug("Extracted {} from {} for {}", keySpace, query, kw);
 				return keySpace;
 			}
 		}
 		return null;
 	}
-
 
 	private static CqlKeySpace extractKeyspaceSingle(CqlQuery query, CqlKeyword cqlKeyword) {
 		String cqlLc = query.partLc;

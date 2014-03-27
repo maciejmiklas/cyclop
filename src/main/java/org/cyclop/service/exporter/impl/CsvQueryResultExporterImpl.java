@@ -1,4 +1,4 @@
-package org.cyclop.service.converter;
+package org.cyclop.service.exporter.impl;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
@@ -9,7 +9,12 @@ import org.cyclop.model.CqlColumnValue;
 import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
+import org.cyclop.service.converter.DataConverter;
+import org.cyclop.service.converter.DataExtractor;
+import org.cyclop.service.exporter.CsvQueryResultExporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,7 +25,9 @@ import java.util.Map;
 
 /** @author Maciej Miklas */
 @Named
-public class CsvQueryResultExporter {
+public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
+
+	private final static Logger LOG = LoggerFactory.getLogger(CsvQueryResultExporterImpl.class);
 
 	@Inject
 	private DataExtractor extractor;
@@ -31,7 +38,9 @@ public class CsvQueryResultExporter {
 	@Inject
 	private AppConfig.CqlExport conf;
 
-	public String exportAsCsv(CqlQuery query, CqlSelectResult result) {
+	public String exportAsCsv(CqlQuery query, CqlQueryResult result) {
+		LOG.debug("Starting CSV export for {}", query);
+
 		StringBuilder buf = new StringBuilder();
 
 		// header
@@ -50,10 +59,13 @@ public class CsvQueryResultExporter {
 			appendRow(buf, row, cols);
 			buf.append(conf.rowSeparator);
 		}
+
+		LOG.trace("Created CSV: {}", buf);
 		return buf.toString();
 	}
 
 	private void appendRow(StringBuilder buf, Row row, List<CqlExtendedColumnName> cols) {
+		LOG.debug("Apending next row");
 		Iterator<CqlExtendedColumnName> it = cols.iterator();
 		while (it.hasNext()) {
 			CqlExtendedColumnName column = it.next();
@@ -79,6 +91,8 @@ public class CsvQueryResultExporter {
 				.entrySet();
 		Iterator<Map.Entry<CqlColumnValue, CqlColumnValue>> it = displayMap.iterator();
 
+		LOG.trace("Appending: {}", displayMap);
+
 		StringBuilder mapBuf = new StringBuilder();
 		while (it.hasNext()) {
 			Map.Entry<CqlColumnValue, CqlColumnValue> entry = it.next();
@@ -98,11 +112,14 @@ public class CsvQueryResultExporter {
 			}
 		}
 
-		buf.append(esc(mapBuf.toString()));
+		String mapVal = esc(mapBuf.toString());
+		LOG.trace("Appended map: {}", mapVal);
+		buf.append(mapVal);
 	}
 
 	private void appendCollection(StringBuilder buf, Row row, CqlExtendedColumnName column) {
 		ImmutableList<CqlColumnValue> content = extractor.extractCollection(row, column);
+		LOG.trace("Appending {}", content);
 		Iterator<CqlColumnValue> contentIt = content.iterator();
 		StringBuilder listBuild = new StringBuilder();
 		while (contentIt.hasNext()) {
@@ -113,21 +130,26 @@ public class CsvQueryResultExporter {
 				listBuild.append(conf.listSeparator);
 			}
 		}
-		buf.append(esc(listBuild.toString()));
+		String colVal = esc(listBuild.toString());
+		LOG.trace("Append collection: {}", colVal);
+		buf.append(colVal);
 	}
 
 	private void appendSingleValue(StringBuilder buf, Row row, CqlExtendedColumnName column) {
 		CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row, column);
 		String valText = esc(converter.convert(cqlColumnValue.value));
+		LOG.trace("Append single value: {}", valText);
 		buf.append(valText);
 	}
 
 	private void appendHeader(CqlQuery query, StringBuilder buf) {
-		buf.append(prep(query.part));
+		String headerVal = prep(query.part);
+		LOG.trace("Append header: {}", headerVal);
+		buf.append(headerVal);
 		buf.append(conf.querySeparator);
 	}
 
-	private void appendGroupSeparator(CqlSelectResult result, StringBuilder buf) {
+	private void appendGroupSeparator(CqlQueryResult result, StringBuilder buf) {
 		if (!result.commonColumns.isEmpty() && !result.dynamicColumns.isEmpty()) {
 			buf.append(conf.columnSeparator);
 		}
@@ -138,6 +160,8 @@ public class CsvQueryResultExporter {
 		if (columns.isEmpty()) {
 			return;
 		}
+
+		LOG.trace("Appending {}", columns);
 
 		Iterator<CqlExtendedColumnName> commonColsIt = columns.iterator();
 		while (commonColsIt.hasNext()) {

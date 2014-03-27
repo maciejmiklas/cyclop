@@ -3,7 +3,7 @@ package org.cyclop.service.queryprotocoling.impl;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.UnmodifiableIterator;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryFavourites;
 import org.cyclop.model.UserIdentifier;
@@ -80,11 +80,11 @@ public class TestFavouritesService extends AbstractTestCase {
 
 		for (int i = 0; i < 20; i++) {
 			assertTrue(favourites.addWithSizeCheck(
-					new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i),
+					new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from HistoryStarTest where id=" + i),
 							1000 + i, 34)));
 
 			assertTrue(favourites.addWithSizeCheck(
-					new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i),
+					new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from HistoryStarTest where id=" + i),
 							2000 + i, 34)));
 
 			favService.store(favourites);
@@ -109,7 +109,7 @@ public class TestFavouritesService extends AbstractTestCase {
 		{
 			for (int i = 0; i < 20; i++) {
 				QueryEntry entry = new QueryEntry(
-						new CqlQuery(CqlQueryName.SELECT, "select * from HistoryStarTest where id=" + i), 4000 + i, 34);
+						new CqlQuery(CqlQueryType.SELECT, "select * from HistoryStarTest where id=" + i), 4000 + i, 34);
 				assertTrue(entry.toString(), readFavs.contains(entry));
 			}
 		}
@@ -155,7 +155,7 @@ public class TestFavouritesService extends AbstractTestCase {
 						QueryFavourites readFavs = favService.read();
 						favs.add(readFavs);
 
-						QueryEntry fav = new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
+						QueryEntry fav = new QueryEntry(new CqlQuery(CqlQueryType.SELECT,
 								"select * from MyTable2 where id=" + UUID.randomUUID()), 5000 + i, 34);
 						int retry = 0;
 						while (!readFavs.addWithSizeCheck(fav)) {

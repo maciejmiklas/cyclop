@@ -1,7 +1,7 @@
 package org.cyclop.model;
 
 /** @author Maciej Miklas */
-public enum CqlQueryName {
+public enum CqlQueryType {
 	UNKNOWN,
 	CREATE_KEYSPACE,
 	USE,

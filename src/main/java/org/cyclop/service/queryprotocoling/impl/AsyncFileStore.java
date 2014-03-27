@@ -33,19 +33,23 @@ class AsyncFileStore<H> {
 	}
 
 	public H getFromWriteQueue(UserIdentifier identifier) {
+		LOG.debug("Reading history from queue for: {}", identifier);
 		synchronized (diskQueue) {
-			return diskQueue.get(identifier);
+			H hist = diskQueue.get(identifier);
+			LOG.trace("Found history: {}", hist);
+			return hist;
 		}
 	}
 
 	/**
-	 * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization block
-	 * on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block time is
-	 * reduced
+	 * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization
+	 * block on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block
+	 * time is reduced
 	 */
 	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
 	@PreDestroy
 	public synchronized void flush() {
+		LOG.debug("Flushing history");
 		while (true) {
 			UserIdentifier identifier;
 			H history;
@@ -53,6 +57,7 @@ class AsyncFileStore<H> {
 			// synchronize #historyMap only for short time to not block
 			// store(...) function by file operation
 			synchronized (diskQueue) {
+				LOG.debug("Got into mutex");
 				if (diskQueue.isEmpty()) {
 					LOG.debug("Flush done - no more entries found");
 					return;

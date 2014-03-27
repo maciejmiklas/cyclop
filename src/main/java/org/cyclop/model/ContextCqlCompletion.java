@@ -12,13 +12,13 @@ import java.util.Objects;
 public final class ContextCqlCompletion implements Serializable {
 	@NotNull
 	@Valid
-	public final CqlQueryName queryName;
+	public final CqlQueryType queryName;
 
 	@NotNull
 	@Valid
 	public final CqlCompletion cqlCompletion;
 
-	public ContextCqlCompletion(CqlQueryName queryName, CqlCompletion cqlCompletion) {
+	public ContextCqlCompletion(CqlQueryType queryName, CqlCompletion cqlCompletion) {
 		this.queryName = queryName;
 		this.cqlCompletion = cqlCompletion;
 	}

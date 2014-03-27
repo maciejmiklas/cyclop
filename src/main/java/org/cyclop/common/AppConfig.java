@@ -4,6 +4,8 @@ import net.jcip.annotations.Immutable;
 import org.cyclop.validation.BeanValidator;
 import org.cyclop.validation.SimpleDate;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
@@ -16,12 +18,9 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
 /** @author Maciej Miklas */
-
-/**
- *
- */
 @Named
 public class AppConfig implements Serializable {
+	private final static Logger LOG = LoggerFactory.getLogger(AppConfig.class);
 
 	@NotNull
 	@Valid
@@ -94,6 +93,7 @@ public class AppConfig implements Serializable {
 	void init() {
 		instance = this;
 		BeanValidator.create(this).validate();
+		LOG.info("Read configuration: {}", this);
 	}
 
 	@Override
@@ -149,7 +149,6 @@ public class AppConfig implements Serializable {
 					maxConnectionsProSession + ", useSsl=" + useSsl + "]";
 		}
 
-
 	}
 
 	@Named
@@ -176,7 +175,6 @@ public class AppConfig implements Serializable {
 			return "FileStore [maxFileSize=" + maxFileSize + ", lockWaitTimeoutMilis=" + lockWaitTimeoutMilis +
 					", folder=" + folder + "]";
 		}
-
 
 	}
 
@@ -299,7 +297,6 @@ public class AppConfig implements Serializable {
 					", maxColumnTooltipDisplayChars=" + maxColumnTooltipDisplayChars + "]";
 		}
 
-
 	}
 
 	@Named
@@ -376,8 +373,6 @@ public class AppConfig implements Serializable {
 					valueBracketEnd + ", trim=" + trim + ", removeCrChars=" + removeCrChars + "]";
 		}
 
-
 	}
-
 
 }

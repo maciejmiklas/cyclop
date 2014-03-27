@@ -61,6 +61,7 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 
 	@Override
 	public void store(@NotNull H newHistory) {
+		LOG.debug("String history");
 		history.set(newHistory);
 		UserIdentifier user = getUser();
 
@@ -77,8 +78,10 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 	public
 	@NotNull
 	H read() {
+		LOG.debug("Accessing history");
 		if (history.get() == null) {
 			synchronized (asyncFileStore) {
+				LOG.debug("Reading history");
 				if (history.get() == null) {
 					UserIdentifier user = getUser();
 

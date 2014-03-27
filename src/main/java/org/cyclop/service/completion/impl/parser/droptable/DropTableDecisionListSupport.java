@@ -2,7 +2,7 @@ package org.cyclop.service.completion.impl.parser.droptable;
 
 import net.jcip.annotations.ThreadSafe;
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
@@ -38,8 +38,8 @@ class DropTableDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlQueryName queryName() {
-		return CqlQueryName.DROP_TABLE;
+	public CqlQueryType queryName() {
+		return CqlQueryType.DROP_TABLE;
 	}
 
 }

@@ -10,9 +10,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.UserPreferences;
-import org.cyclop.service.converter.CsvQueryResultExporter;
+import org.cyclop.service.exporter.CsvQueryResultExporter;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.panels.queryeditor.buttons.ButtonListener;
 import org.cyclop.web.panels.queryeditor.buttons.ButtonsPanel;
@@ -39,7 +39,7 @@ public class QueryEditorPanel extends Panel {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryEditorPanel.class);
 
-	private CqlSelectResult lastQueryResult;
+	private CqlQueryResult lastQueryResult;
 
 	private CqlQuery lastQuery;
 
@@ -101,6 +101,12 @@ public class QueryEditorPanel extends Panel {
 		ButtonListener buttonListener = new ButtonListener() {
 
 			@Override
+			public void onQueryScriptImport(AjaxRequestTarget target) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
 			public void onClickQueryResultExport(AjaxRequestTarget target) {
 				queryResultExport.initiateDownload(target, lastQuery, lastQueryResult);
 			}
@@ -124,7 +130,7 @@ public class QueryEditorPanel extends Panel {
 				}
 				queryRunning = true;
 				try {
-					CqlSelectResult queryResult = queryResultVerticalPanel.executeQuery(query, target);
+					CqlQueryResult queryResult = queryResultVerticalPanel.executeQuery(query, target);
 					if (queryResult != null) {
 						lastQueryResult = queryResult;
 						lastQuery = query;

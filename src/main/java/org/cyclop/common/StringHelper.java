@@ -1,11 +1,15 @@
 package org.cyclop.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
 /** @author Maciej Miklas */
 public class StringHelper {
+	private final static Logger LOG = LoggerFactory.getLogger(StringHelper.class);
 
 	public static String decorate(String toDecorate, StringDecorator decorator, String... keywordsLc) {
 
@@ -35,6 +39,7 @@ public class StringHelper {
 				startSearch = foundIdx + decoratedKw.length() + 1;
 			}
 		}
+		LOG.trace("Decorated {} to {}", toDecorate, buf);
 		return buf.toString();
 	}
 

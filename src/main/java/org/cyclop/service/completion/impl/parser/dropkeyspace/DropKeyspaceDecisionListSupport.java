@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.impl.parser.dropkeyspace;
 
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
@@ -36,8 +36,8 @@ class DropKeyspaceDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlQueryName queryName() {
-		return CqlQueryName.DROP_KEYSPACE;
+	public CqlQueryType queryName() {
+		return CqlQueryType.DROP_KEYSPACE;
 	}
 
 }

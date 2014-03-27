@@ -2,7 +2,7 @@ package org.cyclop.service.search;
 
 import com.google.common.collect.ImmutableSet;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.FilterResult;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Test;
@@ -19,14 +19,14 @@ public class TestSearchService extends AbstractTestCase {
 	@Inject
 	private SearchService<CqlQuery> service;
 
-	private final static CqlQuery[] QUERIES = {new CqlQuery(CqlQueryName.SELECT,
-			"0 select * from cqldemo.mybooks where a=11234"), new CqlQuery(CqlQueryName.SELECT,
-			"1 select * from cqldemo.mybooks where a=3322425"), new CqlQuery(CqlQueryName.SELECT,
-			"2 select attr,id,val from cqldemo.mybooks where a=3322"), new CqlQuery(CqlQueryName.SELECT,
-			"3 select attr,id,val from mybooks where a=332233"), new CqlQuery(CqlQueryName.INSERT,
-			"4 insert attr,id,val into mybooks where a=3322441"), new CqlQuery(CqlQueryName.INSERT,
-			"5 insert attr into mybooks where rid=11233332"), new CqlQuery(CqlQueryName.INSERT,
-			"6 insert attr into testbooks where rid=23423"), new CqlQuery(CqlQueryName.SELECT,
+	private final static CqlQuery[] QUERIES = {new CqlQuery(CqlQueryType.SELECT,
+			"0 select * from cqldemo.mybooks where a=11234"), new CqlQuery(CqlQueryType.SELECT,
+			"1 select * from cqldemo.mybooks where a=3322425"), new CqlQuery(CqlQueryType.SELECT,
+			"2 select attr,id,val from cqldemo.mybooks where a=3322"), new CqlQuery(CqlQueryType.SELECT,
+			"3 select attr,id,val from mybooks where a=332233"), new CqlQuery(CqlQueryType.INSERT,
+			"4 insert attr,id,val into mybooks where a=3322441"), new CqlQuery(CqlQueryType.INSERT,
+			"5 insert attr into mybooks where rid=11233332"), new CqlQuery(CqlQueryType.INSERT,
+			"6 insert attr into testbooks where rid=23423"), new CqlQuery(CqlQueryType.SELECT,
 			"7 select attr from testbooks where rid=33223323")};
 
 	private final static ImmutableSet<CqlQuery> QUERY_LIST = prepare();

@@ -2,6 +2,8 @@ package org.cyclop.model;
 
 import com.google.common.collect.ImmutableSortedSet;
 import net.jcip.annotations.Immutable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -12,6 +14,7 @@ import java.util.Objects;
 /** @author Maciej Miklas */
 @Immutable
 public final class CqlCompletion implements Serializable {
+	private final static Logger LOG = LoggerFactory.getLogger(CqlCompletion.class);
 
 	private final static String[] VALUE_PREF = {"'", "(", ",", ":"};
 
@@ -143,7 +146,9 @@ public final class CqlCompletion implements Serializable {
 		}
 
 		public CqlCompletion build() {
-			return new CqlCompletion(full.build(), min.build());
+			CqlCompletion comp = new CqlCompletion(full.build(), min.build());
+			LOG.trace("Build completion: {}", comp);
+			return comp;
 		}
 
 	}

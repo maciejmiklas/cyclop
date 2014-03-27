@@ -99,6 +99,7 @@ public class FileStorage {
 	}
 
 	public void store(@NotNull UserIdentifier userId, @NotNull Object entity) throws ServiceException {
+		LOG.debug("Storing file for {}", userId);
 		Path histPath = getPath(userId, entity.getClass());
 		try (FileChannel channel = openForWrite(histPath)) {
 			String jsonText = jsonMarshaller.marshal(entity);
@@ -109,30 +110,34 @@ public class FileStorage {
 			throw new ServiceException(
 					"Error storing query history in:" + histPath + " - " + e.getClass() + " - " + e.getMessage(), e);
 		}
+		LOG.trace("File has been sotred {}", entity);
 	}
 
 	public
 	@Valid
 	<T> T read(@NotNull UserIdentifier userId, @NotNull Class<T> clazz) throws ServiceException {
-		Path histPath = getPath(userId, clazz);
-		try (FileChannel channel = openForRead(histPath)) {
+		Path filePath = getPath(userId, clazz);
+		LOG.debug("Reading file {} for {}", filePath, userId);
+		try (FileChannel channel = openForRead(filePath)) {
 			if (channel == null) {
-				LOG.debug("History file not found: {}", histPath);
+				LOG.debug("File not found: {}", filePath);
 				return null;
 			}
 			int fileSize = (int) channel.size();
 			if (fileSize > config.fileStore.maxFileSize) {
-				LOG.info("History file: {} too large: {} - skipping it", histPath, fileSize);
+				LOG.info("File: {} too large: {} - skipping it", filePath, fileSize);
 				return null;
 			}
 			ByteBuffer buf = ByteBuffer.allocate(fileSize);
 			channel.read(buf);
 			buf.flip();
 			String decoded = decoder.get().decode(buf).toString();
-			T history = jsonMarshaller.unmarshal(clazz, decoded);
-			return history;
+			T content = jsonMarshaller.unmarshal(clazz, decoded);
+
+			LOG.debug("File read");
+			return content;
 		} catch (IOException | SecurityException | IllegalStateException e) {
-			throw new ServiceException("Error reading query history from:" + histPath + " - " + e.getMessage(), e);
+			throw new ServiceException("Error reading filr from:" + filePath + " - " + e.getMessage(), e);
 		}
 
 	}
@@ -158,7 +163,7 @@ public class FileStorage {
 	}
 
 	private FileChannel lock(Path histPath, FileChannel channel) throws IOException {
-
+		LOG.debug("Trying to log file: {}", histPath);
 		long start = System.currentTimeMillis();
 		String lastExMessage = null;
 		FileChannel lockChannel = null;

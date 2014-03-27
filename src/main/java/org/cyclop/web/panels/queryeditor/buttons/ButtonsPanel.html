@@ -9,11 +9,15 @@
 			<a href="#" wicket:id="execQuery" class="btn btn-sm btn-success cq-ExecuteQueryButton"
 			   title="Execute Query [CTRL+ENTER]"><span class="glyphicon glyphicon-play"></span></a>
 
-			&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;
 
 			<a href="#" wicket:id="exportQueryResult" class="btn btn-sm btn-warning"
-			   title="Export Last Query Result"><span
+			   title="Export Last Query Result as CSV"><span
 					class="glyphicon glyphicon-floppy-save"></span></a>
+
+			<a href="#" wicket:id="queryScriptImport" class="btn btn-sm btn-warning"
+			   title="CSV Query Script Import"><span
+					class="glyphicon glyphicon-floppy-open"></span></a>
 
 			<a href="#" class="btn btn-sm btn-warning cq-BookmarkButton" title="Bookmark Query"><span
 					class="glyphicon glyphicon glyphicon-envelope"></span></a>
@@ -21,12 +25,11 @@
 			<a href="#" wicket:id="addToFavourites" class="btn btn-sm btn-info" title="Add To Favourites"><span
 					class="glyphicon glyphicon-star"></span></a>
 
-			&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;
 
 			<!-- initButtons() in buttons.js searches for clqHelpExpandSupportLink and registers click() function -->
 			<button type="button" class="btn btn-sm btn-primary cq-CqlHelpButton"
 					title="Cql Help"><span class="glyphicon glyphicon-comment"></span></button>
-
 			<a href="#" wicket:id="completion" class="btn btn-sm btn-primary" title="Completion Hint"><span
 					class="glyphicon glyphicon-pencil"></span></a>
 

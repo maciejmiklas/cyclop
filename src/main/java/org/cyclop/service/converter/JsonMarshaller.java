@@ -9,6 +9,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
 import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.cyclop.model.exception.ServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import javax.validation.Valid;
@@ -18,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 /** @author Maciej Miklas */
 @Named
 public class JsonMarshaller {
+	private final static Logger LOG = LoggerFactory.getLogger(JsonMarshaller.class);
 
 	private final ThreadLocal<ObjectMapper> objectMapper;
 
@@ -55,6 +58,7 @@ public class JsonMarshaller {
 			throw new ServiceException(
 					"Got IOException during json unmarshalling: " + e.getMessage() + " - input:'" + input + "'", e);
 		}
+		LOG.trace("Unmarshaled JSON from {} to {}", input, unmarshalObj);
 		return unmarshalObj;
 	}
 
@@ -71,7 +75,9 @@ public class JsonMarshaller {
 		}
 
 		try {
-			return new String(marshalBytes, "UTF-8");
+			String marshalled = new String(marshalBytes, "UTF-8");
+			LOG.trace("Marshalled JSON from {} to {}", obj, marshalled);
+			return marshalled;
 		} catch (UnsupportedEncodingException e) {
 			throw new ServiceException(
 					"UnsupportedEncodingException marshalling Json stream: " + e.getMessage() + " - input:'" + obj +

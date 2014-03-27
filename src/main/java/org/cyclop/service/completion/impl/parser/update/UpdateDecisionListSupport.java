@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.impl.parser.update;
 
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
@@ -45,8 +45,8 @@ class UpdateDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlQueryName queryName() {
-		return CqlQueryName.UPDATE;
+	public CqlQueryType queryName() {
+		return CqlQueryType.UPDATE;
 	}
 
 }

@@ -10,6 +10,8 @@ public class SerializationUtil {
 	private final static Logger LOG = LoggerFactory.getLogger(SerializationUtil.class);
 
 	public static void setFiled(Object obj, String fieldName, Object val) {
+		LOG.debug("Set filed {} to {} on {}", fieldName, val, obj);
+
 		try {
 			Class<?> clazz = obj.getClass();
 			Field field = findField(clazz, fieldName);
@@ -40,6 +42,8 @@ public class SerializationUtil {
 			}
 			fieldClass = fieldClass.getSuperclass();
 		} while (fieldClass != null && field == null);
+
+		LOG.debug("Found filed {} on {}", fieldName, clazz);
 		return field;
 	}
 }

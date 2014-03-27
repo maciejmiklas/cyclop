@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.impl.parser.dropindex;
 
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
@@ -36,8 +36,8 @@ class DropIndexDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlQueryName queryName() {
-		return CqlQueryName.DROP_INDEX;
+	public CqlQueryType queryName() {
+		return CqlQueryType.DROP_INDEX;
 	}
 
 }

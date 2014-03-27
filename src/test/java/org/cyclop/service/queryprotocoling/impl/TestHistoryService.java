@@ -2,7 +2,7 @@ package org.cyclop.service.queryprotocoling.impl;
 
 import com.google.common.collect.ImmutableList;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
@@ -79,7 +79,7 @@ public class TestHistoryService extends AbstractTestCase {
 
 		for (int i = 0; i < 600; i++) {
 			historyService.addAndStore(new QueryEntry(
-					new CqlQuery(CqlQueryName.SELECT, "select * " + CR + "from HistoryTest where " + CR + "id=" + i),
+					new CqlQuery(CqlQueryType.SELECT, "select * " + CR + "from HistoryTest where " + CR + "id=" + i),
 					1000 + i, 300 + i));
 			QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user);
 			assertNotNull(historyQueue);
@@ -99,7 +99,7 @@ public class TestHistoryService extends AbstractTestCase {
 
 		for (int i = 100; i < 600; i++) {
 			QueryEntry tofind = new QueryEntry(
-					new CqlQuery(CqlQueryName.SELECT, "select * from HistoryTest where id=" + i), 2000 + i, 300 + i);
+					new CqlQuery(CqlQueryType.SELECT, "select * from HistoryTest where id=" + i), 2000 + i, 300 + i);
 			assertTrue(tofind + " NOT FOUND IN: " + readHist, readHist.contains(tofind));
 
 			ImmutableList<QueryEntry> readList = readHist.copyAsList();
@@ -167,7 +167,7 @@ public class TestHistoryService extends AbstractTestCase {
 						QueryHistory history = historyService.read();
 						histories.add(history);
 
-						QueryEntry histEntry = new QueryEntry(new CqlQuery(CqlQueryName.SELECT,
+						QueryEntry histEntry = new QueryEntry(new CqlQuery(CqlQueryType.SELECT,
 								"select * from MyTable2 where id=" + UUID.randomUUID()), 4000 + i, 34);
 						history.add(histEntry);
 

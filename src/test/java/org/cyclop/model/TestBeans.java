@@ -66,13 +66,13 @@ public class TestBeans extends AbstractTestCase {
 	public void testSerialize_QueryFavourites() throws Exception {
 		QueryFavourites obj = new QueryFavourites();
 		obj.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryName.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(),
+				new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(),
 						2312, 34));
 		obj.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
+				new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
 						DateTime.now(), 234, 34));
 		obj.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), DateTime.now(), 345,
+				new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), DateTime.now(), 345,
 						34));
 
 		byte[] serialized = serialize(obj);
@@ -82,18 +82,18 @@ public class TestBeans extends AbstractTestCase {
 
 		// check whether lock has been deserialized
 		des.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), DateTime.now(), 542,
+				new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), DateTime.now(), 542,
 						34));
 	}
 
 	@Test
 	public void testSerialize_QueryHistory() throws Exception {
 		QueryHistory obj = new QueryHistory();
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(), 23,
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(), 23,
 				34));
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
 				DateTime.now(), 7654, 34));
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), DateTime.now(),
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), DateTime.now(),
 				987656, 34));
 
 		byte[] serialized = serialize(obj);
@@ -106,7 +106,7 @@ public class TestBeans extends AbstractTestCase {
 
 	@Test
 	public void testSerialize_QueryEntry() throws Exception {
-		QueryEntry obj = new QueryEntry(new CqlQuery(CqlQueryName.ALTER_TABLE, "alter cqldemo.mybooks ...."),
+		QueryEntry obj = new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."),
 				DateTime.now(), 1231, 34);
 		execSerializeEquals(obj, QueryEntry.class);
 	}
@@ -163,13 +163,13 @@ public class TestBeans extends AbstractTestCase {
 
 	@Test
 	public void testSerialize_CqlQuery() throws Exception {
-		CqlQuery obj = new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks");
+		CqlQuery obj = new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks");
 		execSerializeEquals(obj, CqlQuery.class);
 	}
 
 	@Test
 	public void testSerialize_CqlSelectResult() throws Exception {
-		CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"));
+		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"));
 		assertNotNull(res);
 		assertNotNull(res.rows);
 		assertNotNull(res.commonColumns);
@@ -178,7 +178,7 @@ public class TestBeans extends AbstractTestCase {
 		assertTrue(res.commonColumns.size() > 0);
 
 		byte[] serBytes = serialize(res);
-		CqlSelectResult des = deserialize(serBytes, CqlSelectResult.class);
+		CqlQueryResult des = deserialize(serBytes, CqlQueryResult.class);
 		assertNotNull(des);
 		assertNotNull(des.rows);
 		assertNotNull(des.commonColumns);
@@ -247,19 +247,19 @@ public class TestBeans extends AbstractTestCase {
 		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.TEXT, "cqldemo"));
 		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.create(DataType.counter()), "cqldemo.mybooks"));
 
-		et.addEqualityGroup(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks"));
-		et.addEqualityGroup(new CqlQuery(CqlQueryName.SELECT, "cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlQuery(CqlQueryType.SELECT, "cqldemo.mybooks"));
 
 		et.addEqualityGroup(new CqlTable("cqldemo", "mybooks"));
 		et.addEqualityGroup(new CqlTable("cqldemo.mybooks"));
 		et.addEqualityGroup(new CqlTable("cqldemo"));
 		et.addEqualityGroup(new CqlTable("mybooks"));
 
-		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks"), 34523, 34),
-				new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo.mybooks"), new DateTime(), 2465245,
+		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo.mybooks"), 34523, 34),
+				new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo.mybooks"), new DateTime(), 2465245,
 						34));
-		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryName.CREATE_INDEX, "cqldemo.mybooks"), 345, 34));
-		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "cqldemo"), 3452, 34));
+		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryType.CREATE_INDEX, "cqldemo.mybooks"), 345, 34));
+		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo"), 3452, 34));
 
 		et.addEqualityGroup(new UserIdentifier(UUID.randomUUID()));
 		et.addEqualityGroup(new UserIdentifier(UUID.randomUUID()));

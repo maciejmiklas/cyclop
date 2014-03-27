@@ -2,7 +2,7 @@ package org.cyclop.service.completion.impl.parser.batch;
 
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlNotSupported;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
@@ -37,8 +37,8 @@ class BatchDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlQueryName queryName() {
-		return CqlQueryName.BATCH;
+	public CqlQueryType queryName() {
+		return CqlQueryType.BATCH;
 	}
 
 }

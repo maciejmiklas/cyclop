@@ -2,7 +2,7 @@ package org.cyclop.service.common;
 
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryFavourites;
 import org.cyclop.model.QueryHistory;
@@ -94,7 +94,7 @@ public class TestFileStorage extends AbstractTestCase {
 		assertEquals(0, hist.size());
 		assertFalse(hist.iterator().hasNext());
 
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable");
 		QueryEntry histEntry = new QueryEntry(query, 234, 44);
 		assertFalse(hist.contains(histEntry));
 		try {
@@ -111,7 +111,7 @@ public class TestFileStorage extends AbstractTestCase {
 		assertEquals(0, hist.size());
 		assertFalse(hist.copyAsSortedSet().iterator().hasNext());
 
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable");
 		QueryEntry histEntry = new QueryEntry(query, 6456, 34);
 		assertFalse(hist.contains(histEntry));
 		try {
@@ -127,7 +127,7 @@ public class TestFileStorage extends AbstractTestCase {
 		UserIdentifier userId = new UserIdentifier(UUID.randomUUID());
 		QueryHistory newHistory = new QueryHistory();
 
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable");
 		QueryEntry histEntry = new QueryEntry(query, 6645, 34);
 		newHistory.add(histEntry);
 
@@ -154,7 +154,7 @@ public class TestFileStorage extends AbstractTestCase {
 		UserIdentifier userId = new UserIdentifier(UUID.randomUUID());
 		QueryFavourites newHistory = new QueryFavourites();
 
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable");
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable");
 		QueryEntry favEntry = new QueryEntry(query, 234, 34);
 		newHistory.addWithSizeCheck(favEntry);
 
@@ -176,7 +176,7 @@ public class TestFileStorage extends AbstractTestCase {
 		QueryFavourites history = new QueryFavourites();
 		{
 			for (int i = 0; i < 50; i++) {
-				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=" + i);
+				CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable where id=" + i);
 				assertTrue(history.addWithSizeCheck(new QueryEntry(query, 234, 34)));
 			}
 			assertEquals(50, history.size());
@@ -186,7 +186,7 @@ public class TestFileStorage extends AbstractTestCase {
 
 		{
 			for (int i = 0; i < 10; i++) {
-				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTableA where id=" + i);
+				CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTableA where id=" + i);
 				assertFalse(history.addWithSizeCheck(new QueryEntry(query, 456, 34)));
 			}
 			checkFavLimitContent(history);
@@ -194,7 +194,7 @@ public class TestFileStorage extends AbstractTestCase {
 
 		{
 			for (int i = 0; i < 20; i++) {
-				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=" + i);
+				CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable where id=" + i);
 				assertTrue(history.addWithSizeCheck(new QueryEntry(query, 234, 34)));
 			}
 			checkFavLimitContent(history);
@@ -215,7 +215,7 @@ public class TestFileStorage extends AbstractTestCase {
 		assertEquals(50, history.size());
 		for (int i = 0; i < 50; i++) {
 			assertTrue(favIt.hasNext());
-			CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable where id=" + i);
+			CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable where id=" + i);
 			assertTrue(history.contains(new QueryEntry(query, 7754, 34)));
 			assertTrue(history.contains(favIt.next()));
 		}
@@ -229,7 +229,7 @@ public class TestFileStorage extends AbstractTestCase {
 			QueryHistory history = new QueryHistory();
 
 			for (int i = 0; i < 600; i++) {
-				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable1 where id=" + i);
+				CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable1 where id=" + i);
 				history.add(new QueryEntry(query, 4563, 34));
 			}
 			assertEquals(500, history.size());
@@ -262,7 +262,7 @@ public class TestFileStorage extends AbstractTestCase {
 			}
 
 			for (int i = 0; i < 10; i++) {
-				CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from MyTable2 where id=" + i);
+				CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable2 where id=" + i);
 				history.add(new QueryEntry(query, 567, 34));
 			}
 			storage.store(userId, history);

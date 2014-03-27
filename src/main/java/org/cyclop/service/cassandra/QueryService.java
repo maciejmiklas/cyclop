@@ -5,7 +5,7 @@ import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlTable;
 
 import javax.validation.Valid;
@@ -29,7 +29,7 @@ public interface QueryService {
 	ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
 
 	@NotNull
-	CqlSelectResult execute(@NotNull CqlQuery query);
+	CqlQueryResult execute(@NotNull CqlQuery query);
 
 	@NotNull
 	ImmutableSortedSet<CqlTable> findTableNames(@Valid CqlKeySpace keySpace);

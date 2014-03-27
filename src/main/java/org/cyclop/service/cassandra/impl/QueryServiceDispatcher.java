@@ -5,7 +5,7 @@ import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.service.cassandra.QueryService;
@@ -76,10 +76,10 @@ public class QueryServiceDispatcher implements QueryService {
 	}
 
 	@Override
-	public CqlSelectResult execute(CqlQuery query) {
+	public CqlQueryResult execute(CqlQuery query) {
 		long startTime = System.currentTimeMillis();
 
-		CqlSelectResult resp = get().execute(query);
+		CqlQueryResult resp = get().execute(query);
 
 		long runTime = System.currentTimeMillis() - startTime;
 		int resultSize = resp.rows.size();

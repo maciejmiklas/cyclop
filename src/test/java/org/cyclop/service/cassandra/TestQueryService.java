@@ -10,8 +10,8 @@ import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.test.AbstractTestCase;
@@ -98,7 +98,7 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Test(expected = BeanValidationException.class)
 	public void testFindColumnNames_ViolationEmpty() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, " "));
+		qs.execute(new CqlQuery(CqlQueryType.USE, " "));
 	}
 
 	@Test(expected = BeanValidationException.class)
@@ -108,7 +108,7 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Test
 	public void testFindColumnNames_KeyspaceInSession() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("MyBooks"));
 		assertNotNull(resp);
 		assertTrue("size: " + resp.size(), resp.size() > 5);
@@ -130,9 +130,9 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Test
 	public void testExecute_CompoundPkNoDynamicColumns() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
-		CqlSelectResult res = qs
-				.execute(new CqlQuery(CqlQueryName.SELECT, "select * from CompoundTest where deesc='TEST_SET_1'"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "USE CqlDemo"));
+		CqlQueryResult res = qs
+				.execute(new CqlQuery(CqlQueryType.SELECT, "select * from CompoundTest where deesc='TEST_SET_1'"));
 		assertEquals(50, res.rows.size());
 
 		assertEquals(4, res.commonColumns.size());
@@ -164,8 +164,8 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Test
 	public void testExecute_SimplePkWithDynamicColumn() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "USE CqlDemo"));
-		CqlSelectResult res = qs.execute(new CqlQuery(CqlQueryName.SELECT, "select * from MyBooks where pages=2212"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "USE CqlDemo"));
+		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from MyBooks where pages=2212"));
 		assertEquals(100, res.rows.size());
 
 		assertTrue(res.toString(), res.dynamicColumns.contains(

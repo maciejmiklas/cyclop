@@ -1,7 +1,7 @@
 package org.cyclop.service.completion.impl.parser.use;
 
 import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 
@@ -36,8 +36,8 @@ class UseDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlQueryName queryName() {
-		return CqlQueryName.USE;
+	public CqlQueryType queryName() {
+		return CqlQueryType.USE;
 	}
 
 }

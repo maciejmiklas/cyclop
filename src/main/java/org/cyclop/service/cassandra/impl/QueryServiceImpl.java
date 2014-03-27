@@ -19,8 +19,8 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.cassandra.QueryService;
@@ -143,16 +143,16 @@ class QueryServiceImpl implements QueryService {
 	}
 
 	@Override
-	public CqlSelectResult execute(CqlQuery query) {
+	public CqlQueryResult execute(CqlQuery query) {
 		LOG.debug("Executing CQL: {}", query);
 
-		if (query.type == CqlQueryName.USE) {
+		if (query.type == CqlQueryType.USE) {
 			setActiveKeySpace(query);
 		}
 
 		ResultSet cqlResult = execute(query.part);
 		if (cqlResult == null || cqlResult.isExhausted()) {
-			return new CqlSelectResult();
+			return new CqlQueryResult();
 		}
 
 		Map<String, CqlColumnType> typeMap = createTypeMap(query);
@@ -179,7 +179,7 @@ class QueryServiceImpl implements QueryService {
 		// create query result
 		ImmutableList<Row> rows = rowsBuild.build();
 		if (rows.isEmpty()) {
-			return new CqlSelectResult();
+			return new CqlQueryResult();
 		}
 
 		ImmutableList.Builder<CqlExtendedColumnName> commonColumnsBuild = ImmutableList.builder();
@@ -194,7 +194,7 @@ class QueryServiceImpl implements QueryService {
 		}
 		ImmutableList<CqlExtendedColumnName> commonCols = commonColumnsBuild.build();
 		ImmutableList<CqlExtendedColumnName> dynamicColumns = dynamicColumnsBuild.build();
-		CqlSelectResult result = new CqlSelectResult(commonCols, dynamicColumns, rows, partitionKey);
+		CqlQueryResult result = new CqlQueryResult(commonCols, dynamicColumns, rows, partitionKey);
 		return result;
 	}
 

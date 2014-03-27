@@ -17,9 +17,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public final class CqlQuery extends CqlPart {
 
 	@NotNull
-	public final CqlQueryName type;
+	public final CqlQueryType type;
 
-	public CqlQuery(CqlQueryName type, String cql) {
+	public CqlQuery(CqlQueryType type, String cql) {
 		super(cql);
 		this.type = type;
 	}
@@ -34,7 +34,7 @@ public final class CqlQuery extends CqlPart {
 	public final static class CqlQueryJaxb {
 		public String cql;
 
-		public CqlQueryName type;
+		public CqlQueryType type;
 	}
 
 	@XmlTransient

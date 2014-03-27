@@ -9,5 +9,7 @@ public interface ButtonListener {
 
 	void onClickQueryResultExport(AjaxRequestTarget target);
 
+	void onQueryScriptImport(AjaxRequestTarget target);
+
 	void onClickCompletion(AjaxRequestTarget target, boolean pressed);
 }

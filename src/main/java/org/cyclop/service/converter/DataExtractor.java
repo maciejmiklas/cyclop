@@ -47,6 +47,8 @@ public class DataExtractor {
 
 		}
 		ImmutableList<CqlColumnValue> collection = builder.build();
+
+		LOG.trace("Extracted collection: {}", collection);
 		return collection;
 	}
 
@@ -73,6 +75,7 @@ public class DataExtractor {
 		}
 
 		ImmutableMap<CqlColumnValue, CqlColumnValue> map = builder.build();
+		LOG.trace("Extracted map: {}", map);
 		return map;
 	}
 
@@ -81,6 +84,7 @@ public class DataExtractor {
 	CqlPartitionKeyValue extractPartitionKey(@NotNull Row row, @NotNull CqlPartitionKey partitionKey) {
 		CqlColumnValue colSv = extractSingleValue(row, partitionKey);
 		CqlPartitionKeyValue key = new CqlPartitionKeyValue(colSv.valueClass, colSv.value, partitionKey);
+		LOG.trace("Extracted: {}", key);
 		return key;
 	}
 
@@ -137,6 +141,8 @@ public class DataExtractor {
 
 		Class<?> eClass = extracted.getClass();
 		CqlColumnValue cqlColumnValue = new CqlColumnValue(eClass, extracted, column);
+
+		LOG.debug("Extracted: {}", cqlColumnValue);
 		return cqlColumnValue;
 	}
 

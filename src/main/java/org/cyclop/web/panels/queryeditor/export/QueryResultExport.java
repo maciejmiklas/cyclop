@@ -6,8 +6,8 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlSelectResult;
-import org.cyclop.service.converter.CsvQueryResultExporter;
+import org.cyclop.model.CqlQueryResult;
+import org.cyclop.service.exporter.CsvQueryResultExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +24,7 @@ public class QueryResultExport implements Serializable {
 
 	private CqlQuery query;
 
-	private CqlSelectResult lastQueryResult;
+	private CqlQueryResult lastQueryResult;
 
 	private final CsvQueryResultExporter exporter;
 
@@ -36,7 +36,7 @@ public class QueryResultExport implements Serializable {
 		parent.add(downloader);
 	}
 
-	public void initiateDownload(AjaxRequestTarget target, CqlQuery query, CqlSelectResult lastQueryResult) {
+	public void initiateDownload(AjaxRequestTarget target, CqlQuery query, CqlQueryResult lastQueryResult) {
 		downloader.initiateDownload(target);
 		this.query = query;
 		this.lastQueryResult = lastQueryResult;

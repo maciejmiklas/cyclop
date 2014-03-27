@@ -14,7 +14,7 @@ import java.io.Serializable;
 
 /** @author Maciej Miklas */
 @Immutable
-public final class CqlSelectResult implements Serializable {
+public final class CqlQueryResult implements Serializable {
 
 	/** List of columns that can be found in every row returned by the query */
 	@NotNull
@@ -33,7 +33,7 @@ public final class CqlSelectResult implements Serializable {
 	/** could be null, it not found in result, or in case of error while reading meta data info */
 	public final transient CqlPartitionKey partitionKey;
 
-	public CqlSelectResult() {
+	public CqlQueryResult() {
 		this.commonColumns = ImmutableList.of();
 		this.dynamicColumns = ImmutableList.of();
 		this.rows = ImmutableList.of();
@@ -45,9 +45,9 @@ public final class CqlSelectResult implements Serializable {
 		SerializationUtil.setFiled(this, "rows", ImmutableList.of());
 	}
 
-	public CqlSelectResult(ImmutableList<CqlExtendedColumnName> commonColumns,
-						   ImmutableList<CqlExtendedColumnName> dynamicColumns, ImmutableList<Row> rows,
-						   CqlPartitionKey partitionKey) {
+	public CqlQueryResult(ImmutableList<CqlExtendedColumnName> commonColumns,
+						  ImmutableList<CqlExtendedColumnName> dynamicColumns, ImmutableList<Row> rows,
+						  CqlPartitionKey partitionKey) {
 		this.commonColumns = commonColumns;
 		this.dynamicColumns = dynamicColumns;
 		this.rows = rows;

@@ -20,7 +20,7 @@ import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.web.components.column.WidgetFactory;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
@@ -110,7 +110,7 @@ public class QueryResultVerticalPanel extends Panel {
 				columnListRow.add(columnNameLabel);
 
 				ColumnsModel model = (ColumnsModel) getModel();
-				CqlSelectResult result = model.getResult();
+				CqlQueryResult result = model.getResult();
 				final CqlPartitionKey partitionKey = result == null ? null : result.partitionKey;
 
 				ListView<Row> columnValueList = new ListView<Row>("columnValueList", new RowsModel(displayedRows)) {
@@ -148,7 +148,7 @@ public class QueryResultVerticalPanel extends Panel {
 				displayedRows.add(row);
 
 				RowsModel model = (RowsModel) getModel();
-				CqlSelectResult result = model.getResult();
+				CqlQueryResult result = model.getResult();
 				CqlPartitionKey partitionKey = result.partitionKey;
 
 				Component component;
@@ -169,9 +169,9 @@ public class QueryResultVerticalPanel extends Panel {
 		return displayedRows;
 	}
 
-	public CqlSelectResult executeQuery(CqlQuery query, AjaxRequestTarget target) {
+	public CqlQueryResult executeQuery(CqlQuery query, AjaxRequestTarget target) {
 		target.add(this);
-		CqlSelectResult result = null;
+		CqlQueryResult result = null;
 		try {
 			result = queryService.execute(query);
 		} catch (Exception e) {
@@ -204,7 +204,7 @@ public class QueryResultVerticalPanel extends Panel {
 		columnsModel.clean();
 	}
 
-	private void showResultsTable(CqlSelectResult result) {
+	private void showResultsTable(CqlQueryResult result) {
 		hideCqlResultText();
 		pager.getPageable().setCurrentPage(0);
 		resultTable.setVisible(true);
@@ -216,11 +216,11 @@ public class QueryResultVerticalPanel extends Panel {
 
 		private List<Row> content;
 
-		private CqlSelectResult result;
+		private CqlQueryResult result;
 
 		public void clean() {
 			this.content = ImmutableList.of();
-			this.result = new CqlSelectResult();
+			this.result = new CqlQueryResult();
 		}
 
 		@Override
@@ -241,12 +241,12 @@ public class QueryResultVerticalPanel extends Panel {
 			content = object;
 		}
 
-		public void updateResult(CqlSelectResult result) {
+		public void updateResult(CqlQueryResult result) {
 			this.result = result;
 			setObject(result.rows);
 		}
 
-		private CqlSelectResult getResult() {
+		private CqlQueryResult getResult() {
 			return result;
 		}
 
@@ -256,7 +256,7 @@ public class QueryResultVerticalPanel extends Panel {
 	}
 
 	private final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
-		private CqlSelectResult result;
+		private CqlQueryResult result;
 
 		private List<CqlExtendedColumnName> content = ImmutableList.of();
 
@@ -266,7 +266,7 @@ public class QueryResultVerticalPanel extends Panel {
 
 		public void clean() {
 			this.content = ImmutableList.of();
-			this.result = new CqlSelectResult();
+			this.result = new CqlQueryResult();
 		}
 
 		@Override
@@ -279,7 +279,7 @@ public class QueryResultVerticalPanel extends Panel {
 			content = object;
 		}
 
-		public void updateResult(CqlSelectResult result) {
+		public void updateResult(CqlQueryResult result) {
 			this.result = result;
 			ImmutableList.Builder<CqlExtendedColumnName> allColumnsBuild = ImmutableList.builder();
 			allColumnsBuild.addAll(result.commonColumns);
@@ -294,7 +294,7 @@ public class QueryResultVerticalPanel extends Panel {
 			setObject(allColumns);
 		}
 
-		private CqlSelectResult getResult() {
+		private CqlQueryResult getResult() {
 			return result;
 		}
 

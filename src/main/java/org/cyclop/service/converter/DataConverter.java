@@ -114,6 +114,8 @@ public class DataConverter {
 			LOG.warn("Could not find mapping for type: {}", val.getClass());
 			converted = val.toString();
 		}
+
+		LOG.trace("Converted: {} to {}", val, converted);
 		return converted;
 	}
 

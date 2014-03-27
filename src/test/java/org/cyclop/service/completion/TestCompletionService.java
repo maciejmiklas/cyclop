@@ -6,7 +6,7 @@ import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlKeywordValue;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.test.AbstractTestCase;
@@ -34,7 +34,7 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test(expected = BeanValidationException.class)
 	public void testFindCompletion_Position_Validation_EmptyQuery() {
-		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, " "), 1);
+		cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_TABLE, " "), 1);
 	}
 
 	@Test(expected = BeanValidationException.class)
@@ -44,7 +44,7 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test(expected = BeanValidationException.class)
 	public void testFindCompletion_Position_Validation_NullQuery() {
-		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, null), 1);
+		cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_TABLE, null), 1);
 	}
 
 
@@ -55,7 +55,7 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test(expected = BeanValidationException.class)
 	public void testFindCompletion_Validation_EmptyQuery() {
-		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, " "));
+		cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_TABLE, " "));
 	}
 
 	@Test(expected = BeanValidationException.class)
@@ -65,7 +65,7 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test(expected = BeanValidationException.class)
 	public void testFindCompletion_Validation_NullQuery() {
-		cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, null));
+		cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_TABLE, null));
 	}
 
 	@Test(expected = BeanValidationException.class)
@@ -75,95 +75,95 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_CreateTable_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, "us"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_TABLE, "us"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_CreateTable_NotSupported() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_TABLE, "create table"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_TABLE, "create table"));
 		vh.verifyCompletionNotSupported(completion, "create table");
 	}
 
 	@Test
 	public void testFindCompletion_CreateIndex_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_INDEX, "us"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_INDEX, "us"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_CreateIndex_NotSupported() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.BATCH, "create index"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.BATCH, "create index"));
 		vh.verifyCompletionNotSupported(completion, "create index");
 	}
 
 	@Test
 	public void testFindCompletion_Batch_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.BATCH, "us"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.BATCH, "us"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Batch_NotSupported() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.BATCH, "batch"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.BATCH, "batch"));
 		vh.verifyCompletionNotSupported(completion, "batch");
 	}
 
 	@Test
 	public void testFindCompletion_AlterTable_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.ALTER_TABLE, "us"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.ALTER_TABLE, "us"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_AlterTable_NotSupported() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "alter Table"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter Table"));
 		vh.verifyCompletionNotSupported(completion, "alter table");
 	}
 
 	@Test
 	public void testFindCompletion_AlterKeyspace_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "us"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "us"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_AlterKeyspace_NotSupported() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.ALTER_KEYSPACE, "alter keyspace"));
+				.findCompletion(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter keyspace"));
 		vh.verifyCompletionNotSupported(completion, "alter keyspace");
 	}
 
 	@Test
 	public void testFindCompletion_Use_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.USE, "us"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.USE, "us"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Use_AfterUse() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.USE, "use "));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.USE, "use "));
 		vh.verifyFullAndMinCompletionTheSame(completion, 3);
 		vh.verifyContainsAllKeyspaces(completion.cqlCompletion.minCompletion, true);
 	}
 
 	@Test
 	public void testFindCompletion_Update_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.UPDATE, "up..."));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.UPDATE, "up..."));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Update_AfterUpdate() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.UPDATE, "update"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.UPDATE, "update"));
 		vh.verifyContainsAllKeyspacesAndTables(completion, false);
 	}
 
 	@Test
 	public void testFindCompletion_Update_AfterTableName() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.UPDATE, "update mybooks"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.UPDATE, "update mybooks"));
 		vh.verifyFullAndMinCompletionTheSame(completion, 3);
 		vh.verifyContainsOnlyKeywords(completion.cqlCompletion.minCompletion, CqlKeyword.Def.USING_TTL.value,
 				CqlKeyword.Def.USING_TIMESTAMP.value, CqlKeyword.Def.SET.value);
@@ -171,9 +171,9 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Update_AfterSet() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs.findCompletion(
-				new CqlQuery(CqlQueryName.UPDATE, "update mybooks USING TTL 400 SET director = 'Joss Whedon',"));
+				new CqlQuery(CqlQueryType.UPDATE, "update mybooks USING TTL 400 SET director = 'Joss Whedon',"));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 14);
 
@@ -190,8 +190,8 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Update_AfterWhere() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.UPDATE,
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.UPDATE,
 				"update mybooks USING TTL 400 SET director = 'Joss Whedon',main_actor = 'Nathan Fillion',year = 2005 where"));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 14);
@@ -208,46 +208,46 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Truncate_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.TRUNCATE, "bara-bara"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.TRUNCATE, "bara-bara"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Truncate_AfterTruncate() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.TRUNCATE, "truncate "));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.TRUNCATE, "truncate "));
 		vh.verifyContainsAllKeyspacesAndTables(completion, false);
 	}
 
 	@Test
 	public void testFindCompletion_Truncate_AfterTruncateWithSpaceName() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.TRUNCATE, "truncate cqldemo. "));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.TRUNCATE, "truncate cqldemo. "));
 		vh.verifyFullAndMinCompletionNotTheSame(completion, 2, 4);
 		vh.verifyCqldemoSpaceInQuery(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Insert_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.INSERT, "inse..."));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.INSERT, "inse..."));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Insert_AfterInsert_SpaceSystem() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.INSERT, "insert into abc..."));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.INSERT, "insert into abc..."));
 
 		vh.verifyContainsAllKeyspacesAndTables(completion, false);
 	}
 
 	@Test
 	public void testFindCompletion_Insert_AfterTableName() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.INSERT, "insert into cqldemo.mybooks ("));
+				.findCompletion(new CqlQuery(CqlQueryType.INSERT, "insert into cqldemo.mybooks ("));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 13);
 
@@ -276,9 +276,9 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Insert_AfterColumns() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.INSERT, "insert into cqldemo.mybooks (a,b,c)"));
+				.findCompletion(new CqlQuery(CqlQueryType.INSERT, "insert into cqldemo.mybooks (a,b,c)"));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 1);
 		vh.verifyContainsOnlyKeywords(completion.cqlCompletion.fullCompletion, CqlKeyword.Def.VALUES.value);
@@ -286,9 +286,9 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Insert_OnValues() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.INSERT, "insert into cqldemo.mybooks (a,b,c) values"));
+				.findCompletion(new CqlQuery(CqlQueryType.INSERT, "insert into cqldemo.mybooks (a,b,c) values"));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 1);
 		vh.verifyContainsOnlyKeywords(completion.cqlCompletion.fullCompletion, CqlKeyword.Def.VALUES.value);
@@ -296,9 +296,9 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Insert_AfterVaues() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs.findCompletion(
-				new CqlQuery(CqlQueryName.INSERT, "insert into cqldemo.mybooks (a,b,c) values ('1','1','bla','2') "));
+				new CqlQuery(CqlQueryType.INSERT, "insert into cqldemo.mybooks (a,b,c) values ('1','1','bla','2') "));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 3);
 		vh.verifyContainsOnlyKeywords(completion.cqlCompletion.fullCompletion, CqlKeyword.Def.USING_TTL.value,
@@ -307,8 +307,8 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Insert_AfterInsert_SpaceCqlDemo() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.INSERT, "insert into abc..."));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.INSERT, "insert into abc..."));
 
 		vh.verifyContainsAllKeyspacesAndTables(completion, true);
 	}
@@ -316,7 +316,7 @@ public class TestCompletionService extends AbstractTestCase {
 	@Test
 	public void testFindCompletion_CreateKeyspace_AfterCreate() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, "create keyspace "));
+				.findCompletion(new CqlQuery(CqlQueryType.CREATE_KEYSPACE, "create keyspace "));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 2);
 
@@ -336,19 +336,19 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_CreateKeyspace_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, "c"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_KEYSPACE, "c"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_CreateKeyspace_StartAfterCreate() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, "CREATE "));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_KEYSPACE, "CREATE "));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Delete_AfterDelete() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete "));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DELETE, "delete "));
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 30);
 		vh.verifyContainsAllColumns(completion, true);
@@ -359,19 +359,19 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Delete_AfterFrom_NoSpqceInQuery() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete abc from "));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DELETE, "delete abc from "));
 
 		verifyAfterFromNoSpqceInQuery(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Delete_AfterFrom_SpaceInQuery() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete abc from cqldemo."));
+				.findCompletion(new CqlQuery(CqlQueryType.DELETE, "delete abc from cqldemo."));
 
 		vh.verifyCqldemoSpaceInQuery(completion);
 	}
@@ -379,30 +379,30 @@ public class TestCompletionService extends AbstractTestCase {
 	@Test
 	public void testFindCompletion_Delete_AfterTableName_KeyspaceInQuery() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete abc from cqldemo.mybooks"));
+				.findCompletion(new CqlQuery(CqlQueryType.DELETE, "delete abc from cqldemo.mybooks"));
 		verifyDeleteAfterTableName(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Delete_AfterTableName_KeyspaceInSession() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete abc from mybooks"));
+				.findCompletion(new CqlQuery(CqlQueryType.DELETE, "delete abc from mybooks"));
 		verifyDeleteAfterTableName(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Delete_AfterTableName_WrongKeyspaceInSession() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete abc from mybOoks"));
+				.findCompletion(new CqlQuery(CqlQueryType.DELETE, "delete abc from mybOoks"));
 		verifyDeleteAfterTableName(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Delete_AfterWhere() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DELETE, "delete abc from cqldemo.mybooks WHERE"));
+				.findCompletion(new CqlQuery(CqlQueryType.DELETE, "delete abc from cqldemo.mybooks WHERE"));
 
 		vh.verifyFullAndMinCompletionNotTheSame(completion, 15, 15);
 
@@ -423,89 +423,89 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Delete_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DELETE, "d"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DELETE, "d"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropIndex_AfterDrop() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_INDEX, "drop index   "));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_INDEX, "drop index   "));
 		verifyDropIndexAfterDrop(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropIndex_AfterDropWithExists() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DROP_INDEX, "drop index IF NOT EXISTS"));
+				.findCompletion(new CqlQuery(CqlQueryType.DROP_INDEX, "drop index IF NOT EXISTS"));
 		verifyDropIndexAfterDrop(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropIndex_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_INDEX, "d"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_INDEX, "d"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropIndex_StartDrop() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_INDEX, "drop"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_INDEX, "drop"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropKeyspace_AfterDrop() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_KEYSPACE, "drop keyspace"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_KEYSPACE, "drop keyspace"));
 		verifyDropKeyspaceAfterDrop(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropKeyspace_AfterDrop_KeyspacePartialyInQuery() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DROP_KEYSPACE, "drop keyspace cqlde"));
+				.findCompletion(new CqlQuery(CqlQueryType.DROP_KEYSPACE, "drop keyspace cqlde"));
 		verifyDropKeyspaceAfterDrop(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropKeyspace_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_KEYSPACE, "d"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_KEYSPACE, "d"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropKeyspace_StartDrop() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_KEYSPACE, "drop"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_KEYSPACE, "drop"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_DropTable_AfterDrop_SpaceCqlDemo() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_TABLE, "drop table "));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table "));
 		verifyDropTableAfterDrop(completion, true);
 	}
 
 	@Test
 	public void testFindCompletion_DropTable_AfterDrop_SpaceCqlDemo_IfExists() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DROP_TABLE, "drop table if exists a"));
+				.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table if exists a"));
 		verifyDropTableAfterDrop(completion, true);
 	}
 
 	@Test
 	public void testFindCompletion_DropTable_AfterDrop_SpaceSystem() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_TABLE, "drop table "));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table "));
 		verifyDropTableAfterDrop(completion, false);
 	}
 
 	@Test
 	public void testFindCompletion_DropTable_AfterDrop_SpaceSystem_IfExists() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.DROP_TABLE, "drop table if exists"));
+				.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table if exists"));
 		verifyDropTableAfterDrop(completion, false);
 	}
 
@@ -534,52 +534,52 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_DropTable_Start() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.DROP_TABLE, "dro"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "dro"));
 		verifyInitialCompletion(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Select_AfterFrom_ContainsColumnsFromKeyspaceInSessionScope() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from mybooks"), 8);
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from mybooks"), 8);
 		verifySelectAfterFrom(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Select_AfterFrom_ContainsColumnsFromKeyspaceWithTable_CursorOnEnd() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), 8);
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), 8);
 		verifySelectAfterFrom(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Select_AfterFrom_ContainsColumnsFromKeyspaceWithTable_CursorOnFrom() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks"), 10);
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), 10);
 		verifySelectAfterFrom(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Select_AfterFrom_NoSpqceInQuery() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use cqldemo"));
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from "));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from "));
 		verifyAfterFromNoSpqceInQuery(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Select_AfterFrom_SelectTableFromDifferentSpace() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from mybooks"), 8);
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from mybooks"), 8);
 		verifySelectAfterFrom(completion);
 	}
 
 	@Test
 	public void testFindCompletion_Select_AfterFrom_SpaceInQuery() {
-		qs.execute(new CqlQuery(CqlQueryName.USE, "use system"));
+		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo."));
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo."));
 		vh.verifyCqldemoSpaceInQuery(completion);
 	}
 
@@ -597,7 +597,7 @@ public class TestCompletionService extends AbstractTestCase {
 
 	@Test
 	public void testFindCompletion_Select_AfterSelect_ContainsAllColumns() {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select *"), 88);
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select *"), 88);
 
 		vh.verifyFullAndMinCompletionTheSame(completion, 30);
 		vh.verifyContainsAllColumns(completion, true);
@@ -606,7 +606,7 @@ public class TestCompletionService extends AbstractTestCase {
 	@Test
 	public void testFindCompletion_Select_AfterTableName() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks "), 30);
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks "), 30);
 		vh.verifyFullAndMinCompletionTheSame(completion, 4);
 
 		ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
@@ -619,7 +619,7 @@ public class TestCompletionService extends AbstractTestCase {
 	@Test
 	public void testFindCompletion_Select_AfterWhere() {
 		ContextCqlCompletion completion = cs
-				.findCompletion(new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks  where "), 37);
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks  where "), 37);
 		vh.verifyFullAndMinCompletionNotTheSame(completion, 18, 18);
 
 		{
@@ -647,7 +647,7 @@ public class TestCompletionService extends AbstractTestCase {
 	}
 
 	private void veifySelectWithOrderBy(String cql) {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.SELECT, cql), -1);
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.SELECT, cql), -1);
 		vh.verifyFullAndMinCompletionTheSame(completion, 18);
 
 		ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
@@ -689,7 +689,7 @@ public class TestCompletionService extends AbstractTestCase {
 	}
 
 	private void verifyCreateKeyspaceWith(String cql) {
-		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryName.CREATE_KEYSPACE, cql));
+		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_KEYSPACE, cql));
 
 		vh.verifyFullAndMinCompletionNotTheSame(completion, 10, 34);
 

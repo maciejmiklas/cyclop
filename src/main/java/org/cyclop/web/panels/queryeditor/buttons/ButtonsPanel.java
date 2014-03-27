@@ -48,6 +48,15 @@ public class ButtonsPanel extends Panel {
 		};
 		add(exportQueryResult);
 
+		AjaxFallbackLink<Void> queryScriptImport = new AjaxFallbackLink<Void>("queryScriptImport") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				buttonListener.onQueryScriptImport(target);
+			}
+		};
+		add(queryScriptImport);
+
+
 		AjaxFallbackLink<Void> completion = new StateButton("completion", completionPressed, "btn btn-sm btn-primary",
 				"btn btn-sm btn-primary active") {
 			@Override

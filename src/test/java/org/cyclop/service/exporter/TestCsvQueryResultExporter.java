@@ -1,8 +1,8 @@
-package org.cyclop.service.converter;
+package org.cyclop.service.exporter;
 
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryName;
-import org.cyclop.model.CqlSelectResult;
+import org.cyclop.model.CqlQueryResult;
+import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Test;
@@ -23,8 +23,8 @@ public class TestCsvQueryResultExporter extends AbstractTestCase {
 
 	@Test
 	public void testExportAsCsv_ResultEmpty() {
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select id from cqldemo.mybooks where pages=-1");
-		CqlSelectResult queryRes = qs.execute(query);
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select id from cqldemo.mybooks where pages=-1");
+		CqlQueryResult queryRes = qs.execute(query);
 		String exportRsult = exporter.exportAsCsv(query, queryRes);
 		assertNotNull(exportRsult);
 
@@ -47,8 +47,8 @@ public class TestCsvQueryResultExporter extends AbstractTestCase {
 
 	@Test
 	public void testExportAsCsv_SelectIdsFromMyBooks() {
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select id from cqldemo.mybooks where pages=112291");
-		CqlSelectResult queryRes = qs.execute(query);
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select id from cqldemo.mybooks where pages=112291");
+		CqlQueryResult queryRes = qs.execute(query);
 		String exportRsult = exporter.exportAsCsv(query, queryRes);
 		assertNotNull(exportRsult);
 
@@ -90,9 +90,9 @@ public class TestCsvQueryResultExporter extends AbstractTestCase {
 
 	@Test
 	public void testExportAsCsv_SelectAutorsAndGerneFromMyBooks() {
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT,
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT,
 				"select authors, genre from cqldemo.mybooks where pages=112291");
-		CqlSelectResult queryRes = qs.execute(query);
+		CqlQueryResult queryRes = qs.execute(query);
 		String exportRsult = exporter.exportAsCsv(query, queryRes);
 		assertNotNull(exportRsult);
 
@@ -140,8 +140,8 @@ public class TestCsvQueryResultExporter extends AbstractTestCase {
 
 	@Test
 	public void testExportAsCsv_SelectAllFromMyBooks() {
-		CqlQuery query = new CqlQuery(CqlQueryName.SELECT, "select * from cqldemo.mybooks where pages=112291");
-		CqlSelectResult queryRes = qs.execute(query);
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks where pages=112291");
+		CqlQueryResult queryRes = qs.execute(query);
 		String exportRsult = exporter.exportAsCsv(query, queryRes);
 		assertNotNull(exportRsult);
 
