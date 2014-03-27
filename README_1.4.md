@@ -18,7 +18,7 @@ As you might noticed, the UUID is a solution to all our problems, and this time 
 will be narrowed to tables from this keysapce, assuming that keyspace is not explicitly provided in query
 ![CQL Completion](/doc/img/cmp_tables_from_global_keyspace.png)
 * completion contains only tables that belong to keyspace that has been provided in current query
-![CQL Completion](/doc/img/cop_cqldemo_tables.png)
+![CQL Completion](/doc/img/cmp_cqldemo_tables.png)
 * completion contains only columns of a table that has been provided in current query
 ![CQL Completion](/doc/img/cmp_table_columns.png)
 * query syntax help has been copied from Cassandra documentation. It is decorated with color highlighting
