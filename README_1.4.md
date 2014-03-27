@@ -11,7 +11,7 @@ As you might noticed, the UUID is a solution to all our problems, and this time 
 
 # Query Editor
 ### Query Completion
-![CQL Completion](/doc/img/cop_colors.png)
+![CQL Completion](/doc/img/cmp_colors.png)
 * CQL keyword completion is supported for almost whole CQL3 syntax
 * Completion Hint shows all possible keywords, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color.
 * if the keyspace has been set in previous query ("use cqldemo" in screen shot below), the completion for the following queries
