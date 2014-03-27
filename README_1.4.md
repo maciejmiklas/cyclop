@@ -16,11 +16,11 @@ As you might noticed, the UUID is a solution to all our problems, and this time 
 * Completion Hint shows all possible keywords, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color.
 * if the keyspace has been set in previous query ("use cqldemo" in screen shot below), the completion for the following queries
 will be narrowed to tables from this keysapce, assuming that keyspace is not explicitly provided in query
-![CQL Completion](/doc/img/cop_tables_from_global_keyspace.png)
+![CQL Completion](/doc/img/cmp_tables_from_global_keyspace.png)
 * completion contains only tables that belong to keyspace that has been provided in current query
-![CQL Completion](/doc/img/completion_cqldemo_tables.png)
+![CQL Completion](/doc/img/cop_cqldemo_tables.png)
 * completion contains only columns of a table that has been provided in current query
-![CQL Completion](/doc/img/cop_table_columns.png)
+![CQL Completion](/doc/img/cmp_table_columns.png)
 * query syntax help has been copied from Cassandra documentation. It is decorated with color highlighting
 matching Completion Hint colors
 ![CQL Syntax Help](/doc/img/cql_syntax_help.png)
