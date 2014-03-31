@@ -242,14 +242,19 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 	private final static class KeywordDecorator implements StringDecorator {
 		@Override
 		public String decorate(String in) {
-			return prefix() + in + "</span>";
+			return prefix() + in + postfix();
 		}
 
 		@Override
 		public String prefix() {
 			return "<span class='cq-filterKeyword'>";
 		}
-
+		
+		
+		@Override
+		public String postfix() {
+		    return "</span>";
+		}
 	}
 
 	@Override
