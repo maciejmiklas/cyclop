@@ -5,8 +5,10 @@ There are already few Cassandra Query Language editors available, but Cyclop is 
 ![Login](/doc/img/login.png)
 
 Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has
-been opened, it's being stored in HTTP session, and that's it. From now on, each CQL it being passed to Cassandra over its active session, and the query result is successful or not - based on access rights defined in Cassandra for this particular user.
-Providing support for things like query history gets a bit tricky, if there is no such thing as user.  We could use credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
+been opened, it's being stored in HTTP session, and that's it. From now on, each query it being passed to Cassandra over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
+
+Providing support for things like query history gets a bit tricky, if there is no such thing as user.  We could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
+
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
 
 # Query Editor
