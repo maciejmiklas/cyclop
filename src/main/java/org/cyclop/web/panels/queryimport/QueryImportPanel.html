@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+</head>
+<body>
+	<wicket:panel>
+		<form wicket:id="form">
+
+			<div class="btn-group">
+				<span class="btn btn-success cq-btn-file"><span class="glyphicon glyphicon-plus" />&nbsp;&nbsp;<span
+					class="cq-selected-file-name">Select script file....</span><input wicket:id="scriptFile" type="file"></span>
+				<button class="cq-executeQueryImportButton btn btn-primary" wicket:id="ajaxSubmit" type="button">
+					<span class="glyphicon glyphicon-play" />&nbsp;&nbsp;<span>Execute Script</span>
+				</button>
+
+			</div>
+		</form>
+		
+		<div class="cq-sepLine"></div>
+
+		<div class="row cq-queryImportProgressBar" style='display: none'>
+			<div class="col-lg-3"></div>
+			<div class="col-lg-5">
+				<br>
+				<br>
+				<br>
+				<br>
+				<div class="progress progress-striped active">
+					<div class="progress-bar" style="width: 100%"></div>
+				</div>
+			</div>
+		</div>
+		
+	<div wicket:id="importResultContainer">
+		<wicket:container wicket:id="importResultPager"></wicket:container>
+		<table class="table table-striped table-bordered table-hover">
+			<thead>
+			<tr>
+				<th title="Runtime in ms">Runtime</th>
+				<th>Query</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr wicket:id="resultRow">
+				<td wicket:id="runtime" style="white-space:nowrap; width:1%" align="center"></td>
+				<td>
+					<span wicket:id="query"></span>
+					<wicket:container wicket:id="queryError"><div class="cq-sepLine"></div><span wicket:id="error" class="feedbackPanelERROR"></span> </wicket:container>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>		
+
+	</wicket:panel>
+</body>
+
+</html>

@@ -1,5 +1,17 @@
 package org.cyclop.common;
 
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import net.jcip.annotations.Immutable;
 
 import org.cyclop.model.exception.ServiceException;
@@ -9,17 +21,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 /** @author Maciej Miklas */
 @Named
@@ -94,17 +95,17 @@ public class AppConfig implements Serializable {
 	this.cqlImport = cqlImport;
     }
 
+    private static String crs(String cr, String str) throws UnsupportedEncodingException {
+	String replaced = str.replaceAll("CR", String.valueOf((char) 10));
+	return replaced;
+    }
+
     public static AppConfig get() {
 	if (instance == null) {
 	    throw new IllegalArgumentException(
 		    "Can not access AppConfig because spring initialization is not trough");
 	}
 	return instance;
-    }
-
-    private static String crs(String cr, String str) throws UnsupportedEncodingException {
-	String replaced = str.replaceAll("CR", String.valueOf((char) 10));
-	return replaced;
     }
 
     @PostConstruct
@@ -203,93 +204,6 @@ public class AppConfig implements Serializable {
 
     @Named
     @Immutable
-    public static class FileStore implements Serializable {
-
-	public final int maxFileSize;
-
-	public final int lockWaitTimeoutMilis;
-
-	public final String folder;
-
-	@Inject
-	public FileStore(
-		@Value("${fileStore.maxFileSize}") int maxFileSize,
-		@Value("${fileStore.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis,
-		@Value("${fileStore.folder}") String folder) {
-	    this.maxFileSize = maxFileSize;
-	    this.lockWaitTimeoutMilis = lockWaitTimeoutMilis;
-	    this.folder = folder;
-	}
-
-	@Override
-	public String toString() {
-	    return "FileStore [maxFileSize="
-		    + maxFileSize
-		    + ", lockWaitTimeoutMilis="
-		    + lockWaitTimeoutMilis
-		    + ", folder="
-		    + folder
-		    + "]";
-	}
-
-    }
-
-    @Named
-    @Immutable
-    public static class History implements Serializable {
-	public final int entriesLimit;
-
-	public final int queriesPerPage;
-
-	public final boolean enabled;
-
-	@Inject
-	public History(
-		@Value("${history.entriesLimit}") int entriesLimit,
-		@Value("${history.enabled}") boolean enabled,
-		@Value("${history.queriesPerPage}") int queriesPerPage) {
-	    this.entriesLimit = entriesLimit;
-	    this.enabled = enabled;
-	    this.queriesPerPage = queriesPerPage;
-	}
-
-	@Override
-	public String toString() {
-	    return "History [entriesLimit="
-		    + entriesLimit
-		    + ", queriesPerPage="
-		    + queriesPerPage
-		    + ", enabled="
-		    + enabled
-		    + "]";
-	}
-
-    }
-
-    @Named
-    @Immutable
-    public static class Favourites implements Serializable {
-	public final int entriesLimit;
-
-	public final boolean enabled;
-
-	@Inject
-	public Favourites(
-		@Value("${favourites.entriesLimit}") int entriesLimit,
-		@Value("${favourites.enabled}") boolean enabled) {
-	    this.entriesLimit = entriesLimit;
-	    this.enabled = enabled;
-	}
-
-	@Override
-	public String toString() {
-	    return "Favourites [entriesLimit=" + entriesLimit + ", enabled=" + enabled + "]";
-	}
-
-    }
-
-    @Named
-    @Immutable
     public static class Common implements Serializable {
     }
 
@@ -306,23 +220,6 @@ public class AppConfig implements Serializable {
 	@Override
 	public String toString() {
 	    return "Cookies [expirySeconds=" + expirySeconds + "]";
-	}
-
-    }
-
-    @Named
-    @Immutable
-    public static class HttpSession implements Serializable {
-	public final int expirySeconds;
-
-	@Inject
-	public HttpSession(@Value("${httpSession.expirySeconds}") int expirySeconds) {
-	    this.expirySeconds = expirySeconds;
-	}
-
-	@Override
-	public String toString() {
-	    return "HttpSession [expirySeconds=" + expirySeconds + "]";
 	}
 
     }
@@ -366,36 +263,6 @@ public class AppConfig implements Serializable {
 		    + ", maxColumnTooltipDisplayChars="
 		    + maxColumnTooltipDisplayChars
 		    + "]";
-	}
-
-    }
-
-    @Named
-    @Immutable
-    public static final class CqlImport implements Serializable {
-	@NotNull
-	public final Pattern listSeparatorRegEx;
-
-	@NotEmpty
-	public final String encoding;
-
-	@Inject
-	public CqlImport(
-		@Value("${cqlImport.listSeparatorRegEx}") String listSeparatorRegEx,
-		@Value("${cqlImport.encoding}") String encoding) {
-	    try {
-		this.listSeparatorRegEx = Pattern.compile(listSeparatorRegEx);
-	    }
-	    catch (PatternSyntaxException e) {
-		throw new ServiceException("Property: cqlImport.listSeparatorRegEx syntax error: "
-			+ e.getMessage(), e);
-	    }
-	    this.encoding = encoding;
-	}
-
-	@Override
-	public String toString() {
-	    return "CqlImport [listSeparatorRegEx=" + listSeparatorRegEx + "]";
 	}
 
     }
@@ -493,6 +360,149 @@ public class AppConfig implements Serializable {
 		    + ", removeCrChars="
 		    + removeCrChars
 		    + "]";
+	}
+
+    }
+
+    @Named
+    @Immutable
+    public static final class CqlImport implements Serializable {
+	@NotNull
+	public final Pattern listSeparatorRegEx;
+
+	@NotEmpty
+	public final String encoding;
+
+	@Min(1)
+	public final int maxFileSizeMb;
+
+	@Min(1)
+	public final int resultsPerPage;
+
+	@Inject
+	public CqlImport(
+		@Value("${cqlImport.listSeparatorRegEx}") String listSeparatorRegEx,
+		@Value("${cqlImport.encoding}") String encoding,
+		@Value("${cqlImport.maxFileSizeMb}") int maxFileSizeMb,
+		@Value("${cqlImport.resultsPerPage}") int resultsPerPage) {
+	    try {
+		this.listSeparatorRegEx = Pattern.compile(listSeparatorRegEx);
+	    }
+	    catch (PatternSyntaxException e) {
+		throw new ServiceException("Property: cqlImport.listSeparatorRegEx syntax error: "
+			+ e.getMessage(), e);
+	    }
+	    this.encoding = encoding;
+	    this.maxFileSizeMb = maxFileSizeMb;
+	    this.resultsPerPage = resultsPerPage;
+	}
+
+	@Override
+	public String toString() {
+	    return "CqlImport [listSeparatorRegEx=" + listSeparatorRegEx + "]";
+	}
+    }
+
+    @Named
+    @Immutable
+    public static class Favourites implements Serializable {
+	public final int entriesLimit;
+
+	public final boolean enabled;
+
+	@Inject
+	public Favourites(
+		@Value("${favourites.entriesLimit}") int entriesLimit,
+		@Value("${favourites.enabled}") boolean enabled) {
+	    this.entriesLimit = entriesLimit;
+	    this.enabled = enabled;
+	}
+
+	@Override
+	public String toString() {
+	    return "Favourites [entriesLimit=" + entriesLimit + ", enabled=" + enabled + "]";
+	}
+
+    }
+
+    @Named
+    @Immutable
+    public static class FileStore implements Serializable {
+
+	public final int maxFileSize;
+
+	public final int lockWaitTimeoutMilis;
+
+	public final String folder;
+
+	@Inject
+	public FileStore(
+		@Value("${fileStore.maxFileSize}") int maxFileSize,
+		@Value("${fileStore.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis,
+		@Value("${fileStore.folder}") String folder) {
+	    this.maxFileSize = maxFileSize;
+	    this.lockWaitTimeoutMilis = lockWaitTimeoutMilis;
+	    this.folder = folder;
+	}
+
+	@Override
+	public String toString() {
+	    return "FileStore [maxFileSize="
+		    + maxFileSize
+		    + ", lockWaitTimeoutMilis="
+		    + lockWaitTimeoutMilis
+		    + ", folder="
+		    + folder
+		    + "]";
+	}
+
+    }
+
+    @Named
+    @Immutable
+    public static class History implements Serializable {
+	public final int entriesLimit;
+
+	public final int queriesPerPage;
+
+	public final boolean enabled;
+
+	@Inject
+	public History(
+		@Value("${history.entriesLimit}") int entriesLimit,
+		@Value("${history.enabled}") boolean enabled,
+		@Value("${history.queriesPerPage}") int queriesPerPage) {
+	    this.entriesLimit = entriesLimit;
+	    this.enabled = enabled;
+	    this.queriesPerPage = queriesPerPage;
+	}
+
+	@Override
+	public String toString() {
+	    return "History [entriesLimit="
+		    + entriesLimit
+		    + ", queriesPerPage="
+		    + queriesPerPage
+		    + ", enabled="
+		    + enabled
+		    + "]";
+	}
+
+    }
+
+    @Named
+    @Immutable
+    public static class HttpSession implements Serializable {
+	public final int expirySeconds;
+
+	@Inject
+	public HttpSession(@Value("${httpSession.expirySeconds}") int expirySeconds) {
+	    this.expirySeconds = expirySeconds;
+	}
+
+	@Override
+	public String toString() {
+	    return "HttpSession [expirySeconds=" + expirySeconds + "]";
 	}
 
     }

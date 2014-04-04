@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class TabSupport {
+class TabHelper {
 
 	private final List<FullRefreshData> refreshTabs = new ArrayList<>();
 

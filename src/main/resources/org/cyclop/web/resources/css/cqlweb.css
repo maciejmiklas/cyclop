@@ -110,7 +110,7 @@ pre.cq-helpCqlSyntax {
 	background-color: #0a39b3;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
+.table-hover>tbody>tr.cq-tableRowSeparator,.table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -205,4 +205,25 @@ ul.cq-cqlCollectionList {
 
 .cq-filterKeyword {
 	color: red;
+}
+
+.cq-btn-file {
+	position: relative;
+	overflow: hidden;
+}
+
+.cq-btn-file input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	font-size: 999px;
+	text-align: right;
+	filter: alpha(opacity = 0);
+	opacity: 0;
+	outline: none;
+	background: white;
+	cursor: inherit;
+	display: block;
 }

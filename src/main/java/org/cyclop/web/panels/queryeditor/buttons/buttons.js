@@ -1,4 +1,4 @@
-function initButtons() {
+$(function() {
 
 	// clqHelpExpandSupportBody
 	$(".cq-clqHelpExpandSupportBody").hide();
@@ -53,10 +53,10 @@ function initButtons() {
 
 			notify("Page address in browser has been updated - now you can bookmark it :)");
 		}
-	)
-}
+	);
+});
 
-function cqlQuerySuccessResponse() {
+function queryExecutedResponse() {
 	$(".cq-queryProgressBar").hide();
 	$(".cq-ExecuteQueryButton").removeClass("disabled");
 }

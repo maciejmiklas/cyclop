@@ -4,7 +4,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.common.AppConfig;
@@ -35,7 +34,7 @@ public class ButtonsPanel extends Panel {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
 				buttonListener.onClickExecCql(target);
-				target.appendJavaScript("cqlQuerySuccessResponse()");
+				target.appendJavaScript("queryExecutedResponse()");
 			}
 		};
 		add(execQuery);
@@ -47,15 +46,6 @@ public class ButtonsPanel extends Panel {
 			}
 		};
 		add(exportQueryResult);
-
-		AjaxFallbackLink<Void> queryScriptImport = new AjaxFallbackLink<Void>("queryScriptImport") {
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				buttonListener.onQueryScriptImport(target);
-			}
-		};
-		add(queryScriptImport);
-
 
 		AjaxFallbackLink<Void> completion = new StateButton("completion", completionPressed, "btn btn-sm btn-primary",
 				"btn btn-sm btn-primary active") {
@@ -71,6 +61,5 @@ public class ButtonsPanel extends Panel {
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
 		response.render(JavaScriptReferenceHeaderItem.forReference(JS_BUTTONS));
-		response.render(OnDomReadyHeaderItem.forScript("initButtons()"));
 	}
 }

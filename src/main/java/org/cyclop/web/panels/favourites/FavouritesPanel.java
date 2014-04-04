@@ -10,6 +10,7 @@ import org.cyclop.model.QueryEntry;
 import org.cyclop.web.common.AjaxReloadSupport;
 import org.cyclop.web.common.ImmutableListModel;
 
+/** @author Maciej Miklas */
 public class FavouritesPanel extends Panel implements AjaxReloadSupport {
 
 	private AbstractDefaultAjaxBehavior browserCallback;
