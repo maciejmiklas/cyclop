@@ -15,7 +15,6 @@ import java.io.Serializable;
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class UserPreferences implements Serializable {
 
-	// TODO break annotations
 	@XmlElement(name = "e_hi")
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean showCqlCompletionHint = true;
@@ -23,6 +22,14 @@ public final class UserPreferences implements Serializable {
 	@XmlElement(name = "e_he")
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean showCqlHelp = true;
+
+	@XmlElement(name = "i_hi")
+	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
+	private boolean importIncludeInHistory = true;
+
+	@XmlElement(name = "i_ce")
+	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
+	private boolean importContinueWithErrors = false;
 
 	public boolean isShowCqlCompletionHint() {
 		return showCqlCompletionHint;
@@ -43,12 +50,30 @@ public final class UserPreferences implements Serializable {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("showCqlCompletionHint", showCqlCompletionHint)
-				.add("showCqlHelp", showCqlHelp).toString();
+				.add("showCqlHelp", showCqlHelp).add("importIncludeInHistory", importIncludeInHistory)
+				.add("importContinueWithErrors", importContinueWithErrors).toString();
+	}
+
+	public boolean isImportIncludeInHistory() {
+		return importIncludeInHistory;
+	}
+
+	public void setImportIncludeInHistory(boolean importIncludeInHistory) {
+		this.importIncludeInHistory = importIncludeInHistory;
+	}
+
+	public boolean isImportContinueWithErrors() {
+		return importContinueWithErrors;
+	}
+
+	public void setImportContinueWithErrors(boolean importContinueWithErrors) {
+		this.importContinueWithErrors = importContinueWithErrors;
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(showCqlCompletionHint, showCqlHelp);
+		return java.util.Objects
+				.hash(showCqlCompletionHint, showCqlHelp, importIncludeInHistory, importContinueWithErrors);
 	}
 
 	@Override
@@ -58,6 +83,8 @@ public final class UserPreferences implements Serializable {
 		}
 		final UserPreferences other = (UserPreferences) obj;
 		return java.util.Objects.equals(showCqlCompletionHint, other.showCqlCompletionHint) &&
-				java.util.Objects.equals(showCqlHelp, other.showCqlHelp);
+				java.util.Objects.equals(showCqlHelp, other.showCqlHelp) &&
+				java.util.Objects.equals(importIncludeInHistory, other.importIncludeInHistory) &&
+				java.util.Objects.equals(importContinueWithErrors, other.importContinueWithErrors);
 	}
 }

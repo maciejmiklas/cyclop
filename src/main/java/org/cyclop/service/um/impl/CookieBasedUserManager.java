@@ -21,10 +21,19 @@ public class CookieBasedUserManager implements UserManager {
 	@Inject
 	private CookieStorage cookieStorage;
 
-	public void storePreferences(UserPreferences preferences) {
+	@Override
+	public boolean storePreferences(UserPreferences preferences) {
+		UserPreferences readPrefs = readPreferences();
+		if (readPrefs.equals(preferences)) {
+			LOG.debug("Preferences did not change - no update required {}", preferences);
+			return false;
+		}
+		LOG.debug("Updating preferences {}", preferences);
 		cookieStorage.storeCookieAsJson(CookieStorage.CookieName.cyclop_prefs, preferences);
+		return true;
 	}
 
+	@Override
 	public UserPreferences readPreferences() {
 		UserPreferences preferences = cookieStorage
 				.readCookieAsJson(CookieStorage.CookieName.cyclop_prefs, UserPreferences.class);

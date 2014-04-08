@@ -13,7 +13,7 @@ public interface UserManager {
 	@NotNull
 	UserIdentifier readIdentifier();
 
-	void storePreferences(@NotNull UserPreferences preferences);
+	boolean storePreferences(@NotNull UserPreferences preferences);
 
 	@NotNull
 	UserPreferences readPreferences();

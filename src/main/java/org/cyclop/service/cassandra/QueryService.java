@@ -32,5 +32,8 @@ public interface QueryService {
 	CqlQueryResult execute(@NotNull CqlQuery query);
 
 	@NotNull
+	CqlQueryResult execute(@NotNull CqlQuery query, boolean updateHistory);
+
+	@NotNull
 	ImmutableSortedSet<CqlTable> findTableNames(@Valid CqlKeySpace keySpace);
 }

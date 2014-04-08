@@ -6,5 +6,6 @@ import java.io.InputStream;
 /** @author Maciej Miklas */
 public interface QueryImporter {
 
-	public void importScript(@NotNull InputStream input, @NotNull ResultWritter resultWritter);
+	void importScript(@NotNull InputStream input, @NotNull ResultWritter resultWritter, boolean updateHistory,
+					  boolean continueWithErrors);
 }

@@ -22,8 +22,10 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.CqlTable;
+import org.cyclop.model.QueryEntry;
 import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,9 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 @Named
 @CassandraVersionQualifier(CassandraVersion.VER_2_x)
 class QueryServiceImpl implements QueryService {
+
+	@Inject
+	private HistoryService historyService;
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceImpl.class);
 
@@ -137,15 +142,28 @@ class QueryServiceImpl implements QueryService {
 	}
 
 	private void setActiveKeySpace(CqlQuery query) {
-
 		CqlKeySpace space = extractSpace(query);
 		queryScope.setActiveKeySpace(space);
 	}
 
 	@Override
 	public CqlQueryResult execute(CqlQuery query) {
-		LOG.debug("Executing CQL: {}", query);
+		return execute(query, true);
+	}
 
+	@Override
+	public CqlQueryResult execute(CqlQuery query, boolean updateHistory) {
+		long startTime = System.currentTimeMillis();
+		CqlQueryResult result = executeIntern(query);
+
+		if (updateHistory) {
+			updateHistory(query, result, startTime);
+		}
+		return result;
+	}
+
+	private CqlQueryResult executeIntern(CqlQuery query) {
+		LOG.debug("Executing CQL: {}", query);
 		if (query.type == CqlQueryType.USE) {
 			setActiveKeySpace(query);
 		}
@@ -195,7 +213,15 @@ class QueryServiceImpl implements QueryService {
 		ImmutableList<CqlExtendedColumnName> commonCols = commonColumnsBuild.build();
 		ImmutableList<CqlExtendedColumnName> dynamicColumns = dynamicColumnsBuild.build();
 		CqlQueryResult result = new CqlQueryResult(commonCols, dynamicColumns, rows, partitionKey);
+
 		return result;
+	}
+
+	private void updateHistory(CqlQuery query, CqlQueryResult result, long startTime) {
+		long runTime = System.currentTimeMillis() - startTime;
+		int resultSize = result.rows.size();
+		QueryEntry entry = new QueryEntry(query, runTime, resultSize);
+		historyService.addAndStore(entry);
 	}
 
 	private CqlPartitionKey collectAndCountColumns(Row row, Map<CqlExtendedColumnName, MutableInt> columnsCount,

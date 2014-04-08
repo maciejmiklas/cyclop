@@ -7,9 +7,7 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlTable;
-import org.cyclop.model.QueryEntry;
 import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.queryprotocoling.HistoryService;
 import org.springframework.context.annotation.Primary;
 
 import javax.inject.Inject;
@@ -27,9 +25,6 @@ public class QueryServiceDispatcher implements QueryService {
 	@Inject
 	@CassandraVersionQualifier(CassandraVersion.VER_1_x)
 	private QueryService fallbackQs;
-
-	@Inject
-	private HistoryService historyService;
 
 	@Inject
 	private CassandraSessionImpl session;
@@ -77,15 +72,11 @@ public class QueryServiceDispatcher implements QueryService {
 
 	@Override
 	public CqlQueryResult execute(CqlQuery query) {
-		long startTime = System.currentTimeMillis();
+		return get().execute(query);
+	}
 
-		CqlQueryResult resp = get().execute(query);
-
-		long runTime = System.currentTimeMillis() - startTime;
-		int resultSize = resp.rows.size();
-		QueryEntry entry = new QueryEntry(query, runTime, resultSize);
-		historyService.addAndStore(entry);
-
-		return resp;
+	@Override
+	public CqlQueryResult execute(CqlQuery query, boolean updateHistory) {
+		return get().execute(query, updateHistory);
 	}
 }

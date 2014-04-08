@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URL;
 
 // TODO rename to SyntaxHelpPanel (also package)
+
 /** @author Maciej Miklas */
 public class CqlHelpPanel extends Panel {
 

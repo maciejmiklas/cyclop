@@ -100,17 +100,11 @@ pre.cq-helpCqlSyntax {
 	margin: 0 1em 0 0;
 }
 
-.cq-sepLine {
-	padding: 0;
-	margin: 0.5em 0 0.5em 0;
-	border-bottom: 1px solid #282828;
-}
-
 .table-hover>tbody>tr.cq-tableRowSeparator:hover>td {
 	background-color: #0a39b3;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator,.table-hover>tbody>tr.cq-tableRowSeparator>td {
+.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -185,6 +179,24 @@ ul.cq-cqlCollectionList {
 
 .cq-nav {
 	margin-bottom: 10px !important;
+	border-bottom: 1px solid #424221 !important;
+}
+
+.cq-nav > li > a:hover {
+	border-color: transparent transparent #424221 !important;
+	background-color: #002966 !important;
+}
+
+.cq-table-sepLine {
+	padding: 0;
+	margin: 0.5em 0 0.5em 0;
+	border-bottom: 1px solid #333333;
+}
+
+.cq-sepLine {
+	padding: 0;
+	margin: 0.5em 0 0.5em 0;
+	border-bottom: 1px solid #424221;
 }
 
 .cq-nav>li>a {
@@ -212,6 +224,10 @@ ul.cq-cqlCollectionList {
 	overflow: hidden;
 }
 
+.cq-single-line {
+	white-space: nowrap;
+}
+
 .cq-btn-file input[type=file] {
 	position: absolute;
 	top: 0;
@@ -220,10 +236,14 @@ ul.cq-cqlCollectionList {
 	min-height: 100%;
 	font-size: 999px;
 	text-align: right;
-	filter: alpha(opacity = 0);
+	filter: alpha(opacity=0);
 	opacity: 0;
 	outline: none;
 	background: white;
 	cursor: inherit;
 	display: block;
+}
+
+.cq-pull-right {
+	float: right !important;
 }
