@@ -5,15 +5,17 @@ There are already few Cassandra Query Language editors available, but Cyclop is 
 ![Login](/doc/img/login.png)
 
 Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has
-been opened, it's being stored in HTTP session, and that's it. From now on, each CQL it being passed to Cassandra over its active session, and the query result is successful or not - based on access rights defined in Cassandra for this particular user.
-Providing support for things like query history gets a bit tricky, if there is no such thing as user.  We could use credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
+been opened, it's being stored in HTTP session, and that's it. From now on, each query it being passed to Cassandra over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
+
+Providing support for things like query history gets a bit tricky, if there is no such thing as user.  We could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
+
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
 
 # Query Editor
 ### Query Completion
+* completion is supported for almost whole CQL 3 syntax
+* Completion Hint shows all possible keywords, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color
 ![CQL Completion](/doc/img/cmp_colors.png)
-* CQL keyword completion is supported for almost whole CQL3 syntax
-* Completion Hint shows all possible keywords, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color.
 * if the keyspace has been set in previous query ("use cqldemo" in screen shot below), the completion for the following queries
 will be narrowed to tables from this keysapce, assuming that keyspace is not explicitly provided in query
 ![CQL Completion](/doc/img/cmp_tables_from_global_keyspace.png)
@@ -51,14 +53,16 @@ divided by blue separator line. The top of the table contains "static columns" -
 rows returned by the query. The second section contains columns, which value is not empty only for single row. Cassandra
 supports dynamic columns, and the idea is to have "static" columns at the top of the table, and "dynamic" ones on the bottom, because those are mostly empty
 * table header for each row displays partition key value, assuming that query returns it
-* long text is trimmed in order to fit into table cell. Such cell has in left top corner a blue icon, clicking on it opens pop-up containing the whole text
+* long text is trimmed in order to fit into table cell. Such cell has a blue icon in the left top corner, clicking on it opens pop-up containing the whole text
 ![Large Content](/doc/img/large_content.png)
 
 # Query History
 ![Query History Full](/doc/img/history_full.png)
+
 * history contains last 500 queries that has been successfully executed from this particular browser (we recognize users based on persistent cookie)
 * each entry in history contains the query itself, the runtime and response size
 * next to the query there is a blue icon, clicking on it will trigger redirect to editor and paste query into it, so you can execute it again
+
 ### History Filtering
 * filter supports live update - you get results while typing. Just remember that words shorter that three characters will be ignored
 * multiple keywords are joined by OR, this means that filter result will contain queries which contain at leas one keyword
