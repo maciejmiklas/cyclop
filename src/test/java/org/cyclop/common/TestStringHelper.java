@@ -11,15 +11,15 @@ public class TestStringHelper {
 
 	@Test
 	public void testDecorate_ContainsDecoratedText() {
-		String decorated = StringHelper.decorate(
-				"select +++ from +++cqldemo----.mybooks where id=1122 and some value is not ++++++++ fromstone", TD,
-				"from", "fromsto", "112", "demo", "not", "+++");
+		String decorated = StringHelper
+				.decorate("select +++ from +++cqldemo----.mybooks where id=1122 and some value is not ++++++++ fromstone", TD,
+						"from", "fromsto", "112", "demo", "not", "+++");
 
 		assertEquals(
 				"select +++ +++++from-- +++cql+++++demo------.mybooks where id=+++++112--2 and some value is +++++not-- ++++++++ +++++fromsto--ne",
 				decorated);
 	}
-
+	
 	@Test
 	public void testDecorate_ContainitgWords_ShorterFirst() {
 		String decorated = StringHelper
@@ -108,10 +108,10 @@ public class TestStringHelper {
 		public String prefix() {
 			return "+++++";
 		}
-
+		
 		@Override
 		public String postfix() {
-			return "--";
+		    return "--";
 		}
 	}
 }

@@ -42,9 +42,9 @@ class AsyncFileStore<H> {
 	}
 
 	/**
-	 * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization block
-	 * on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block time is
-	 * reduced
+	 * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization
+	 * block on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block
+	 * time is reduced
 	 */
 	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
 	@PreDestroy
