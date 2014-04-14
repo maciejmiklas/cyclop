@@ -1,11 +1,18 @@
 package org.cyclop.service.importer;
 
-import javax.validation.constraints.NotNull;
 import java.io.InputStream;
+
+import javax.validation.constraints.NotNull;
+
+import org.cyclop.service.importer.model.ImportStats;
+
 
 /** @author Maciej Miklas */
 public interface QueryImporter {
 
-	void importScript(@NotNull InputStream input, @NotNull ResultWritter resultWritter, boolean updateHistory,
-					  boolean continueWithErrors);
+    @NotNull ImportStats importScript(
+	    @NotNull InputStream input,
+	    @NotNull ResultWritter resultWritter,
+	    boolean updateHistory,
+	    boolean continueWithErrors);
 }
