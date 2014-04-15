@@ -2,7 +2,6 @@ package org.cyclop.model;
 
 import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 

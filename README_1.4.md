@@ -1,5 +1,25 @@
 # Overview
-There are already few Cassandra Query Language editors available, but Cyclop is a bit different. It's a web based - once installed you can access it from web browser and still enjoy native application feeling. It's almost fully based on AJAX, so page reloads are rare.
+Cassandra is one of the most popular open source NoSQL databases, but it's only few years old, and therefore tools support is still limited, especially when it comes to free open source software. 
+
+If you are working with Cassandra, sooner or later you will have to analyse its content on remote cluster. Most of the available tools are desktop applications  that connect to Cassandra over its protocol. Getting such access might be a hard task, because usually databases are installed in restricted networks in order to minimize data breach risk. Security policies are changing frequently to cover new findings, and the fact that you have access to your database today, does not actually mean that it will last long.
+Gaining access over SSH and command line interface should be easier, but I do not have to convince anyone that using terminal to query database content is painful, especially when it comes to NoSQL database which contains tons of data, and it's wide rows can contain millions of columns!
+
+But there is one solution, that is almost always available: web based applications! Every company knows how to secure them, how to run penetration tests, locate security leaks, and so on.... actually it does not matter what happens behind scenes, you - the end user has always access to such application.
+
+Here is a good news: Cyclop is 100% web based, and It's based on latest Wicket release! Once you managed to install it, you can query your database from a web browser and still enjoy native application feeling. It's almost fully based on AJAX, so page reloads are rare.
+
+There is also another cool thing: it your security experts will run penetration tests against Cyclop they will came up with findings like Database Script Injection. This will be the first time in you live when you can honestly say: "It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely no usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
+
+# Live Demo
+There is a demo deployment of Cyclop, so that you can get a first impression. I'm hosting it at home, so it can be down sometimes, because I have no static IP, and when it changes propagation takes some time.
+
+Different links below contain different queries. Clicking on link will open Cyclop and paste into its editor query from link. Try to edit those queries using Cyclop's editor to see how the code completion is working. Provided user has read only access, so only part of the functionality is available. 
+* User: democasusr, Password: Cassandra123 written backwards (32...aC) 
+* http://maciejmiklas.no-ip.biz/cyclop
+* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20*%20from%20cqldemo.mybooks
+* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20id%2Cauthors%2Cgenre%20from%20cqldemo.mybooks%20where%20pages%20%3D%20121
+* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20id%2Cauthors%20from%20cqldemo.mybooks%20where%20id%3D6ff12f41-cfb1-45ff-9e89-fb20f95ffc5d
+* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20*%20from%20system.schema_columnfamilies
 
 # User Management
 ![Login](/doc/img/login.png)
@@ -7,12 +27,14 @@ There are already few Cassandra Query Language editors available, but Cyclop is 
 Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has
 been opened, it's being stored in HTTP session, and that's it. From now on, each query it being passed to Cassandra over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
 
-Providing support for things like query history gets a bit tricky, if there is no such thing as user.  We could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
+Providing support persistent data like query history gets a bit tricky, if there is no such thing as user.  We could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
 
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
 
+#### User Preferences
+
 # Query Editor
-### Query Completion
+#### Query Completion
 * completion is supported for almost whole CQL 3 syntax
 * Completion Hint shows all possible keywords, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color
 ![CQL Completion](/doc/img/cmp_colors.png)
@@ -27,13 +49,13 @@ will be narrowed to tables from this keysapce, assuming that keyspace is not exp
 matching Completion Hint colors
 ![CQL Syntax Help](/doc/img/cql_syntax_help.png)
 
-### Keyboard Navigation
+#### Keyboard Navigation
 * Enter - confirms currently highlighted completion
 * Tab - next completion value
 * Ctrl+Enter - executes query
 * ESC - cancel completion
 
-### Configuration
+#### Configuration
 <code>cyclop/src/main/resources/cyclop.properties</code>
 
 ``` properties
@@ -50,7 +72,7 @@ and columns vertically. When scrolling page from left to right you will switch b
 shows follow up columns
 * columns are displayed in order returned by the query, but additionally they are grouped into two sections
 divided by blue separator line. The top of the table contains "static columns" - their values are not empty in multiple
-rows returned by the query. The second section contains columns, which value is not empty only for single row. Cassandra
+rows returned by executed query. The second section contains columns, which value is not empty only for single row. Cassandra
 supports dynamic columns, and the idea is to have "static" columns at the top of the table, and "dynamic" ones on the bottom, because those are mostly empty
 * table header for each row displays partition key value, assuming that query returns it
 * long text is trimmed in order to fit into table cell. Such cell has a blue icon in the left top corner, clicking on it opens pop-up containing the whole text
@@ -63,18 +85,18 @@ supports dynamic columns, and the idea is to have "static" columns at the top of
 * each entry in history contains the query itself, the runtime and response size
 * next to the query there is a blue icon, clicking on it will trigger redirect to editor and paste query into it, so you can execute it again
 
-### History Filtering
-* filter supports live update - you get results while typing. Just remember that words shorter that three characters will be ignored
+#### History Filtering
+* filter supports live update - you get results while typing. Just remember that words shorter than three characters will be ignored
 * multiple keywords are joined by OR, this means that filter result will contain queries which contain at leas one keyword
-* you can specify multiple keywords in the filter. Is such case the top of the filtered history will contain queries most hits. This builds groups, like queries with four hits, than three, and on the end with single hit. The queries within those groups are sorted alphabetically
+* you can specify multiple keywords in the filter. Is such case the top of the filtered history will contain queries with most hits. This builds groups, like queries with four hits, than three, and on the end with single hit. The queries within those groups are sorted by execution time
 ![Query History Filter](/doc/img/history_filter.png)
 * pressing Enter resets filter, you can also click on "clean" icon
 
-### Data on the Server
+#### Data on the Server
 The history itself is stored on server in configured folder (fileStore.folder), in file: [fileStore.folder]\QueryHistory-[User-UUID].json.  The file itself contains serialized history in json form.
 The solution is also secure, so you can use Cyclop from any computer without restrictions. Random cookie is the only information stored in browser - but this does not matter, because history can be viewed only by authenticated users.
 
-### Configuration
+#### Configuration
 <code>cyclop/src/main/resources/cyclop.properties</code>
 
 ``` properties
@@ -95,7 +117,7 @@ CQL query can be bookmarked. This is convenient for frequently used queries, or 
 
 Query result can be exported to CSV file.
 
-### Configuration
+#### Configuration
 <code>cyclop/src/main/resources/cyclop.properties</code>
 
 ``` properties
@@ -111,6 +133,24 @@ cqlExport.valueBracketStart:"
 cqlExport.valueBracketEnd:"
 cqlExport.fileName: cql_export_DATE.csv
 cqlExport.fileName.date: yyyy-MM-dd_HH:mm:ss.SSS
+```
+
+# Import
+It's meant to import files containing CQL queries separated by ;\n. Single query can spread over multiple lines. Results of the import are displayed in table, which contains each single query, runtime and eventually an error - in this case row has read color. You can also specify few options, so that script execution will break (or not) after first error, or executed queries can be included in query history.
+
+Import has also few limitations:
+* import script and results table has to fit into tomcat memory
+* each query will be executed as separate Cassandra call, so that we can precisely point out errors, and measure execution time, on the other hand side it causes latencies
+* import script does not support comments
+
+#### Configuration
+<code>cyclop/src/main/resources/cyclop.properties</code>
+
+``` properties
+cqlImport.listSeparatorRegEx: [;]\n
+cqlImport.encoding: UTF-8
+cqlImport.maxFileSizeMb: 50
+cqlImport.resultsPerPage: 100
 ```
 
 # Requirements

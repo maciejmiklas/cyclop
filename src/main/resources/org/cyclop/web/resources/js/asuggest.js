@@ -166,7 +166,7 @@ function replaceSuggests(editorId, suggests) {
 		$area.getCompletionForLastSuggest = function () {
 
 			var suggestFromLast = null;
-			if ($area.lastSuggestActive) {				
+			if ($area.lastSuggestActive) {
 				var matchIdx = $area.lastSuggest.length;
 				var textBeforeCursor = $area.getTextBeforeCursor().toLowerCase();
 				var suggestLow = $area.lastSuggest.toLowerCase();

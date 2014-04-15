@@ -4,43 +4,40 @@ import java.io.Serializable;
 
 /** @author Maciej Miklas */
 public final class ImportOptions implements Serializable {
-    private boolean includeInHistory = true;
-    private boolean continueWithErrors = false;
-    private String scriptFile;
+	private boolean includeInHistory = true;
 
-    @Override
-    public String toString() {
-	return "ImportOptions [includeInHistory="
-		+ includeInHistory
-		+ ", continueWithErrors="
-		+ continueWithErrors
-		+ ", scriptFile="
-		+ scriptFile
-		+ "]";
-    }
+	private boolean continueWithErrors = false;
 
-    public boolean isIncludeInHistory() {
-	return includeInHistory;
-    }
+	private String scriptFile;
 
-    public void setIncludeInHistory(boolean includeInHistory) {
-	this.includeInHistory = includeInHistory;
-    }
+	@Override
+	public String toString() {
+		return "ImportOptions [includeInHistory=" + includeInHistory + ", continueWithErrors=" + continueWithErrors +
+				", scriptFile=" + scriptFile + "]";
+	}
 
-    public boolean isContinueWithErrors() {
-	return continueWithErrors;
-    }
+	public boolean isIncludeInHistory() {
+		return includeInHistory;
+	}
 
-    public void setContinueWithErrors(boolean continueWithErrors) {
-	this.continueWithErrors = continueWithErrors;
-    }
+	public void setIncludeInHistory(boolean includeInHistory) {
+		this.includeInHistory = includeInHistory;
+	}
 
-    public String getScriptFile() {
-	return scriptFile;
-    }
+	public boolean isContinueWithErrors() {
+		return continueWithErrors;
+	}
 
-    public void setScriptFile(String scriptFile) {
-	this.scriptFile = scriptFile;
-    }
+	public void setContinueWithErrors(boolean continueWithErrors) {
+		this.continueWithErrors = continueWithErrors;
+	}
+
+	public String getScriptFile() {
+		return scriptFile;
+	}
+
+	public void setScriptFile(String scriptFile) {
+		this.scriptFile = scriptFile;
+	}
 
 }

@@ -30,9 +30,9 @@ public interface QueryService {
 
 	@NotNull
 	CqlQueryResult execute(@NotNull CqlQuery query);
-	
+
 	void executeSimple(@NotNull CqlQuery query, boolean updateHistory);
-	
+
 	@NotNull
 	CqlQueryResult execute(@NotNull CqlQuery query, boolean updateHistory);
 

@@ -124,6 +124,7 @@ public class ValidationHelper {
 		assertNotNull(col);
 
 		List<String> columnNamesBasic = new ArrayList<>();
+		columnNamesBasic.add("title");
 		columnNamesBasic.add("price");
 		columnNamesBasic.add("genre");
 		columnNamesBasic.add("publishDate");

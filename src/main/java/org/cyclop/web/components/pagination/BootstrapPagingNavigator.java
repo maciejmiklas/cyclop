@@ -1,23 +1,40 @@
 package org.cyclop.web.components.pagination;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigation;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationIncrementLink;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigationLink;
 import org.apache.wicket.ajax.markup.html.navigation.paging.AjaxPagingNavigator;
 import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.LoopItem;
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.navigation.paging.IPagingLabelProvider;
 import org.apache.wicket.markup.html.navigation.paging.PagingNavigation;
+import org.apache.wicket.model.PropertyModel;
 
 /** @author Maciej Miklas */
 public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
-	public BootstrapPagingNavigator(String id, IPageable pageable) {
+	private final IPageableItems pageable;
+
+	private final static ImmutableList<Long> CHOICES = ImmutableList
+			.of(1L, 2L, 5L, 10L, 20L, 50L, 100L, 200L, 500L, 1000L);
+
+	public BootstrapPagingNavigator(String id, IPageableItems pageable) {
 		super(id, pageable);
+		this.pageable = pageable;
+		initPageSizeChoice();
+	}
+
+	public void reset() {
+		getPageable().setCurrentPage(0);
 	}
 
 	// Link for: "1 | 2 | 3 | 4"
@@ -72,5 +89,20 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 			}
 		});
 		return navCont;
+	}
+
+	private void initPageSizeChoice() {
+		final DropDownChoice<Long> choice = new DropDownChoice<>("pageSize", CHOICES);
+		choice.setDefaultModel(new PropertyModel<Long>(pageable, "itemsPerPage"));
+		add(choice);
+
+		choice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
+				reset();
+				onAjaxEvent(target);
+			}
+		});
 	}
 }

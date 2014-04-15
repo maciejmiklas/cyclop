@@ -100,12 +100,11 @@ pre.cq-helpCqlSyntax {
 	margin: 0 1em 0 0;
 }
 
-
 .table-hover>tbody>tr.cq-tableRowSeparator:hover>td {
 	background-color: #0a39b3;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator,.table-hover>tbody>tr.cq-tableRowSeparator>td {
+.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -188,7 +187,6 @@ ul.cq-cqlCollectionList {
 	background-color: #002966 !important;
 }
 
-
 .cq-table-sepLine {
 	padding: 0;
 	margin: 0.5em 0 0.5em 0;
@@ -200,7 +198,6 @@ ul.cq-cqlCollectionList {
 	margin: 0.5em 0 0.5em 0;
 	border-bottom: 1px solid #424221;
 }
-
 
 .cq-nav>li>a {
 	padding: 5px 10px !important;
@@ -248,5 +245,5 @@ ul.cq-cqlCollectionList {
 }
 
 .cq-pull-right {
-  float: right !important;
+	float: right !important;
 }

@@ -1,7 +1,7 @@
 var scriptFileName = null;
 
-$(function() {
-	$(".cq-executeQueryImportButton").click(function() {
+$(function () {
+	$(".cq-executeQueryImportButton").click(function () {
 		if (!scriptFileName) {
 			notify("Please select Script File first");
 		}
@@ -24,7 +24,7 @@ function onQueryImportResponse(response) {
 	}
 }
 
-$(document).on('change', '.cq-btn-file :file', function() {
+$(document).on('change', '.cq-btn-file :file', function () {
 	var $input = $(this);
 	var $label = $input.parents('.cq-btn-file').find('.cq-selected-file-name');
 	scriptFileName = $input.val();

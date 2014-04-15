@@ -6,7 +6,7 @@ import org.apache.wicket.model.IModel;
 import java.io.Serializable;
 
 /** @author Maciej Miklas */
-public class PageLinkIncrementCssModel implements IModel<String>, Serializable {
+class PageLinkIncrementCssModel implements IModel<String>, Serializable {
 
 	protected final IPageable pageable;
 

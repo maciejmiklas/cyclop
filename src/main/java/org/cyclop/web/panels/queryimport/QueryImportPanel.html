@@ -3,75 +3,80 @@
 <head>
 </head>
 <body>
-	<wicket:panel>
-		<form wicket:id="form">
-			<div class="row">
-				<div class="col-lg-4">
-					<br>
-					<span class="btn btn-success cq-btn-file"><span class="glyphicon glyphicon-plus" />&nbsp;&nbsp;<span
-						class="cq-selected-file-name">Select script file....</span><input wicket:id="scriptFile" type="file"></span>
-				</div>
-				<div class="col-lg-4">
-					<div class="panel panel-warning">
-						<div class="panel-heading">
-							<h3 class="panel-title">Import Options</h3>
-						</div>
-						<div class="panel-body">
+<wicket:panel>
+	<form wicket:id="form">
+		<div class="row">
+			<div class="col-lg-4">
+				<br>
+					<span class="btn btn-success cq-btn-file"><span class="glyphicon glyphicon-plus"/>&nbsp;&nbsp;<span
+							class="cq-selected-file-name">Select script file....</span><input wicket:id="scriptFile"
+																							  type="file"></span>
+			</div>
+			<div class="col-lg-4">
+				<div class="panel panel-warning">
+					<div class="panel-heading">
+						<h3 class="panel-title">Import Options</h3>
+					</div>
+					<div class="panel-body">
 							<span class="cq-single-line"><label title="Errors during script execution will be ignored">Continue
-									with errors:</label> <input type="checkbox" wicket:id="continueWithErrors" /></span> &nbsp;&nbsp;&nbsp; <span
-								class="cq-single-line"><label title="Query History will contain queries from script">Include
-									in History:</label> <input type="checkbox" wicket:id="includeInHistory" /></span>
-						</div>
+								with errors:</label> <input type="checkbox" wicket:id="continueWithErrors"/></span>
+						&nbsp;&nbsp;&nbsp; <span
+							class="cq-single-line"><label title="Query History will contain queries from script">Include
+						in History:</label> <input type="checkbox" wicket:id="includeInHistory"/></span>
 					</div>
 				</div>
-				<div class="col-lg-4">
-					<br>
-					<button class="cq-pull-right cq-executeQueryImportButton btn btn-success" wicket:id="ajaxSubmit"
+			</div>
+			<div class="col-lg-4">
+				<br>
+				<button class="cq-pull-right cq-executeQueryImportButton btn btn-success" wicket:id="ajaxSubmit"
 						type="button">
-						<span class="glyphicon glyphicon-play" />&nbsp;&nbsp;<span>Execute Script</span>
-					</button>
-				</div>
-			</div>
-		</form>
-
-		<div class="cq-sepLine"></div>
-
-		<div class="row cq-queryImportProgressBar" style='display: none'>
-			<div class="col-lg-3"></div>
-			<div class="col-lg-5">
-				<br>
-				<br>
-				<br>
-				<br>
-				<div class="progress progress-striped active">
-					<div class="progress-bar" style="width: 100%"></div>
-				</div>
+					<span class="glyphicon glyphicon-play"/>&nbsp;&nbsp;<span>Execute Script</span>
+				</button>
 			</div>
 		</div>
+	</form>
 
-		<div wicket:id="importResultContainer">
-			<wicket:container wicket:id="importResultPager"></wicket:container>
-			<table class="table table-striped table-bordered table-hover">
-				<thead>
-					<tr>
-						<th title="Runtime in ms">Runtime</th>
-						<th>Query</th>
-					</tr>
-				</thead>
+	<div class="cq-sepLine"></div>
 
-				<tbody>
-					<tr wicket:id="resultRow">
-						<td wicket:id="runtime" style="white-space: nowrap; width: 1%" align="center"></td>
-						<td><span wicket:id="query"></span> <wicket:container wicket:id="queryError">
-								<div class="cq-table-sepLine"></div>
-								<span wicket:id="error" class="feedbackPanelERROR"></span>
-							</wicket:container></td>
-					</tr>
-				</tbody>
-			</table>
+	<div class="row cq-queryImportProgressBar" style='display: none'>
+		<div class="col-lg-3"></div>
+		<div class="col-lg-5">
+			<br>
+			<br>
+			<br>
+			<br>
+
+			<div class="progress progress-striped active">
+				<div class="progress-bar" style="width: 100%"></div>
+			</div>
 		</div>
+	</div>
 
-	</wicket:panel>
+	<div wicket:id="importResultContainer">
+		<wicket:container wicket:id="importResultPager"></wicket:container>
+		<table class="table table-striped table-bordered table-hover">
+			<thead>
+			<tr>
+				<th title="Runtime in ms">Runtime</th>
+				<th>Query</th>
+			</tr>
+			</thead>
+
+			<tbody>
+			<tr wicket:id="resultRow">
+				<td wicket:id="runtime" style="white-space: nowrap; width: 1%" align="center"></td>
+				<td><span wicket:id="query"></span>
+					<wicket:container wicket:id="queryError">
+						<div class="cq-table-sepLine"></div>
+						<span wicket:id="error" class="feedbackPanelERROR"></span>
+					</wicket:container>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+</wicket:panel>
 </body>
 
 </html>
