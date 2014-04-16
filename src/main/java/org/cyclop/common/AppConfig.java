@@ -187,9 +187,6 @@ public class AppConfig implements Serializable {
 	public static class CqlEditor implements Serializable {
 
 		@Min(1)
-		public final int rowsPerPage;
-
-		@Min(1)
 		public final int maxColumnEmbeddedDisplayChars;
 
 		@Min(1)
@@ -199,11 +196,9 @@ public class AppConfig implements Serializable {
 		public final int maxColumnTooltipDisplayChars;
 
 		@Inject
-		protected CqlEditor(@Value("${cqlEditor.rowsPerPage}") int rowsPerPage,
-							@Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
+		protected CqlEditor(@Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
 							@Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
 							@Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
-			this.rowsPerPage = rowsPerPage;
 			this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
 			this.maxColumnDisplayChars = maxColumnDisplayChars;
 			this.maxColumnTooltipDisplayChars = maxColumnTooltipDisplayChars;
@@ -211,9 +206,9 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "CqlEditor [rowsPerPage=" + rowsPerPage + ", maxColumnEmbeddedDisplayChars=" +
-					maxColumnEmbeddedDisplayChars + ", maxColumnDisplayChars=" + maxColumnDisplayChars +
-					", maxColumnTooltipDisplayChars=" + maxColumnTooltipDisplayChars + "]";
+			return "CqlEditor [maxColumnEmbeddedDisplayChars=" + maxColumnEmbeddedDisplayChars +
+					", maxColumnDisplayChars=" + maxColumnDisplayChars + ", maxColumnTooltipDisplayChars=" +
+					maxColumnTooltipDisplayChars + "]";
 		}
 
 	}
@@ -306,14 +301,10 @@ public class AppConfig implements Serializable {
 		@Min(1)
 		public final int maxFileSizeMb;
 
-		@Min(1)
-		public final int resultsPerPage;
-
 		@Inject
 		public CqlImport(@Value("${cqlImport.listSeparatorRegEx}") String listSeparatorRegEx,
 						 @Value("${cqlImport.encoding}") String encoding,
-						 @Value("${cqlImport.maxFileSizeMb}") int maxFileSizeMb,
-						 @Value("${cqlImport.resultsPerPage}") int resultsPerPage) {
+						 @Value("${cqlImport.maxFileSizeMb}") int maxFileSizeMb) {
 			try {
 				this.listSeparatorRegEx = Pattern.compile(listSeparatorRegEx);
 			} catch (PatternSyntaxException e) {
@@ -321,7 +312,6 @@ public class AppConfig implements Serializable {
 			}
 			this.encoding = encoding;
 			this.maxFileSizeMb = maxFileSizeMb;
-			this.resultsPerPage = resultsPerPage;
 		}
 
 		@Override
@@ -338,8 +328,8 @@ public class AppConfig implements Serializable {
 		public final boolean enabled;
 
 		@Inject
-		public Favourites(@Value("${favourites.entriesLimit}") int entriesLimit,
-						  @Value("${favourites.enabled}") boolean enabled) {
+		public Favourites(@Value("${favourites.entriesLimit:50}") int entriesLimit,
+						  @Value("${favourites.enabled:false}") boolean enabled) {
 			this.entriesLimit = entriesLimit;
 			this.enabled = enabled;
 		}
@@ -383,22 +373,18 @@ public class AppConfig implements Serializable {
 	public static class History implements Serializable {
 		public final int entriesLimit;
 
-		public final int queriesPerPage;
-
 		public final boolean enabled;
 
 		@Inject
-		public History(@Value("${history.entriesLimit}") int entriesLimit, @Value("${history.enabled}") boolean enabled,
-					   @Value("${history.queriesPerPage}") int queriesPerPage) {
+		public History(@Value("${history.entriesLimit}") int entriesLimit,
+					   @Value("${history.enabled}") boolean enabled) {
 			this.entriesLimit = entriesLimit;
 			this.enabled = enabled;
-			this.queriesPerPage = queriesPerPage;
 		}
 
 		@Override
 		public String toString() {
-			return "History [entriesLimit=" + entriesLimit + ", queriesPerPage=" + queriesPerPage + ", enabled=" +
-					enabled + "]";
+			return "History [entriesLimit=" + entriesLimit + ", enabled=" + enabled + "]";
 		}
 
 	}

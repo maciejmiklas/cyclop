@@ -6,7 +6,6 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
-import org.cyclop.common.AppConfig;
 import org.cyclop.web.components.buttons.StateButton;
 
 /** @author Maciej Miklas */
@@ -15,8 +14,6 @@ public class ButtonsPanel extends Panel {
 	private static final JavaScriptResourceReference JS_BUTTONS = new JavaScriptResourceReference(ButtonsPanel.class,
 			"buttons.js");
 
-	private AppConfig conf = AppConfig.get();
-
 	public ButtonsPanel(String id, final ButtonListener buttonListener, boolean completionPressed) {
 		super(id);
 		setRenderBodyOnly(true);
@@ -24,11 +21,11 @@ public class ButtonsPanel extends Panel {
 		AjaxFallbackLink<Void> addToFavourites = new AjaxFallbackLink<Void>("addToFavourites") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				//buttonListener.onClickExecCql(target);
+				// buttonListener.onClickExecCql(target);
 			}
 		};
 		add(addToFavourites);
-		addToFavourites.setVisible(conf.favourites.enabled);
+		addToFavourites.setVisible(false);
 
 		AjaxFallbackLink<Void> execQuery = new AjaxFallbackLink<Void>("execQuery") {
 			@Override

@@ -19,25 +19,29 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.util.string.Strings;
-import org.cyclop.common.AppConfig;
 import org.cyclop.common.StringHelper;
 import org.cyclop.common.StringHelper.StringDecorator;
 import org.cyclop.model.FilterResult;
 import org.cyclop.model.QueryEntry;
+import org.cyclop.model.UserPreferences;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.service.search.FilterFieldAccessor;
 import org.cyclop.service.search.SearchService;
+import org.cyclop.service.um.UserManager;
 import org.cyclop.web.common.AjaxReloadSupport;
 import org.cyclop.web.common.ImmutableListModel;
 import org.cyclop.web.common.TextModel;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
+import org.cyclop.web.components.pagination.PagerConfigurator;
 import org.cyclop.web.pages.main.MainPage;
 
 import javax.inject.Inject;
 
 /** @author Maciej Miklas */
 public class HistoryPanel extends Panel implements AjaxReloadSupport {
+	@Inject
+	private UserManager um;
 
 	private static final JavaScriptResourceReference JS_HISTORY = new JavaScriptResourceReference(HistoryPanel.class,
 			"history.js");
@@ -144,7 +148,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 	private ImmutableListModel<QueryEntry> initHistoryTable(final WebMarkupContainer historyContainer) {
 		ImmutableListModel<QueryEntry> model = new ImmutableListModel<>();
 
-		historyTable = new PageableListView<QueryEntry>("historyRow", model, AppConfig.get().history.queriesPerPage) {
+		historyTable = new PageableListView<QueryEntry>("historyRow", model, 1) {
 
 			@Override
 			protected void populateItem(ListItem<QueryEntry> item) {
@@ -157,7 +161,20 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 			}
 		};
 		historyContainer.add(historyTable);
-		pager = new BootstrapPagingNavigator("historyPager", historyTable);
+		pager = new BootstrapPagingNavigator("historyPager", historyTable, new PagerConfigurator() {
+
+			@Override
+			public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
+				UserPreferences prefs = um.readPreferences().setPagerHistoryItems(newItemsPerPage);
+				um.storePreferences(prefs);
+
+			}
+
+			@Override
+			public long getInitialItemsPerPage() {
+				return um.readPreferences().getPagerHistoryItems();
+			}
+		});
 		historyContainer.add(pager);
 
 		return model;

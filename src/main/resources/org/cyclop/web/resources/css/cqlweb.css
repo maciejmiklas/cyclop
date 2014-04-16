@@ -182,7 +182,7 @@ ul.cq-cqlCollectionList {
 	border-bottom: 1px solid #424221 !important;
 }
 
-.cq-nav > li > a:hover {
+.cq-nav>li>a:hover {
 	border-color: transparent transparent #424221 !important;
 	background-color: #002966 !important;
 }
@@ -246,4 +246,10 @@ ul.cq-cqlCollectionList {
 
 .cq-pull-right {
 	float: right !important;
+}
+
+.cq-paging-dropdown select {
+	border: 0 !important;
+	background: black;
+	color: white;
 }

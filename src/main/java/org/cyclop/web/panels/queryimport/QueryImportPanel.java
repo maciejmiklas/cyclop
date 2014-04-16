@@ -27,6 +27,7 @@ import org.cyclop.web.common.ImmutableListModel;
 import org.cyclop.web.common.ImmutableListModel.ModelChangeListener;
 import org.cyclop.web.common.JsFunctionBuilder;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
+import org.cyclop.web.components.pagination.PagerConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -158,8 +159,7 @@ public class QueryImportPanel extends Panel {
 	private ImmutableListModel<ImportResult> initResultTable(final WebMarkupContainer container) {
 		ImmutableListModel<ImportResult> model = new ImmutableListModel<>();
 
-		PageableListView<ImportResult> historyTable = new PageableListView<ImportResult>("resultRow", model,
-				AppConfig.get().cqlImport.resultsPerPage) {
+		PageableListView<ImportResult> historyTable = new PageableListView<ImportResult>("resultRow", model, 1) {
 
 			@Override
 			protected void populateItem(ListItem<ImportResult> item) {
@@ -171,7 +171,19 @@ public class QueryImportPanel extends Panel {
 		};
 		container.add(historyTable);
 		final BootstrapPagingNavigator importResultPager = new BootstrapPagingNavigator("importResultPager",
-				historyTable);
+				historyTable, new PagerConfigurator() {
+
+			@Override
+			public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
+				UserPreferences prefs = um.readPreferences().setPagerImportItems(newItemsPerPage);
+				um.storePreferences(prefs);
+			}
+
+			@Override
+			public long getInitialItemsPerPage() {
+				return um.readPreferences().getPagerImportItems();
+			}
+		});
 		container.add(importResultPager);
 
 		model.registerOnChangeListener(new ModelChangeListener<ImportResult>() {

@@ -14,16 +14,18 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PageableListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
+import org.cyclop.model.UserPreferences;
 import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.um.UserManager;
 import org.cyclop.web.components.column.WidgetFactory;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
+import org.cyclop.web.components.pagination.PagerConfigurator;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ import java.util.List;
 
 /** @author Maciej Miklas */
 public class QueryResultVerticalPanel extends Panel {
+
+	@Inject
+	private UserManager um;
 
 	@Inject
 	private QueryService queryService;
@@ -47,8 +52,6 @@ public class QueryResultVerticalPanel extends Panel {
 	private final Label cqlResultText;
 
 	private final CqlResultTextModel cqlResultTextModel;
-
-	private final AppConfig appConfig = AppConfig.get();
 
 	private BootstrapPagingNavigator pager;
 
@@ -72,7 +75,7 @@ public class QueryResultVerticalPanel extends Panel {
 		rowsModel = new RowsModel();
 		columnsModel = new ColumnsModel();
 
-		List<Row> displayedRows = initRowNamesList(resultTable, rowsModel, appConfig.cqlEditor.rowsPerPage);
+		List<Row> displayedRows = initRowNamesList(resultTable, rowsModel, 1);
 		initColumnList(resultTable, columnsModel, displayedRows);
 	}
 
@@ -192,7 +195,19 @@ public class QueryResultVerticalPanel extends Panel {
 		};
 		resultTable.add(rowNamesList);
 
-		pager = new BootstrapPagingNavigator("rowNamesListPager", rowNamesList);
+		pager = new BootstrapPagingNavigator("rowNamesListPager", rowNamesList, new PagerConfigurator() {
+
+			@Override
+			public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
+				UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
+				um.storePreferences(prefs);
+			}
+
+			@Override
+			public long getInitialItemsPerPage() {
+				return um.readPreferences().getPagerEditorItems();
+			}
+		});
 		resultTable.add(pager);
 
 		return displayedRows;

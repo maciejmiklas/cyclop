@@ -22,15 +22,22 @@ import org.apache.wicket.model.PropertyModel;
 /** @author Maciej Miklas */
 public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
+	private PagerConfigurator configurator;
+
 	private final IPageableItems pageable;
 
 	private final static ImmutableList<Long> CHOICES = ImmutableList
 			.of(1L, 2L, 5L, 10L, 20L, 50L, 100L, 200L, 500L, 1000L);
 
-	public BootstrapPagingNavigator(String id, IPageableItems pageable) {
+	public BootstrapPagingNavigator(String id, IPageableItems pageable, PagerConfigurator configurator) {
 		super(id, pageable);
 		this.pageable = pageable;
 		initPageSizeChoice();
+		if (configurator == null) {
+			throw new IllegalArgumentException("Null coinfigurator");
+		}
+		this.configurator = configurator;
+		pageable.setItemsPerPage(configurator.getInitialItemsPerPage());
 	}
 
 	public void reset() {
@@ -102,6 +109,7 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 			protected void onUpdate(AjaxRequestTarget target) {
 				reset();
 				onAjaxEvent(target);
+				configurator.onItemsPerPageChanged(target, pageable.getItemsPerPage());
 			}
 		});
 	}
