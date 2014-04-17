@@ -104,7 +104,7 @@ pre.cq-helpCqlSyntax {
 	background-color: #0a39b3;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
+.table-hover>tbody>tr.cq-tableRowSeparator,.table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -183,8 +183,14 @@ ul.cq-cqlCollectionList {
 }
 
 .cq-nav>li>a:hover {
-	border-color: transparent transparent #424221 !important;
-	background-color: #002966 !important;
+	color: #ffffff !important;
+	background-color: #2a9fd6 !important;
+	border: 1px solid #282828 !important;
+	border-bottom-color: transparent !important;
+}
+
+.cq-nav>li>a {
+	padding: 5px 10px !important;
 }
 
 .cq-table-sepLine {
@@ -199,10 +205,6 @@ ul.cq-cqlCollectionList {
 	border-bottom: 1px solid #424221;
 }
 
-.cq-nav>li>a {
-	padding: 5px 10px !important;
-}
-
 .table th {
 	background-color: #310019 !important;
 }
@@ -213,6 +215,12 @@ ul.cq-cqlCollectionList {
 
 .cq-pagination {
 	margin: 0 !important;
+}
+
+.cq-pagination>li>a:hover,.cq-pagination>li>span:hover,.cq-pagination>li>a:focus,.cq-pagination>li>span:focus
+	{
+	background-color: #2a9fd6 !important;
+	border-color: #2a9fd6 !important;
 }
 
 .cq-filterKeyword {
@@ -236,7 +244,7 @@ ul.cq-cqlCollectionList {
 	min-height: 100%;
 	font-size: 999px;
 	text-align: right;
-	filter: alpha(opacity=0);
+	filter: alpha(opacity = 0);
 	opacity: 0;
 	outline: none;
 	background: white;
@@ -249,7 +257,13 @@ ul.cq-cqlCollectionList {
 }
 
 .cq-paging-dropdown select {
-	border: 0 !important;
-	background: black;
+	border: 1 !important;
+	border-color: white;
+	border-radius: 4px 4px 4px 4px;
+	background: #222222;
 	color: white;
+}
+
+.cq-paging-dropdown select:hover {
+	cursor: pointer;
 }
