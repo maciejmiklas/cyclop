@@ -104,7 +104,7 @@ pre.cq-helpCqlSyntax {
 	background-color: #0a39b3;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator,.table-hover>tbody>tr.cq-tableRowSeparator>td {
+.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
 	padding: 0.3em;
 	border: 0;
 }
@@ -217,8 +217,7 @@ ul.cq-cqlCollectionList {
 	margin: 0 !important;
 }
 
-.cq-pagination>li>a:hover,.cq-pagination>li>span:hover,.cq-pagination>li>a:focus,.cq-pagination>li>span:focus
-	{
+.cq-pagination>li>a:hover, .cq-pagination>li>span:hover, .cq-pagination>li>a:focus, .cq-pagination>li>span:focus {
 	background-color: #2a9fd6 !important;
 	border-color: #2a9fd6 !important;
 }
@@ -244,7 +243,7 @@ ul.cq-cqlCollectionList {
 	min-height: 100%;
 	font-size: 999px;
 	text-align: right;
-	filter: alpha(opacity = 0);
+	filter: alpha(opacity=0);
 	opacity: 0;
 	outline: none;
 	background: white;
@@ -262,6 +261,11 @@ ul.cq-cqlCollectionList {
 	border-radius: 4px 4px 4px 4px;
 	background: #222222;
 	color: white;
+}
+
+.cq-paging-dropdown {
+	padding-top: 4px !important;
+	padding-bottom: 4px !important;
 }
 
 .cq-paging-dropdown select:hover {
