@@ -16,11 +16,14 @@ There is also another cool thing: it your security experts will run penetration 
 Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has
 been opened, it's being stored in HTTP session, and that's it. From now on, each query it being passed to Cassandra over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
 
-Providing support persistent data like query history gets a bit tricky, if there is no such thing as user.  We could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
+Providing support for persistent data like query history gets a bit tricky, if there is no such thing as user.  We
+could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
 
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
 
-#### User Preferences
+User Preferences cover things like amount of rows in result table, import settings or button state. Those are stored
+in browser as cooke in a json format. First of all there is no security issue,
+because it's no a sensitive data and additionally we can access it directly from Java Script.
 
 # Query Editor
 #### Query Completion
@@ -75,16 +78,11 @@ supports dynamic columns, and the idea is to have "static" columns at the top of
 The history itself is stored on server in configured folder (fileStore.folder), in file: [fileStore.folder]\QueryHistory-[User-UUID].json.  The file itself contains serialized history in json form.
 The solution is also secure, so you can use Cyclop from any computer without restrictions. Random cookie is the only information stored in browser - but this does not matter, because history can be viewed only by authenticated users.
 
-# Bookmarks
-![Query Bookmark](/doc/img/query_bookmark.png)
-CQL query can be bookmarked. This is convenient for frequently used queries, or if you like to share it with somebody else. When you click on bookmark button, the URL in browser will be changed, so that it contains the query from editor.
-
 # CSV Export
-![CSV Export](/doc/img/csv_export.png)
-
-Query result can be exported to CSV file.
+Query result can be exported to CSV file. You can influence it's format trough configuration file.
 
 # Import
+![Query Bookmark](/doc/img/import.png)
 It's meant to import files containing CQL queries separated by ;\n. Single query can spread over multiple lines. Results of the import are displayed in table, which contains each single query, runtime and eventually an error - in this case row has read color. You can also specify few options, so that script execution will break (or not) after first error, or executed queries can be included in query history.
 
 Import has also few limitations:
