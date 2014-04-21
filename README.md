@@ -86,15 +86,15 @@ Query result can be exported to CSV file. You can influence it's format trough c
 It's meant to import files containing CQL queries separated by ;\n. Single query can spread over multiple lines. Results of the import are displayed in table, which contains each single query, runtime and eventually an error - in this case row has read color. You can also specify few options, so that script execution will break (or not) after first error, or executed queries can be included in query history.
 
 Import has also few limitations:
-* import script and results table has to fit into tomcat memory
+* import script and results table has to fit into memory
 * each query will be executed as separate Cassandra call, so that we can precisely point out errors, and measure execution time, on the other hand side it causes latencies
 * import script does not support comments
 
 # Requirements
 * java 7
 * cassandra v1.2 or above (tested with 1.2 and 2.0)
-* supports only schema created with CQL 3
-* CLI schamas are NOT supported
+* only CQL 3 is supported
+* CLI is NOT supported
 * Tomcat v7 or another v3.x web container
 
 # Technologies

@@ -45,14 +45,10 @@ public class TestQueryImporter extends AbstractTestCase {
 
 	@Test
 	public void testImportMix() throws Exception {
-		try (InputStream fio = getClass().getResourceAsStream("/createDemoDataMix.cql")) {
+		try (InputStream fio = getClass().getResourceAsStream("/testImportMix.cql")) {
 			ResultConsumer rc = new ResultConsumer();
 			ImportStats stats = importer.importScript(fio, rc, true, true);
-			assertEquals(8, rc.size());
-			assertEquals(3, rc.error.size());
-			assertEquals(5, rc.success.size());
-			assertEquals(3, stats.errorCount);
-			assertEquals(5, stats.successCount);
+
 			assertTrue(rc.toString(), rc.success.contains(new CqlQuery(CqlQueryType.UNKNOWN, "USE CqlDemo")));
 			assertTrue(rc.toString(), rc.success.contains(new CqlQuery(CqlQueryType.UNKNOWN,
 					"INSERT INTO MyBooks (id,title,genre,publishDate,description,authors,pages,price,paperType) VALUES (1ff18f41-cfb8-45ff-9e89-fb20f95ffc5d,'XML Developers Guide','Computer','2000-10-01','An in-depth look at creating applications with XML.',{'Gambardella, Matthew','Marcin Miklas','Fryderyk Zajac','Anna Zajac'},112291,{'D':3.85,'E':4.11,'F':4.00},'white and soft')")));
@@ -62,6 +58,18 @@ public class TestQueryImporter extends AbstractTestCase {
 					"INSERT INTO MyBooks (id,title,pages,price) VALUES (c746c90c-94dc-45dc-9b47-e410e46a0e61,'just title..... urrr...',112291,{'DE':44,'EU':343})")));
 			assertTrue(rc.toString(), rc.success.contains(new CqlQuery(CqlQueryType.UNKNOWN,
 					"INSERT INTO MyBooks (id,title,pages,            price) VALUES (e1390b2e-1393-490b-aa6e-88874ac1fc88,            'just title. wed dwe....',112291,           {'DE':4,'EU':324})")));
+
+
+			for (int i = 1; i < 12; i++) {
+
+				String q1 = "ALTER TABLE MyBooks ADD tc_" + i + " varchar";
+				assertTrue(q1, rc.success.contains(new CqlQuery(CqlQueryType.UNKNOWN, q1)));
+
+				String q2 =
+						"INSERT INTO MyBooks (id,tc_" + i + ") VALUES (44f2054c-f98b-43a7-833d-0e1358fdee82,'v" + i +
+								"')";
+				assertTrue(rc.toString(), rc.success.contains(new CqlQuery(CqlQueryType.UNKNOWN, q2)));
+			}
 
 			{
 				QueryException res = rc.error
@@ -89,6 +97,23 @@ public class TestQueryImporter extends AbstractTestCase {
 				assertTrue(res.toString(), res.getMessage().contains("Unmatched column names/values"));
 			}
 
+
+			{
+				QueryException res = rc.error.get(new CqlQuery(CqlQueryType.UNKNOWN,
+						"INSERT INTO MyBooks (id,tc_13) VALUES (44f2054c-f98b-43a7-833d-0e1358fdee82,'v13')"));
+				assertNotNull(rc.toString(), res);
+				assertTrue(res.toString(), res.getMessage().contains("Error executing CQL"));
+				assertTrue(res.toString(), res.getMessage().contains("Unknown identifier tc_13"));
+			}
+
+			{
+				assertEquals(4, rc.error.size());
+				assertEquals(4, stats.errorCount);
+				assertEquals(2044, rc.success.size());
+				assertEquals(rc.success.size(), stats.successCount);
+				assertEquals(2048, rc.size());
+			}
+
 		}
 	}
 
@@ -98,7 +123,7 @@ public class TestQueryImporter extends AbstractTestCase {
 				"select title from cqldemo.mybooks where id=644556a9-651b-45b3-bd01-cc807c64bd4f");
 		assertTrue(queryService.execute(testCql).isEmpty());
 
-		try (InputStream fio = getClass().getResourceAsStream("/createDemoDataLb.cql")) {
+		try (InputStream fio = getClass().getResourceAsStream("/testImportLineBreaks.cql")) {
 			ResultConsumer rc = new ResultConsumer();
 			ImportStats stats = importer.importScript(fio, rc, true, true);
 			assertEquals(8, rc.size());
