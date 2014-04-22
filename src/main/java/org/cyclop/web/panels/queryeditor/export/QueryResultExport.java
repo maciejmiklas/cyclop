@@ -28,7 +28,7 @@ public class QueryResultExport implements Serializable {
 
 	private final CsvQueryResultExporter exporter;
 
-	private final static AppConfig.CqlExport conf = AppConfig.get().cqlExport;
+	private final static AppConfig.QueryExport conf = AppConfig.get().queryExport;
 
 	public QueryResultExport(MarkupContainer parent, CsvQueryResultExporter exporter) {
 		this.exporter = exporter;

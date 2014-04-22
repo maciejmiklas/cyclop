@@ -49,7 +49,7 @@ public class DataConverter {
 			return null;
 		}
 
-		int limit = embeddedColumn ? appConfig.cqlEditor.maxColumnEmbeddedDisplayChars : appConfig.cqlEditor.maxColumnDisplayChars;
+		int limit = embeddedColumn ? appConfig.queryEditor.maxColumnEmbeddedDisplayChars : appConfig.queryEditor.maxColumnDisplayChars;
 		if (content.length() > limit) {
 			return content.trim().substring(0, limit) + ".....";
 		} else {
@@ -62,8 +62,8 @@ public class DataConverter {
 			return null;
 		}
 
-		if (content.length() > appConfig.cqlEditor.maxColumnTooltipDisplayChars) {
-			return content.trim().substring(0, appConfig.cqlEditor.maxColumnTooltipDisplayChars) + ".....";
+		if (content.length() > appConfig.queryEditor.maxColumnTooltipDisplayChars) {
+			return content.trim().substring(0, appConfig.queryEditor.maxColumnTooltipDisplayChars) + ".....";
 		} else {
 			return content.trim();
 		}

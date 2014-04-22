@@ -19,7 +19,9 @@ public class TestJsonMarshaller extends AbstractTestCase {
 		UserPreferences up = new UserPreferences();
 		up.setShowCqlCompletionHint(false);
 		String res = marshaller.marshal(up);
-		assertEquals("{\"e_hi\":\"0\",\"e_he\":\"1\",\"i_hi\":\"1\",\"i_ce\":\"0\",\"p_ei\":5,\"p_hi\":50,\"p_ii\":100}", res);
+		assertEquals(
+				"{\"e_hi\":\"0\",\"e_he\":\"1\",\"i_hi\":\"1\",\"i_ce\":\"0\",\"p_ei\":5,\"p_hi\":50,\"p_ii\":100}",
+				res);
 	}
 
 	@Test

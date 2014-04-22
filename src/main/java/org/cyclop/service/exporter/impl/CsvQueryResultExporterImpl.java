@@ -36,7 +36,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 	private DataConverter converter;
 
 	@Inject
-	private AppConfig.CqlExport conf;
+	private AppConfig.QueryExport conf;
 
 	public String exportAsCsv(CqlQuery query, CqlQueryResult result) {
 		LOG.debug("Starting CSV export for {}", query);

@@ -4,11 +4,13 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.cassandra.QueryService;
+import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,19 +22,23 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class TestQueryImporter extends AbstractTestCase {
+public class TestSyncQueryImporter extends AbstractTestCase {
 
 	@Inject
+	@Named(QueryImporter.IMPL_SYNC)
 	private QueryImporter importer;
 
 	@Inject
 	private QueryService queryService;
 
+	// TODO test import breaks after first error
+
 	@Test
 	public void testImportOneQueryPerLine() throws Exception {
 		try (InputStream fio = getClass().getResourceAsStream("/createDemoData.cql")) {
 			ResultConsumer rc = new ResultConsumer();
-			ImportStats stats = importer.importScript(fio, rc, true, true);
+			ImportStats stats = importer
+					.importScript(fio, rc, new ImportConfig().withContinueWithErrors(true).withUpdateHistory(true));
 			assertEquals(6, rc.size());
 			assertEquals(0, rc.error.size());
 			assertEquals(6, rc.success.size());
@@ -44,10 +50,11 @@ public class TestQueryImporter extends AbstractTestCase {
 	}
 
 	@Test
-	public void testImportMix() throws Exception {
-		try (InputStream fio = getClass().getResourceAsStream("/testImportMix.cql")) {
+	public void testImportOrdered() throws Exception {
+		try (InputStream fio = getClass().getResourceAsStream("/testImportOrdered.cql")) {
 			ResultConsumer rc = new ResultConsumer();
-			ImportStats stats = importer.importScript(fio, rc, true, true);
+			ImportStats stats = importer
+					.importScript(fio, rc, new ImportConfig().withContinueWithErrors(true).withUpdateHistory(true));
 
 			assertTrue(rc.toString(), rc.success.contains(new CqlQuery(CqlQueryType.UNKNOWN, "USE CqlDemo")));
 			assertTrue(rc.toString(), rc.success.contains(new CqlQuery(CqlQueryType.UNKNOWN,
@@ -125,7 +132,8 @@ public class TestQueryImporter extends AbstractTestCase {
 
 		try (InputStream fio = getClass().getResourceAsStream("/testImportLineBreaks.cql")) {
 			ResultConsumer rc = new ResultConsumer();
-			ImportStats stats = importer.importScript(fio, rc, true, true);
+			ImportStats stats = importer
+					.importScript(fio, rc, new ImportConfig().withContinueWithErrors(true).withUpdateHistory(true));
 			assertEquals(8, rc.size());
 			assertEquals(0, rc.error.size());
 			assertEquals(8, rc.success.size());
@@ -160,7 +168,7 @@ public class TestQueryImporter extends AbstractTestCase {
 
 	}
 
-	public class ResultConsumer implements ResultWritter {
+	public class ResultConsumer implements ResultWriter {
 
 		public List<CqlQuery> success = new ArrayList<>();
 

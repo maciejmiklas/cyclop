@@ -1,5 +1,6 @@
 package org.cyclop.common;
 
+import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
 import org.cyclop.model.exception.ServiceException;
 import org.cyclop.validation.BeanValidator;
@@ -35,7 +36,7 @@ public class AppConfig implements Serializable {
 
 	@NotNull
 	@Valid
-	public final CqlEditor cqlEditor;
+	public final QueryEditor queryEditor;
 
 	@NotNull
 	@Valid
@@ -55,7 +56,7 @@ public class AppConfig implements Serializable {
 
 	@NotNull
 	@Valid
-	public final CqlExport cqlExport;
+	public final QueryExport queryExport;
 
 	@NotNull
 	@Valid
@@ -67,22 +68,22 @@ public class AppConfig implements Serializable {
 
 	@NotNull
 	@Valid
-	public final CqlImport cqlImport;
+	public final QueryImport queryImport;
 
 	@Inject
-	public AppConfig(Cassandra cassandra, CqlEditor cqlEditor, Common common, CqlExport cqlExport, Cookies cookie,
-					 History history, Favourites favourites, FileStore fileStore, HttpSession httpSession,
-					 CqlImport cqlImport) {
+	public AppConfig(Cassandra cassandra, QueryEditor queryEditor, Common common, QueryExport queryExport,
+					 Cookies cookie, History history, Favourites favourites, FileStore fileStore,
+					 HttpSession httpSession, QueryImport queryImport) {
 		this.cassandra = cassandra;
-		this.cqlEditor = cqlEditor;
+		this.queryEditor = queryEditor;
 		this.common = common;
-		this.cqlExport = cqlExport;
+		this.queryExport = queryExport;
 		this.cookie = cookie;
 		this.history = history;
 		this.favourites = favourites;
 		this.fileStore = fileStore;
 		this.httpSession = httpSession;
-		this.cqlImport = cqlImport;
+		this.queryImport = queryImport;
 	}
 
 	private static String crs(String cr, String str) throws UnsupportedEncodingException {
@@ -107,9 +108,10 @@ public class AppConfig implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AppConfig [cassandra=" + cassandra + ", cqlEditor=" + cqlEditor + ", common=" + common + ", history=" +
-				history + ", fileStore=" + fileStore + ", favourites=" + favourites + ", cqlExport=" + cqlExport +
-				", httpSession=" + httpSession + ", cookie=" + cookie + "]";
+		return Objects.toStringHelper(this).add("cassandra", cassandra).add("queryEditor", queryEditor)
+				.add("common", common).add("history", history).add("fileStore", fileStore).add("favourites", favourites)
+				.add("queryExport", queryExport).add("httpSession", httpSession).add("cookie", cookie)
+				.add("queryImport", queryImport).toString();
 	}
 
 	@Named
@@ -153,11 +155,10 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "Cassandra [port=" + port + ", timeoutMilis=" + timeoutMilis + ", rowsLimit=" + rowsLimit +
-					", columnsLimit=" + columnsLimit + ", hosts=" + hosts + ", maxConnectionsProSession=" +
-					maxConnectionsProSession + ", useSsl=" + useSsl + "]";
+			return Objects.toStringHelper(this).add("port", port).add("timeoutMilis", timeoutMilis)
+					.add("rowsLimit", rowsLimit).add("columnsLimit", columnsLimit).add("hosts", hosts)
+					.add("maxConnectionsProSession", maxConnectionsProSession).add("useSsl", useSsl).toString();
 		}
-
 	}
 
 	@Named
@@ -184,7 +185,7 @@ public class AppConfig implements Serializable {
 
 	@Named
 	@Immutable
-	public static class CqlEditor implements Serializable {
+	public static class QueryEditor implements Serializable {
 
 		@Min(1)
 		public final int maxColumnEmbeddedDisplayChars;
@@ -196,9 +197,9 @@ public class AppConfig implements Serializable {
 		public final int maxColumnTooltipDisplayChars;
 
 		@Inject
-		protected CqlEditor(@Value("${cqlEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
-							@Value("${cqlEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
-							@Value("${cqlEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
+		protected QueryEditor(@Value("${queryEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
+							  @Value("${queryEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
+							  @Value("${queryEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
 			this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
 			this.maxColumnDisplayChars = maxColumnDisplayChars;
 			this.maxColumnTooltipDisplayChars = maxColumnTooltipDisplayChars;
@@ -206,16 +207,15 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "CqlEditor [maxColumnEmbeddedDisplayChars=" + maxColumnEmbeddedDisplayChars +
-					", maxColumnDisplayChars=" + maxColumnDisplayChars + ", maxColumnTooltipDisplayChars=" +
-					maxColumnTooltipDisplayChars + "]";
+			return Objects.toStringHelper(this).add("maxColumnEmbeddedDisplayChars", maxColumnEmbeddedDisplayChars)
+					.add("maxColumnDisplayChars", maxColumnDisplayChars)
+					.add("maxColumnTooltipDisplayChars", maxColumnTooltipDisplayChars).toString();
 		}
-
 	}
 
 	@Named
 	@Immutable
-	public static final class CqlExport implements Serializable {
+	public static final class QueryExport implements Serializable {
 
 		@NotEmpty
 		public final String querySeparator;
@@ -251,18 +251,18 @@ public class AppConfig implements Serializable {
 		public final boolean removeCrChars;
 
 		@Inject
-		public CqlExport(@Value("${cqlExport.fileName}") String fileName,
-						 @Value("${cqlExport.fileName.date}") String fileNameDate,
-						 @Value("${cqlExport.querySeparator}") String querySeparator,
-						 @Value("${cqlExport.rowSeparator}") String rowSeparator,
-						 @Value("${cqlExport.columnSeparator}") String columnSeparator,
-						 @Value("${cqlExport.listSeparator}") String listSeparator,
-						 @Value("${cqlExport.mapSeparator}") String mapSeparator,
-						 @Value("${cqlExport.valueBracketStart}") String valueBracketStart,
-						 @Value("${cqlExport.valueBracketEnd}") String valueBracketEnd,
-						 @Value("${cqlExport.crCharCode}") int crCharCode,
-						 @Value("${cqlExport.removeCrChars}") boolean removeCrChars,
-						 @Value("${cqlExport.trim}") boolean trim) throws UnsupportedEncodingException {
+		public QueryExport(@Value("${queryExport.fileName}") String fileName,
+						   @Value("${queryExport.fileName.date}") String fileNameDate,
+						   @Value("${queryExport.querySeparator}") String querySeparator,
+						   @Value("${queryExport.rowSeparator}") String rowSeparator,
+						   @Value("${queryExport.columnSeparator}") String columnSeparator,
+						   @Value("${queryExport.listSeparator}") String listSeparator,
+						   @Value("${queryExport.mapSeparator}") String mapSeparator,
+						   @Value("${queryExport.valueBracketStart}") String valueBracketStart,
+						   @Value("${queryExport.valueBracketEnd}") String valueBracketEnd,
+						   @Value("${queryExport.crCharCode}") int crCharCode,
+						   @Value("${queryExport.removeCrChars}") boolean removeCrChars,
+						   @Value("${queryExport.trim}") boolean trim) throws UnsupportedEncodingException {
 			this.crCharCode = crCharCode;
 			String crChar = String.valueOf((char) crCharCode);
 			this.querySeparator = crs(crChar, querySeparator);
@@ -280,18 +280,18 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "CqlExport [querySeparator=" + querySeparator + ", rowSeparator=" + rowSeparator +
-					", listSeparator=" + listSeparator + ", mapSeparator=" + mapSeparator + ", columnSeparator=" +
-					columnSeparator + ", crCharCode=" + crCharCode + ", valueBracketStart=" + valueBracketStart +
-					", fileName=" + fileName + ", fileNameDate=" + fileNameDate + ", valueBracketEnd=" +
-					valueBracketEnd + ", trim=" + trim + ", removeCrChars=" + removeCrChars + "]";
+			return Objects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator", rowSeparator)
+					.add("listSeparator", listSeparator).add("mapSeparator", mapSeparator)
+					.add("columnSeparator", columnSeparator).add("crCharCode", crCharCode)
+					.add("valueBracketStart", valueBracketStart).add("fileName", fileName)
+					.add("fileNameDate", fileNameDate).add("valueBracketEnd", valueBracketEnd).add("trim", trim)
+					.add("removeCrChars", removeCrChars).toString();
 		}
-
 	}
 
 	@Named
 	@Immutable
-	public static final class CqlImport implements Serializable {
+	public static final class QueryImport implements Serializable {
 		@NotNull
 		public final Pattern listSeparatorRegEx;
 
@@ -301,22 +301,29 @@ public class AppConfig implements Serializable {
 		@Min(1)
 		public final int maxFileSizeMb;
 
+		@Min(1)
+		public final int maxThreadsProImport;
+
 		@Inject
-		public CqlImport(@Value("${cqlImport.listSeparatorRegEx}") String listSeparatorRegEx,
-						 @Value("${cqlImport.encoding}") String encoding,
-						 @Value("${cqlImport.maxFileSizeMb}") int maxFileSizeMb) {
+		public QueryImport(@Value("${queryImport.listSeparatorRegEx}") String listSeparatorRegEx,
+						   @Value("${queryImport.encoding}") String encoding,
+						   @Value("${queryImport.maxFileSizeMb}") int maxFileSizeMb,
+						   @Value("${queryImport.async.maxThreadsProImport}") int maxThreadsProImport) {
 			try {
 				this.listSeparatorRegEx = Pattern.compile(listSeparatorRegEx);
 			} catch (PatternSyntaxException e) {
-				throw new ServiceException("Property: cqlImport.listSeparatorRegEx syntax error: " + e.getMessage(), e);
+				throw new ServiceException("Property: queryImport.listSeparatorRegEx syntax error: " + e.getMessage(),
+						e);
 			}
 			this.encoding = encoding;
 			this.maxFileSizeMb = maxFileSizeMb;
+			this.maxThreadsProImport = maxThreadsProImport;
 		}
 
 		@Override
 		public String toString() {
-			return "CqlImport [listSeparatorRegEx=" + listSeparatorRegEx + "]";
+			return Objects.toStringHelper(this).add("listSeparatorRegEx", listSeparatorRegEx).add("encoding", encoding)
+					.add("maxFileSizeMb", maxFileSizeMb).add("maxThreadsProImport", maxThreadsProImport).toString();
 		}
 	}
 
@@ -336,9 +343,8 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "Favourites [entriesLimit=" + entriesLimit + ", enabled=" + enabled + "]";
+			return Objects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
 		}
-
 	}
 
 	@Named
@@ -362,10 +368,9 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "FileStore [maxFileSize=" + maxFileSize + ", lockWaitTimeoutMilis=" + lockWaitTimeoutMilis +
-					", folder=" + folder + "]";
+			return Objects.toStringHelper(this).add("maxFileSize", maxFileSize)
+					.add("lockWaitTimeoutMilis", lockWaitTimeoutMilis).add("folder", folder).toString();
 		}
-
 	}
 
 	@Named
@@ -384,9 +389,8 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "History [entriesLimit=" + entriesLimit + ", enabled=" + enabled + "]";
+			return Objects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
 		}
-
 	}
 
 	@Named
@@ -401,9 +405,8 @@ public class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return "HttpSession [expirySeconds=" + expirySeconds + "]";
+			return Objects.toStringHelper(this).add("expirySeconds", expirySeconds).toString();
 		}
-
 	}
 
 }

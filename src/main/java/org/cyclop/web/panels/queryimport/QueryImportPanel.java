@@ -21,6 +21,7 @@ import org.apache.wicket.util.lang.Bytes;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.importer.QueryImporter;
+import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.common.ImmutableListModel;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.ByteArrayInputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -41,10 +43,18 @@ public class QueryImportPanel extends Panel {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryImportPanel.class);
 
+	private static final JavaScriptResourceReference JS_IMPORT = new JavaScriptResourceReference(QueryImportPanel.class,
+			"queryImport.js");
+
 	private final ImmutableListModel<ImportResult> resultModel;
 
+	private final AppConfig conf = AppConfig.get();
+
+	private final WebMarkupContainer importResultContainer;
+
 	@Inject
-	private QueryImporter impoter;
+	@Named(QueryImporter.IMPL_SYNC)
+	private QueryImporter importer;
 
 	@Inject
 	private UserManager um;
@@ -58,13 +68,6 @@ public class QueryImportPanel extends Panel {
 
 		;
 	};
-
-	private final AppConfig conf = AppConfig.get();
-
-	private final WebMarkupContainer importResultContainer;
-
-	private static final JavaScriptResourceReference JS_IMPORT = new JavaScriptResourceReference(QueryImportPanel.class,
-			"queryImport.js");
 
 	public QueryImportPanel(String id) {
 		super(id);
@@ -101,10 +104,12 @@ public class QueryImportPanel extends Panel {
 		byte[] fileContentBytes = upload.getBytes();
 		LOG.debug("Importing file of {} bytes", fileContentBytes.length);
 
-		ImportResultWritter result = new ImportResultWritter();
-		ImportStats stats = impoter
-				.importScript(new ByteArrayInputStream(fileContentBytes), result, importOptions.isIncludeInHistory(),
-						importOptions.isContinueWithErrors());
+		ImportResultWriter result = new ImportResultWriter();
+
+		ImportConfig config = new ImportConfig();
+		config.withContinueWithErrors(importOptions.isContinueWithErrors())
+				.withUpdateHistory(importOptions.isContinueWithErrors());
+		ImportStats stats = importer.importScript(new ByteArrayInputStream(fileContentBytes), result, config);
 
 		String resp = createStatsMessage(stats);
 		sendJsResponse(target, resp);
@@ -125,7 +130,7 @@ public class QueryImportPanel extends Panel {
 			protected void onSubmit() {
 			}
 		};
-		form.setMaxSize(Bytes.megabytes(conf.cqlImport.maxFileSizeMb));
+		form.setMaxSize(Bytes.megabytes(conf.queryImport.maxFileSizeMb));
 		add(form);
 		form.add(scriptFile);
 

@@ -3,10 +3,10 @@ package org.cyclop.web.panels.queryimport;
 import com.google.common.collect.ImmutableList;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.exception.QueryException;
-import org.cyclop.service.importer.ResultWritter;
+import org.cyclop.service.importer.ResultWriter;
 
 /** @author Maciej Miklas */
-final class ImportResultWritter implements ResultWritter {
+final class ImportResultWriter implements ResultWriter {
 
 	private final ImmutableList.Builder<ImportResult> resultBuild = ImmutableList.builder();
 

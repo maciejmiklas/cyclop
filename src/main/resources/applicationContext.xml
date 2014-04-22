@@ -21,4 +21,9 @@
 	<task:scheduler id="cyclop.scheduler" pool-size="1"/>
 
 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
+	<bean id="importExecutor" class="java.util.concurrent.Executors" factory-method="newFixedThreadPool"
+		  destroy-method="shutdownNow">
+		<constructor-arg value="${queryImport.async.poolThreads}"/>
+	</bean>
 </beans>

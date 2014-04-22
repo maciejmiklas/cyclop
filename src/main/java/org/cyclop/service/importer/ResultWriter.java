@@ -3,8 +3,12 @@ package org.cyclop.service.importer;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.exception.QueryException;
 
-/** @author Maciej Miklas */
-public interface ResultWritter {
+/**
+ * IMPLEMENTATION MUST BE THREAD-SAVE
+ *
+ * @author Maciej Miklas
+ */
+public interface ResultWriter {
 
 	void success(CqlQuery query, long runtime);
 

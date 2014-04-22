@@ -1,5 +1,6 @@
 package org.cyclop.service.importer.model;
 
+import com.google.common.base.Objects;
 import net.jcip.annotations.Immutable;
 import org.apache.commons.lang3.time.StopWatch;
 
@@ -22,8 +23,7 @@ public class ImportStats implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ImportResult [runtime=" + runtime + ", successCount=" + successCount + ", errorCount=" + errorCount +
-				"]";
+		return Objects.toStringHelper(this).add("runtime", runtime).add("successCount", successCount)
+				.add("errorCount", errorCount).toString();
 	}
-
 }
