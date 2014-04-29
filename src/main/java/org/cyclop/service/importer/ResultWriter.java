@@ -13,4 +13,6 @@ public interface ResultWriter {
 	void success(CqlQuery query, long runtime);
 
 	void error(CqlQuery query, QueryException error, long runtime);
+
+	void unknownError(CqlQuery query, Exception error, long runtime);
 }

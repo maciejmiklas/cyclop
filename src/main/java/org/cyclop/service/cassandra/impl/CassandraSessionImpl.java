@@ -87,7 +87,8 @@ public class CassandraSessionImpl implements CassandraSession {
 		return cassandraVersion;
 	}
 
-	protected Session getSession() {
+	@Override
+	public Session getSession() {
 		checkAuthenticated();
 		return session;
 	}

@@ -24,6 +24,6 @@
 
 	<bean id="importExecutor" class="java.util.concurrent.Executors" factory-method="newFixedThreadPool"
 		  destroy-method="shutdownNow">
-		<constructor-arg value="${queryImport.async.poolThreads}"/>
+		<constructor-arg value="${queryImport.parallel.poolThreads}"/>
 	</bean>
 </beans>

@@ -53,8 +53,12 @@ public class QueryImportPanel extends Panel {
 	private final WebMarkupContainer importResultContainer;
 
 	@Inject
-	@Named(QueryImporter.IMPL_SYNC)
-	private QueryImporter importer;
+	@Named(QueryImporter.IMPL_SERIAL)
+	private QueryImporter serialImporter;
+
+	@Inject
+	@Named(QueryImporter.IMPL_PARALLEL)
+	private QueryImporter parallelImporter;
 
 	@Inject
 	private UserManager um;
@@ -72,7 +76,7 @@ public class QueryImportPanel extends Panel {
 	public QueryImportPanel(String id) {
 		super(id);
 		ImportOptions importOptions = createImportOptions();
-		setDefaultModel(new CompoundPropertyModel<ImportOptions>(importOptions));
+		setDefaultModel(new CompoundPropertyModel<>(importOptions));
 
 		Form<?> form = initFileUpload(importOptions);
 		initUploadOptions(form);
@@ -86,6 +90,7 @@ public class QueryImportPanel extends Panel {
 		UserPreferences prefs = um.readPreferences();
 		importOptions.setContinueWithErrors(prefs.isImportContinueWithErrors());
 		importOptions.setIncludeInHistory(prefs.isImportIncludeInHistory());
+		importOptions.setParallel(prefs.isImportParallel());
 		return importOptions;
 	}
 
@@ -106,19 +111,29 @@ public class QueryImportPanel extends Panel {
 
 		ImportResultWriter result = new ImportResultWriter();
 
-		ImportConfig config = new ImportConfig();
-		config.withContinueWithErrors(importOptions.isContinueWithErrors())
-				.withUpdateHistory(importOptions.isContinueWithErrors());
-		ImportStats stats = importer.importScript(new ByteArrayInputStream(fileContentBytes), result, config);
+		ImportConfig config = createImportConfig(importOptions);
+		ImportStats stats = getImporter(importOptions)
+				.importScript(new ByteArrayInputStream(fileContentBytes), result, config);
+
+		resultModel.setObject(result.getResult());
 
 		String resp = createStatsMessage(stats);
 		sendJsResponse(target, resp);
-
 		importResultContainer.setVisible(true);
 		target.add(importResultContainer);
-		resultModel.setObject(result.getResult());
 
 		updatePreferences(importOptions);
+	}
+
+	private ImportConfig createImportConfig(ImportOptions importOptions) {
+		ImportConfig config = new ImportConfig();
+		config.withContinueWithErrors(importOptions.isContinueWithErrors())
+				.withUpdateHistory(importOptions.isContinueWithErrors());
+		return config;
+	}
+
+	private QueryImporter getImporter(ImportOptions importOptions) {
+		return importOptions.isParallel() ? parallelImporter : serialImporter;
 
 	}
 
@@ -169,7 +184,9 @@ public class QueryImportPanel extends Panel {
 			@Override
 			protected void populateItem(ListItem<ImportResult> item) {
 				ImportResult entry = item.getModel().getObject();
-
+				if (entry == null) {
+					return;
+				}
 				populateRuntime(item, entry);
 				populateQuery(item, entry);
 			}
@@ -202,11 +219,14 @@ public class QueryImportPanel extends Panel {
 	}
 
 	private void initUploadOptions(Form<?> form) {
-		final CheckBox continueWithErrors = new CheckBox("continueWithErrors");
+		CheckBox continueWithErrors = new CheckBox("continueWithErrors");
 		form.add(continueWithErrors);
 
-		final CheckBox includeInHistory = new CheckBox("includeInHistory");
+		CheckBox includeInHistory = new CheckBox("includeInHistory");
 		form.add(includeInHistory);
+
+		CheckBox parallel = new CheckBox("parallel");
+		form.add(parallel);
 	}
 
 	private void populateQuery(ListItem<ImportResult> item, ImportResult entry) {
@@ -219,13 +239,13 @@ public class QueryImportPanel extends Panel {
 		if (entry.error == null) {
 			errorContainer.setVisible(false);
 		} else {
-			Label errorLabel = new Label("error", entry.error.getMessage());
+			Label errorLabel = new Label("error", entry.error);
 			errorContainer.add(errorLabel);
 		}
 	}
 
-	private void populateRuntime(ListItem<ImportResult> item, ImportResult entry) {
-		String dateStr = Long.toString(entry.runTime);
+	private void populateRuntime(ListItem<ImportResult> item, ImportResult result) {
+		String dateStr = Long.toString(result.runTime);
 		Label executedOn = new Label("runtime", dateStr);
 		item.add(executedOn);
 	}
@@ -243,8 +263,9 @@ public class QueryImportPanel extends Panel {
 
 	private void updatePreferences(ImportOptions importOptions) {
 		UserPreferences prefs = um.readPreferences();
-		prefs.setImportContinueWithErrors(importOptions.isContinueWithErrors());
-		prefs.setImportIncludeInHistory(importOptions.isIncludeInHistory());
+		prefs.setImportContinueWithErrors(importOptions.isContinueWithErrors())
+				.setImportIncludeInHistory(importOptions.isIncludeInHistory())
+				.setImportParallel(importOptions.isParallel());
 		um.storePreferences(prefs);
 	}
 

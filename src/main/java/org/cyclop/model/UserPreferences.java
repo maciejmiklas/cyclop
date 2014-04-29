@@ -31,6 +31,11 @@ public final class UserPreferences implements Serializable {
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean importContinueWithErrors = false;
 
+
+	@XmlElement(name = "i_pa")
+	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
+	private boolean importParallel = false;
+
 	@XmlElement(name = "p_ei")
 	private long pagerEditorItems = 5;
 
@@ -102,6 +107,15 @@ public final class UserPreferences implements Serializable {
 		return this;
 	}
 
+	public boolean isImportParallel() {
+		return importParallel;
+	}
+
+	public UserPreferences setImportParallel(boolean importParallel) {
+		this.importParallel = importParallel;
+		return this;
+	}
+
 	public long getPagerHistoryItems() {
 		return pagerHistoryItems;
 	}
@@ -115,7 +129,7 @@ public final class UserPreferences implements Serializable {
 	public int hashCode() {
 		return java.util.Objects
 				.hash(showCqlCompletionHint, showCqlHelp, importIncludeInHistory, importContinueWithErrors,
-						pagerEditorItems, pagerHistoryItems, pagerImportItems);
+						pagerEditorItems, pagerHistoryItems, pagerImportItems, importParallel);
 	}
 
 	@Override
@@ -130,6 +144,7 @@ public final class UserPreferences implements Serializable {
 				java.util.Objects.equals(importContinueWithErrors, other.importContinueWithErrors) &&
 				java.util.Objects.equals(pagerEditorItems, other.pagerEditorItems) &&
 				java.util.Objects.equals(pagerHistoryItems, other.pagerHistoryItems) &&
-				java.util.Objects.equals(pagerImportItems, other.pagerImportItems);
+				java.util.Objects.equals(pagerImportItems, other.pagerImportItems) &&
+				java.util.Objects.equals(importParallel, other.importParallel);
 	}
 }

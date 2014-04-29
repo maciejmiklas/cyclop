@@ -308,7 +308,7 @@ public class AppConfig implements Serializable {
 		public QueryImport(@Value("${queryImport.listSeparatorRegEx}") String listSeparatorRegEx,
 						   @Value("${queryImport.encoding}") String encoding,
 						   @Value("${queryImport.maxFileSizeMb}") int maxFileSizeMb,
-						   @Value("${queryImport.async.maxThreadsProImport}") int maxThreadsProImport) {
+						   @Value("${queryImport.parallel.maxThreadsProImport}") int maxThreadsProImport) {
 			try {
 				this.listSeparatorRegEx = Pattern.compile(listSeparatorRegEx);
 			} catch (PatternSyntaxException e) {

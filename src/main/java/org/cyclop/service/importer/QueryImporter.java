@@ -10,9 +10,9 @@ import java.io.InputStream;
 /** @author Maciej Miklas */
 public interface QueryImporter {
 
-	String IMPL_SYNC = "SyncQueryImporter";
+	String IMPL_SERIAL = "SerialQueryImporter";
 
-	String IMPL_ASYNC = "AsyncQueryImporter";
+	String IMPL_PARALLEL = "ParallelQueryImporter";
 
 	@NotNull
 	ImportStats importScript(@NotNull InputStream input, @NotNull ResultWriter resultWriter, ImportConfig config);

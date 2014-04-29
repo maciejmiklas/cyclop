@@ -373,7 +373,7 @@ class QueryServiceImpl implements QueryService {
 	protected ResultSet execute(String cql) {
 
 		LOG.debug("Executing: {} ", cql);
-		ResultSet resultSet = null;
+		ResultSet resultSet;
 		try {
 			resultSet = session.getSession().execute(cql);
 		} catch (Exception e) {

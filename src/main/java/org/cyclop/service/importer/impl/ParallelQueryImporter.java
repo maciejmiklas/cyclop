@@ -1,13 +1,17 @@
 package org.cyclop.service.importer.impl;
 
+import com.datastax.driver.core.Session;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.QueryHistory;
+import org.cyclop.service.cassandra.CassandraSession;
 import org.cyclop.service.importer.QueryImporter;
 import org.cyclop.service.importer.ResultWriter;
 import org.cyclop.service.importer.model.ImportConfig;
+import org.cyclop.service.queryprotocoling.HistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,15 +20,20 @@ import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 /** @author Maciej Miklas */
-@Named(QueryImporter.IMPL_ASYNC)
-public class AsyncQueryImporter extends AbstractImporter {
+@Named(QueryImporter.IMPL_PARALLEL)
+public class ParallelQueryImporter extends AbstractImporter {
 
-	private final static Logger LOG = LoggerFactory.getLogger(AsyncQueryImporter.class);
+	private final static Logger LOG = LoggerFactory.getLogger(ParallelQueryImporter.class);
+
+	@Inject
+	protected HistoryService historyService;
+
+	@Inject
+	private CassandraSession session;
 
 	@Inject
 	@Named("importExecutor")
@@ -40,23 +49,43 @@ public class AsyncQueryImporter extends AbstractImporter {
 
 		final int queriesSize = queries.size();
 		final int proThread = Math.max(1, queriesSize / conf.queryImport.maxThreadsProImport);
+		final int mod = queriesSize % conf.queryImport.maxThreadsProImport;
 		int startIndex = 0;
-		int amount = proThread;
-		LOG.debug("Starting parallel import for {} queues, {} pro thread", queriesSize, proThread);
-		List<Future<Void>> futures = new ArrayList();
+
+		LOG.debug("Starting parallel import for {} queries, {} pro thread", queriesSize, proThread);
+		Session cassSession = session.getSession();
+		List<Future<Void>> futures = new ArrayList<>();
+		QueryHistory history = historyService.read();
+
 		for (int thrNr = 1; thrNr <= conf.queryImport.maxThreadsProImport; thrNr++) {
+			int amount;
+			if (thrNr == 1) {
+				amount = proThread + mod;
+			} else {
+				amount = proThread;
+			}
+
 			if (amount + startIndex > queriesSize) {
 				thrNr = Integer.MAX_VALUE;
 				amount = queriesSize - startIndex;
 			}
+
 			LOG.debug("Starting thread nr: {} with start index: {} and amount: {}", thrNr, startIndex, amount);
-			Future<Void> future = executor.submit(new ImportExecutor(startIndex, amount, queries));
+
+			ImportWorker task = new ImportWorker(startIndex, amount, queries, status, iconfig, resultWriter,
+					cassSession, history);
+
+			Future<Void> future = executor.submit(task);
 			futures.add(future);
 
 			startIndex += amount;
 		}
 
 		waitForImport(futures);
+
+		if (iconfig.isUpdateHistory()) {
+			historyService.store(history);
+		}
 		LOG.debug("Tasks submitted - waiting for results");
 	}
 
@@ -68,7 +97,7 @@ public class AsyncQueryImporter extends AbstractImporter {
 				Thread.interrupted();
 				LOG.warn("Import executor interrupted", e);
 			} catch (Exception e) {
-				LOG.warn("Import executor error", e);
+				LOG.error("Import executor error", e);
 			}
 		}
 	}
@@ -98,23 +127,4 @@ public class AsyncQueryImporter extends AbstractImporter {
 		return res;
 	}
 
-	private final static class ImportExecutor implements Callable<Void> {
-
-		private int offset;
-
-		private int amount;
-
-		private ImmutableList<CqlQuery> queries;
-
-		private ImportExecutor(int offset, int amount, ImmutableList<CqlQuery> queries) {
-			this.offset = offset;
-			this.amount = amount;
-			this.queries = queries;
-		}
-
-		@Override
-		public Void call() throws Exception {
-			return null;
-		}
-	}
 }

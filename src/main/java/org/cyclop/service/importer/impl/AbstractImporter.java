@@ -2,7 +2,6 @@ package org.cyclop.service.importer.impl;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.cyclop.common.AppConfig;
-import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.importer.QueryImporter;
 import org.cyclop.service.importer.ResultWriter;
 import org.cyclop.service.importer.model.ImportConfig;
@@ -17,9 +16,6 @@ import java.util.Scanner;
 /** @author Maciej Miklas */
 abstract class AbstractImporter implements QueryImporter {
 	private final static Logger LOG = LoggerFactory.getLogger(AbstractImporter.class);
-
-	@Inject
-	protected QueryService queryService;
 
 	@Inject
 	protected AppConfig conf;

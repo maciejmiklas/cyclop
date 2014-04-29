@@ -1,5 +1,7 @@
 package org.cyclop.service.cassandra;
 
+import com.datastax.driver.core.Session;
+
 import javax.validation.constraints.NotNull;
 
 /** @author Maciej Miklas */
@@ -10,4 +12,6 @@ public interface CassandraSession extends AutoCloseable {
 	void close();
 
 	boolean isOpen();
+
+	Session getSession();
 }

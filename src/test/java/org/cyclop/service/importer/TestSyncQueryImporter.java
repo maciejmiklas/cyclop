@@ -21,11 +21,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestSyncQueryImporter extends AbstractTestCase {
 
 	@Inject
-	@Named(QueryImporter.IMPL_SYNC)
+	@Named(QueryImporter.IMPL_SERIAL)
 	private QueryImporter importer;
 
 	@Inject
@@ -79,7 +80,7 @@ public class TestSyncQueryImporter extends AbstractTestCase {
 			}
 
 			{
-				QueryException res = rc.error
+				Exception res = rc.error
 						.get(new CqlQuery(CqlQueryType.UNKNOWN, "asdf adf adfa;sdf as'fasdf;asdf ;;q34t24gtvrf"));
 				assertNotNull(rc.toString(), res);
 				assertTrue(res.toString(), res.getMessage().contains("Error executing CQL"));
@@ -88,7 +89,7 @@ public class TestSyncQueryImporter extends AbstractTestCase {
 			}
 
 			{
-				QueryException res = rc.error.get(new CqlQuery(CqlQueryType.UNKNOWN,
+				Exception res = rc.error.get(new CqlQuery(CqlQueryType.UNKNOWN,
 						"INSERT INTO MyBooks (id,title,pages,price) VALUE (38710416-6253-4a77-a31c-6429f16f3837,'just title..... NR 2',112291,{'DE':4,'EU':4})"));
 				assertNotNull(rc.toString(), res);
 				assertTrue(res.toString(), res.getMessage().contains("Error executing CQL"));
@@ -97,7 +98,7 @@ public class TestSyncQueryImporter extends AbstractTestCase {
 			}
 
 			{
-				QueryException res = rc.error.get(new CqlQuery(CqlQueryType.UNKNOWN,
+				Exception res = rc.error.get(new CqlQuery(CqlQueryType.UNKNOWN,
 						"INSERT INTO MyBooks (id,title,pages,price) VALUES (6ceb1c47-0955-4654-80d4-5230b88467d2,'just title.....',112291)"));
 				assertNotNull(rc.toString(), res);
 				assertTrue(res.toString(), res.getMessage().contains("Error executing CQL"));
@@ -106,7 +107,7 @@ public class TestSyncQueryImporter extends AbstractTestCase {
 
 
 			{
-				QueryException res = rc.error.get(new CqlQuery(CqlQueryType.UNKNOWN,
+				Exception res = rc.error.get(new CqlQuery(CqlQueryType.UNKNOWN,
 						"INSERT INTO MyBooks (id,tc_13) VALUES (44f2054c-f98b-43a7-833d-0e1358fdee82,'v13')"));
 				assertNotNull(rc.toString(), res);
 				assertTrue(res.toString(), res.getMessage().contains("Error executing CQL"));
@@ -172,7 +173,7 @@ public class TestSyncQueryImporter extends AbstractTestCase {
 
 		public List<CqlQuery> success = new ArrayList<>();
 
-		public Map<CqlQuery, QueryException> error = new HashMap<>();
+		public Map<CqlQuery, Exception> error = new HashMap<>();
 
 		@Override
 		public void success(CqlQuery query, long runtime) {
@@ -181,10 +182,16 @@ public class TestSyncQueryImporter extends AbstractTestCase {
 		}
 
 		@Override
-		public void error(CqlQuery query, QueryException errore, long runtime) {
+		public void error(CqlQuery query, QueryException ex, long runtime) {
 			assertTrue(runtime >= 0);
-			error.put(query, errore);
+			error.put(query, ex);
 		}
+
+		@Override
+		public void unknownError(CqlQuery query, Exception error, long runtime) {
+			fail();
+		}
+
 
 		public int size() {
 			return success.size() + error.size();

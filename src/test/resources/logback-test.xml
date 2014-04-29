@@ -9,10 +9,7 @@
 		</encoder>
 	</appender>
 
-
-	<logger
-			name="org.cyclop.service.common.CookieStorage"
-			level="ERROR"/>
+	<logger name="org.cyclop.service.common.CookieStorage" level="ERROR"/>
 	<root>
 		<level value="INFO"/>
 		<appender-ref ref="CONSOLE"/>

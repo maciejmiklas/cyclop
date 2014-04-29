@@ -1,13 +1,12 @@
 package org.cyclop.web.panels.queryimport;
 
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.exception.QueryException;
 
 /** @author Maciej Miklas */
 class ImportResult {
 	public final CqlQuery query;
 
-	public final QueryException error;
+	public final String error;
 
 	public final long runTime;
 
@@ -15,7 +14,7 @@ class ImportResult {
 		this(query, null, runtime);
 	}
 
-	public ImportResult(CqlQuery query, QueryException error, long runtime) {
+	public ImportResult(CqlQuery query, String error, long runtime) {
 		this.query = query;
 		this.error = error;
 		this.runTime = runtime;
