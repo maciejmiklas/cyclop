@@ -47,31 +47,36 @@ public class ParallelQueryImporter extends AbstractImporter {
 			return;
 		}
 
-		final int queriesSize = queries.size();
-		final int proThread = Math.max(1, queriesSize / conf.queryImport.maxThreadsProImport);
-		final int modProThread = queriesSize % conf.queryImport.maxThreadsProImport;
-		int startIndex = 0;
-
-		LOG.debug("Starting parallel import for {} queries, {} pro thread and mod: {}", queriesSize, proThread,
-				modProThread);
-		Session cassSession = session.getSession();
-		List<Future<Void>> futures = new ArrayList<>();
 		QueryHistory history = historyService.read();
 
-		for (int thrNr = 1; thrNr <= conf.queryImport.maxThreadsProImport; thrNr++) {
-			int amount;
-			if (thrNr == 1) {
-				amount = proThread + modProThread;
-			} else {
-				amount = proThread;
-			}
+		List<Future<Void>> futures = startWorkers(queries, resultWriter, status, iconfig, history);
+		waitForImport(futures);
 
-			if (amount + startIndex > queriesSize) {
-				thrNr = Integer.MAX_VALUE;
-				amount = queriesSize - startIndex;
-			}
+		if (iconfig.isUpdateHistory()) {
+			historyService.store(history);
+		}
 
-			LOG.debug("Starting thread nr: {} with start index: {} and amount: {}", thrNr, startIndex, amount);
+	}
+
+	private List<Future<Void>> startWorkers(ImmutableList<CqlQuery> queries, ResultWriter resultWriter,
+											StatsCollector status, ImportConfig iconfig, QueryHistory history) {
+
+		final int queriesSize = queries.size();
+		final int proThread = Math.max(1, queriesSize / conf.queryImport.maxThreadsProImport);
+
+		LOG.debug("Starting parallel import for {} queries, {} pro thread", queriesSize, proThread);
+		Session cassSession = session.getSession();
+
+
+		List<Future<Void>> futures = new ArrayList<>();
+		int startIndex = 0;
+		int remaining = queriesSize;
+		while (remaining > 0) {
+			remaining -= proThread;
+			int amount = remaining > 0 ? proThread : remaining + proThread;
+
+			LOG.debug("Starting thread with start index: {} and amount: {}, remaining: {}", startIndex, amount,
+					remaining);
 
 			ImportWorker task = new ImportWorker(startIndex, amount, queries, status, iconfig, resultWriter,
 					cassSession, history);
@@ -81,16 +86,11 @@ public class ParallelQueryImporter extends AbstractImporter {
 
 			startIndex += amount;
 		}
-
-		waitForImport(futures);
-
-		if (iconfig.isUpdateHistory()) {
-			historyService.store(history);
-		}
-		LOG.debug("Tasks submitted - waiting for results");
+		return futures;
 	}
 
 	private void waitForImport(List<Future<Void>> futures) {
+		LOG.debug("Tasks submitted - waiting for results");
 		for (Future<Void> future : futures) {
 			try {
 				future.get();
