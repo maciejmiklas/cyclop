@@ -6,7 +6,7 @@ Gaining access over SSH and command line interface should be easier, but I do no
 
 But there is one solution, that is almost always available: web based applications! Every company knows how to secure them, how to run penetration tests, locate security leaks, and so on.... actually it does not matter what happens behind scenes, you - the end user has always access to such application.
 
-Here is a good news: Cyclop is 100% web based, and It's based on latest Wicket release! Once you managed to install it, you can query your database from a web browser and still enjoy native application feeling. It's almost fully based on AJAX, so page reloads are rare.
+Here is a good news: Cyclop is 100% web based, and It's based on latest Wicket release! Once you managed to install it, you can query your database from a web browser and still enjoy native application feeling (it's almost fully based on AJAX, so page reloads are rare).
 
 There is also another cool thing: it your security experts will run penetration tests against Cyclop they will came up with findings like Database Script Injection. This will be the first time in you live when you can honestly say: "It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely no usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
 
