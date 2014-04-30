@@ -25,7 +25,7 @@ public class SerialQueryImporter extends AbstractImporter {
 	protected QueryService queryService;
 
 	@Override
-	void execImport(Scanner scanner, ResultWriter resultWriter, StatusCollector status, ImportConfig config) {
+	void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig config) {
 		while (scanner.hasNext()) {
 			String nextStr = StringUtils.trimToNull(scanner.next());
 			if (nextStr == null) {

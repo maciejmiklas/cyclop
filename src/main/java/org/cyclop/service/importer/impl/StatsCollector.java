@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** @author Maciej Miklas */
 @ThreadSafe
-final class StatusCollector {
+final class StatsCollector {
 
 	public final AtomicInteger error = new AtomicInteger(0);
 

@@ -25,7 +25,8 @@ abstract class AbstractImporter implements QueryImporter {
 		LOG.debug("Starting query import");
 		StopWatch timer = new StopWatch();
 		timer.start();
-		StatusCollector status = new StatusCollector();
+
+		StatsCollector status = new StatsCollector();
 		Scanner scanner = new Scanner(input, conf.queryImport.encoding);
 		scanner.useDelimiter(conf.queryImport.listSeparatorRegEx);
 
@@ -39,6 +40,6 @@ abstract class AbstractImporter implements QueryImporter {
 		return stats;
 	}
 
-	abstract void execImport(Scanner scanner, ResultWriter resultWriter, StatusCollector status, ImportConfig config);
+	abstract void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig config);
 
 }

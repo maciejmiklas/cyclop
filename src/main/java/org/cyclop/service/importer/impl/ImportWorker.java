@@ -27,7 +27,7 @@ class ImportWorker implements Callable<Void> {
 
 	private final ResultWriter resultWriter;
 
-	private final StatusCollector status;
+	private final StatsCollector status;
 
 	private final ImportConfig iconfig;
 
@@ -35,7 +35,7 @@ class ImportWorker implements Callable<Void> {
 
 	private final QueryHistory history;
 
-	ImportWorker(int offset, int amount, ImmutableList<CqlQuery> queries, StatusCollector status, ImportConfig iconfig,
+	ImportWorker(int offset, int amount, ImmutableList<CqlQuery> queries, StatsCollector status, ImportConfig iconfig,
 				 ResultWriter resultWriter, Session session, QueryHistory history) {
 		this.offset = offset;
 		this.amount = amount;

@@ -40,7 +40,7 @@ public class ParallelQueryImporter extends AbstractImporter {
 	private ExecutorService executor;
 
 	@Override
-	void execImport(Scanner scanner, ResultWriter resultWriter, StatusCollector status, ImportConfig iconfig) {
+	void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig iconfig) {
 		ImmutableList<CqlQuery> queries = parse(scanner);
 		if (queries.isEmpty()) {
 			LOG.debug("No data to import");
@@ -49,10 +49,11 @@ public class ParallelQueryImporter extends AbstractImporter {
 
 		final int queriesSize = queries.size();
 		final int proThread = Math.max(1, queriesSize / conf.queryImport.maxThreadsProImport);
-		final int mod = queriesSize % conf.queryImport.maxThreadsProImport;
+		final int modProThread = queriesSize % conf.queryImport.maxThreadsProImport;
 		int startIndex = 0;
 
-		LOG.debug("Starting parallel import for {} queries, {} pro thread", queriesSize, proThread);
+		LOG.debug("Starting parallel import for {} queries, {} pro thread and mod: {}", queriesSize, proThread,
+				modProThread);
 		Session cassSession = session.getSession();
 		List<Future<Void>> futures = new ArrayList<>();
 		QueryHistory history = historyService.read();
@@ -60,7 +61,7 @@ public class ParallelQueryImporter extends AbstractImporter {
 		for (int thrNr = 1; thrNr <= conf.queryImport.maxThreadsProImport; thrNr++) {
 			int amount;
 			if (thrNr == 1) {
-				amount = proThread + mod;
+				amount = proThread + modProThread;
 			} else {
 				amount = proThread;
 			}
