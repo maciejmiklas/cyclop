@@ -209,12 +209,13 @@ class QueryServiceImpl implements QueryService {
 		if (rows.isEmpty()) {
 			return new CqlQueryResult();
 		}
+		int rowsSize = rows.size();
 
 		ImmutableList.Builder<CqlExtendedColumnName> commonColumnsBuild = ImmutableList.builder();
 		ImmutableList.Builder<CqlExtendedColumnName> dynamicColumnsBuild = ImmutableList.builder();
 
 		for (Map.Entry<CqlExtendedColumnName, MutableInt> entry : columnsCount.entrySet()) {
-			if (entry.getValue().anInt > 1) {
+			if (rowsSize == 1 || entry.getValue().anInt > 1) {
 				commonColumnsBuild.add(entry.getKey());
 			} else {
 				dynamicColumnsBuild.add(entry.getKey());

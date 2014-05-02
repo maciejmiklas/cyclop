@@ -37,8 +37,8 @@ public class EmbeddedCassandra {
 		session = cluster.connect();
 		assertNotNull(session);
 
-		executeScript(session, "/createDemoTables.cql");
-		executeScript(session, "/createDemoData.cql");
+		executeScript(session, "/cql/createDemoTables.cql");
+		executeScript(session, "/cql/createDemoData.cql");
 		createTestData(session);
 		running = true;
 	}

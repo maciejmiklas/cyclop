@@ -6,6 +6,7 @@ ALTER TABLE MyBooks ADD paperType varchar;
 ALTER TABLE MyBooks ADD dynamicColumn1 varchar;
 ALTER TABLE MyBooks ADD dynamicColumn2 varchar;
 ALTER TABLE MyBooks ADD dynamicColumn3 varchar;
+ALTER TABLE MyBooks ADD impcol set<int>;
 ALTER TABLE MyBooks ADD idx int;
 CREATE INDEX ON MyBooks(description);
 CREATE INDEX ON MyBooks(publishDate);
