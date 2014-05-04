@@ -1,5 +1,6 @@
 package org.cyclop.service.importer;
 
+import net.jcip.annotations.ThreadSafe;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.exception.QueryException;
 
@@ -8,6 +9,7 @@ import org.cyclop.model.exception.QueryException;
  *
  * @author Maciej Miklas
  */
+@ThreadSafe
 public interface ResultWriter {
 
 	void success(CqlQuery query, long runtime);

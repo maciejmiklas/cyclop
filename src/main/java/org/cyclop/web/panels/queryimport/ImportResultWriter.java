@@ -1,6 +1,7 @@
 package org.cyclop.web.panels.queryimport;
 
 import com.google.common.collect.ImmutableList;
+import net.jcip.annotations.ThreadSafe;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.importer.ResultWriter;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.UUID;
 
 /** @author Maciej Miklas */
+@ThreadSafe
 final class ImportResultWriter implements ResultWriter {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryImportPanel.class);

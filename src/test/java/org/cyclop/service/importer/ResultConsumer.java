@@ -1,5 +1,6 @@
 package org.cyclop.service.importer;
 
+import net.jcip.annotations.ThreadSafe;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.exception.QueryException;
 
@@ -12,6 +13,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /** @author Maciej Miklas */
+@ThreadSafe
 class ResultConsumer implements ResultWriter {
 
 	public List<CqlQuery> success = new ArrayList<>();
@@ -19,28 +21,28 @@ class ResultConsumer implements ResultWriter {
 	public Map<CqlQuery, Exception> error = new HashMap<>();
 
 	@Override
-	public void success(CqlQuery query, long runtime) {
+	public synchronized void success(CqlQuery query, long runtime) {
 		assertTrue(runtime >= 0);
 		success.add(query);
 	}
 
 	@Override
-	public void error(CqlQuery query, QueryException ex, long runtime) {
+	public synchronized void error(CqlQuery query, QueryException ex, long runtime) {
 		assertTrue(runtime >= 0);
 		error.put(query, ex);
 	}
 
 	@Override
-	public void unknownError(CqlQuery query, Exception error, long runtime) {
+	public synchronized void unknownError(CqlQuery query, Exception error, long runtime) {
 		fail();
 	}
 
-	public int size() {
+	public synchronized int size() {
 		return success.size() + error.size();
 	}
 
 	@Override
-	public String toString() {
+	public synchronized String toString() {
 		return "ResultConsumer [success=" + success + ", error=" + error + "]";
 	}
 

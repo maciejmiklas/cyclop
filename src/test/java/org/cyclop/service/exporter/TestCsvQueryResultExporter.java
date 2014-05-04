@@ -164,9 +164,6 @@ public class TestCsvQueryResultExporter extends AbstractTestCase {
 							line);
 					break;
 				case 3:
-					System.out.println(
-							"\"43da06c5-bf5c-4468-b92c-cb8aacb29675\";\"\"Anna Zajac\",\"Fryderyk Zajac\",\"Gambardella, Matthew\",\"Marcin Miklas 2\"\";\"An in-depth look at creating 2 applications with XML.\";\"Computer\";\"112291\";\"white and soft3\";\"\"D\"=\"3.45\",\"E\"=\"2.11\",\"F\"=\"4.3\"\";\"2000-10-02 00:00:00.000\";\"XML Developers Guide 2\"");
-					System.out.println(line);
 					assertEquals(
 							"\"43da06c5-bf5c-4468-b92c-cb8aacb29675\";\"\"Anna Zajac\",\"Fryderyk Zajac\",\"Gambardella, Matthew\",\"Marcin Miklas 2\"\";\"An in-depth look at creating 2 applications with XML.\";\"Computer\";\"112291\";\"white and soft3\";\"\"D\"=\"3.45\",\"E\"=\"2.11\",\"F\"=\"4.3\"\";\"2000-10-02 00:00:00.000\";\"XML Developers Guide 2\"",
 							line);
