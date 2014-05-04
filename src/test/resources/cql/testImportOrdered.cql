@@ -14,7 +14,7 @@ paperType) VALUES (
 	{'Gambardella, Matthew','Marcin Miklas','Fryderyk Zajac','Anna Zajac'},112291,
 	{'D':3.85,'E':4.11,'F':4.00},'white and soft');
 
-INSERT INTO MyBooks (id,tc_13) VALUES (44f2054c-f98b-43a7-833d-0e1358fdee82,'v13');
+INSERT INTO MyBooks (id,tc_13XYZ) VALUES (44f2054c-f98b-43a7-833d-0e1358fdee82,'v13');
 ALTER TABLE MyBooks ADD tc_13 varchar;
 
 ALTER TABLE MyBooks ADD tc_1 varchar;
