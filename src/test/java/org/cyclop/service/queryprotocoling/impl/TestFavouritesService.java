@@ -56,11 +56,13 @@ public class TestFavouritesService extends AbstractTestCase {
 
 	@After
 	public void cleanUp() {
+		super.cleanUp();
 		threadTestScope.setSingleThread(false);
 	}
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
+		super.setup();
 		asyncFileStore.flush();
 
 		QueryFavourites favs = favService.read();

@@ -56,11 +56,13 @@ public class TestHistoryService extends AbstractTestCase {
 
 	@After
 	public void cleanUp() {
+		super.cleanUp();
 		threadTestScope.setSingleThread(false);
 	}
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
+		super.setup();
 		asyncFileStore.flush();
 		QueryHistory history = historyService.read();
 		assertNotNull(history);

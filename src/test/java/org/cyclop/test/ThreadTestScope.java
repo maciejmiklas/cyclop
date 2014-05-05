@@ -19,7 +19,6 @@ public class ThreadTestScope extends SimpleThreadScope {
 		this.singleThread = singleThread;
 	}
 
-
 	@Override
 	@SuppressWarnings("rawtypes")
 	public synchronized Object get(String name, ObjectFactory objectFactory) {

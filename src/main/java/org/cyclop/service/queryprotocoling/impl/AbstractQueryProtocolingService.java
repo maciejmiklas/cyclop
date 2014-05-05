@@ -25,6 +25,8 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 
 	private final static Logger LOG = LoggerFactory.getLogger(AbstractQueryProtocolingService.class);
 
+	private final AtomicReference<H> history = new AtomicReference<>();
+
 	@Inject
 	private UserManager um;
 
@@ -35,8 +37,6 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 	private AsyncFileStore<H> asyncFileStore;
 
 	private UserIdentifier identifier;
-
-	private final AtomicReference<H> history = new AtomicReference<>();
 
 	protected abstract Class<H> getClazz();
 
@@ -73,7 +73,6 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 		}
 	}
 
-	// TODO remove break line
 	@Override
 	public
 	@NotNull

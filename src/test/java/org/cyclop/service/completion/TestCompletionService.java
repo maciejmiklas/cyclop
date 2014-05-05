@@ -646,6 +646,13 @@ public class TestCompletionService extends AbstractTestCase {
 		verifyInitialCompletion(completion);
 	}
 
+	@Test
+	public void testFindCompletion_CursorOn0() {
+		ContextCqlCompletion completion = cs
+				.findCompletion(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks  where "), 0);
+		verifyInitialCompletion(completion);
+	}
+
 	private void veifySelectWithOrderBy(String cql) {
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.SELECT, cql), -1);
 		vh.verifyFullAndMinCompletionTheSame(completion, 18);

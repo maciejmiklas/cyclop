@@ -42,8 +42,6 @@ class CompletionServiceImpl implements CompletionService {
 
 	@Override
 	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
-
-		// TODO missing test
 		if (cursorPosition == 0) {
 			return findInitialCompletion();
 		}

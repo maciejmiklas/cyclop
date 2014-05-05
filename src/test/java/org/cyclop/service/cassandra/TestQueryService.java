@@ -13,14 +13,19 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.CqlTable;
+import org.cyclop.model.QueryHistory;
 import org.cyclop.model.exception.BeanValidationException;
+import org.cyclop.model.exception.QueryException;
+import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
 import org.junit.Test;
 
 import javax.inject.Inject;
+import java.util.UUID;
 
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,6 +35,9 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Inject
 	private QueryService qs;
+
+	@Inject
+	private HistoryService hs;
 
 	@Inject
 	private ValidationHelper vh;
@@ -131,8 +139,14 @@ public class TestQueryService extends AbstractTestCase {
 	@Test
 	public void testExecute_CompoundPkNoDynamicColumns() {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "USE CqlDemo"));
-		CqlQueryResult res = qs
-				.execute(new CqlQuery(CqlQueryType.SELECT, "select * from CompoundTest where deesc='TEST_SET_1'"));
+		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from CompoundTest where deesc='TEST_SET_1'");
+		try (QueryHistory.HistoryIterator iterator = hs.read().iterator()) {
+			assertNotSame(query, iterator.next().query);
+		}
+		CqlQueryResult res = qs.execute(query);
+		try (QueryHistory.HistoryIterator iterator = hs.read().iterator()) {
+			assertEquals(query, iterator.next().query);
+		}
 		assertEquals(50, res.rows.size());
 
 		assertEquals(4, res.commonColumns.size());
@@ -158,8 +172,75 @@ public class TestQueryService extends AbstractTestCase {
 	}
 
 	@Test(expected = BeanValidationException.class)
-	public void testExecute_Violation() {
+	public void testExecute_IncorrectParams() {
 		qs.execute(new CqlQuery(null, null));
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testExecuteSimple_IncorrectParams() {
+		qs.executeSimple(new CqlQuery(null, null), false);
+	}
+
+	@Test(expected = QueryException.class)
+	public void testExecuteSimple_QueryError() {
+		qs.executeSimple(new CqlQuery(CqlQueryType.SELECT, "select * from bara.bara"), false);
+	}
+
+	@Test
+	public void testExecuteSimple_Select_UpdateHistory() {
+		executeSimpleSelect(true);
+	}
+
+	@Test
+	public void testExecuteSimple_Select_DoNotUpdateHistory() {
+		executeSimpleSelect(false);
+	}
+
+	private void executeSimpleSelect(boolean updateHistory) {
+		CqlQuery testCql = new CqlQuery(CqlQueryType.SELECT,
+				"select title from cqldemo.mybooks where id=" + UUID.randomUUID());
+
+		try (QueryHistory.HistoryIterator iterator1 = hs.read().iterator()) {
+			if (iterator1.hasNext()) {
+				assertNotSame(testCql, iterator1.next().query);
+			}
+		}
+		qs.executeSimple(testCql, updateHistory);
+		if (updateHistory) {
+			try (QueryHistory.HistoryIterator iterator = hs.read().iterator()) {
+				assertEquals(testCql, iterator.next().query);
+			}
+		} else {
+			try (QueryHistory.HistoryIterator iterator = hs.read().iterator()) {
+				if (iterator.hasNext()) {
+					assertNotSame(testCql, iterator.next().query);
+				}
+			}
+		}
+
+		assertTrue(qs.execute(testCql).isEmpty());
+		try (QueryHistory.HistoryIterator iterator = hs.read().iterator()) {
+			assertEquals(testCql, iterator.next().query);
+		}
+	}
+
+	@Test
+	public void testExecuteSimple_Insert() {
+
+		CqlQuery testCql = new CqlQuery(CqlQueryType.SELECT,
+				"select title from cqldemo.mybooks where id=d0302001-bd93-42a2-8bc8-79bbdbfc7717");
+		assertTrue(qs.execute(testCql).isEmpty());
+
+		qs.executeSimple(new CqlQuery(CqlQueryType.INSERT,
+				"INSERT INTO CqlDemo.MyBooks (id,title) VALUES (d0302001-bd93-42a2-8bc8-79bbdbfc7717,'some value')"),
+				false);
+
+		assertFalse(qs.execute(testCql).isEmpty());
+	}
+
+	@Test(expected = QueryException.class)
+	public void testExecute_QueryError() {
+		qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from bara.bara"), false);
 	}
 
 	@Test

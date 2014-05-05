@@ -169,7 +169,8 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 	}
 
 	@Before
-	public void before() {
+	public void before() throws Exception {
+		super.setup();
 		queryService.execute(new CqlQuery(CqlQueryType.SELECT,
 				"delete from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
 

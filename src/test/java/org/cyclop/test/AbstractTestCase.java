@@ -96,7 +96,7 @@ public abstract class AbstractTestCase {
 	}
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		cassandraSession.authenticate("test", "test1234");
 	}
 

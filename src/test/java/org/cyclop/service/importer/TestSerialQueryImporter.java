@@ -2,11 +2,9 @@ package org.cyclop.service.importer;
 
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
-import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
 import org.junit.Test;
-import org.springframework.test.annotation.Repeat;
 
 import javax.inject.Inject;
 import javax.inject.Named;

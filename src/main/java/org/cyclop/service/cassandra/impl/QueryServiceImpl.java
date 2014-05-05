@@ -151,7 +151,6 @@ class QueryServiceImpl implements QueryService {
 		return execute(query, true);
 	}
 
-	// TODO tests
 	@Override
 	public void executeSimple(CqlQuery query, boolean updateHistory) {
 		long startTime = System.currentTimeMillis();

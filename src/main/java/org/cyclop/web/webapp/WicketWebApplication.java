@@ -12,7 +12,7 @@ import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.cyclop.web.pages.authenticate.AuthenticatePage;
+import org.cyclop.web.pages.authenticate.AuthenticationPage;
 import org.cyclop.web.pages.error.ErrorPage;
 import org.cyclop.web.pages.main.MainPage;
 
@@ -47,7 +47,7 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 
 	private void setupExceptionHandler() {
 		// show login page on session timeout
-		getApplicationSettings().setPageExpiredErrorPage(AuthenticatePage.class);
+		getApplicationSettings().setPageExpiredErrorPage(AuthenticationPage.class);
 
 		getRequestCycleListeners().add(new GlobalExceptionHandler());
 	}
@@ -80,7 +80,7 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 
 	@Override
 	protected Class<? extends WebPage> getSignInPageClass() {
-		return AuthenticatePage.class;
+		return AuthenticationPage.class;
 	}
 
 }

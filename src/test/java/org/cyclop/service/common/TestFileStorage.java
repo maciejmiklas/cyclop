@@ -37,7 +37,8 @@ public class TestFileStorage extends AbstractTestCase {
 	private FileStorage storage;
 
 	@Before
-	public void init() throws Exception {
+	public void setup() throws Exception {
+		super.setup();
 		File histFolder = new File(config.fileStore.folder);
 		histFolder.setWritable(true);
 		assertTrue("History folder not writable:" + histFolder, histFolder.canWrite());
@@ -92,7 +93,9 @@ public class TestFileStorage extends AbstractTestCase {
 	public void testEmptyHistory() {
 		QueryHistory hist = new QueryHistory();
 		assertEquals(0, hist.size());
-		assertFalse(hist.iterator().hasNext());
+		try (QueryHistory.HistoryIterator iterator = hist.iterator()) {
+			assertFalse(iterator.hasNext());
+		}
 
 		CqlQuery query = new CqlQuery(CqlQueryType.SELECT, "select * from MyTable");
 		QueryEntry histEntry = new QueryEntry(query, 234, 44);

@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.common.AppConfig;
-import org.cyclop.web.pages.authenticate.AuthenticatePage;
+import org.cyclop.web.pages.authenticate.AuthenticationPage;
 import org.cyclop.web.pages.parent.ParentPage;
 import org.cyclop.web.panels.about.AboutPanel;
 import org.cyclop.web.panels.favourites.FavouritesPanel;
@@ -41,7 +41,7 @@ public class MainPage extends ParentPage {
 			@Override
 			public void onClick() {
 				getSession().invalidate();
-				setResponsePage(AuthenticatePage.class);
+				setResponsePage(AuthenticationPage.class);
 			}
 		};
 		add(logOut);
