@@ -42,7 +42,7 @@ class CompletionServiceImpl implements CompletionService {
 
 	@Override
 	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
-		if (cursorPosition == 0) {
+		if (cursorPosition <= 1) {
 			return findInitialCompletion();
 		}
 		ContextCqlCompletion comp = parser.findCompletion(cqlQuery, cursorPosition);
