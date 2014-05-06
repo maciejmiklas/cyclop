@@ -82,7 +82,7 @@ The history itself is stored on server in file: [fileStore.folder]\QueryHistory-
 The solution is also secure, so you can use Cyclop from any computer without restrictions. Random cookie is the only information stored in browser - but this does not matter, because history can be viewed only by authenticated users.
 
 # CSV Export
-Query result can be exported to CSV file. You can influence it's format trough configuration file.
+Query result can be exported to CSV file. You can influence its format trough configuration file.
 
 # Import
 ![Query Bookmark](/doc/img/import.png)
@@ -91,7 +91,7 @@ or parallel import. The last option will divide import file into chunks and exec
  default 6. Be aware that queries will be executed in unspecified order.
 
 Import has also few limitations:
-* import script and results table has to fit into memory
+* import script and results table have to fit into memory
 * each query will be executed as separate Cassandra call, so that we can precisely point out errors, and measure execution time, on the other hand side it causes latencies
 * import script does not support comments
 
@@ -128,7 +128,7 @@ You can also overwrite each property from <code>cyclop.properties</code> by sett
 to connect to different Cassandra host set:<code>-Dcassandra.hosts=server1,server2</code>. This gives you simple possibility
 to change properties after the war file has been assembled.
 
-4. Optionally change logger settings by editing <code>logback.xml</code>. By default it logs in into into <code>/var/lib/tomcat7/logs/cyclop-${time}.log</code>
+4. Optionally change logger settings by editing <code>logback.xml</code>. By default it logs in into <code>/var/lib/tomcat7/logs/cyclop-${time}.log</code>
 5. Build war file: <code>mvn package</code>
 5. Drop war file into tomcat
 
