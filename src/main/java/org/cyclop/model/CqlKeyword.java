@@ -24,7 +24,7 @@ public class CqlKeyword extends CqlPart {
 		UPDATE("update"),
 		TRUNCATE("truncate"),
 		WHERE("where"),
-		USING_TIMESTAMP("using  timestamp"),
+		USING_TIMESTAMP("using timestamp"),
 		USING_TTL("using ttl"),
 		ORDER_BY("order by"),
 		ASC("asc"),
