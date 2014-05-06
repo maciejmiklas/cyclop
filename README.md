@@ -11,7 +11,7 @@ Here comes good news: Cyclop is 100% web based, and It's based on latest Wicket 
 
 There is also another cool thing: if your security experts will run penetration tests against Cyclop they will come
 up with findings like Database Script Injection. This will be the first time in your life when you can honestly say:
-"It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely no usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
+"It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely not a usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
 
 # User Management
 ![Login](/doc/img/login.png)
@@ -26,8 +26,7 @@ could reference credentials used to open Cassandra session, but it's a common us
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
 
 User Preferences cover things like amount of rows in result table, import settings or button state. Those are stored
-in browser as cookie in a json format. First of all there is no security issue,
-because it's not a sensitive data and additionally we can access it directly from Java Script.
+in browser as cookie in a json format. Firstly, there is no security issue, because it's not a sensitive data,  secondly we can access it directly from Java Script.
 
 # Query Editor
 #### Query Completion
