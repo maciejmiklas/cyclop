@@ -124,7 +124,7 @@ cassandra.port: 9042
 cassandra.useSsl: false
 cassandra.timeoutMilis: 3600000
 ```
-You can also overwrite each property from <code>cyclop.properties</code> by setting it as jvm parameter, for example
+You can also overwrite each property from <code>cyclop.properties</code> by setting it as jvm parameter. For example
 to connect to different Cassandra host set:<code>-Dcassandra.hosts=server1,server2</code>. This gives you simple possibility
 to change properties after the war file has been assembled.
 
