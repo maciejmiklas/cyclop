@@ -2,11 +2,11 @@
 Cassandra is one of the most popular open source NoSQL databases, but it's only few years old, and therefore tools support is still limited, especially when it comes to free open source software. 
 
 If you are working with Cassandra, sooner or later you will have to analyse its content on remote cluster. Most of the available tools are desktop applications  that connect to Cassandra over its protocol. Getting such access might be a hard task, because usually databases are installed in restricted networks in order to minimize data breach risk. Security policies are changing frequently to cover new findings, and the fact that you have access to your database today, does not actually mean that it will last long.
-Gaining access over SSH and command line interface should be easier, but I do not have to convince anyone that using terminal to query database content is painful, especially when it comes to NoSQL database which contains tons of data, and it's wide rows can contain millions of columns!
+Gaining access over SSH and command line interface should be easier, but I do not have to convince anyone that using terminal to query database content is painful, especially when it holds wide rows!
 
-But there is one solution, that is almost always available: web based applications! Every company knows how to secure them, how to run penetration tests, locate security leaks, and so on.... actually it does not matter what happens behind scenes, you - the end user has always access to such application.
+But there is one solution, that is almost always available: web based applications! Every company knows how to secure them, how to run penetration tests, locate security leaks, and so on.... actually it does not matter what happens behind scenes, you - the end user has always access to such application - at least in the theory ;)
 
-Here is a good news: Cyclop is 100% web based, and It's based on latest Wicket release! Once you managed to install it, you can query your database from a web browser and still enjoy native application feeling (it's almost fully based on AJAX, so page reloads are rare).
+Here comes good news: Cyclop is 100% web based, and It's based on latest Wicket release! Once you managed to install it, you can query your database from a web browser and still enjoy native application feeling (it's almost fully based on AJAX, so page reloads are rare).
 
 There is also another cool thing: it your security experts will run penetration tests against Cyclop they will came up with findings like Database Script Injection. This will be the first time in you live when you can honestly say: "It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely no usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
 
@@ -75,7 +75,7 @@ supports dynamic columns, and the idea is to have "static" columns at the top of
 * pressing Enter resets filter, you can also click on "clean" icon
 
 #### Data on the Server
-The history itself is stored on server in configured folder (fileStore.folder), in file: [fileStore.folder]\QueryHistory-[User-UUID].json.  The file itself contains serialized history in json form.
+The history itself is stored on server in file: [fileStore.folder]\QueryHistory-[User-UUID].json.  The file itself contains serialized history in json form.
 The solution is also secure, so you can use Cyclop from any computer without restrictions. Random cookie is the only information stored in browser - but this does not matter, because history can be viewed only by authenticated users.
 
 # CSV Export
@@ -83,7 +83,9 @@ Query result can be exported to CSV file. You can influence it's format trough c
 
 # Import
 ![Query Bookmark](/doc/img/import.png)
-It's meant to import files containing CQL queries separated by ;\n. Single query can spread over multiple lines. Results of the import are displayed in table, which contains each single query, runtime and eventually an error - in this case row has read color. You can also specify few options, so that script execution will break (or not) after first error, or executed queries can be included in query history.
+It's meant to import files containing CQL queries separated by ;\n. Single query can spread over multiple lines. Results of the import are displayed in table, which contains each single query, runtime and eventually an error - in this case row is highlighted in red. You can also specify few options, so that script execution will break (or not) after first error, or executed queries can be included in query history,
+or parallel import. The last option will divide import file into chunks and execute each one in separated thread - by
+ default 6. Be aware that queries will be executed in unspecified order.
 
 Import has also few limitations:
 * import script and results table has to fit into memory
