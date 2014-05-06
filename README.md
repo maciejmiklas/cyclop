@@ -138,7 +138,7 @@ you have to deploy few cyclop war archives, each one with different  <code>cassa
 # Live Demo
 There is a demo deployment of Cyclop, so that you can get a first impression. I'm hosting it at home, so it can be down sometimes, because I have no static IP, and when it changes propagation takes some time.
 
-Different links below contain different queries. Clicking on link will open Cyclop and paste into its editor query from link. Try to edit those queries using Cyclop's editor to see how the code completion is working. Provided user has read only access, so only part of the functionality is available.
+Different links below contain different queries. Clicking on link will open Cyclop and paste into its editor the query from link. Try to edit those queries using Cyclop's editor to see how the code completion is working. Provided user has read only access, so only part of the functionality is available.
 * User: democasusr, Password: Cassandra123 written backwards (32...aC)
 * http://maciejmiklas.no-ip.biz/cyclop
 * http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20*%20from%20cqldemo.mybooks
