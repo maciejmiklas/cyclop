@@ -2,6 +2,7 @@
 Cassandra is one of the most popular open source NoSQL databases, but it's only few years old, and therefore tools support is still limited, especially when it comes to free open source software. 
 
 If you are working with Cassandra, sooner or later you will have to analyse its content on remote cluster. Most of the available tools are desktop applications  that connect to Cassandra over its protocol. Getting such access might be a hard task, because usually databases are installed in restricted networks in order to minimize data breach risk. Security policies are changing frequently to cover new findings, and the fact that you have access to your database today, does not actually mean that it will last long.
+
 Gaining access over SSH and command line interface should be easier, but I do not have to convince anyone that using terminal to query database content is painful, especially when it holds wide rows!
 
 But there is one solution, that is almost always available: web based applications! Every company knows how to secure them, how to run penetration tests, locate security leaks, and so on.... actually it does not matter what happens behind scenes, you - the end user has always access to such application - at least in the theory ;)
