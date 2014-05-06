@@ -8,22 +8,25 @@ But there is one solution, that is almost always available: web based applicatio
 
 Here comes good news: Cyclop is 100% web based, and It's based on latest Wicket release! Once you managed to install it, you can query your database from a web browser and still enjoy native application feeling (it's almost fully based on AJAX, so page reloads are rare).
 
-There is also another cool thing: it your security experts will run penetration tests against Cyclop they will came up with findings like Database Script Injection. This will be the first time in you live when you can honestly say: "It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely no usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
+There is also another cool thing: if your security experts will run penetration tests against Cyclop they will come
+up with findings like Database Script Injection. This will be the first time in your life when you can honestly say:
+"It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely no usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
 
 # User Management
 ![Login](/doc/img/login.png)
 
 Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has
-been opened, it's being stored in HTTP session, and that's it. From now on, each query it being passed to Cassandra over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
+been opened, it's being stored in HTTP session, and that's it. From now on, each query will be passed to Cassandra
+over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
 
 Providing support for persistent data like query history gets a bit tricky, if there is no such thing as user.  We
-could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third third floor".
+could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third floor".
 
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
 
 User Preferences cover things like amount of rows in result table, import settings or button state. Those are stored
-in browser as cooke in a json format. First of all there is no security issue,
-because it's no a sensitive data and additionally we can access it directly from Java Script.
+in browser as cookie in a json format. First of all there is no security issue,
+because it's not a sensitive data and additionally we can access it directly from Java Script.
 
 # Query Editor
 #### Query Completion
@@ -31,7 +34,7 @@ because it's no a sensitive data and additionally we can access it directly from
 * Completion Hint shows all possible keywords, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color
 ![CQL Completion](/doc/img/cmp_colors.png)
 * if the keyspace has been set in previous query ("use cqldemo" in screen shot below), the completion for the following queries
-will be narrowed to tables from this keysapce, assuming that keyspace is not explicitly provided in query
+will be narrowed to tables from this keyspace, assuming that keyspace is not explicitly provided in query
 ![CQL Completion](/doc/img/cmp_tables_from_global_keyspace.png)
 * completion contains only tables that belong to keyspace that has been provided in current query
 ![CQL Completion](/doc/img/cmp_cqldemo_tables.png)
@@ -69,7 +72,7 @@ supports dynamic columns, and the idea is to have "static" columns at the top of
 
 #### History Filtering
 * filter supports live update - you get results while typing. Just remember that words shorter than three characters will be ignored
-* multiple keywords are joined by OR, this means that filter result will contain queries which contain at leas one keyword
+* multiple keywords are joined by OR, this means that filter result will contain queries with at least one keyword
 * you can specify multiple keywords in the filter. Is such case the top of the filtered history will contain queries with most hits. This builds groups, like queries with four hits, than three, and on the end with single hit. The queries within those groups are sorted by execution time
 ![Query History Filter](/doc/img/history_filter.png)
 * pressing Enter resets filter, you can also click on "clean" icon
