@@ -1,5 +1,6 @@
 package org.cyclop.web.webapp;
 
+import com.datastax.driver.core.exceptions.AuthenticationException;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
@@ -45,7 +46,7 @@ public class CqlWebSession extends AuthenticatedWebSession {
 			lastLoginError = e.getMessage();
 			authenticated = false;
 
-			LOG.info("Log-in failed:" + e.getMessage(), e);
+			LOG.info("Log-in failed:" + e.getMessage());
 			LOG.debug(e.getMessage(), e);
 		}
 
