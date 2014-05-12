@@ -171,19 +171,19 @@ public class TestBeans extends AbstractTestCase {
 	public void testSerialize_CqlSelectResult() throws Exception {
 		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"));
 		assertNotNull(res);
-		assertNotNull(res.rows);
+		assertNotNull(res.iterator());
 		assertNotNull(res.commonColumns);
 		assertNotNull(res.dynamicColumns);
-		assertTrue(res.rows.size() > 0);
+		assertTrue(res.rowsSize > 0);
 		assertTrue(res.commonColumns.size() > 0);
 
 		byte[] serBytes = serialize(res);
 		CqlQueryResult des = deserialize(serBytes, CqlQueryResult.class);
 		assertNotNull(des);
-		assertNotNull(des.rows);
+		assertNotNull(des.iterator());
 		assertNotNull(des.commonColumns);
 		assertNotNull(des.dynamicColumns);
-		assertEquals(0, des.rows.size());
+		assertEquals(0, des.rowsSize);
 		assertTrue(des.commonColumns.size() > 0);
 		assertTrue(res.commonColumns.containsAll(des.commonColumns));
 	}

@@ -147,7 +147,7 @@ public class TestQueryService extends AbstractTestCase {
 		try (QueryHistory.HistoryIterator iterator = hs.read().iterator()) {
 			assertEquals(query, iterator.next().query);
 		}
-		assertEquals(50, res.rows.size());
+		assertEquals(50, res.rowsSize);
 
 		assertEquals(4, res.commonColumns.size());
 		assertEquals(0, res.dynamicColumns.size());
@@ -166,7 +166,7 @@ public class TestQueryService extends AbstractTestCase {
 		assertTrue(comColsStr, res.commonColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()), "deesc")));
 
-		for (Row row : res.rows) {
+		for (Row row : res) {
 			assertEquals("TEST_SET_1", row.getString("deesc"));
 		}
 	}
@@ -247,7 +247,7 @@ public class TestQueryService extends AbstractTestCase {
 	public void testExecute_SimplePkWithDynamicColumn() {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "USE CqlDemo"));
 		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from MyBooks where pages=2212"));
-		assertEquals(100, res.rows.size());
+		assertEquals(100, res.rowsSize);
 
 		assertTrue(res.toString(), res.dynamicColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()), "genre")));
@@ -266,7 +266,7 @@ public class TestQueryService extends AbstractTestCase {
 		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
 				CqlDataType.create(DataType.map(DataType.varchar(), DataType.cdouble())), "price")));
 
-		for (Row row : res.rows) {
+		for (Row row : res) {
 			int idx = row.getInt("idx");
 			assertEquals("Midnight Rain-" + idx, row.getString("title"));
 		}

@@ -86,7 +86,7 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 		}
 
 		assertFalse(queryService.execute(testCql).isEmpty());
-		assertEquals("some text in title ;)", queryService.execute(testCql).rows.iterator().next().getString("title"));
+		assertEquals("some text in title ;)", queryService.execute(testCql).iterator().next().getString("title"));
 
 	}
 
@@ -155,9 +155,9 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 
 			assertEquals(1, res.commonColumns.size());
 			assertEquals(0, res.dynamicColumns.size());
-			assertEquals(1, res.rows.size());
+			assertEquals(1, res.rowsSize);
 
-			for (Row row : res.rows) {
+			for (Row row : res) {
 				Set<Integer> impcol = row.getSet("impcol", Integer.class);
 				assertEquals(impcolSize, impcol.size());
 				for (Integer val : impcol) {

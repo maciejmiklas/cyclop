@@ -39,7 +39,7 @@ public class CassandraSessionImpl implements CassandraSession {
 	private Cluster cluster;
 
 	public synchronized void authenticate(@NotNull String userName, @NotNull String password) {
-		if(cluster != null){
+		if (cluster != null) {
 			return;
 		}
 		Cluster.Builder builder = Cluster.builder();

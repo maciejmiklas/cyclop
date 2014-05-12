@@ -1,6 +1,5 @@
 package org.cyclop.web.webapp;
 
-import com.datastax.driver.core.exceptions.AuthenticationException;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;

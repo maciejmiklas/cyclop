@@ -44,7 +44,7 @@ public class WidgetFactory {
 	public Component createForColumn(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
 									 String componentId) {
 
-		Component component = null;
+		Component component;
 		if (column.columnType == CqlColumnType.SEPARATOR) {
 			component = createForSeparator(componentId);
 

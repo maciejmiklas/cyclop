@@ -55,7 +55,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		buf.append(conf.rowSeparator);
 
 		// content
-		for (Row row : result.rows) {
+		for (Row row : result) {
 			appendRow(buf, row, cols);
 			buf.append(conf.rowSeparator);
 		}

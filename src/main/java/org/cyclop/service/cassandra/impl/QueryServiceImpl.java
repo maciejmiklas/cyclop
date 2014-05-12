@@ -166,7 +166,7 @@ class QueryServiceImpl implements QueryService {
 		CqlQueryResult result = executeIntern(query);
 
 		if (updateHistory) {
-			updateHistory(query, result.rows.size(), startTime);
+			updateHistory(query, result.rowsSize, startTime);
 		}
 		return result;
 	}
