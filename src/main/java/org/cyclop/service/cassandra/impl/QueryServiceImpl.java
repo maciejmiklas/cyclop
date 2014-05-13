@@ -179,7 +179,7 @@ class QueryServiceImpl implements QueryService {
 
 		ResultSet cqlResult = execute(query.part);
 		if (cqlResult == null || cqlResult.isExhausted()) {
-			return new CqlQueryResult();
+			return CqlQueryResult.EMPTY;
 		}
 
 		Map<String, CqlColumnType> typeMap = createTypeMap(query);
@@ -206,7 +206,7 @@ class QueryServiceImpl implements QueryService {
 		// create query result
 		ImmutableList<Row> rows = rowsBuild.build();
 		if (rows.isEmpty()) {
-			return new CqlQueryResult();
+			return CqlQueryResult.EMPTY;
 		}
 		int rowsSize = rows.size();
 

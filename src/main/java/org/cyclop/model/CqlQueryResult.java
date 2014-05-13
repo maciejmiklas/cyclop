@@ -20,6 +20,8 @@ import java.util.Iterator;
 @Immutable
 public final class CqlQueryResult implements Serializable, Iterable<Row> {
 
+	public final static CqlQueryResult EMPTY = new CqlQueryResult();
+
 	/** could be null, it not found in result, or in case of error while reading meta data info */
 	public final transient CqlPartitionKey partitionKey;
 
@@ -45,7 +47,7 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 	@Valid
 	private final transient ImmutableList<Row> rows;
 
-	public CqlQueryResult() {
+	private CqlQueryResult() {
 		this.commonColumns = ImmutableList.of();
 		this.dynamicColumns = ImmutableList.of();
 		this.columns = ImmutableList.of();
