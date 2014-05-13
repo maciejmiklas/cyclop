@@ -116,7 +116,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private void initFilter(final WebMarkupContainer historyContainer) {
 		final TextModel filterFieldModel = new TextModel();
-		final TextField<String> filterField = new TextField<String>("filterField", filterFieldModel);
+		final TextField<String> filterField = new TextField<>("filterField", filterFieldModel);
 		filterField.setOutputMarkupId(true);
 
 		filterField.add(new FilterBehaviour(filterFieldModel, historyContainer));

@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,16 +46,12 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		appendHeader(query, buf);
 
 		// column names
-		List<CqlExtendedColumnName> cols = new ArrayList<>(result.commonColumns.size() + result.commonColumns.size());
-		appendColumns(buf, result.commonColumns, cols);
-		appendGroupSeparator(result, buf);
-		appendColumns(buf, result.dynamicColumns, cols);
-
+		appendColumns(buf, result.columns);
 		buf.append(conf.rowSeparator);
 
 		// content
 		for (Row row : result) {
-			appendRow(buf, row, cols);
+			appendRow(buf, row, result.columns);
 			buf.append(conf.rowSeparator);
 		}
 
@@ -149,14 +144,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		buf.append(conf.querySeparator);
 	}
 
-	private void appendGroupSeparator(CqlQueryResult result, StringBuilder buf) {
-		if (!result.commonColumns.isEmpty() && !result.dynamicColumns.isEmpty()) {
-			buf.append(conf.columnSeparator);
-		}
-	}
-
-	private void appendColumns(StringBuilder buf, List<CqlExtendedColumnName> columns,
-							   List<CqlExtendedColumnName> ret) {
+	private void appendColumns(StringBuilder buf, List<CqlExtendedColumnName> columns) {
 		if (columns.isEmpty()) {
 			return;
 		}
@@ -166,7 +154,6 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		Iterator<CqlExtendedColumnName> commonColsIt = columns.iterator();
 		while (commonColsIt.hasNext()) {
 			CqlExtendedColumnName next = commonColsIt.next();
-			ret.add(next);
 			buf.append(prep(esc(next.toDisplayString())));
 
 			if (commonColsIt.hasNext()) {

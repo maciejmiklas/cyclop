@@ -153,8 +153,8 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 			CqlQueryResult res = queryService.execute(new CqlQuery(CqlQueryType.SELECT,
 					"select impcol from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
 
-			assertEquals(1, res.commonColumns.size());
-			assertEquals(0, res.dynamicColumns.size());
+			assertEquals(1, res.iterator().rowMetadata.commonColumns.size());
+			assertEquals(0, res.iterator().rowMetadata.dynamicColumns.size());
 			assertEquals(1, res.rowsSize);
 
 			for (Row row : res) {

@@ -44,9 +44,6 @@ import static org.cyclop.common.QueryHelper.extractTableName;
 @CassandraVersionQualifier(CassandraVersion.VER_2_x)
 class QueryServiceImpl implements QueryService {
 
-	@Inject
-	private HistoryService historyService;
-
 	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceImpl.class);
 
 	@Inject
@@ -57,6 +54,9 @@ class QueryServiceImpl implements QueryService {
 
 	@Inject
 	protected QueryScopeImpl queryScope;
+
+	@Inject
+	private HistoryService historyService;
 
 	@Override
 	public boolean checkTableExists(CqlTable table) {
@@ -211,18 +211,22 @@ class QueryServiceImpl implements QueryService {
 		int rowsSize = rows.size();
 
 		ImmutableList.Builder<CqlExtendedColumnName> commonColumnsBuild = ImmutableList.builder();
+		ImmutableList.Builder<CqlExtendedColumnName> columnsBuild = ImmutableList.builder();
 		ImmutableList.Builder<CqlExtendedColumnName> dynamicColumnsBuild = ImmutableList.builder();
 
 		for (Map.Entry<CqlExtendedColumnName, MutableInt> entry : columnsCount.entrySet()) {
+			CqlExtendedColumnName key = entry.getKey();
+			columnsBuild.add(key);
 			if (rowsSize == 1 || entry.getValue().anInt > 1) {
-				commonColumnsBuild.add(entry.getKey());
+				commonColumnsBuild.add(key);
 			} else {
-				dynamicColumnsBuild.add(entry.getKey());
+				dynamicColumnsBuild.add(key);
 			}
 		}
 		ImmutableList<CqlExtendedColumnName> commonCols = commonColumnsBuild.build();
 		ImmutableList<CqlExtendedColumnName> dynamicColumns = dynamicColumnsBuild.build();
-		CqlQueryResult result = new CqlQueryResult(commonCols, dynamicColumns, rows, partitionKey);
+		ImmutableList<CqlExtendedColumnName> columns = columnsBuild.build();
+		CqlQueryResult result = new CqlQueryResult(commonCols, dynamicColumns, columns, rows, partitionKey);
 
 		return result;
 	}

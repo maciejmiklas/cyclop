@@ -12,6 +12,7 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.exception.BeanValidationException;
@@ -149,21 +150,22 @@ public class TestQueryService extends AbstractTestCase {
 		}
 		assertEquals(50, res.rowsSize);
 
-		assertEquals(4, res.commonColumns.size());
-		assertEquals(0, res.dynamicColumns.size());
+		CqlRowMetadata rowMetadata = res.iterator().rowMetadata;
+		assertEquals(4, rowMetadata.commonColumns.size());
+		assertEquals(0, rowMetadata.dynamicColumns.size());
 
-		String comColsStr = res.commonColumns.toString();
-		assertTrue(comColsStr, res.commonColumns.contains(
+		String comColsStr = rowMetadata.commonColumns.toString();
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.create(DataType.uuid()), "id")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.cint()), "id2")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.varchar()),
 						"id3")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()), "deesc")));
 
 		for (Row row : res) {
@@ -249,21 +251,21 @@ public class TestQueryService extends AbstractTestCase {
 		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from MyBooks where pages=2212"));
 		assertEquals(100, res.rowsSize);
 
-		assertTrue(res.toString(), res.dynamicColumns.contains(
+		CqlRowMetadata rowMetadata = res.iterator().rowMetadata;
+		assertTrue(res.toString(), rowMetadata.dynamicColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()), "genre")));
 
-		String comColsStr = res.commonColumns.toString();
-		assertTrue(comColsStr, res.commonColumns.contains(
+		String comColsStr = rowMetadata.commonColumns.toString();
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.create(DataType.uuid()), "id")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(
-				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.set(DataType.varchar())),
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.set(DataType.varchar())),
 						"authors")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(
-				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.cint()), "pages")));
+		assertTrue(comColsStr, rowMetadata.commonColumns
+				.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.cint()), "pages")));
 
-		assertTrue(comColsStr, res.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
 				CqlDataType.create(DataType.map(DataType.varchar(), DataType.cdouble())), "price")));
 
 		for (Row row : res) {

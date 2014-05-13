@@ -28,11 +28,11 @@ public class MainPage extends ParentPage {
 
 	public MainPage(PageParameters params) {
 		tabSupport = new TabHelper();
-		initQueryEditorTab(params);
-		initHistoryTab();
+		initQueryEditorTab(params, tabSupport);
+		initHistoryTab(tabSupport);
 		// initFavouritesTab();
-		initQueryImportTab();
-		initAboutTab();
+		initQueryImportTab(tabSupport);
+		initAboutTab(tabSupport);
 		initLogout();
 	}
 
@@ -47,13 +47,13 @@ public class MainPage extends ParentPage {
 		add(logOut);
 	}
 
-	private void initQueryImportTab() {
+	private void initQueryImportTab(TabHelper tabSupport) {
 		QueryImportPanel queryImportPanel = new QueryImportPanel("queryImportPanel");
 		add(queryImportPanel);
 		tabSupport.registerSaticTab(".cq-tabQueryImport");
 	}
 
-	private void initQueryEditorTab(PageParameters params) {
+	private void initQueryEditorTab(PageParameters params,TabHelper tabSupport) {
 		QueryEditorPanel queryEditorPanel = new QueryEditorPanel("queryEditorPanel", params);
 		add(queryEditorPanel);
 		tabSupport.registerSaticTab(".cq-tabQueryEditor");
@@ -69,13 +69,13 @@ public class MainPage extends ParentPage {
 		tabSupport.registerReloadableTab(favourites, ".cq-tabFavourites");
 	}
 
-	private void initAboutTab() {
+	private void initAboutTab(TabHelper tabSupport) {
 		AboutPanel panel = new AboutPanel("aboutPanel");
 		add(panel);
 		tabSupport.registerReloadableTab(panel, ".cq-tabAbout");
 	}
 
-	private void initHistoryTab() {
+	private void initHistoryTab(TabHelper tabSupport) {
 		if (!AppConfig.get().history.enabled) {
 			add(new Label("historyPanel", "History is disabled in application-configuration"));
 			return;

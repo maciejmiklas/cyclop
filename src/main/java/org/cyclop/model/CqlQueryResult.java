@@ -5,6 +5,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import net.jcip.annotations.Immutable;
 import net.jcip.annotations.NotThreadSafe;
+import org.apache.commons.collections4.iterators.EmptyIterator;
 import org.cyclop.common.SerializationUtil;
 
 import javax.validation.Valid;
@@ -19,20 +20,26 @@ import java.util.Iterator;
 @Immutable
 public final class CqlQueryResult implements Serializable, Iterable<Row> {
 
-	/** List of columns that can be found in every row returned by the query */
-	@NotNull
-	@Valid
-	public final ImmutableList<CqlExtendedColumnName> commonColumns;
-
-	/** List of columns that can be found is particular rows */
-	@NotNull
-	@Valid
-	public final ImmutableList<CqlExtendedColumnName> dynamicColumns;
-
 	/** could be null, it not found in result, or in case of error while reading meta data info */
 	public final transient CqlPartitionKey partitionKey;
 
+	// TODO this is estimated value - is it always correct?
 	public final int rowsSize;
+
+	/** all columns returned by db-query, in exact the same order */
+	@NotNull
+	@Valid
+	public final ImmutableList<CqlExtendedColumnName> columns;
+
+	/** List of columns that value is not empty for multiple rows */
+	@NotNull
+	@Valid
+	private final ImmutableList<CqlExtendedColumnName> commonColumns;
+
+	/** List of columns that value is not empty only for single row, or it's empty */
+	@NotNull
+	@Valid
+	private final ImmutableList<CqlExtendedColumnName> dynamicColumns;
 
 	@NotNull
 	@Valid
@@ -41,16 +48,19 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 	public CqlQueryResult() {
 		this.commonColumns = ImmutableList.of();
 		this.dynamicColumns = ImmutableList.of();
+		this.columns = ImmutableList.of();
 		this.rows = ImmutableList.of();
 		this.partitionKey = null;
 		this.rowsSize = -1;
 	}
 
 	public CqlQueryResult(ImmutableList<CqlExtendedColumnName> commonColumns,
-						  ImmutableList<CqlExtendedColumnName> dynamicColumns, ImmutableList<Row> rows,
+						  ImmutableList<CqlExtendedColumnName> dynamicColumns,
+						  ImmutableList<CqlExtendedColumnName> columns, ImmutableList<Row> rows,
 						  CqlPartitionKey partitionKey) {
 		this.commonColumns = commonColumns;
 		this.dynamicColumns = dynamicColumns;
+		this.columns = columns;
 		this.rows = rows;
 		this.partitionKey = partitionKey;
 		this.rowsSize = rows.size();
@@ -68,13 +78,14 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 
 	@Override
 	public RowIterator iterator() {
-		return new RowIterator(rows);
+		return new RowIterator(rows, new CqlRowMetadata(commonColumns, dynamicColumns, columns, partitionKey));
 	}
 
-	// TODO !!!
-	// test
+	// TODO javax validation
+	// TODO test
 	public RowIterator iterator(int first, int count) {
-		return new RowIterator(rows.subList(first, first + count));
+		return new RowIterator(rows.subList(first, first + count),
+				new CqlRowMetadata(commonColumns, dynamicColumns, columns, partitionKey));
 	}
 
 	@Override
@@ -91,10 +102,22 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 	@NotThreadSafe
 	public final static class RowIterator implements Iterator<Row> {
 
+		public final static RowIterator EMPTY = new RowIterator();
+
+		@NotNull
+		@Valid
+		public final CqlRowMetadata rowMetadata;
+
 		private final Iterator<Row> rowsIt;
 
-		RowIterator(ImmutableList<Row> rows) {
+		RowIterator() {
+			rowsIt = EmptyIterator.INSTANCE;
+			rowMetadata = CqlRowMetadata.EMPTY;
+		}
+
+		RowIterator(ImmutableList<Row> rows, CqlRowMetadata rowMetadata) {
 			rowsIt = rows.iterator();
+			this.rowMetadata = rowMetadata;
 		}
 
 		@Override
@@ -112,4 +135,5 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 			throw new UnsupportedOperationException("Remove is not supported on RowIterator");
 		}
 	}
+
 }

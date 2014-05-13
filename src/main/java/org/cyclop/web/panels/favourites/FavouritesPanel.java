@@ -20,8 +20,8 @@ public class FavouritesPanel extends Panel implements AjaxReloadSupport {
 	public FavouritesPanel(String id) {
 		super(id);
 		WebMarkupContainer favouritesContainer = initFavouritesContainer();
-		ImmutableListModel<QueryEntry> model = initFavouritesTable(favouritesContainer);
-		browserCallback = initBrowserCallback(model, favouritesContainer);
+		initFavouritesTable(favouritesContainer);
+		browserCallback = initBrowserCallback(favouritesContainer);
 
 		favouritesContainer.add(new Label("counter", new IModel<String>() {
 
@@ -58,8 +58,7 @@ public class FavouritesPanel extends Panel implements AjaxReloadSupport {
 		return historyContainer;
 	}
 
-	private AbstractDefaultAjaxBehavior initBrowserCallback(final ImmutableListModel<QueryEntry> model,
-															final WebMarkupContainer historyContainer) {
+	private AbstractDefaultAjaxBehavior initBrowserCallback(final WebMarkupContainer historyContainer) {
 
 		AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
 

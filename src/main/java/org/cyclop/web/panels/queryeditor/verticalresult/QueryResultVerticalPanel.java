@@ -3,7 +3,6 @@ package org.cyclop.web.panels.queryeditor.verticalresult;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.collections4.iterators.EmptyIterator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -23,6 +22,7 @@ import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
+import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.um.UserManager;
@@ -49,6 +49,8 @@ public class QueryResultVerticalPanel extends Panel {
 
 	private final CqlResultTextModel cqlResultTextModel;
 
+	private final RowsModel rowsModel;
+
 	@Inject
 	private UserManager um;
 
@@ -63,8 +65,12 @@ public class QueryResultVerticalPanel extends Panel {
 	public QueryResultVerticalPanel(String id) {
 		super(id);
 		Injector.get().inject(this);
+		setOutputMarkupPlaceholderTag(true);
 
 		cqlResultTextModel = new CqlResultTextModel();
+		rowDataProvider = new RowDataProvider();
+		columnsModel = new ColumnsModel();
+
 		cqlResultText = new Label("cqlResultText", cqlResultTextModel);
 		cqlResultText.setVisible(false);
 		cqlResultText.setOutputMarkupPlaceholderTag(true);
@@ -72,21 +78,16 @@ public class QueryResultVerticalPanel extends Panel {
 
 		resultTable = new WebMarkupContainer("resultTable");
 		resultTable.setOutputMarkupPlaceholderTag(true);
-
-		setOutputMarkupPlaceholderTag(true);
+		resultTable.setVisible(false);
 		add(resultTable);
 
-		resultTable.setVisible(false);
-		rowDataProvider = new RowDataProvider();
-		columnsModel = new ColumnsModel();
-
-		List<Row> displayedRows = initRowNamesList(resultTable);
-		initColumnList(resultTable, columnsModel, displayedRows);
+		rowsModel = initRowNamesList(resultTable, rowDataProvider);
+		initColumnList(resultTable, columnsModel, rowsModel);
 	}
 
 	public CqlQueryResult executeQuery(CqlQuery query, AjaxRequestTarget target) {
 		target.add(this);
-		CqlQueryResult result = null;
+		CqlQueryResult result;
 		try {
 			result = queryService.execute(query);
 		} catch (Exception e) {
@@ -111,10 +112,10 @@ public class QueryResultVerticalPanel extends Panel {
 		resultTable.setVisible(false);
 		rowDataProvider.clean();
 		columnsModel.clean();
+		rowsModel.getObject().clear();
 	}
 
-	private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel,
-								final List<Row> displayedRows) {
+	private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel, final RowsModel rowsModel) {
 		ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>("columnList", columnsModel) {
 			@Override
 			protected void populateItem(ListItem<CqlExtendedColumnName> item) {
@@ -147,10 +148,10 @@ public class QueryResultVerticalPanel extends Panel {
 				columnListRow.add(columnNameLabel);
 
 				ColumnsModel model = (ColumnsModel) getModel();
-				CqlQueryResult result = model.getResult();
+				CqlRowMetadata result = model.getResult();
 				final CqlPartitionKey partitionKey = result == null ? null : result.partitionKey;
 
-				ListView<Row> columnValueList = new ListView<Row>("columnValueList", new RowsModel(displayedRows)) {
+				ListView<Row> columnValueList = new ListView<Row>("columnValueList", rowsModel) {
 
 					@Override
 					protected void populateItem(ListItem<Row> item) {
@@ -168,7 +169,7 @@ public class QueryResultVerticalPanel extends Panel {
 		resultTable.add(columnList);
 	}
 
-	private List<Row> initRowNamesList(WebMarkupContainer resultTable) {
+	private RowsModel initRowNamesList(WebMarkupContainer resultTable, final RowDataProvider rowDataProvider) {
 
 		final List<Row> displayedRows = new ArrayList<>();
 		GridView<Row> rowNamesList = new GridView<Row>("rowNamesList", rowDataProvider) {
@@ -219,7 +220,7 @@ public class QueryResultVerticalPanel extends Panel {
 		});
 		resultTable.add(pager);
 
-		return displayedRows;
+		return new RowsModel(displayedRows);
 	}
 
 	private void showCqlResultText(String text) {
@@ -233,11 +234,10 @@ public class QueryResultVerticalPanel extends Panel {
 		pager.reset();
 		resultTable.setVisible(true);
 		rowDataProvider.setResult(result);
-		columnsModel.updateResult(result);
 	}
 
 	private final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
-		private CqlQueryResult result;
+		private CqlRowMetadata result;
 
 		private List<CqlExtendedColumnName> content = ImmutableList.of();
 
@@ -247,7 +247,7 @@ public class QueryResultVerticalPanel extends Panel {
 
 		public void clean() {
 			this.content = ImmutableList.of();
-			this.result = new CqlQueryResult();
+			this.result = CqlRowMetadata.EMPTY;
 		}
 
 		@Override
@@ -264,11 +264,11 @@ public class QueryResultVerticalPanel extends Panel {
 			content = object;
 		}
 
-		private CqlQueryResult getResult() {
+		private CqlRowMetadata getResult() {
 			return result;
 		}
 
-		public void updateResult(CqlQueryResult result) {
+		public void updateResult(CqlRowMetadata result) {
 			this.result = result;
 			ImmutableList.Builder<CqlExtendedColumnName> allColumnsBuild = ImmutableList.builder();
 			allColumnsBuild.addAll(result.commonColumns);
@@ -306,39 +306,6 @@ public class QueryResultVerticalPanel extends Panel {
 		}
 	}
 
-	private final static class RowDataProvider implements IDataProvider<Row> {
-
-		private CqlQueryResult result;
-
-		private void setResult(CqlQueryResult result) {
-			this.result = result;
-		}
-
-		@Override
-		public Iterator<Row> iterator(long first, long count) {
-			Iterator<Row> iter = result == null ? EmptyIterator.INSTANCE : result.iterator((int) first, (int) count);
-			return iter;
-		}
-
-		@Override
-		public long size() {
-			return result == null ? 0 : result.rowsSize;
-		}
-
-		@Override
-		public IModel<Row> model(Row row) {
-			return new TransientModel(row);
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		public void clean() {
-			result = null;
-		}
-	}
-
 	private final static class RowsModel implements IModel<List<Row>> {
 
 		private List<Row> content;
@@ -361,5 +328,41 @@ public class QueryResultVerticalPanel extends Panel {
 			content = object;
 		}
 
+	}
+
+	private final class RowDataProvider implements IDataProvider<Row> {
+
+		private CqlQueryResult result;
+
+		private void setResult(CqlQueryResult result) {
+			this.result = result;
+		}
+
+		@Override
+		public Iterator<Row> iterator(long first, long count) {
+			CqlQueryResult.RowIterator iterator =
+					result == null ? CqlQueryResult.RowIterator.EMPTY : result.iterator((int) first, (int) count);
+
+			columnsModel.updateResult(iterator.rowMetadata);
+			return iterator;
+		}
+
+		@Override
+		public long size() {
+			return result == null ? 0 : result.rowsSize;
+		}
+
+		@Override
+		public IModel<Row> model(Row row) {
+			return new TransientModel(row);
+		}
+
+		@Override
+		public void detach() {
+		}
+
+		public void clean() {
+			result = null;
+		}
 	}
 }
