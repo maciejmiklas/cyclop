@@ -116,8 +116,10 @@ Import has also few limitations:
 * guava - v15.x (Cassandra 2.0 does not work with v16)
 
 # Installation
-1. Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/latest</code>
-2. Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for Cassandra
+1. Install Java 7 and Maven 3
+2. Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/latest</code>
+3. Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for
+Cassandra
 ``` properties
 cassandra.hosts: localhost
 cassandra.port: 9042
