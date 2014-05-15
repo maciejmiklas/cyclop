@@ -117,19 +117,20 @@ Import has also few limitations:
 
 # Installation
 * Install Java 7 and Maven 3
-* Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/latest</code>
-* Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for
+* Download last release: `https://github.com/maciejmiklas/cyclop/releases/latest`
+* Edit property file: `cyclop/src/main/resources/cyclop.properties` and set connection settings for
 Cassandra:
-``` properties
+
+    ``` properties
 cassandra.hosts: localhost
 cassandra.port: 9042
 cassandra.useSsl: false
 cassandra.timeoutMilis: 3600000
 ```
 
-You can also overwrite each property from <code>cyclop.properties</code> by setting it as jvm parameter. For example to connect to different Cassandra host set:<code>-Dcassandra.hosts=server1,server2</code>. This gives you simple possibility to change properties after the war file has been assembled.
+    You can also overwrite each property from `cyclop.properties` by setting it as jvm parameter. For example to connect to different Cassandra host set:<code>-Dcassandra.hosts=server1,server2</code>. This gives you simple possibility to change properties after the war file has been assembled.
 
-* Optionally change logger settings by editing <code>logback.xml</code>. By default it logs in into <code>/var/lib/tomcat7/logs/cyclop-${time}.log</code>
+* Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
 * Build war file: <code>mvn package</code>
 * Drop war file into tomcat
 
