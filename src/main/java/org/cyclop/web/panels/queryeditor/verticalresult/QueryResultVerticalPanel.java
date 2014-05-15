@@ -13,8 +13,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.GridView;
-import org.apache.wicket.markup.repeater.data.IDataProvider;
 import org.apache.wicket.model.IModel;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlDataType;
@@ -28,6 +26,8 @@ import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.common.TransientModel;
 import org.cyclop.web.components.column.WidgetFactory;
+import org.cyclop.web.components.iterablegrid.IterableDataProvider;
+import org.cyclop.web.components.iterablegrid.IterableGridView;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.components.pagination.PagerConfigurator;
 
@@ -172,7 +172,7 @@ public class QueryResultVerticalPanel extends Panel {
 	private RowsModel initRowNamesList(WebMarkupContainer resultTable, final RowDataProvider rowDataProvider) {
 
 		final List<Row> displayedRows = new ArrayList<>();
-		GridView<Row> rowNamesList = new GridView<Row>("rowNamesList", rowDataProvider) {
+		IterableGridView<Row> rowNamesList = new IterableGridView<Row>("rowNamesList", rowDataProvider) {
 
 			@Override
 			protected void onBeforeRender() {
@@ -330,26 +330,25 @@ public class QueryResultVerticalPanel extends Panel {
 
 	}
 
-	private final class RowDataProvider implements IDataProvider<Row> {
+	private final class RowDataProvider extends IterableDataProvider<Row> {
 
 		private CqlQueryResult result;
+
+		protected RowDataProvider() {
+			super(um.readPreferences().getPagerEditorItems());
+		}
 
 		private void setResult(CqlQueryResult result) {
 			this.result = result;
 		}
 
 		@Override
-		public Iterator<Row> iterator(long first, long count) {
-			CqlQueryResult.RowIterator iterator =
-					result == null ? CqlQueryResult.RowIterator.EMPTY : result.iterator((int) first, (int) count);
+		protected Iterator<Row> iterator() {
+			CqlQueryResult.RowIterator iterator = result == null ? CqlQueryResult.RowIterator.EMPTY : result.iterator();
 
 			columnsModel.updateResult(iterator.rowMetadata);
-			return iterator;
-		}
 
-		@Override
-		public long size() {
-			return result == null ? 0 : result.rowsSize;
+			return iterator;
 		}
 
 		@Override

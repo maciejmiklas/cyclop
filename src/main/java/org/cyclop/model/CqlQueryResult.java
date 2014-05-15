@@ -83,13 +83,6 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 		return new RowIterator(rows, new CqlRowMetadata(commonColumns, dynamicColumns, columns, partitionKey));
 	}
 
-	// TODO javax validation
-	// TODO test
-	public RowIterator iterator(int first, int count) {
-		return new RowIterator(rows.subList(first, first + count),
-				new CqlRowMetadata(commonColumns, dynamicColumns, columns, partitionKey));
-	}
-
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("commonColumns", commonColumns).add("dynamicColumns", dynamicColumns)
