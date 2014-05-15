@@ -116,24 +116,22 @@ Import has also few limitations:
 * guava - v15.x (Cassandra 2.0 does not work with v16)
 
 # Installation
-* Install Java 7 and Maven 3
-* Download last release: `https://github.com/maciejmiklas/cyclop/releases/latest`
-* Edit property file: `cyclop/src/main/resources/cyclop.properties` and set connection settings for
+1. Install Java 7 and Maven 3
+2. Download last release: `https://github.com/maciejmiklas/cyclop/releases/latest`
+3. Edit property file: `cyclop/src/main/resources/cyclop.properties` and set connection settings for
 Cassandra:
 
     ``` properties
-cassandra.hosts: localhost
-cassandra.port: 9042
-cassandra.useSsl: false
-cassandra.timeoutMilis: 3600000
-```
-
-
+    cassandra.hosts: localhost
+    cassandra.port: 9042
+    cassandra.useSsl: false
+    cassandra.timeoutMilis: 3600000
+    ```
     You can also overwrite each property from `cyclop.properties` by setting it as jvm parameter. For example to connect to different Cassandra host set:`-Dcassandra.hosts=server1,server2`. This gives you simple possibility to change properties after the war file has been assembled.
-
-* Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
-* Build war file: `mvn package`
-* Drop war file into tomcat
+    
+4. Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
+5. Build war file: `mvn package`
+6. Drop war file into tomcat
 
     The created war can connect only to one Cassandra cluster, in order to serve multiple clusters from one Tomcat
 you have to deploy few cyclop war archives, each one with different `cassandra.hosts` value
