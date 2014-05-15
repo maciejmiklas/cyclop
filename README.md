@@ -96,8 +96,8 @@ Import has also few limitations:
 * import script does not support comments
 
 # Requirements
-* java 7
-* cassandra v1.2 or above (tested with 1.2 and 2.0)
+* Java 7
+* Cassandra v1.2 or above (tested with 1.2 and 2.0)
 * only CQL 3 is supported
 * CLI is NOT supported
 * Tomcat v7 or another v3.x web container
@@ -117,25 +117,24 @@ Import has also few limitations:
 
 # Installation
 1. Install Java 7 and Maven 3
-2. Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/latest</code>
-3. Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for
-Cassandra
-``` properties
-cassandra.hosts: localhost
-cassandra.port: 9042
-cassandra.useSsl: false
-cassandra.timeoutMilis: 3600000
-```
-You can also overwrite each property from <code>cyclop.properties</code> by setting it as jvm parameter. For example
-to connect to different Cassandra host set:<code>-Dcassandra.hosts=server1,server2</code>. This gives you simple possibility
-to change properties after the war file has been assembled.
+2. Download last release: `https://github.com/maciejmiklas/cyclop/releases/latest`
+3. Edit property file: `cyclop/src/main/resources/cyclop.properties` and set connection settings for
+Cassandra:
 
-4. Optionally change logger settings by editing <code>logback.xml</code>. By default it logs in into <code>/var/lib/tomcat7/logs/cyclop-${time}.log</code>
-5. Build war file: <code>mvn package</code>
-5. Drop war file into tomcat
+    ``` properties
+    cassandra.hosts: localhost
+    cassandra.port: 9042
+    cassandra.useSsl: false
+    cassandra.timeoutMilis: 3600000
+    ```
+    You can also overwrite each property from `cyclop.properties` by setting it as jvm parameter. For example to connect to different Cassandra host set:`-Dcassandra.hosts=server1,server2`. This gives you simple possibility to change properties after the war file has been assembled.
+    
+4. Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
+5. Build war file: `mvn package`
+6. Drop war file into tomcat
 
-The created war can connect only to one Cassandra cluster, in order to serve multiple clusters from one Tomcat
-you have to deploy few cyclop war archives, each one with different  <code>cassandra.hosts</code> value
+    The created war can connect only to one Cassandra cluster, in order to serve multiple clusters from one Tomcat
+you have to deploy few cyclop war archives, each one with different `cassandra.hosts` value
 
 # Live Demo
 There is a demo deployment of Cyclop, so that you can get a first impression. I'm hosting it at home, so it can be down sometimes, because I have no static IP, and when it changes propagation takes some time.
