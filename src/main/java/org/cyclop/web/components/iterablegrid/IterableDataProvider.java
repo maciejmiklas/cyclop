@@ -40,8 +40,13 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 		long size;
 		if (iterator == null) {
 			size = itemsPerPage + 1;
+
 		} else if (lastPage > currentPage) {
 			size = iterator.getReadElementsCount();
+
+		} else if (!iterator.reachedEnd()) {
+			size = iterator.getReadElementsCount();
+
 		} else {
 			size = iterator.getReadElementsCount() + itemsPerPage + 1;
 		}

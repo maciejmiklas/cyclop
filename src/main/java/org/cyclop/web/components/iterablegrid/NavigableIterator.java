@@ -48,13 +48,18 @@ class NavigableIterator<E> implements Iterator<E> {
 
 	@Override
 	public boolean hasNext() {
-		return wrapped.hasNext() && count > 0;
+		boolean next = count > 0 && (wrapped.hasNext() || nextIndex < read.size());
+		return next;
+	}
+
+	public boolean reachedEnd() {
+		return wrapped.hasNext();
 	}
 
 	@Override
 	public E next() {
 		E next;
-		if (nextIndex < read.size() - 1) {
+		if (nextIndex < read.size()) {
 			next = read.get(nextIndex);
 		} else {
 			if (!wrapped.hasNext()) {

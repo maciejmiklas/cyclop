@@ -78,7 +78,7 @@ public class WidgetFactory {
 	private Component createForDataType(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
 										String componentId) {
 		String partLc = column.partLc;
-		if (row.isNull(partLc)) {
+		if (row == null || row.isNull(partLc)) {
 			return null;
 		}
 
@@ -87,7 +87,7 @@ public class WidgetFactory {
 			cqlPartitionKeyValue = extractor.extractPartitionKey(row, partitionKey);
 		}
 
-		Component component = null;
+		Component component;
 		CqlDataType dataType = column.dataType;
 		if (dataType.name == DataType.Name.SET || dataType.name == DataType.Name.LIST) {
 			component = createForCollection(row, cqlPartitionKeyValue, column, componentId);
