@@ -96,8 +96,8 @@ Import has also few limitations:
 * import script does not support comments
 
 # Requirements
-* java 7
-* cassandra v1.2 or above (tested with 1.2 and 2.0)
+* Java 7
+* Cassandra v1.2 or above (tested with 1.2 and 2.0)
 * only CQL 3 is supported
 * CLI is NOT supported
 * Tomcat v7 or another v3.x web container
