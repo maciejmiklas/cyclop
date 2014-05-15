@@ -81,7 +81,4 @@ class NavigableIterator<E> implements Iterator<E> {
 		return read.size();
 	}
 
-	int getNextIndex() {
-		return nextIndex;
-	}
 }

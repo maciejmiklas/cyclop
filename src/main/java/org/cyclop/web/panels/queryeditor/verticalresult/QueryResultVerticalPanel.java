@@ -249,7 +249,7 @@ public class QueryResultVerticalPanel extends Panel {
 		hideCqlResultText();
 		pager.reset();
 		resultTable.setVisible(true);
-		rowDataProvider.setResult(result);
+		rowDataProvider.replaceModel(result);
 	}
 
 	private final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
@@ -354,8 +354,9 @@ public class QueryResultVerticalPanel extends Panel {
 			super(um.readPreferences().getPagerEditorItems());
 		}
 
-		private void setResult(CqlQueryResult result) {
+		public void replaceModel(CqlQueryResult result) {
 			this.result = result;
+			reset();
 		}
 
 		@Override

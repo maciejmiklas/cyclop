@@ -48,6 +48,12 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 		return size;
 	}
 
+	public void reset() {
+		lastPage = 0;
+		currentPage = 0;
+		iterator = null;
+	}
+
 	@Override
 	public final Iterator<T> iterator(long first, long count) {
 		if (iterator == null) {
@@ -56,10 +62,6 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 		iterator.prepare((int) first, (int) count);
 		lastPage = currentPage;
 		return iterator;
-	}
-
-	public long getItemsPerPage() {
-		return itemsPerPage;
 	}
 
 	void setItemsPerPage(long itemsPerPage) {

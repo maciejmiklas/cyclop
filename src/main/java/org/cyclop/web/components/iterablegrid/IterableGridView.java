@@ -27,7 +27,7 @@ public abstract class IterableGridView<T> extends GridView<T> {
 	}
 
 	@Override
-	public void setCurrentPage(long page) {
+	public final void setCurrentPage(long page) {
 		dataProvider.setCurrentPage(page);
 		super.setCurrentPage(page);
 	}
