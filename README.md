@@ -119,8 +119,7 @@ Import has also few limitations:
 * Install Java 7 and Maven 3
 * Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/latest</code>
 * Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for
-Cassandra: 
-
+Cassandra:
 ``` properties
 cassandra.hosts: localhost
 cassandra.port: 9042
