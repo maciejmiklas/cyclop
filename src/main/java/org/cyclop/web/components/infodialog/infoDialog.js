@@ -1,3 +1,4 @@
+
 $(function () {
 	var $linkNameToDisable = $("${linkNameToDisable}");
 	$linkNameToDisable.addClass('cq-disableLink');
