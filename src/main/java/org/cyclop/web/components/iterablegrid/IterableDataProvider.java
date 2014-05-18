@@ -53,7 +53,12 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 			} else if (!iterator.hasMoreData()) {
 				size = iterator.maxSize();
 
-				// user clicks on next page
+				// user is not on page 2 and click on next page - 3. Pager will show link for page 4, but not for
+				// page 5 - this will first happen when user clicks on page 4. In order to show link for only
+				// following page we have to calculate size right. This is the amount of elements up to
+				// current page (3) plus element that can be displayed on next page.
+				// If the current page is last page, the link for next page mus not be shown - this is handled by
+				//  iterateToIndex(...) - it narrows calculated size to maximum allowed value.
 			} else {
 				size = iterator.readSize() + itemsPerPage + 1;
 				size = iterator.iterateToIndex((int) size + 1) - 1;

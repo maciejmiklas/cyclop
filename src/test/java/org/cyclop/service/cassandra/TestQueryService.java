@@ -74,7 +74,7 @@ public class TestQueryService extends AbstractTestCase {
 	public void testFindColumnNames_KeyspaceWithTable() {
 		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("cqldemo", "MyBooks"));
 		assertNotNull(resp);
-		assertTrue("size: " + resp.size(), resp.size() > 5);
+		assertTrue("readSize: " + resp.size(), resp.size() > 5);
 		vh.verifyContainsMybooksColumns(resp, true);
 		vh.verifyContainsSystemColumns(resp, false);
 		vh.verifyContainsCompoundTestColumns(resp, false);
@@ -136,7 +136,7 @@ public class TestQueryService extends AbstractTestCase {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("MyBooks"));
 		assertNotNull(resp);
-		assertTrue("size: " + resp.size(), resp.size() > 5);
+		assertTrue("readSize: " + resp.size(), resp.size() > 5);
 		vh.verifyContainsMybooksColumns(resp, true);
 		vh.verifyContainsSystemColumns(resp, false);
 		vh.verifyContainsCompoundTestColumns(resp, false);

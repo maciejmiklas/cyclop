@@ -117,7 +117,7 @@ commitlog_directory: target/embeddedCassandra/commitlog
 # ignore: ignore fatal errors and let requests fail, as in pre-1.2 Cassandra
 disk_failure_policy: stop
 
-# Maximum size of the key cache in memory.
+# Maximum readSize of the key cache in memory.
 #
 # Each key cache hit saves 1 seek and each row cache hit saves 2 seeks at the
 # minimum, sometimes more. The key cache is fairly tiny for the amount of
@@ -126,7 +126,7 @@ disk_failure_policy: stop
 # so it is extremely space-intensive. It's best to only use the
 # row cache if you have hot rows or static rows.
 #
-# NOTE: if you reduce the size, you may not get you hottest keys loaded on startup.
+# NOTE: if you reduce the readSize, you may not get you hottest keys loaded on startup.
 #
 # Default prefix is empty to make it "auto" (min(5% of Heap (in MB), 100MB)). Set to 0 to disable key cache.
 key_cache_size_in_mb:
@@ -146,8 +146,8 @@ key_cache_save_period: 14400
 # Disabled by default, meaning all keys are going to be saved
 # key_cache_keys_to_save: 100
 
-# Maximum size of the row cache in memory.
-# NOTE: if you reduce the size, you may not get you hottest keys loaded on startup.
+# Maximum readSize of the row cache in memory.
+# NOTE: if you reduce the readSize, you may not get you hottest keys loaded on startup.
 #
 # Default prefix is 0, to disable row caching.
 row_cache_size_in_mb: 0
@@ -198,12 +198,12 @@ saved_caches_directory: saved_caches
 commitlog_sync: periodic
 commitlog_sync_period_in_ms: 10000
 
-# The size of the individual commitlog file segments.  A commitlog
+# The readSize of the individual commitlog file segments.  A commitlog
 # segment may be archived, deleted, or recycled once all the data
 # in it (potentially from each columnfamily in the system) has been
 # flushed to sstables.
 #
-# The default size is 32, which is almost always fine, but if you are
+# The default readSize is 32, which is almost always fine, but if you are
 # archiving commitlog segments (see commitlog_archiving.properties),
 # then you probably want a finer granularity of archiving; 8 or 16 MB
 # is reasonable.
@@ -240,7 +240,7 @@ concurrent_writes: 32
 # memtable_total_space_in_mb: 2048
 
 # Total space to use for commitlogs.  Since commitlog segments are
-# mmapped, and hence use up address space, the default size is 32
+# mmapped, and hence use up address space, the default readSize is 32
 # on 32-bit JVMs, and 1024 on 64-bit JVMs.
 #
 # If space gets above this prefix (it will round up to the next nearest
@@ -331,7 +331,7 @@ rpc_keepalive: true
 # Cassandra provides three out-of-the-box options for the RPC Server:
 #
 # sync  -> One thread per thrift connection. For a very large number of clients, memory
-#          will be your limiting factor. On a 64 bit JVM, 180KB is the minimum stack size
+#          will be your limiting factor. On a 64 bit JVM, 180KB is the minimum stack readSize
 #          per thread, and that will correspond to your use of virtual memory (but physical memory
 #          may be limited depending on use of stack space).
 #
@@ -347,7 +347,7 @@ rpc_keepalive: true
 # of an o.a.c.t.TServerFactory that can create an instance of it.
 rpc_server_type: sync
 
-# Uncomment rpc_min|max_thread to set request pool size limits.
+# Uncomment rpc_min|max_thread to set request pool readSize limits.
 #
 # Regardless of your choice of RPC server (see above), the number of maximum requests in the
 # RPC thread pool dictates how many concurrent requests are possible (but if you are using the sync
@@ -364,8 +364,8 @@ rpc_server_type: sync
 # rpc_send_buff_size_in_bytes:
 # rpc_recv_buff_size_in_bytes:
 
-# Uncomment to set socket buffer size for internode communication
-# Note that when setting this, the buffer size is limited by net.core.wmem_max
+# Uncomment to set socket buffer readSize for internode communication
+# Note that when setting this, the buffer readSize is limited by net.core.wmem_max
 # and when not setting it it is defined by net.ipv4.tcp_wmem
 # See:
 # /proc/sys/net/core/wmem_max
@@ -376,7 +376,7 @@ rpc_server_type: sync
 # internode_send_buff_size_in_bytes:
 # internode_recv_buff_size_in_bytes:
 
-# Frame size for thrift (maximum message length).
+# Frame readSize for thrift (maximum message length).
 thrift_framed_transport_size_in_mb: 15
 
 # Set to true to have Cassandra create a hard link to each sstable
@@ -397,7 +397,7 @@ snapshot_before_compaction: false
 # lose data on truncation or drop.
 auto_snapshot: true
 
-# Add column indexes to a row after its contents reach this size.
+# Add column indexes to a row after its contents reach this readSize.
 # Increase if your column values are large, or if you have a very large
 # number of columns.  The competing causes are, Cassandra has to
 # deserialize this much of the row to read a single column, so you want
