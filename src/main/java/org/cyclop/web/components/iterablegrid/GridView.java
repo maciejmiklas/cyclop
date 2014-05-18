@@ -35,7 +35,7 @@ import java.util.Iterator;
 
 /**
  * A pageable DataView which breaks the data in the IDataProvider into a number of data-rows, depending on the column
- * size. A typical use case is to show items in a table with ie 3 columns where the table is filled left to right
+ * readSize. A typical use case is to show items in a table with ie 3 columns where the table is filled left to right
  * top-down so that for each third item a new row is created.
  * <p/>
  * Example
