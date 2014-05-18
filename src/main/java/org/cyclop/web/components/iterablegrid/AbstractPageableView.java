@@ -194,7 +194,7 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	}
 
 	/**
-	 * Get the item count. Since dataprovider.size() could potentially be expensive, the item count is cached.
+	 * Get the item count. Since dataprovider.readSize() could potentially be expensive, the item count is cached.
 	 *
 	 * @return the item count
 	 * @see #getRowCount()

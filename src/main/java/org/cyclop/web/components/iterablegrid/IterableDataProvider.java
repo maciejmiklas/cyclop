@@ -38,17 +38,26 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 	@Override
 	public final long size() {
 		long size;
+
+		// first page view, before calling iterator
 		if (iterator == null) {
 			size = itemsPerPage + 1;
 
-		} else if (lastPage > currentPage) {
-			size = iterator.getReadElementsCount();
-
-		} else if (!iterator.reachedEnd()) {
-			size = iterator.getReadElementsCount();
-
 		} else {
-			size = iterator.getReadElementsCount() + itemsPerPage + 1;
+
+			// uer goes back on pager, like now he is on page 5 and clicks on 3
+			if (lastPage > currentPage) {
+				size = iterator.readSize();
+
+				// there is no more data to be read - we are on last page
+			} else if (!iterator.hasMoreData()) {
+				size = iterator.maxSize();
+
+				// user clicks on next page
+			} else {
+				size = iterator.readSize() + itemsPerPage + 1;
+				size = iterator.iterateToIndex((int) size + 1) - 1;
+			}
 		}
 		return size;
 	}
