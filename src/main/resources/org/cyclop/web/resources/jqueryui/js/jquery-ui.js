@@ -1568,7 +1568,7 @@
 
 			this.helper.addClass("ui-draggable-dragging");
 
-			//Cache the helper size
+			//Cache the helper readSize
 			this._cacheHelperProportions();
 
 			//If ddmanager is used for droppables, set the global draggable
@@ -1626,7 +1626,7 @@
 				return false;
 			}
 
-			//Recache the helper size
+			//Recache the helper readSize
 			this._cacheHelperProportions();
 
 			//Prepare the droppable offsets
@@ -2183,7 +2183,7 @@
 						this.instance._mouseStop(event, true);
 						this.instance.options.helper = this.instance.options._helper;
 
-						//Now we remove our currentItem, the list group clone again, and the placeholder, and animate the helper back to it's original size
+						//Now we remove our currentItem, the list group clone again, and the placeholder, and animate the helper back to it's original readSize
 						this.instance.currentItem.remove();
 						if (this.instance.placeholder) {
 							this.instance.placeholder.remove();
@@ -3192,7 +3192,7 @@
 
 			if (this._aspectRatio || forceAspectRatio) {
 				// We want to create an enclosing box whose aspect ration is the requested one
-				// First, compute the "projected" size for each dimension based on the aspect ratio and other dimension
+				// First, compute the "projected" readSize for each dimension based on the aspect ratio and other dimension
 				pMinWidth = b.minHeight * this.aspectRatio;
 				pMinHeight = b.minWidth / this.aspectRatio;
 				pMaxWidth = b.maxHeight * this.aspectRatio;
@@ -4172,7 +4172,7 @@
 			//Create and append the visible helper
 			this.helper = this._createHelper(event);
 
-			//Cache the helper size
+			//Cache the helper readSize
 			this._cacheHelperProportions();
 
 			/*
@@ -4263,7 +4263,7 @@
 			//Call callbacks
 			this._trigger("start", event, this._uiHash());
 
-			//Recache the helper size
+			//Recache the helper readSize
 			if (!this._preserveHelperProportions) {
 				this._cacheHelperProportions();
 			}
@@ -4810,7 +4810,7 @@
 			//Append it after the actual current item
 			that.currentItem.after(that.placeholder);
 
-			//Update the size of the placeholder (: Logic to fuzzy, see line 316/317)
+			//Update the readSize of the placeholder (: Logic to fuzzy, see line 316/317)
 			o.placeholder.update(that, that.placeholder);
 
 		},
@@ -6349,7 +6349,7 @@
 			this.isNewMenu = true;
 			this.menu.refresh();
 
-			// size and position menu
+			// readSize and position menu
 			ul.show();
 			this._resizeMenu();
 			ul.position($.extend({
@@ -6961,7 +6961,7 @@
 			altFormat: "", // The date format to use for the alternate field
 			constrainInput: true, // The input is constrained by the current date format
 			showButtonPanel: false, // True to show button panel, false to not show it
-			autoSize: false, // True to size the input for the date format, false to leave as is
+			autoSize: false, // True to readSize the input for the date format, false to leave as is
 			disabled: false // The initial disabled state
 		};
 		$.extend(this._defaults, this.regional[""]);
@@ -7112,7 +7112,7 @@
 					date.setDate(findMax(this._get(inst, (dateFormat.match(/DD/) ?
 						"dayNames" : "dayNamesShort"))) + 20 - date.getDay());
 				}
-				inst.input.attr("size", this._formatDate(inst, date).length);
+				inst.input.attr("readSize", this._formatDate(inst, date).length);
 			}
 		},
 
@@ -13800,7 +13800,7 @@
 							margin: 0,
 							padding: 0
 						}),
-				// Store the size in case width/height are defined in % - Fixes #5245
+				// Store the readSize in case width/height are defined in % - Fixes #5245
 					size = {
 						width: element.width(),
 						height: element.height()
@@ -14427,7 +14427,7 @@
 				mx = j - ( cells - 1 ) / 2;
 
 				// Create a clone of the now hidden main element that will be absolute positioned
-				// within a wrapper div off the -left and -top equal to size of our pieces
+				// within a wrapper div off the -left and -top equal to readSize of our pieces
 				el
 					.clone()
 					.appendTo("body")
@@ -14440,7 +14440,7 @@
 					})
 
 					// select the wrapper - make it overflow: hidden and absolute positioned based on
-					// where the original was located +left and +top equal to the size of pieces
+					// where the original was located +left and +top equal to the readSize of pieces
 					.parent()
 					.addClass("ui-effects-explode")
 					.css({
@@ -14695,8 +14695,8 @@
 				x: direction !== "vertical" ? (percent / 100) : 1
 			};
 
-		// We are going to pass this effect to the size effect:
-		options.effect = "size";
+		// We are going to pass this effect to the readSize effect:
+		options.effect = "readSize";
 		options.queue = false;
 		options.complete = done;
 
@@ -14843,7 +14843,7 @@
 		// Animate
 		if (scale === "content" || scale === "both") { // Scale the children
 
-			// Add margins/font-size
+			// Add margins/font-readSize
 			vProps = vProps.concat([ "marginTop", "marginBottom" ]).concat(cProps);
 			hProps = hProps.concat([ "marginLeft", "marginRight" ]);
 			props2 = props0.concat(vProps).concat(hProps);

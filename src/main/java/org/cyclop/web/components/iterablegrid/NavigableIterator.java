@@ -19,8 +19,10 @@ package org.cyclop.web.components.iterablegrid;
 import net.jcip.annotations.NotThreadSafe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
@@ -28,7 +30,9 @@ class NavigableIterator<E> implements Iterator<E> {
 
 	private final Iterator<E> wrapped;
 
-	private List<E> read = new ArrayList<>();
+	private List<E> cache = new ArrayList<>();
+
+	private Set<E> read = new HashSet<>();
 
 	private int nextIndex = 0;
 
@@ -46,33 +50,42 @@ class NavigableIterator<E> implements Iterator<E> {
 		this.count = count;
 	}
 
+	/**
+	 * @return true if there is more data to be cache for current setup done by {@link #prepare(int, int)}
+	 */
 	@Override
 	public boolean hasNext() {
-		boolean next = count > 0 && (wrapped.hasNext() || nextIndex < read.size());
+		boolean next = count > 0 && (wrapped.hasNext() || nextIndex < cache.size());
 		return next;
 	}
 
-	public boolean reachedEnd() {
+	public boolean hasMoreData() {
 		return wrapped.hasNext();
 	}
 
 	@Override
 	public E next() {
 		E next;
-		if (nextIndex < read.size()) {
-			next = read.get(nextIndex);
+		if (nextIndex < cache.size()) {
+			next = cache.get(nextIndex);
 		} else {
 			if (!wrapped.hasNext()) {
 				next = null;
 			} else {
+
+				// user could skipp single page, but we have to read all elements from iterator and they have
+				// to correspond to index position
+				iterateToIndex(nextIndex);
+
 				next = wrapped.next();
-				read.add(next);
+				cache.add(next);
 			}
 		}
 
 		if (next != null) {
 			count--;
 			nextIndex++;
+			read.add(next);
 		}
 		return next;
 	}
@@ -82,8 +95,29 @@ class NavigableIterator<E> implements Iterator<E> {
 		wrapped.remove();
 	}
 
-	public int getReadElementsCount() {
+	public int iterateToIndex(int toIndex) {
+		int rsize = cache.size();
+		if (toIndex <= rsize) {
+			return toIndex;
+		}
+
+		int index = rsize + 1;
+		for (; index < toIndex; index++) {
+			if (wrapped.hasNext()) {
+				cache.add(wrapped.next());
+			} else {
+				break;
+			}
+		}
+		return index;
+	}
+
+	public int readSize() {
 		return read.size();
+	}
+
+	public int maxSize() {
+		return cache.size();
 	}
 
 }
