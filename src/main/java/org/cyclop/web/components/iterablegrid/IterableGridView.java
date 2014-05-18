@@ -31,4 +31,10 @@ public abstract class IterableGridView<T> extends GridView<T> {
 		dataProvider.setCurrentPage(page);
 		super.setCurrentPage(page);
 	}
+
+	@Override
+	public void setItemsPerPage(long items) {
+		dataProvider.setItemsPerPage(items);
+		super.setItemsPerPage(items);
+	}
 }

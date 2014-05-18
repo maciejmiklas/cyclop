@@ -85,6 +85,7 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 
 	void setItemsPerPage(long itemsPerPage) {
 		this.itemsPerPage = itemsPerPage;
+		reset();
 	}
 
 	void setCurrentPage(long currentPage) {

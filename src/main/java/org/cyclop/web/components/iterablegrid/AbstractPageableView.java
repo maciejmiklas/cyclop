@@ -29,6 +29,7 @@ import java.util.NoSuchElementException;
 // This class has been copied from wicket 6.14.0
 // Only minimal modifications has been made in order to simplify future updates to new wicket version, those are:
 // - removed final from method setCurrentPage(long) - method can be overwritten now
+// - removed final from method setItemsPerPage(long) - method can be overwritten now
 // - AbstractPageableView is package protected
 // ####################################################################################################################
 
@@ -158,7 +159,7 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	 *
 	 * @param items
 	 */
-	public final void setItemsPerPage(long items) {
+	public void setItemsPerPage(long items) {
 		if (items < 1) {
 			throw new IllegalArgumentException("Argument [itemsPerPage] cannot be less than 1");
 		}

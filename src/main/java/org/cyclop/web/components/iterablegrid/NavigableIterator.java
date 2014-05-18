@@ -73,8 +73,8 @@ class NavigableIterator<E> implements Iterator<E> {
 				next = null;
 			} else {
 
-				// Call on NavigableIterator#prepare(...) could skipp some elements, so we have to go to right index
-				// on wrapped iterator
+				// Call on NavigableIterator#prepare(...) could skipp some elements, this has to be reflected in
+				// iterator position on #wrapper
 				iterateToIndex(nextIndex);
 
 				next = wrapped.next();
