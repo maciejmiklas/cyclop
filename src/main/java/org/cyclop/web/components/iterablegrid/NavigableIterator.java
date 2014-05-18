@@ -30,9 +30,9 @@ class NavigableIterator<E> implements Iterator<E> {
 
 	private final Iterator<E> wrapped;
 
-	private List<E> cache = new ArrayList<>();
+	private final List<E> cache = new ArrayList<>();
 
-	private Set<E> read = new HashSet<>();
+	private final Set<E> read = new HashSet<>();
 
 	private int nextIndex = 0;
 
@@ -73,8 +73,8 @@ class NavigableIterator<E> implements Iterator<E> {
 				next = null;
 			} else {
 
-				// user could skipp single page, but we have to read all elements from iterator and they have
-				// to correspond to index position
+				// Call on NavigableIterator#prepare(...) could skipp some elements, so we have to go to right index
+				// on wrapped iterator
 				iterateToIndex(nextIndex);
 
 				next = wrapped.next();
