@@ -14,6 +14,10 @@ Package: `org.cyclop.web.components.iterablegrid`
 This is the Wicket's `GridView` that does not work with `IDataProvider` but with `IterableDataProvider`. New data  provider has a bit different interface - it requires only plain Iterator and a factory method to create models for elements  returned by the iterator:
 
 ``` java
+final List<String> myGridData = new ArrayList<>();
+myGridData.add("value 1");
+myGridData.add("value 2");
+
 IterableDataProvider<String> iterableDataProvider = new IterableDataProvider<String>(10) {
 	@Override
 	protected Iterator<String> iterator() {
