@@ -84,8 +84,8 @@ public class QueryResultVerticalPanel extends Panel {
 		setOutputMarkupPlaceholderTag(true);
 
 		cqlResultTextModel = new CqlResultTextModel();
-		rowDataProvider = new RowDataProvider();
 		columnsModel = new ColumnsModel();
+		rowDataProvider = new RowDataProvider();
 
 		cqlResultText = new Label("cqlResultText", cqlResultTextModel);
 		cqlResultText.setVisible(false);
@@ -356,15 +356,13 @@ public class QueryResultVerticalPanel extends Panel {
 
 		public void replaceModel(CqlQueryResult result) {
 			this.result = result;
-			reset();
+			replaceModel();
 		}
 
 		@Override
 		protected Iterator<Row> iterator() {
 			CqlQueryResult.RowIterator iterator = result == null ? CqlQueryResult.RowIterator.EMPTY : result.iterator();
-
 			columnsModel.updateResult(iterator.rowMetadata);
-
 			return iterator;
 		}
 

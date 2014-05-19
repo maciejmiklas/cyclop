@@ -33,51 +33,46 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 
 	protected IterableDataProvider(long itemsPerPage) {
 		this.itemsPerPage = itemsPerPage;
+		replaceModel();
 	}
 
 	@Override
 	public final long size() {
 		long size;
 
-		// first page view, before calling iterator
-		if (iterator == null) {
-			size = itemsPerPage + 1;
+		// uer goes back on pager, like now he is on page 5 and clicks on 3
+		if (lastPage > currentPage) {
+			size = iterator.readSize();
 
+			// there is no more data to be read - we are on last page
+		} else if (!iterator.hasMoreData()) {
+			size = iterator.maxSize();
+
+			// user is not on page 2 and click on next page - 3. Pager will show link for page 4, but not for
+			// page 5 - this will first happen when user clicks on page 4. In order to show link for only
+			// following page we have to calculate size right. This is the amount of elements up to
+			// current page (3) plus element that can be displayed on next page.
+			// If the current page is last page, the link for next page mus not be shown - this is handled by
+			//  iterateToIndex(...) - it narrows calculated size to maximum allowed value.
 		} else {
-
-			// uer goes back on pager, like now he is on page 5 and clicks on 3
-			if (lastPage > currentPage) {
-				size = iterator.readSize();
-
-				// there is no more data to be read - we are on last page
-			} else if (!iterator.hasMoreData()) {
-				size = iterator.maxSize();
-
-				// user is not on page 2 and click on next page - 3. Pager will show link for page 4, but not for
-				// page 5 - this will first happen when user clicks on page 4. In order to show link for only
-				// following page we have to calculate size right. This is the amount of elements up to
-				// current page (3) plus element that can be displayed on next page.
-				// If the current page is last page, the link for next page mus not be shown - this is handled by
-				//  iterateToIndex(...) - it narrows calculated size to maximum allowed value.
-			} else {
-				size = iterator.readSize() + itemsPerPage + 1;
-				size = iterator.iterateToIndex((int) size + 1) - 1;
-			}
+			size = iterator.readSize() + itemsPerPage + 1;
+			size = iterator.iterateToIndex((int) size + 1) - 1;
 		}
 		return size;
 	}
 
-	public void reset() {
+	void reset() {
 		lastPage = 0;
 		currentPage = 0;
-		iterator = null;
+	}
+
+	public void replaceModel() {
+		iterator = new NavigableIterator(iterator());
+		reset();
 	}
 
 	@Override
 	public final Iterator<T> iterator(long first, long count) {
-		if (iterator == null) {
-			iterator = new NavigableIterator(iterator());
-		}
 		iterator.prepare((int) first, (int) count);
 		lastPage = currentPage;
 		return iterator;
