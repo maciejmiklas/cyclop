@@ -37,14 +37,16 @@ IterableDataProvider<String> iterableDataProvider = new IterableDataProvider<Str
 IterableGridView<String> myGrid = new IterableGridView<String>("myGrid", iterableDataProvider) {
 	@Override
 	protected void populateEmptyItem(Item<String> item) {
-		// do something ....
+		item.add(new Label("myValue"));
 	}
 
 	@Override
-	protected void populateItem(Item<String> components) {
-		// do something ....
+	protected void populateItem(Item<String> item) {
+		item.add(new Label("myValue", item.getModelObject()));
 	}
 };
+
+add(myGrid);
 
 ```
 
