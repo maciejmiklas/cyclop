@@ -119,19 +119,19 @@ abstract class DataViewBase<T> extends AbstractPageableView<T> {
 			items = count > 0 ? dataProvider.iterator(offset, count) : null;
 		}
 
-		/** @see java.util.Iterator#remove() */
+		/** @see Iterator#remove() */
 		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
 
-		/** @see java.util.Iterator#hasNext() */
+		/** @see Iterator#hasNext() */
 		@Override
 		public boolean hasNext() {
 			return items != null && items.hasNext() && (index < max);
 		}
 
-		/** @see java.util.Iterator#next() */
+		/** @see Iterator#next() */
 		@Override
 		public IModel<T> next() {
 			index++;

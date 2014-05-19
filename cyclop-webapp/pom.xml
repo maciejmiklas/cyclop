@@ -6,9 +6,9 @@
 
 	<groupId>org.cyclop</groupId>
 	<artifactId>cyclop</artifactId>
-	<version>1.4.0</version>
+	<version>1.4.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<description>Cyclop - Cassandra-CQL3 lightweight web edtor</description>
+	<description>Cyclop is a web based editor for Cassandra Query Language</description>
 	<url>https://github.com/maciejmiklas/cyclop</url>
 
 	<properties>
@@ -63,6 +63,11 @@
 
 	<dependencies>
 		<!-- ### Wicket ### -->
+		<dependency>
+			<groupId>org.cyclop</groupId>
+			<artifactId>cyclop-wicket-components</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-auth-roles</artifactId>
