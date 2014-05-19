@@ -89,7 +89,7 @@ public class DataConverter {
 		if (val == null) {
 			return null;
 		}
-		String converted = null;
+		String converted;
 		if (val instanceof String) {
 			converted = val.toString();
 

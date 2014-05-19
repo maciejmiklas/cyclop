@@ -37,4 +37,5 @@ public abstract class IterableGridView<T> extends GridView<T> {
 		dataProvider.setItemsPerPage(items);
 		super.setItemsPerPage(items);
 	}
+
 }

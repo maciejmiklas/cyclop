@@ -17,13 +17,14 @@
 package org.cyclop.service.converter;
 
 import org.cyclop.test.AbstractTestCase;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
-import java.util.Date;
+import java.sql.Date;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -50,7 +51,6 @@ public class TestDataConverter extends AbstractTestCase {
 		assertEquals("localhost/127.0.0.1", converter.convert(InetAddress.getLoopbackAddress()));
 	}
 
-
 	@Test
 	public void testConvert_UUID() {
 		UUID id = UUID.randomUUID();
@@ -59,7 +59,8 @@ public class TestDataConverter extends AbstractTestCase {
 
 	@Test
 	public void testConvert_Date() {
-		assertEquals("2014-03-03 08:33:46.821", converter.convert(new Date(1393832026821L)));
+		String actual = converter.convert(DateTime.parse("2014-03-03T08:33:46.821"));
+		assertEquals("2014-03-03 08:33:46.821", actual);
 	}
 
 	@Test

@@ -26,7 +26,7 @@ import java.util.Set;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
-class NavigableIterator<E> implements Iterator<E> {
+final class NavigableIterator<E> implements Iterator<E> {
 
 	private final Iterator<E> wrapped;
 
