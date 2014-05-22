@@ -6,15 +6,15 @@ This project contains wicket components. It has been tested with wicket 6.15.0
 ## Bootstrap Paging Navigator
 Package: `org.cyclop.web.components.pagination`
 
-This is Wicket's `AjaxPagingNavigator` which view has been adopted to Bootstrap 3 HTML structure. This blog article contains implementation details: http://maciej-miklas.blogspot.de/2013/10/wicket-6-paging-navigator-for-bootstrap.html
+This is Wicket's `AjaxPagingNavigator` which view has been adopted to Bootstrap 3 HTML structure. It also supports Iterable Grid View.
 
-It also supports Iterable Grid View.
+This blog article contains implementation details: http://maciej-miklas.blogspot.de/2013/10/wicket-6-paging-navigator-for-bootstrap.html
 
 ## Iterable Grid View
 Package: `org.cyclop.web.components.iterablegrid`
 
-This Grid View is based on Wicket's `GridView`, however it does not work with `IDataProvider` but with
-new data provider: `IterableDataProvider`. This one relies only on plain java iterator, size information is not needed, and there also there is no need to create iterators for each page.
+Iterable Grid View is based on Wicket's `GridView`, however it does not work with `IDataProvider` but with
+ `IterableDataProvider`. This new data provider relies only on plain java iterator - size information is not needed, and there is also no need to create range iterators for each page.
 
 ``` java
 final List<String> myGridData = new ArrayList<>();
@@ -51,7 +51,6 @@ IterableGridView<String> myGrid = new IterableGridView<String>("myGrid", iterabl
 
 add(myGrid);
 
-
 myGrid.setItemsPerPage(10);
 
 // you have to use custom pager and not AjaxPagingNavigator
@@ -59,8 +58,6 @@ IterablePagingNavigator pager = new IterablePagingNavigator("rowNamesListPager",
 resultTable.add(pager);
 
 ```
-
-
 
 Here you can find implementation example: https://github.com/maciejmiklas/cyclop/tree/master/cyclop-webapp/src/main/java/org/cyclop/web/panels/queryeditor/verticalresult
 
