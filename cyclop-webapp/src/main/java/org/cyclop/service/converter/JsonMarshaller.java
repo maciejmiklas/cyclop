@@ -48,14 +48,14 @@ public class JsonMarshaller {
 
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-				AnnotationIntrospector introspectorPair = new AnnotationIntrospector.Pair(
+				AnnotationIntrospector introspector = new AnnotationIntrospector.Pair(
 						new JaxbAnnotationIntrospector(), new JacksonAnnotationIntrospector());
 
 				SerializationConfig sc = mapper.getSerializationConfig()
 						.withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-				mapper.setSerializationConfig(sc.withAnnotationIntrospector(introspectorPair));
+				mapper.setSerializationConfig(sc.withAnnotationIntrospector(introspector));
 				mapper.setDeserializationConfig(
-						mapper.getDeserializationConfig().withAnnotationIntrospector(introspectorPair));
+						mapper.getDeserializationConfig().withAnnotationIntrospector(introspector));
 				return mapper;
 			}
 		};
@@ -67,7 +67,7 @@ public class JsonMarshaller {
 			return null;
 		}
 
-		T unmarshalObj = null;
+		T unmarshalObj;
 		try {
 			unmarshalObj = objectMapper.get().readValue(input, clazz);
 		} catch (IOException e) {
@@ -91,9 +91,9 @@ public class JsonMarshaller {
 		}
 
 		try {
-			String marshalled = new String(marshalBytes, "UTF-8");
-			LOG.trace("Marshalled JSON from {} to {}", obj, marshalled);
-			return marshalled;
+			String marshal = new String(marshalBytes, "UTF-8");
+			LOG.trace("Marshalled JSON from {} to {}", obj, marshal);
+			return marshal;
 		} catch (UnsupportedEncodingException e) {
 			throw new ServiceException(
 					"UnsupportedEncodingException marshalling Json stream: " + e.getMessage() + " - input:'" + obj +

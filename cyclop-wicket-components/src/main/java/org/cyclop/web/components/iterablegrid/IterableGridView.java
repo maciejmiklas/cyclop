@@ -38,4 +38,8 @@ public abstract class IterableGridView<T> extends GridView<T> {
 		super.setItemsPerPage(items);
 	}
 
+	public boolean hasMoreData() {
+		return dataProvider.hasMoreData();
+	}
+
 }

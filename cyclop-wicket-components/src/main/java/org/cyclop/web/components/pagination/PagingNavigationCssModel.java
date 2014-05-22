@@ -22,20 +22,23 @@ import org.apache.wicket.model.IModel;
 import java.io.Serializable;
 
 /** @author Maciej Miklas */
-class PageLinkIncrementCssModel implements IModel<String>, Serializable {
+class PagingNavigationCssModel implements IModel<String>, Serializable {
+
+	protected final long pageNumber;
 
 	protected final IPageable pageable;
 
-	private final long pageNumber;
+	private final String disableCss;
 
-	public PageLinkIncrementCssModel(IPageable pageable, long pageNumber) {
-		this.pageable = pageable;
+	public PagingNavigationCssModel(IPageable pageable, long pageNumber, String disableCss) {
 		this.pageNumber = pageNumber;
+		this.pageable = pageable;
+		this.disableCss = disableCss;
 	}
 
 	@Override
 	public String getObject() {
-		return isEnabled() ? "" : "disabled";
+		return isEnabled() ? "" : disableCss;
 	}
 
 	@Override
@@ -47,18 +50,24 @@ class PageLinkIncrementCssModel implements IModel<String>, Serializable {
 	}
 
 	public boolean isEnabled() {
-		if (pageNumber < 0) {
-			return !isFirst();
-		} else {
-			return !isLast();
+		return getPageNumber() != pageable.getCurrentPage();
+	}
+
+	private long getPageNumber() {
+		long idx = pageNumber;
+		if (idx < 0) {
+			idx = pageable.getPageCount() + idx;
 		}
+
+		if (idx > (pageable.getPageCount() - 1)) {
+			idx = pageable.getPageCount() - 1;
+		}
+
+		if (idx < 0) {
+			idx = 0;
+		}
+
+		return idx;
 	}
 
-	public boolean isFirst() {
-		return pageable.getCurrentPage() <= 0;
-	}
-
-	public boolean isLast() {
-		return pageable.getCurrentPage() >= (pageable.getPageCount() - 1);
-	}
 }

@@ -83,6 +83,10 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 		reset();
 	}
 
+	public boolean hasMoreData() {
+		return iterator.hasMoreData();
+	}
+
 	void setCurrentPage(long currentPage) {
 		this.currentPage = currentPage;
 	}

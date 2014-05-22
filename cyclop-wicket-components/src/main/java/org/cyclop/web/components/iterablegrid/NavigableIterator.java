@@ -30,8 +30,10 @@ final class NavigableIterator<E> implements Iterator<E> {
 
 	private final Iterator<E> wrapped;
 
+	/** contains all elements in order returned by iterator */
 	private final List<E> cache = new ArrayList<>();
 
+	/** Contains unique elements that has been read by #next() */
 	private final Set<E> read = new HashSet<>();
 
 	private int nextIndex = 0;

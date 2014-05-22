@@ -76,7 +76,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 	}
 
 	private void appendRow(StringBuilder buf, Row row, List<CqlExtendedColumnName> cols) {
-		LOG.debug("Apending next row");
+		LOG.debug("Appending next row");
 		Iterator<CqlExtendedColumnName> it = cols.iterator();
 		while (it.hasNext()) {
 			CqlExtendedColumnName column = it.next();

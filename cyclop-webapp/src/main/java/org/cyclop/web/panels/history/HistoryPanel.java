@@ -42,7 +42,7 @@ import org.cyclop.model.QueryEntry;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.queryprotocoling.HistoryService;
-import org.cyclop.service.search.FilterFieldAccessor;
+import org.cyclop.service.search.FieldAccessor;
 import org.cyclop.service.search.SearchService;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.common.AjaxReloadSupport;
@@ -80,7 +80,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private ImmutableSet<String> filterKeywords;
 
-	private final static QueryEntryFilterFieldAccessor FILTER_ACCESSOR = new QueryEntryFilterFieldAccessor();
+	private final static QueryEntryFieldAccessor FILTER_ACCESSOR = new QueryEntryFieldAccessor();
 
 	private final static KeywordDecorator KEYWORD_DECORATOR = new KeywordDecorator();
 
@@ -289,7 +289,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 		}
 	}
 
-	private final static class QueryEntryFilterFieldAccessor implements FilterFieldAccessor<QueryEntry> {
+	private final static class QueryEntryFieldAccessor implements FieldAccessor<QueryEntry> {
 		@Override
 		public String getText(QueryEntry obj) {
 			return obj.query.partLc;

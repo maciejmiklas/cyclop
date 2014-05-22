@@ -22,13 +22,13 @@ import org.apache.wicket.model.IModel;
 import java.io.Serializable;
 
 /** @author Maciej Miklas */
-class PageLinkIncrementCssModel implements IModel<String>, Serializable {
+class NavigationIncrementLinkCssModel implements IModel<String>, Serializable {
 
 	protected final IPageable pageable;
 
 	private final long pageNumber;
 
-	public PageLinkIncrementCssModel(IPageable pageable, long pageNumber) {
+	public NavigationIncrementLinkCssModel(IPageable pageable, long pageNumber) {
 		this.pageable = pageable;
 		this.pageNumber = pageNumber;
 	}
@@ -47,11 +47,13 @@ class PageLinkIncrementCssModel implements IModel<String>, Serializable {
 	}
 
 	public boolean isEnabled() {
+		boolean enabled;
 		if (pageNumber < 0) {
-			return !isFirst();
+			enabled = !isFirst();
 		} else {
-			return !isLast();
+			enabled = !isLast();
 		}
+		return enabled;
 	}
 
 	public boolean isFirst() {

@@ -21,5 +21,5 @@ import org.cyclop.model.FilterResult;
 
 public interface SearchService<T> {
 
-	FilterResult<T> filter(ImmutableCollection<T> input, FilterFieldAccessor<T> accessor, String... keywords);
+	FilterResult<T> filter(ImmutableCollection<T> input, FieldAccessor<T> accessor, String... keywords);
 }

@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.cyclop.model.FilterResult;
-import org.cyclop.service.search.FilterFieldAccessor;
+import org.cyclop.service.search.FieldAccessor;
 import org.cyclop.service.search.SearchService;
 import org.cyclop.validation.EnableValidation;
 
@@ -42,7 +42,7 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 	@Override
 	public
 	@NotNull
-	FilterResult<T> filter(@NotNull ImmutableCollection<T> input, @NotNull FilterFieldAccessor<T> accessor,
+	FilterResult<T> filter(@NotNull ImmutableCollection<T> input, @NotNull FieldAccessor<T> accessor,
 						   @NotNull String... keywords) {
 
 		ImmutableSet<String> normKeywords = normalize(keywords);
@@ -109,7 +109,6 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 		public final String keyLc;
 
 		public WeightSortingKey(int weight, String keyLc) {
-			super();
 			this.weight = weight;
 			this.keyLc = keyLc;
 		}

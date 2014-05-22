@@ -16,6 +16,6 @@
  */
 package org.cyclop.service.search;
 
-public interface FilterFieldAccessor<T> {
+public interface FieldAccessor<T> {
 	String getText(T obj);
 }

@@ -65,7 +65,7 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
 				// add css for enable/disable link
 				long pageIndex = getStartIndex() + iteration;
-				item.add(new AttributeModifier("class", new PageLinkCssModel(pageable, pageIndex, "active")));
+				item.add(new AttributeModifier("class", new PagingNavigationCssModel(pageable, pageIndex, "active")));
 
 				return item;
 			}
@@ -79,7 +79,7 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
 		// add css for enable/disable link
 		long pageIndex = pageable.getCurrentPage() + pageNumber;
-		navCont.add(new AttributeModifier("class", new PageLinkCssModel(pageable, pageIndex, "disabled")));
+		navCont.add(new AttributeModifier("class", new PagingNavigationLinkCssModel(pageable, pageIndex, "disabled")));
 
 		// change original wicket-link, so that it always generates href
 		navCont.add(new AjaxPagingNavigationLink(id, pageable, pageNumber) {
@@ -97,7 +97,7 @@ public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
 		// add css for enable/disable link
 		long pageIndex = pageable.getCurrentPage() + increment;
-		navCont.add(new AttributeModifier("class", new PageLinkIncrementCssModel(pageable, pageIndex)));
+		navCont.add(new AttributeModifier("class", new NavigationIncrementLinkCssModel(pageable, pageIndex)));
 
 		// change original wicket-link, so that it always generates href
 		navCont.add(new AjaxPagingNavigationIncrementLink(id, pageable, increment) {

@@ -47,7 +47,7 @@ public class TestSearchService extends AbstractTestCase {
 
 	private final static ImmutableSet<CqlQuery> QUERY_LIST = prepare();
 
-	private final static FilterFieldAccessorCq FAC = new FilterFieldAccessorCq();
+	private final static FieldAccessorCq FAC = new FieldAccessorCq();
 
 	@Test
 	public void testFilter_KeywordsToShort() {
@@ -159,7 +159,7 @@ public class TestSearchService extends AbstractTestCase {
 		return res.build();
 	}
 
-	private final static class FilterFieldAccessorCq implements FilterFieldAccessor<CqlQuery> {
+	private final static class FieldAccessorCq implements FieldAccessor<CqlQuery> {
 
 		@Override
 		public String getText(CqlQuery obj) {
