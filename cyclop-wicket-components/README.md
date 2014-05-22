@@ -13,8 +13,8 @@ It also supports Iterable Grid View.
 ## Iterable Grid View
 Package: `org.cyclop.web.components.iterablegrid`
 
-This Grid View is based on Wicket's `GridView`, however it does not work with `IDataProvider` but with
-new data provider: `IterableDataProvider`. This one relies only on plain java iterator, size information is not needed, and there also there is no need to create iterators for each page.
+Iterable Grid View is based on Wicket's `GridView`, however it does not work with `IDataProvider` but with
+ `IterableDataProvider`. This one relies only on plain java iterator - size information is not needed, and there also there is no need to create range iterators for each page.
 
 ``` java
 final List<String> myGridData = new ArrayList<>();
