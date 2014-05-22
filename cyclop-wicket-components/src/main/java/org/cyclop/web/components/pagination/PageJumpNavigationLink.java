@@ -9,7 +9,7 @@ import org.cyclop.web.components.iterablegrid.IterableGridView;
  *
  * @author Maciej Miklas
  */
-public class PageJumpNavigationLink extends AjaxPagingNavigationLink {
+class PageJumpNavigationLink extends AjaxPagingNavigationLink {
 
 	public PageJumpNavigationLink(String id, IPageable pageable, long pageNumber) {
 		super(id, pageable, pageNumber);

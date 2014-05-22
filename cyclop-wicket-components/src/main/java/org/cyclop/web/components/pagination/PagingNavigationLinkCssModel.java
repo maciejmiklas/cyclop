@@ -4,7 +4,7 @@ import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.cyclop.web.components.iterablegrid.IterableGridView;
 
 /** @author Maciej Miklas */
-public class PagingNavigationLinkCssModel extends PagingNavigationCssModel {
+class PagingNavigationLinkCssModel extends PagingNavigationCssModel {
 
 	public PagingNavigationLinkCssModel(IPageable pageable, long pageNumber, String css) {
 		super(pageable, pageNumber, css);

@@ -48,6 +48,13 @@ IterableGridView<String> myGrid = new IterableGridView<String>("myGrid", iterabl
 
 add(myGrid);
 
+
+myGrid.setItemsPerPage(10);
+
+// you have to use custom pager and not AjaxPagingNavigator
+IterablePagingNavigator pager = new IterablePagingNavigator("rowNamesListPager", rowNamesList);
+resultTable.add(pager);
+
 ```
 
 
