@@ -164,7 +164,6 @@ public class TestQueryService extends AbstractTestCase {
 		try (QueryHistory.HistoryIterator iterator = hs.read().iterator()) {
 			assertEquals(query, iterator.next().query);
 		}
-		assertEquals(50, res.rowsSize);
 
 		CqlRowMetadata rowMetadata = res.iterator().rowMetadata;
 		assertEquals(4, rowMetadata.commonColumns.size());
@@ -184,9 +183,12 @@ public class TestQueryService extends AbstractTestCase {
 		assertTrue(comColsStr, rowMetadata.commonColumns.contains(
 				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()), "deesc")));
 
+		int rowsCnt = 0;
 		for (Row row : res) {
+			rowsCnt++;
 			assertEquals("TEST_SET_1", row.getString("deesc"));
 		}
+		assertEquals(50, rowsCnt);
 	}
 
 	@Test(expected = BeanValidationException.class)
@@ -265,7 +267,6 @@ public class TestQueryService extends AbstractTestCase {
 	public void testExecute_SimplePkWithDynamicColumn() {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "USE CqlDemo"));
 		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from MyBooks where pages=2212"));
-		assertEquals(100, res.rowsSize);
 
 		CqlRowMetadata rowMetadata = res.iterator().rowMetadata;
 		assertTrue(res.toString(), rowMetadata.dynamicColumns.contains(
@@ -278,16 +279,20 @@ public class TestQueryService extends AbstractTestCase {
 		assertTrue(comColsStr, rowMetadata.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.set(DataType.varchar())),
 						"authors")));
 
-		assertTrue(comColsStr, rowMetadata.commonColumns
-				.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.cint()), "pages")));
+		assertTrue(comColsStr, rowMetadata.commonColumns.contains(
+				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.cint()), "pages")));
 
 		assertTrue(comColsStr, rowMetadata.commonColumns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
 				CqlDataType.create(DataType.map(DataType.varchar(), DataType.cdouble())), "price")));
 
+		int rowsSize = 0;
 		for (Row row : res) {
+			rowsSize++;
 			int idx = row.getInt("idx");
 			assertEquals("Midnight Rain-" + idx, row.getString("title"));
 		}
+
+		assertEquals(100, rowsSize);
 
 	}
 }

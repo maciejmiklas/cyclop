@@ -49,17 +49,14 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
 	public final long runTime;
 
-	public final int resultsSize;
-
-	public QueryEntry(CqlQuery query, long runTime, int resultsSize) {
-		this(query, new DateTime().toDateTime(DateTimeZone.UTC), runTime, resultsSize);
+	public QueryEntry(CqlQuery query, long runTime) {
+		this(query, new DateTime().toDateTime(DateTimeZone.UTC), runTime);
 	}
 
-	public QueryEntry(CqlQuery query, DateTime executedOnUtc, long runTime, int resultsSize) {
+	public QueryEntry(CqlQuery query, DateTime executedOnUtc, long runTime) {
 		this.query = query;
 		this.executedOnUtc = executedOnUtc;
 		this.runTime = runTime;
-		this.resultsSize = resultsSize;
 	}
 
 	@Override
@@ -98,13 +95,13 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 	@XmlRootElement
 	@XmlAccessorType(XmlAccessType.FIELD)
 	public final static class QueryHistoryEntryJaxb {
-		private CqlQuery query;
-
-		private DateTime executedOn;
-
 		public long runTime;
 
 		public int resultsSize;
+
+		private CqlQuery query;
+
+		private DateTime executedOn;
 
 		@Override
 		public String toString() {
@@ -122,7 +119,7 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 				return null;
 			}
 
-			QueryEntry entry = new QueryEntry(jaxb.query, jaxb.executedOn, jaxb.runTime, jaxb.resultsSize);
+			QueryEntry entry = new QueryEntry(jaxb.query, jaxb.executedOn, jaxb.runTime);
 			return entry;
 		}
 
@@ -135,7 +132,6 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 			jaxb.executedOn = histObj.executedOnUtc;
 			jaxb.query = histObj.query;
 			jaxb.runTime = histObj.runTime;
-			jaxb.resultsSize = histObj.resultsSize;
 			return jaxb;
 		}
 	}

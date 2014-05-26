@@ -88,7 +88,7 @@ class ImportWorker implements Callable<Void> {
 
 			long runTime = System.currentTimeMillis() - startTime;
 			if (iconfig.isUpdateHistory()) {
-				QueryEntry entry = new QueryEntry(query, runTime, 0);
+				QueryEntry entry = new QueryEntry(query, runTime);
 				history.add(entry);
 			}
 			resultWriter.success(query, runTime);

@@ -172,7 +172,7 @@ class QueryServiceImpl implements QueryService {
 		long startTime = System.currentTimeMillis();
 		execute(query.part);
 		if (updateHistory) {
-			updateHistory(query, 0, startTime);
+			updateHistory(query, startTime);
 		}
 	}
 
@@ -182,7 +182,7 @@ class QueryServiceImpl implements QueryService {
 		CqlQueryResult result = executeIntern(query);
 
 		if (updateHistory) {
-			updateHistory(query, result.rowsSize, startTime);
+			updateHistory(query, startTime);
 		}
 		return result;
 	}
@@ -247,9 +247,9 @@ class QueryServiceImpl implements QueryService {
 		return result;
 	}
 
-	private void updateHistory(CqlQuery query, int resultSize, long startTime) {
+	private void updateHistory(CqlQuery query, long startTime) {
 		long runTime = System.currentTimeMillis() - startTime;
-		QueryEntry entry = new QueryEntry(query, runTime, resultSize);
+		QueryEntry entry = new QueryEntry(query, runTime);
 		historyService.addAndStore(entry);
 	}
 

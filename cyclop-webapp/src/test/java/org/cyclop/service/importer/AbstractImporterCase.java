@@ -171,7 +171,6 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 
 			assertEquals(1, res.iterator().rowMetadata.commonColumns.size());
 			assertEquals(0, res.iterator().rowMetadata.dynamicColumns.size());
-			assertEquals(1, res.rowsSize);
 
 			for (Row row : res) {
 				Set<Integer> impcol = row.getSet("impcol", Integer.class);

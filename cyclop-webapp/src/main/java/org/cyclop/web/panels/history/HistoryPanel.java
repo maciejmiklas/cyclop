@@ -172,7 +172,6 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 				populateExecutedOn(item, entry);
 				populateRuntime(item, entry);
-				populateResultsSize(item, entry);
 				populateQuery(item, entry);
 			}
 		};
@@ -213,11 +212,6 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 		item.add(queryLabel);
 	}
 
-	private void populateResultsSize(ListItem<QueryEntry> item, QueryEntry entry) {
-		String dateStr = Long.toString(entry.resultsSize);
-		Label executedOn = new Label("resultsSize", dateStr);
-		item.add(executedOn);
-	}
 
 	private void populateRuntime(ListItem<QueryEntry> item, QueryEntry entry) {
 		String dateStr = Long.toString(entry.runTime);

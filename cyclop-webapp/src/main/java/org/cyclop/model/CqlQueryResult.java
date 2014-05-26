@@ -41,9 +41,6 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 	/** could be null, it not found in result, or in case of error while reading meta data info */
 	public final transient CqlPartitionKey partitionKey;
 
-	// TODO this is estimated value - is it always correct?
-	public final int rowsSize;
-
 	/** all columns returned by db-query, in exact the same order */
 	@NotNull
 	@Valid
@@ -69,7 +66,6 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 		this.columns = ImmutableList.of();
 		this.rows = ImmutableList.of();
 		this.partitionKey = null;
-		this.rowsSize = -1;
 	}
 
 	public CqlQueryResult(ImmutableList<CqlExtendedColumnName> commonColumns,
@@ -81,13 +77,11 @@ public final class CqlQueryResult implements Serializable, Iterable<Row> {
 		this.columns = columns;
 		this.rows = rows;
 		this.partitionKey = partitionKey;
-		this.rowsSize = rows.size();
 	}
 
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		in.defaultReadObject();
 		SerializationUtil.setFiled(this, "rows", ImmutableList.of());
-		SerializationUtil.setFiled(this, "rowsSize", 0);
 	}
 
 	public boolean isEmpty() {
