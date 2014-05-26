@@ -16,10 +16,8 @@
  */
 package org.cyclop.web.panels.queryeditor.verticalresult;
 
-import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.injection.Injector;
@@ -30,8 +28,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.cyclop.model.CqlColumnType;
-import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
@@ -111,7 +107,7 @@ public class QueryResultVerticalPanel extends Panel {
 			return null;
 		}
 
-		if (result.isEmpty()) {
+		if (!result.iterator().hasNext()) {
 			showCqlResultText("Query executed successfully, result is empty");
 		} else {
 			showResultsTable(result);
@@ -140,27 +136,7 @@ public class QueryResultVerticalPanel extends Panel {
 				WebMarkupContainer columnListRow = new WebMarkupContainer("columnListRow");
 				item.add(columnListRow);
 
-				Label columnNameLabel;
-				if (columnName.columnType == CqlColumnType.SEPARATOR) {
-					columnNameLabel = widgetFactory.createForSeparator("columnName");
-					columnListRow.add(new AttributeModifier("class", new IModel<String>() {
-
-						@Override
-						public void detach() {
-						}
-
-						@Override
-						public String getObject() {
-							return "cq-tableRowSeparator";
-						}
-
-						@Override
-						public void setObject(String object) {
-						}
-					}));
-				} else {
-					columnNameLabel = new Label("columnName", columnName.part);
-				}
+				Label columnNameLabel = new Label("columnName", columnName.part);
 				columnListRow.add(columnNameLabel);
 
 				ColumnsModel model = (ColumnsModel) getModel();
@@ -206,7 +182,7 @@ public class QueryResultVerticalPanel extends Panel {
 				Row row = item.getModel().getObject();
 				displayedRows.add(row);
 				CqlQueryResult result = rowDataProvider.result;
-				CqlPartitionKey partitionKey = result.partitionKey;
+				CqlPartitionKey partitionKey = result.rowMetadata.partitionKey;
 
 				Component component;
 				if (partitionKey != null) {
@@ -286,17 +262,7 @@ public class QueryResultVerticalPanel extends Panel {
 
 		public void updateResult(CqlRowMetadata result) {
 			this.result = result;
-			ImmutableList.Builder<CqlExtendedColumnName> allColumnsBuild = ImmutableList.builder();
-			allColumnsBuild.addAll(result.commonColumns);
-			if (!result.commonColumns.isEmpty() && !result.dynamicColumns.isEmpty()) {
-				allColumnsBuild
-						.add(new CqlExtendedColumnName(CqlColumnType.SEPARATOR, CqlDataType.create(DataType.text()),
-								"-"));
-			}
-			allColumnsBuild.addAll(result.dynamicColumns);
-
-			List<CqlExtendedColumnName> allColumns = allColumnsBuild.build();
-			setObject(allColumns);
+			setObject(result.columns);
 		}
 	}
 
@@ -361,9 +327,9 @@ public class QueryResultVerticalPanel extends Panel {
 
 		@Override
 		protected Iterator<Row> iterator() {
-			CqlQueryResult.RowIterator iterator = result == null ? CqlQueryResult.RowIterator.EMPTY : result.iterator();
-			columnsModel.updateResult(iterator.rowMetadata);
-			return iterator;
+			CqlQueryResult res = result == null ? CqlQueryResult.EMPTY : result;
+			columnsModel.updateResult(res.rowMetadata);
+			return res.iterator();
 		}
 
 		@Override

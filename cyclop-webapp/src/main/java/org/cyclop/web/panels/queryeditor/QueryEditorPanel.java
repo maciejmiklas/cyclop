@@ -47,15 +47,13 @@ import javax.inject.Inject;
 @AuthorizeInstantiation(Roles.ADMIN)
 public class QueryEditorPanel extends Panel {
 
+	private final static Logger LOG = LoggerFactory.getLogger(QueryEditorPanel.class);
+
 	private final CqlHelpPanel cqlHelpPanel;
 
 	private final CompletionHintPanel cqlCompletionHintPanel;
 
 	private boolean queryRunning = false;
-
-	private final static Logger LOG = LoggerFactory.getLogger(QueryEditorPanel.class);
-
-	private CqlQueryResult lastQueryResult;
 
 	private CqlQuery lastQuery;
 
@@ -118,7 +116,7 @@ public class QueryEditorPanel extends Panel {
 
 			@Override
 			public void onClickQueryResultExport(AjaxRequestTarget target) {
-				queryResultExport.initiateDownload(target, lastQuery, lastQueryResult);
+				queryResultExport.initiateDownload(target, lastQuery);
 			}
 
 			@Override
@@ -142,7 +140,6 @@ public class QueryEditorPanel extends Panel {
 				try {
 					CqlQueryResult queryResult = queryResultVerticalPanel.executeQuery(query, target);
 					if (queryResult != null) {
-						lastQueryResult = queryResult;
 						lastQuery = query;
 					}
 				} finally {

@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
-import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlColumnValue;
 import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
@@ -60,14 +59,7 @@ public class WidgetFactory {
 	public Component createForColumn(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
 									 String componentId) {
 
-		Component component;
-		if (column.columnType == CqlColumnType.SEPARATOR) {
-			component = createForSeparator(componentId);
-
-		} else {
-			component = createForDataType(row, partitionKey, column, componentId);
-		}
-
+		Component component = createForDataType(row, partitionKey, column, componentId);
 		if (component == null) {
 			component = createForEmptyColumn(componentId);
 		}
@@ -116,11 +108,6 @@ public class WidgetFactory {
 		}
 
 		return comp;
-	}
-
-	public Label createForSeparator(String componentId) {
-		Label component = new Label(componentId, "");
-		return component;
 	}
 
 	private Component createForSingleValue(Row row, CqlPartitionKeyValue cqlPartitionKeyValue,

@@ -66,7 +66,7 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 
 		CqlQuery testCql = new CqlQuery(CqlQueryType.SELECT,
 				"select title from cqldemo.mybooks where id=644556a9-651b-45b3-bd01-cc807c64bd4f");
-		assertTrue(queryService.execute(testCql).isEmpty());
+		assertFalse(queryService.execute(testCql).iterator().hasNext());
 
 		try (InputStream fio = getClass().getResourceAsStream("/cql/testImportLineBreaks.cql")) {
 			ResultConsumer rc = new ResultConsumer();
@@ -101,7 +101,7 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 					"INSERT INTO MyBooks (id,title,pages,            price) VALUES (e1390b2e-1393-490b-aa6e-88874ac1fc88,            'just title. wed dwe....',112291,           {'DE':4,'EU':324})")));
 		}
 
-		assertFalse(queryService.execute(testCql).isEmpty());
+		assertTrue(queryService.execute(testCql).iterator().hasNext());
 		assertEquals("some text in title ;)", queryService.execute(testCql).iterator().next().getString("title"));
 
 	}
@@ -169,8 +169,7 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 			CqlQueryResult res = queryService.execute(new CqlQuery(CqlQueryType.SELECT,
 					"select impcol from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
 
-			assertEquals(1, res.iterator().rowMetadata.commonColumns.size());
-			assertEquals(0, res.iterator().rowMetadata.dynamicColumns.size());
+			assertEquals(1, res.rowMetadata.columns.size());
 
 			for (Row row : res) {
 				Set<Integer> impcol = row.getSet("impcol", Integer.class);
@@ -191,6 +190,6 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 
 		CqlQueryResult res = queryService.execute(new CqlQuery(CqlQueryType.SELECT,
 				"select impcol from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
-		assertTrue(res.toString(), res.isEmpty());
+		assertFalse(res.toString(), res.iterator().hasNext());
 	}
 }

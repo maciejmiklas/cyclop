@@ -100,15 +100,6 @@ pre.cq-helpCqlSyntax {
 	margin: 0 1em 0 0;
 }
 
-.table-hover>tbody>tr.cq-tableRowSeparator:hover>td {
-	background-color: #0a39b3;
-}
-
-.table-hover>tbody>tr.cq-tableRowSeparator, .table-hover>tbody>tr.cq-tableRowSeparator>td {
-	padding: 0.3em;
-	border: 0;
-}
-
 ul.cq-cqlCollectionList {
 	padding-top: 0;
 	padding-bottom: 0;

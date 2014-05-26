@@ -22,7 +22,6 @@ import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryResult;
 import org.cyclop.service.exporter.CsvQueryResultExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +35,13 @@ public class QueryResultExport implements Serializable {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryResultExport.class);
 
+	private final static AppConfig.QueryExport conf = AppConfig.get().queryExport;
+
 	private final Downloader downloader;
-
-	private CqlQuery query;
-
-	private CqlQueryResult lastQueryResult;
 
 	private final CsvQueryResultExporter exporter;
 
-	private final static AppConfig.QueryExport conf = AppConfig.get().queryExport;
+	private CqlQuery query;
 
 	public QueryResultExport(MarkupContainer parent, CsvQueryResultExporter exporter) {
 		this.exporter = exporter;
@@ -52,10 +49,9 @@ public class QueryResultExport implements Serializable {
 		parent.add(downloader);
 	}
 
-	public void initiateDownload(AjaxRequestTarget target, CqlQuery query, CqlQueryResult lastQueryResult) {
+	public void initiateDownload(AjaxRequestTarget target, CqlQuery query) {
 		downloader.initiateDownload(target);
 		this.query = query;
-		this.lastQueryResult = lastQueryResult;
 	}
 
 	private final class Downloader extends DownloadBehavior {
@@ -70,13 +66,12 @@ public class QueryResultExport implements Serializable {
 
 		@Override
 		protected IResourceStream getResourceStream() {
-			if (query == null || lastQueryResult == null) {
+			if (query == null) {
 				return new StringResourceStream("No Data");
 			}
 
-			String csv = exporter.exportAsCsv(query, lastQueryResult);
+			String csv = exporter.exportAsCsv(query);
 			return new StringResourceStream(csv);
-
 		}
 	}
 

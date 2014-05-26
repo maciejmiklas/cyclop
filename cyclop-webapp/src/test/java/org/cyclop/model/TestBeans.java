@@ -187,23 +187,19 @@ public class TestBeans extends AbstractTestCase {
 	public void testSerialize_CqlSelectResult() throws Exception {
 		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"));
 		assertNotNull(res);
-		CqlQueryResult.RowIterator iterator = res.iterator();
-		assertNotNull(iterator);
-		assertNotNull(iterator.rowMetadata.commonColumns);
-		assertNotNull(iterator.rowMetadata.dynamicColumns);
+		assertNotNull(res.iterator());
+		assertNotNull(res.rowMetadata.columns);
 		assertTrue(res.iterator().hasNext());
-		assertTrue(iterator.rowMetadata.commonColumns.size() > 0);
+		assertTrue(res.rowMetadata.columns.size() > 0);
 
 		byte[] serBytes = serialize(res);
 		CqlQueryResult des = deserialize(serBytes, CqlQueryResult.class);
 		assertNotNull(des);
-		CqlQueryResult.RowIterator desIterator = des.iterator();
-		assertNotNull(desIterator);
-		assertNotNull(desIterator.rowMetadata.commonColumns);
-		assertNotNull(desIterator.rowMetadata.dynamicColumns);
+		assertNotNull(des.iterator());
+		assertNotNull(des.rowMetadata.columns);
 		assertFalse(des.iterator().hasNext());
-		assertTrue(desIterator.rowMetadata.commonColumns.size() > 0);
-		assertTrue(iterator.rowMetadata.commonColumns.containsAll(desIterator.rowMetadata.commonColumns));
+		assertTrue(des.rowMetadata.columns.size() > 0);
+		assertTrue(res.rowMetadata.columns.containsAll(des.rowMetadata.columns));
 	}
 
 	@Test

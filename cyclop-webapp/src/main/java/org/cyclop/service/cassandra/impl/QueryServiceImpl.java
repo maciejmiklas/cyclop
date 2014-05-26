@@ -20,7 +20,6 @@ import com.datastax.driver.core.ColumnDefinitions;
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSortedSet;
@@ -37,6 +36,7 @@ import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.exception.QueryException;
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static org.cyclop.common.QueryHelper.extractSpace;
@@ -199,51 +199,11 @@ class QueryServiceImpl implements QueryService {
 		}
 
 		Map<String, CqlColumnType> typeMap = createTypeMap(query);
-		// go over rows:
-		// - count columns to find those that are the same over many rows
-		// - collect rows, since we cannot iterate over results again
-		Map<CqlExtendedColumnName, MutableInt> columnsCount = new LinkedHashMap<>();
-		ImmutableList.Builder<Row> rowsBuild = ImmutableList.builder();
-		CqlPartitionKey partitionKey = null;
-		int rowNr = 0;
-		for (Row row : cqlResult) {
-			if (++rowNr > config.cassandra.rowsLimit) {
-				LOG.debug("Reached rows limit: {}", config.cassandra.rowsLimit);
-				break;
-			}
+		Row firstRow = cqlResult.one();
+		CqlRowMetadata rowMetadata = extractRowMetadata(firstRow, typeMap);
 
-			CqlPartitionKey partitionKeyTmp = collectAndCountColumns(row, columnsCount, typeMap);
-			if (partitionKeyTmp != null) {
-				partitionKey = partitionKeyTmp;
-			}
-			rowsBuild.add(row);
-		}
-
-		// create query result
-		ImmutableList<Row> rows = rowsBuild.build();
-		if (rows.isEmpty()) {
-			return CqlQueryResult.EMPTY;
-		}
-		int rowsSize = rows.size();
-
-		ImmutableList.Builder<CqlExtendedColumnName> commonColumnsBuild = ImmutableList.builder();
-		ImmutableList.Builder<CqlExtendedColumnName> columnsBuild = ImmutableList.builder();
-		ImmutableList.Builder<CqlExtendedColumnName> dynamicColumnsBuild = ImmutableList.builder();
-
-		for (Map.Entry<CqlExtendedColumnName, MutableInt> entry : columnsCount.entrySet()) {
-			CqlExtendedColumnName key = entry.getKey();
-			columnsBuild.add(key);
-			if (rowsSize == 1 || entry.getValue().anInt > 1) {
-				commonColumnsBuild.add(key);
-			} else {
-				dynamicColumnsBuild.add(key);
-			}
-		}
-		ImmutableList<CqlExtendedColumnName> commonCols = commonColumnsBuild.build();
-		ImmutableList<CqlExtendedColumnName> dynamicColumns = dynamicColumnsBuild.build();
-		ImmutableList<CqlExtendedColumnName> columns = columnsBuild.build();
-		CqlQueryResult result = new CqlQueryResult(commonCols, dynamicColumns, columns, rows, partitionKey);
-
+		RowIterator rowIterator = new RowIterator(cqlResult.iterator(), firstRow);
+		CqlQueryResult result = new CqlQueryResult(rowIterator, rowMetadata);
 		return result;
 	}
 
@@ -253,11 +213,11 @@ class QueryServiceImpl implements QueryService {
 		historyService.addAndStore(entry);
 	}
 
-	private CqlPartitionKey collectAndCountColumns(Row row, Map<CqlExtendedColumnName, MutableInt> columnsCount,
-												   Map<String, CqlColumnType> typeMap) {
+	private CqlRowMetadata extractRowMetadata(Row row, Map<String, CqlColumnType> typeMap) {
 
 		// collect and count all columns
 		ColumnDefinitions definitions = row.getColumnDefinitions();
+		ImmutableList.Builder<CqlExtendedColumnName> columnsBuild = ImmutableList.builder();
 		CqlPartitionKey partitionKey = null;
 		for (int colIndex = 0; colIndex < definitions.size(); colIndex++) {
 			if (colIndex > config.cassandra.columnsLimit) {
@@ -279,15 +239,11 @@ class QueryServiceImpl implements QueryService {
 			if (columnType == CqlColumnType.PARTITION_KEY) {
 				partitionKey = CqlPartitionKey.fromColumn(columnName);
 			}
-			MutableInt colCount = columnsCount.get(columnName);
-			if (colCount == null) {
-				columnsCount.put(columnName, new MutableInt());
-			} else {
-				colCount.anInt++;
-			}
-
+			columnsBuild.add(columnName);
 		}
-		return partitionKey;
+
+		CqlRowMetadata metadata = new CqlRowMetadata(columnsBuild.build(), partitionKey);
+		return metadata;
 	}
 
 	protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
@@ -402,14 +358,50 @@ class QueryServiceImpl implements QueryService {
 		return resultSet;
 	}
 
-	private static class MutableInt {
-		public int anInt = 1;
+	private class RowIterator implements Iterator<Row> {
+
+		private final Iterator<Row> wrapped;
+
+		private final Row firstRow;
+
+		private int read = 0;
+
+		private RowIterator(Iterator<Row> wrapped, Row firstRow) {
+			this.wrapped = wrapped;
+			this.firstRow = firstRow;
+		}
 
 		@Override
-		public String toString() {
+		public boolean hasNext() {
+			boolean has;
+			if (read == config.cassandra.rowsLimit) {
+				LOG.debug("Reached configured row limit");
+				has = false;
 
-			return Objects.toStringHelper(this).add("anInt", anInt).toString();
+			} else if (read == 0 && firstRow != null) {
+				has = true;
+
+			} else {
+				has = wrapped.hasNext();
+			}
+			return has;
+		}
+
+		@Override
+		public Row next() {
+			Row next = read == 0 ? firstRow : wrapped.next();
+
+			if (next != null) {
+				read++;
+			}
+			return next;
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("Remove is not supported");
 		}
 	}
+
 
 }

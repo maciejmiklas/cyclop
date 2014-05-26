@@ -26,6 +26,7 @@ import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
+import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.converter.DataExtractor;
 import org.cyclop.service.exporter.CsvQueryResultExporter;
@@ -53,21 +54,26 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 	@Inject
 	private AppConfig.QueryExport conf;
 
-	public String exportAsCsv(CqlQuery query, CqlQueryResult result) {
+	@Inject
+	private QueryService queryService;
+
+	public String exportAsCsv(CqlQuery query) {
 		LOG.debug("Starting CSV export for {}", query);
 
+		CqlQueryResult result = queryService.execute(query,false);
 		StringBuilder buf = new StringBuilder();
 
 		// header
 		appendHeader(query, buf);
 
 		// column names
-		appendColumns(buf, result.columns);
+		ImmutableList<CqlExtendedColumnName> columns = result.rowMetadata.columns;
+		appendColumns(buf, columns);
 		buf.append(conf.rowSeparator);
 
 		// content
 		for (Row row : result) {
-			appendRow(buf, row, result.columns);
+			appendRow(buf, row, columns);
 			buf.append(conf.rowSeparator);
 		}
 

@@ -22,7 +22,5 @@ public enum CqlColumnType {
 	PARTITION_KEY,
 	REGULAR,
 	COMPACT_VALUE,
-	CLUSTERING_KEY,
-	/** trick used to separate template columns from custom columns in results list */
-	SEPARATOR
+	CLUSTERING_KEY
 }

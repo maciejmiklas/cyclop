@@ -22,5 +22,5 @@ import org.cyclop.model.CqlQueryResult;
 /** @author Maciej Miklas */
 public interface CsvQueryResultExporter {
 
-	String exportAsCsv(CqlQuery query, CqlQueryResult result);
+	String exportAsCsv(CqlQuery query);
 }
