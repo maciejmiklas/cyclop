@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQuery;
@@ -63,6 +64,8 @@ public class QueryResultVerticalPanel extends Panel {
 
 	private final RowsModel rowsModel;
 
+	private final AppConfig config = AppConfig.get();
+
 	@Inject
 	private UserManager um;
 
@@ -82,6 +85,7 @@ public class QueryResultVerticalPanel extends Panel {
 		cqlResultTextModel = new CqlResultTextModel();
 		columnsModel = new ColumnsModel();
 		rowDataProvider = new RowDataProvider();
+		rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
 
 		cqlResultText = new Label("cqlResultText", cqlResultTextModel);
 		cqlResultText.setVisible(false);

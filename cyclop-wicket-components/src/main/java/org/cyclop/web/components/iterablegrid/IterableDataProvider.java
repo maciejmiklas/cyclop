@@ -31,9 +31,16 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 
 	private long currentPage = 0;
 
+	/** max amount of elements read from iterator. This prevents out of memory for large iterators. */
+	private int elementsLimit = Integer.MAX_VALUE;
+
 	protected IterableDataProvider(long itemsPerPage) {
 		this.itemsPerPage = itemsPerPage;
 		replaceModel();
+	}
+
+	public void setElementsLimit(int elementsLimit) {
+		this.elementsLimit = elementsLimit;
 	}
 
 	@Override
@@ -67,7 +74,7 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 	}
 
 	public void replaceModel() {
-		iterator = new NavigableIterator(iterator());
+		iterator = new NavigableIterator(iterator(), elementsLimit);
 		reset();
 	}
 

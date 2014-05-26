@@ -138,10 +138,7 @@ public class AppConfig implements Serializable {
 		public final int port;
 
 		@Min(0)
-		public final int timeoutMilis;
-
-		@Min(1)
-		public final int rowsLimit;
+		public final int timeoutMillis;
 
 		@Min(1)
 		public final int columnsLimit;
@@ -156,23 +153,21 @@ public class AppConfig implements Serializable {
 
 		@Inject
 		public Cassandra(@Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
-						 @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMilis}") int timeoutMilis,
-						 @Value("${cassandra.rowsLimit}") int rowsLimit,
+						 @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMillis}") int timeoutMillis,
 						 @Value("${cassandra.columnsLimit}") int columnsLimit,
 						 @Value("${cassandra.maxConnectionsProSession}") int maxConnectionsProSession) {
 			this.hosts = hosts;
 			this.useSsl = useSsl;
 			this.port = port;
-			this.timeoutMilis = timeoutMilis;
-			this.rowsLimit = rowsLimit;
+			this.timeoutMillis = timeoutMillis;
 			this.columnsLimit = columnsLimit;
 			this.maxConnectionsProSession = maxConnectionsProSession;
 		}
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("port", port).add("timeoutMilis", timeoutMilis)
-					.add("rowsLimit", rowsLimit).add("columnsLimit", columnsLimit).add("hosts", hosts)
+			return Objects.toStringHelper(this).add("port", port).add("timeoutMillis", timeoutMillis)
+					.add("columnsLimit", columnsLimit).add("hosts", hosts)
 					.add("maxConnectionsProSession", maxConnectionsProSession).add("useSsl", useSsl).toString();
 		}
 	}
@@ -212,19 +207,26 @@ public class AppConfig implements Serializable {
 		@Min(1)
 		public final int maxColumnTooltipDisplayChars;
 
+		@Min(1)
+		public final int rowsLimit;
+
 		@Inject
 		protected QueryEditor(@Value("${queryEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
 							  @Value("${queryEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
-							  @Value("${queryEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars) {
+							  @Value("${queryEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars,
+							  @Value("${queryEditor.rowsLimit}") int rowsLimit
+
+		) {
 			this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
 			this.maxColumnDisplayChars = maxColumnDisplayChars;
 			this.maxColumnTooltipDisplayChars = maxColumnTooltipDisplayChars;
+			this.rowsLimit = rowsLimit;
 		}
 
 		@Override
 		public String toString() {
 			return Objects.toStringHelper(this).add("maxColumnEmbeddedDisplayChars", maxColumnEmbeddedDisplayChars)
-					.add("maxColumnDisplayChars", maxColumnDisplayChars)
+					.add("maxColumnDisplayChars", maxColumnDisplayChars).add("rowsLimit", rowsLimit)
 					.add("maxColumnTooltipDisplayChars", maxColumnTooltipDisplayChars).toString();
 		}
 	}
@@ -369,23 +371,23 @@ public class AppConfig implements Serializable {
 
 		public final int maxFileSize;
 
-		public final int lockWaitTimeoutMilis;
+		public final int lockWaitTimeoutMillis;
 
 		public final String folder;
 
 		@Inject
 		public FileStore(@Value("${fileStore.maxFileSize}") int maxFileSize,
-						 @Value("${fileStore.lockWaitTimeoutMilis}") int lockWaitTimeoutMilis,
+						 @Value("${fileStore.lockWaitTimeoutMillis}") int lockWaitTimeoutMillis,
 						 @Value("${fileStore.folder}") String folder) {
 			this.maxFileSize = maxFileSize;
-			this.lockWaitTimeoutMilis = lockWaitTimeoutMilis;
+			this.lockWaitTimeoutMillis = lockWaitTimeoutMillis;
 			this.folder = folder;
 		}
 
 		@Override
 		public String toString() {
 			return Objects.toStringHelper(this).add("maxFileSize", maxFileSize)
-					.add("lockWaitTimeoutMilis", lockWaitTimeoutMilis).add("folder", folder).toString();
+					.add("lockWaitTimeoutMillis", lockWaitTimeoutMillis).add("folder", folder).toString();
 		}
 	}
 

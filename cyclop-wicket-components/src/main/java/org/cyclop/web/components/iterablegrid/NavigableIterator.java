@@ -40,14 +40,21 @@ final class NavigableIterator<E> implements Iterator<E> {
 
 	private int count = 0;
 
-	public NavigableIterator(Iterator<E> wrapped) {
+	private int limit;
+
+	public NavigableIterator(Iterator<E> wrapped, int limit) {
 		if (wrapped == null) {
 			throw new IllegalArgumentException("Wrapped must not be null");
 		}
 		this.wrapped = wrapped;
+		this.limit = limit;
 	}
 
 	public void prepare(int first, int count) {
+		if (first > limit) {
+			throw new IllegalArgumentException(
+					"Cannot skipp " + first + " elements, because iterator is limited to: " + limit);
+		}
 		this.nextIndex = first;
 		this.count = count;
 	}
@@ -57,7 +64,10 @@ final class NavigableIterator<E> implements Iterator<E> {
 	 */
 	@Override
 	public boolean hasNext() {
-		boolean next = count > 0 && (wrapped.hasNext() || nextIndex < cache.size());
+		if (nextIndex > limit) {
+			return false;
+		}
+		boolean next = (count > 0 && (wrapped.hasNext()) || (nextIndex < cache.size()));
 		return next;
 	}
 
@@ -68,7 +78,9 @@ final class NavigableIterator<E> implements Iterator<E> {
 	@Override
 	public E next() {
 		E next;
-		if (nextIndex < cache.size()) {
+		if (nextIndex > limit) {
+			next = null;
+		} else if (nextIndex < cache.size()) {
 			next = cache.get(nextIndex);
 		} else {
 			if (!wrapped.hasNext()) {
@@ -98,6 +110,7 @@ final class NavigableIterator<E> implements Iterator<E> {
 	}
 
 	public int iterateToIndex(int toIndex) {
+		toIndex = Math.min(toIndex, limit);
 		int rsize = cache.size();
 		if (toIndex <= rsize) {
 			return toIndex;

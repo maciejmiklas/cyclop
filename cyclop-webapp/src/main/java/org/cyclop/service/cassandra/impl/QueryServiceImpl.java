@@ -374,11 +374,7 @@ class QueryServiceImpl implements QueryService {
 		@Override
 		public boolean hasNext() {
 			boolean has;
-			if (read == config.cassandra.rowsLimit) {
-				LOG.debug("Reached configured row limit");
-				has = false;
-
-			} else if (read == 0 && firstRow != null) {
+			if (read == 0 && firstRow != null) {
 				has = true;
 
 			} else {

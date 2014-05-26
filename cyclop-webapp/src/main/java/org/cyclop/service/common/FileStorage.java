@@ -183,7 +183,7 @@ public class FileStorage {
 		long start = System.currentTimeMillis();
 		String lastExMessage = null;
 		FileChannel lockChannel = null;
-		while (lockChannel == null && System.currentTimeMillis() - start < config.fileStore.lockWaitTimeoutMilis) {
+		while (lockChannel == null && System.currentTimeMillis() - start < config.fileStore.lockWaitTimeoutMillis) {
 			try {
 				FileLock lock = channel.lock();
 				lockChannel = lock.channel();

@@ -69,7 +69,7 @@ public class CassandraSessionImpl implements CassandraSession {
 		}
 
 		SocketOptions socketOptions = new SocketOptions();
-		socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMilis);
+		socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMillis);
 
 		PoolingOptions pooling = new PoolingOptions();
 		pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, 1);
