@@ -18,12 +18,14 @@ package org.cyclop.web.components.iterablegrid;
 
 import org.apache.wicket.markup.repeater.data.IDataProvider;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /** @author Maciej Miklas */
-public abstract class IterableDataProvider<T> implements IDataProvider<T> {
+public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 
-	private NavigableIterator<T> iterator;
+	private NavigableIterator<E> iterator;
 
 	private long itemsPerPage;
 
@@ -48,12 +50,10 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 		long size;
 
 		// uer goes back on pager, like now he is on page 5 and clicks on 3
-		if (lastPage > currentPage) {
+		// OR
+		// there is no more data to be read - we are on last page
+		if (lastPage > currentPage || !iterator.hasMoreData()) {
 			size = iterator.readSize();
-
-			// there is no more data to be read - we are on last page
-		} else if (!iterator.hasMoreData()) {
-			size = iterator.maxSize();
 
 			// user is not on page 2 and click on next page - 3. Pager will show link for page 4, but not for
 			// page 5 - this will first happen when user clicks on page 4. In order to show link for only
@@ -74,12 +74,12 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 	}
 
 	public void replaceModel() {
-		iterator = new NavigableIterator(iterator(), elementsLimit);
+		iterator = new NavigableIterator(iterator(), elementsLimit, createElementsCache());
 		reset();
 	}
 
 	@Override
-	public final Iterator<T> iterator(long first, long count) {
+	public final Iterator<E> iterator(long first, long count) {
 		iterator.prepare((int) first, (int) count);
 		lastPage = currentPage;
 		return iterator;
@@ -98,5 +98,14 @@ public abstract class IterableDataProvider<T> implements IDataProvider<T> {
 		this.currentPage = currentPage;
 	}
 
-	protected abstract Iterator<T> iterator();
+	protected abstract Iterator<E> iterator();
+
+	/**
+	 * Use this method to replace iterator cache with something else. This can be useful, it you need to display results of
+	 * iterators containing large data amounts (HugeCollections or BigCollections).
+	 */
+	protected List<E> createElementsCache() {
+		return new ArrayList<>();
+	}
+
 }

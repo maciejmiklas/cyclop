@@ -18,7 +18,6 @@ package org.cyclop.web.components.iterablegrid;
 
 import net.jcip.annotations.NotThreadSafe;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -31,10 +30,10 @@ final class NavigableIterator<E> implements Iterator<E> {
 	private final Iterator<E> wrapped;
 
 	/** contains all elements in order returned by iterator */
-	private final List<E> cache = new ArrayList<>();
+	private final List<E> cache;
 
-	/** Contains unique elements that has been read by #next() */
-	private final Set<E> read = new HashSet<>();
+	/** Contains index of the elements that has been read by #next() */
+	private final Set<Integer> read = new HashSet<>();
 
 	private int nextIndex = 0;
 
@@ -42,12 +41,13 @@ final class NavigableIterator<E> implements Iterator<E> {
 
 	private int limit;
 
-	public NavigableIterator(Iterator<E> wrapped, int limit) {
+	public NavigableIterator(Iterator<E> wrapped, int limit, List<E> cache) {
 		if (wrapped == null) {
 			throw new IllegalArgumentException("Wrapped must not be null");
 		}
 		this.wrapped = wrapped;
 		this.limit = limit;
+		this.cache = cache;
 	}
 
 	public void prepare(int first, int count) {
@@ -97,9 +97,9 @@ final class NavigableIterator<E> implements Iterator<E> {
 		}
 
 		if (next != null) {
+			read.add(nextIndex);
 			count--;
 			nextIndex++;
-			read.add(next);
 		}
 		return next;
 	}
@@ -130,9 +130,4 @@ final class NavigableIterator<E> implements Iterator<E> {
 	public int readSize() {
 		return read.size();
 	}
-
-	public int maxSize() {
-		return cache.size();
-	}
-
 }
