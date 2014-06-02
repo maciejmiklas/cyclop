@@ -61,4 +61,5 @@ resultTable.add(pager);
 
 Here you can find implementation example: https://github.com/maciejmiklas/cyclop/tree/master/cyclop-webapp/src/main/java/org/cyclop/web/panels/queryeditor/verticalresult
 
+See also this linkg for more details: http://maciej-miklas.blogspot.de/2014/05/wickets-data-grid-based-on-plain.html
 
