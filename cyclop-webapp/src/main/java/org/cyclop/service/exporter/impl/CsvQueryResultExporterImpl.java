@@ -26,6 +26,7 @@ import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
+import org.cyclop.model.exception.ServiceException;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.converter.DataExtractor;
@@ -35,6 +36,10 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -57,31 +62,45 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 	@Inject
 	private QueryService queryService;
 
+	@Override
 	public String exportAsCsv(CqlQuery query) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		exportAsCsv(query, bos);
+		try {
+			String resStr = new String(bos.toByteArray(), conf.encoding);
+			return resStr;
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException("Encoding: " + conf.encoding + " caused error during export: " + e.getMessage(),
+					e);
+		}
+	}
+
+	@Override
+	public void exportAsCsv(CqlQuery query, OutputStream output) {
 		LOG.debug("Starting CSV export for {}", query);
 
+		PrintWriter out = new PrintWriter(output);
 		CqlQueryResult result = queryService.execute(query,false);
-		StringBuilder buf = new StringBuilder();
 
 		// header
-		appendHeader(query, buf);
+		appendHeader(query, out);
 
 		// column names
 		ImmutableList<CqlExtendedColumnName> columns = result.rowMetadata.columns;
-		appendColumns(buf, columns);
-		buf.append(conf.rowSeparator);
+		appendColumns(out, columns);
+		out.append(conf.rowSeparator);
 
 		// content
 		for (Row row : result) {
-			appendRow(buf, row, columns);
-			buf.append(conf.rowSeparator);
+			appendRow(out, row, columns);
+			out.append(conf.rowSeparator);
 		}
 
-		LOG.trace("Created CSV: {}", buf);
-		return buf.toString();
+		out.flush();
+		out.close();
 	}
 
-	private void appendRow(StringBuilder buf, Row row, List<CqlExtendedColumnName> cols) {
+	private void appendRow(PrintWriter out, Row row, List<CqlExtendedColumnName> cols) {
 		LOG.debug("Appending next row");
 		Iterator<CqlExtendedColumnName> it = cols.iterator();
 		while (it.hasNext()) {
@@ -89,21 +108,21 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 			CqlDataType dataType = column.dataType;
 
 			if (dataType.name == DataType.Name.SET || dataType.name == DataType.Name.LIST) {
-				appendCollection(buf, row, column);
+				appendCollection(out, row, column);
 
 			} else if (dataType.name == DataType.Name.MAP) {
-				appendMap(buf, row, column);
+				appendMap(out, row, column);
 			} else {
-				appendSingleValue(buf, row, column);
+				appendSingleValue(out, row, column);
 			}
 
 			if (it.hasNext()) {
-				buf.append(conf.columnSeparator);
+				out.append(conf.columnSeparator);
 			}
 		}
 	}
 
-	private void appendMap(StringBuilder buf, Row row, CqlExtendedColumnName column) {
+	private void appendMap(PrintWriter out, Row row, CqlExtendedColumnName column) {
 		ImmutableSet<Map.Entry<CqlColumnValue, CqlColumnValue>> displayMap = extractor.extractMap(row, column)
 				.entrySet();
 		Iterator<Map.Entry<CqlColumnValue, CqlColumnValue>> it = displayMap.iterator();
@@ -131,10 +150,10 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 
 		String mapVal = esc(mapBuf.toString());
 		LOG.trace("Appended map: {}", mapVal);
-		buf.append(mapVal);
+		out.append(mapVal);
 	}
 
-	private void appendCollection(StringBuilder buf, Row row, CqlExtendedColumnName column) {
+	private void appendCollection(PrintWriter out, Row row, CqlExtendedColumnName column) {
 		ImmutableList<CqlColumnValue> content = extractor.extractCollection(row, column);
 		LOG.trace("Appending {}", content);
 		Iterator<CqlColumnValue> contentIt = content.iterator();
@@ -149,24 +168,24 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		}
 		String colVal = esc(listBuild.toString());
 		LOG.trace("Append collection: {}", colVal);
-		buf.append(colVal);
+		out.append(colVal);
 	}
 
-	private void appendSingleValue(StringBuilder buf, Row row, CqlExtendedColumnName column) {
+	private void appendSingleValue(PrintWriter out, Row row, CqlExtendedColumnName column) {
 		CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row, column);
 		String valText = esc(converter.convert(cqlColumnValue.value));
 		LOG.trace("Append single value: {}", valText);
-		buf.append(valText);
+		out.append(valText);
 	}
 
-	private void appendHeader(CqlQuery query, StringBuilder buf) {
+	private void appendHeader(CqlQuery query, PrintWriter out) {
 		String headerVal = prep(query.part);
 		LOG.trace("Append header: {}", headerVal);
-		buf.append(headerVal);
-		buf.append(conf.querySeparator);
+		out.append(headerVal);
+		out.append(conf.querySeparator);
 	}
 
-	private void appendColumns(StringBuilder buf, List<CqlExtendedColumnName> columns) {
+	private void appendColumns(PrintWriter out, List<CqlExtendedColumnName> columns) {
 		if (columns.isEmpty()) {
 			return;
 		}
@@ -176,10 +195,10 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		Iterator<CqlExtendedColumnName> commonColsIt = columns.iterator();
 		while (commonColsIt.hasNext()) {
 			CqlExtendedColumnName next = commonColsIt.next();
-			buf.append(prep(esc(next.toDisplayString())));
+			out.append(prep(esc(next.toDisplayString())));
 
 			if (commonColsIt.hasNext()) {
-				buf.append(conf.columnSeparator);
+				out.append(conf.columnSeparator);
 			}
 		}
 	}

@@ -264,6 +264,9 @@ public class AppConfig implements Serializable {
 		@NotEmpty
 		public final String valueBracketEnd;
 
+		@NotEmpty
+		public final String encoding;
+
 		public final boolean trim;
 
 		public final boolean removeCrChars;
@@ -280,7 +283,8 @@ public class AppConfig implements Serializable {
 						   @Value("${queryExport.valueBracketEnd}") String valueBracketEnd,
 						   @Value("${queryExport.crCharCode}") int crCharCode,
 						   @Value("${queryExport.removeCrChars}") boolean removeCrChars,
-						   @Value("${queryExport.trim}") boolean trim) throws UnsupportedEncodingException {
+						   @Value("${queryExport.trim}") boolean trim,
+						   @Value("${queryExport.encoding}") String encoding) throws UnsupportedEncodingException {
 			this.crCharCode = crCharCode;
 			String crChar = String.valueOf((char) crCharCode);
 			this.querySeparator = crs(crChar, querySeparator);
@@ -294,6 +298,7 @@ public class AppConfig implements Serializable {
 			this.valueBracketStart = valueBracketStart;
 			this.valueBracketEnd = valueBracketEnd;
 			this.trim = trim;
+			this.encoding = encoding;
 		}
 
 		@Override

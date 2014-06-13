@@ -18,6 +18,7 @@ package org.cyclop.web.panels.queryeditor.export;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.resource.StringResourceStream;
 import org.cyclop.common.AppConfig;
@@ -26,6 +27,8 @@ import org.cyclop.service.exporter.CsvQueryResultExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,9 +73,13 @@ public class QueryResultExport implements Serializable {
 				return new StringResourceStream("No Data");
 			}
 
-			String csv = exporter.exportAsCsv(query);
-			return new StringResourceStream(csv);
+			return new AbstractResourceStreamWriter() {
+
+				@Override
+				public void write(OutputStream output) throws IOException {
+					exporter.exportAsCsv(query, output);
+				}
+			};
 		}
 	}
-
 }
