@@ -102,7 +102,7 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 
 	/**
 	 * Use this method to replace iterator cache with something else. This can be useful, it you need to display results of
-	 * iterators containing large data amounts (HugeCollections or BigCollections).
+	 * iterators containing large data amounts (BigList, HugeCollections or BigCollections).
 	 */
 	protected List<E> createElementsCache() {
 		return new ArrayList<>();
