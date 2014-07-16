@@ -40,7 +40,7 @@ public class CqlQueryResult implements Iterable<Row>, Serializable {
 
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		in.defaultReadObject();
-		SerializationUtil.setFiled(this, "rows", EmptyIterator.INSTANCE);
+		SerializationUtil.setField(this, "rows", EmptyIterator.INSTANCE);
 	}
 
 	@Override

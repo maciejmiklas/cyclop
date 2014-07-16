@@ -25,7 +25,7 @@ import java.lang.reflect.Field;
 public class SerializationUtil {
 	private final static Logger LOG = LoggerFactory.getLogger(SerializationUtil.class);
 
-	public static void setFiled(Object obj, String fieldName, Object val) {
+	public static void setField(Object obj, String fieldName, Object val) {
 		LOG.debug("Set filed {} to {} on {}", fieldName, val, obj);
 
 		try {

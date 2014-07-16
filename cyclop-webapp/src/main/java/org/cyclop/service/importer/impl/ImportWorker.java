@@ -51,6 +51,7 @@ class ImportWorker implements Callable<Void> {
 
 	private final QueryHistory history;
 
+	// TODO to many paraeters - use builder pattern
 	ImportWorker(int offset, int amount, ImmutableList<CqlQuery> queries, StatsCollector status, ImportConfig iconfig,
 				 ResultWriter resultWriter, Session session, QueryHistory history) {
 		this.offset = offset;

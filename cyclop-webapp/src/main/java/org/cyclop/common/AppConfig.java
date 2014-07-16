@@ -39,7 +39,7 @@ import java.util.regex.PatternSyntaxException;
 
 /** @author Maciej Miklas */
 @Named
-public class AppConfig implements Serializable {
+public final class AppConfig implements Serializable {
 	private final static Logger LOG = LoggerFactory.getLogger(AppConfig.class);
 
 	@NotNull
