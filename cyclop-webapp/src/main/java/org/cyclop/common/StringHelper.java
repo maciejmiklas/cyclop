@@ -16,12 +16,14 @@
  */
 package org.cyclop.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.util.Comparator.comparingInt;
 
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 public class StringHelper {
@@ -74,20 +76,8 @@ public class StringHelper {
 	}
 
 	private static Set<String> sortBySize(String... strArray) {
-		Set<String> sorted = new TreeSet<>(new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				int lengthDif = o2.length() - o1.length();
-				if (lengthDif != 0) {
-					return lengthDif;
-				}
-				return o1.compareTo(o2);
-			}
-		});
-
-		for (String str : strArray) {
-			sorted.add(str);
-		}
+		Set<String> sorted = new TreeSet<>(comparingInt(String::length).reversed().thenComparing(String::compareTo));
+		sorted.addAll(Arrays.asList(strArray));
 		return sorted;
 	}
 }
