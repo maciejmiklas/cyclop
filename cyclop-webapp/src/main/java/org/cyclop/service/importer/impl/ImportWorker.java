@@ -16,9 +16,8 @@
  */
 package org.cyclop.service.importer.impl;
 
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.exceptions.DriverException;
-import com.google.common.collect.ImmutableList;
+import java.util.concurrent.Callable;
+
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
@@ -28,7 +27,9 @@ import org.cyclop.service.importer.model.ImportConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.Callable;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.exceptions.DriverException;
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 class ImportWorker implements Callable<Void> {
@@ -53,7 +54,7 @@ class ImportWorker implements Callable<Void> {
 
 	// TODO to many paraeters - use builder pattern
 	ImportWorker(int offset, int amount, ImmutableList<CqlQuery> queries, StatsCollector status, ImportConfig iconfig,
-				 ResultWriter resultWriter, Session session, QueryHistory history) {
+			ResultWriter resultWriter, Session session, QueryHistory history) {
 		this.offset = offset;
 		this.amount = amount;
 		this.queries = queries;

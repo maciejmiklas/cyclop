@@ -72,15 +72,10 @@ public class CassandraSessionImpl implements CassandraSession {
 		socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMillis);
 
 		PoolingOptions pooling = new PoolingOptions();
-		pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, 1);
-		pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, 1);
-		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, 1);
-		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, 1);
-
-		pooling.setMaxConnectionsPerHost(HostDistance.REMOTE, 1);
-		pooling.setCoreConnectionsPerHost(HostDistance.REMOTE, 1);
-		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.REMOTE, 1);
-		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.REMOTE, 1);
+		pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.coreConnectionsPerHost);
+		pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.maxConnectionsPerHost);
+		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, appConfig.cassandra.minSimultaneousRequestsPerConnectionThreshold);
+		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, appConfig.cassandra.maxSimultaneousRequestsPerConnectionThreshold);
 
 		cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions)
 				.withPoolingOptions(pooling).build();

@@ -18,6 +18,7 @@ package org.cyclop.service.importer.impl;
 
 import com.datastax.driver.core.Session;
 import com.google.common.collect.ImmutableList;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.cyclop.model.CqlQuery;
@@ -33,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -71,7 +73,6 @@ public class ParallelQueryImporter extends AbstractImporter {
 		if (iconfig.isUpdateHistory()) {
 			historyService.store(history);
 		}
-
 	}
 
 	private List<Future<Void>> startWorkers(ImmutableList<CqlQuery> queries, ResultWriter resultWriter,
@@ -82,7 +83,6 @@ public class ParallelQueryImporter extends AbstractImporter {
 
 		LOG.debug("Starting parallel import for {} queries, {} pro thread", queriesSize, proThread);
 		Session cassSession = session.getSession();
-
 
 		List<Future<Void>> futures = new ArrayList<>();
 		int startIndex = 0;
@@ -99,7 +99,6 @@ public class ParallelQueryImporter extends AbstractImporter {
 
 			Future<Void> future = executor.submit(task);
 			futures.add(future);
-
 			startIndex += amount;
 		}
 		return futures;

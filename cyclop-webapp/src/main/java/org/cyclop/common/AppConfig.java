@@ -88,8 +88,8 @@ public final class AppConfig implements Serializable {
 
 	@Inject
 	public AppConfig(Cassandra cassandra, QueryEditor queryEditor, Common common, QueryExport queryExport,
-					 Cookies cookie, History history, Favourites favourites, FileStore fileStore,
-					 HttpSession httpSession, QueryImport queryImport) {
+			Cookies cookie, History history, Favourites favourites, FileStore fileStore, HttpSession httpSession,
+			QueryImport queryImport) {
 		this.cassandra = cassandra;
 		this.queryEditor = queryEditor;
 		this.common = common;
@@ -125,9 +125,9 @@ public final class AppConfig implements Serializable {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("cassandra", cassandra).add("queryEditor", queryEditor)
-				.add("common", common).add("history", history).add("fileStore", fileStore).add("favourites", favourites)
-				.add("queryExport", queryExport).add("httpSession", httpSession).add("cookie", cookie)
-				.add("queryImport", queryImport).toString();
+				.add("common", common).add("history", history).add("fileStore", fileStore)
+				.add("favourites", favourites).add("queryExport", queryExport).add("httpSession", httpSession)
+				.add("cookie", cookie).add("queryImport", queryImport).toString();
 	}
 
 	@Named
@@ -146,29 +146,55 @@ public final class AppConfig implements Serializable {
 		@NotEmpty
 		public final String hosts;
 
+		@Min(2)
+		public final int maxConnectionsPerHost;
+
 		@Min(1)
-		public final int maxConnectionsProSession;
+		public final int coreConnectionsPerHost;
+
+		@Min(2)
+		public final int maxSimultaneousRequestsPerConnectionThreshold;
+
+		@Min(1)
+		public final int minSimultaneousRequestsPerConnectionThreshold;
 
 		public final boolean useSsl;
 
 		@Inject
-		public Cassandra(@Value("${cassandra.hosts}") String hosts, @Value("${cassandra.useSsl}") boolean useSsl,
-						 @Value("${cassandra.port}") int port, @Value("${cassandra.timeoutMillis}") int timeoutMillis,
-						 @Value("${cassandra.columnsLimit}") int columnsLimit,
-						 @Value("${cassandra.maxConnectionsProSession}") int maxConnectionsProSession) {
+		public Cassandra(
+				@Value("${cassandra.hosts}") String hosts,
+				@Value("${cassandra.useSsl}") boolean useSsl,
+				@Value("${cassandra.port}") int port,
+				@Value("${cassandra.timeoutMillis}") int timeoutMillis,
+				@Value("${cassandra.columnsLimit}") int columnsLimit,
+				@Value("${cassandra.maxConnectionsPerHost}") int maxConnectionsPerHost,
+				@Value("${cassandra.coreConnectionsPerHost}") int coreConnectionsPerHost,
+				@Value("${cassandra.maxSimultaneousRequestsPerConnectionThreshold}") int maxSimultaneousRequestsPerConnectionThreshold,
+				@Value("${cassandra.minSimultaneousRequestsPerConnectionThreshold}") int minSimultaneousRequestsPerConnectionThreshold) {
 			this.hosts = hosts;
 			this.useSsl = useSsl;
 			this.port = port;
 			this.timeoutMillis = timeoutMillis;
 			this.columnsLimit = columnsLimit;
-			this.maxConnectionsProSession = maxConnectionsProSession;
+			this.maxConnectionsPerHost = maxConnectionsPerHost;
+			this.coreConnectionsPerHost = coreConnectionsPerHost;
+			this.maxSimultaneousRequestsPerConnectionThreshold = maxSimultaneousRequestsPerConnectionThreshold;
+			this.minSimultaneousRequestsPerConnectionThreshold = minSimultaneousRequestsPerConnectionThreshold;
 		}
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("port", port).add("timeoutMillis", timeoutMillis)
-					.add("columnsLimit", columnsLimit).add("hosts", hosts)
-					.add("maxConnectionsProSession", maxConnectionsProSession).add("useSsl", useSsl).toString();
+			return Objects
+					.toStringHelper(this)
+					.add("port", port)
+					.add("timeoutMillis", timeoutMillis)
+					.add("columnsLimit", columnsLimit)
+					.add("hosts", hosts)
+					.add("maxConnectionsPerHost", maxConnectionsPerHost)
+					.add("coreConnectionsPerHost", coreConnectionsPerHost)
+					.add("maxSimultaneousRequestsPerConnectionThreshold", maxSimultaneousRequestsPerConnectionThreshold)
+					.add("minSimultaneousRequestsPerConnectionThreshold", minSimultaneousRequestsPerConnectionThreshold)
+					.add("useSsl", useSsl).toString();
 		}
 	}
 
@@ -212,9 +238,9 @@ public final class AppConfig implements Serializable {
 
 		@Inject
 		protected QueryEditor(@Value("${queryEditor.maxColumnEmbeddedDisplayChars}") int maxColumnEmbeddedDisplayChars,
-							  @Value("${queryEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
-							  @Value("${queryEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars,
-							  @Value("${queryEditor.rowsLimit}") int rowsLimit
+				@Value("${queryEditor.maxColumnDisplayChars}") int maxColumnDisplayChars,
+				@Value("${queryEditor.maxColumnTooltipDisplayChars}") int maxColumnTooltipDisplayChars,
+				@Value("${queryEditor.rowsLimit}") int rowsLimit
 
 		) {
 			this.maxColumnEmbeddedDisplayChars = maxColumnEmbeddedDisplayChars;
@@ -273,18 +299,18 @@ public final class AppConfig implements Serializable {
 
 		@Inject
 		public QueryExport(@Value("${queryExport.fileName}") String fileName,
-						   @Value("${queryExport.fileName.date}") String fileNameDate,
-						   @Value("${queryExport.querySeparator}") String querySeparator,
-						   @Value("${queryExport.rowSeparator}") String rowSeparator,
-						   @Value("${queryExport.columnSeparator}") String columnSeparator,
-						   @Value("${queryExport.listSeparator}") String listSeparator,
-						   @Value("${queryExport.mapSeparator}") String mapSeparator,
-						   @Value("${queryExport.valueBracketStart}") String valueBracketStart,
-						   @Value("${queryExport.valueBracketEnd}") String valueBracketEnd,
-						   @Value("${queryExport.crCharCode}") int crCharCode,
-						   @Value("${queryExport.removeCrChars}") boolean removeCrChars,
-						   @Value("${queryExport.trim}") boolean trim,
-						   @Value("${queryExport.encoding}") String encoding) throws UnsupportedEncodingException {
+				@Value("${queryExport.fileName.date}") String fileNameDate,
+				@Value("${queryExport.querySeparator}") String querySeparator,
+				@Value("${queryExport.rowSeparator}") String rowSeparator,
+				@Value("${queryExport.columnSeparator}") String columnSeparator,
+				@Value("${queryExport.listSeparator}") String listSeparator,
+				@Value("${queryExport.mapSeparator}") String mapSeparator,
+				@Value("${queryExport.valueBracketStart}") String valueBracketStart,
+				@Value("${queryExport.valueBracketEnd}") String valueBracketEnd,
+				@Value("${queryExport.crCharCode}") int crCharCode,
+				@Value("${queryExport.removeCrChars}") boolean removeCrChars,
+				@Value("${queryExport.trim}") boolean trim, @Value("${queryExport.encoding}") String encoding)
+				throws UnsupportedEncodingException {
 			this.crCharCode = crCharCode;
 			String crChar = String.valueOf((char) crCharCode);
 			this.querySeparator = crs(crChar, querySeparator);
@@ -329,9 +355,9 @@ public final class AppConfig implements Serializable {
 
 		@Inject
 		public QueryImport(@Value("${queryImport.listSeparatorRegEx}") String listSeparatorRegEx,
-						   @Value("${queryImport.encoding}") String encoding,
-						   @Value("${queryImport.maxFileSizeMb}") int maxFileSizeMb,
-						   @Value("${queryImport.parallel.maxThreadsProImport}") int maxThreadsProImport) {
+				@Value("${queryImport.encoding}") String encoding,
+				@Value("${queryImport.maxFileSizeMb}") int maxFileSizeMb,
+				@Value("${queryImport.parallel.maxThreadsProImport}") int maxThreadsProImport) {
 			try {
 				this.listSeparatorRegEx = Pattern.compile(listSeparatorRegEx);
 			} catch (PatternSyntaxException e) {
@@ -359,7 +385,7 @@ public final class AppConfig implements Serializable {
 
 		@Inject
 		public Favourites(@Value("${favourites.entriesLimit:50}") int entriesLimit,
-						  @Value("${favourites.enabled:false}") boolean enabled) {
+				@Value("${favourites.enabled:false}") boolean enabled) {
 			this.entriesLimit = entriesLimit;
 			this.enabled = enabled;
 		}
@@ -382,8 +408,8 @@ public final class AppConfig implements Serializable {
 
 		@Inject
 		public FileStore(@Value("${fileStore.maxFileSize}") int maxFileSize,
-						 @Value("${fileStore.lockWaitTimeoutMillis}") int lockWaitTimeoutMillis,
-						 @Value("${fileStore.folder}") String folder) {
+				@Value("${fileStore.lockWaitTimeoutMillis}") int lockWaitTimeoutMillis,
+				@Value("${fileStore.folder}") String folder) {
 			this.maxFileSize = maxFileSize;
 			this.lockWaitTimeoutMillis = lockWaitTimeoutMillis;
 			this.folder = folder;
@@ -404,8 +430,7 @@ public final class AppConfig implements Serializable {
 		public final boolean enabled;
 
 		@Inject
-		public History(@Value("${history.entriesLimit}") int entriesLimit,
-					   @Value("${history.enabled}") boolean enabled) {
+		public History(@Value("${history.entriesLimit}") int entriesLimit, @Value("${history.enabled}") boolean enabled) {
 			this.entriesLimit = entriesLimit;
 			this.enabled = enabled;
 		}
