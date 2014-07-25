@@ -13,3 +13,5 @@ CREATE INDEX ON MyBooks(publishDate);
 CREATE INDEX ON MyBooks(genre);
 CREATE INDEX ON MyBooks(pages);
 CREATE INDEX ON CompoundTest(deesc)
+
+CREATE TABLE MyCounter (id UUID, cval counter, primary key(id));

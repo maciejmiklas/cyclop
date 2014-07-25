@@ -16,7 +16,14 @@
  */
 package org.cyclop.service.importer;
 
-import com.datastax.driver.core.Row;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.InputStream;
+
+import javax.inject.Inject;
+
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlQueryType;
@@ -26,14 +33,6 @@ import org.cyclop.service.importer.model.ImportStats;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.inject.Inject;
-import java.io.InputStream;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /** @author Maciej Miklas */
 public abstract class AbstractImporterCase extends AbstractTestCase {
@@ -59,7 +58,7 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 					rc.success
 							.contains(new CqlQuery(
 									CqlQueryType.UNKNOWN,
-									"INSERT INTO MyBooks (id,title,pages,price) VALUES (0f6939a7-62f7-4ed0-a909-6fc302764c8d,'just title.....',112291,{'DE':4,'EU':34})")));
+									"INSERT INTO MyBooks (id,title,pages,price) VALUES (0f6939a7-62f7-4ed0-a909-6fc302764c8d,'just title.....',2299,{'DE':4,'EU':34})")));
 		}
 	}
 
@@ -139,87 +138,95 @@ public abstract class AbstractImporterCase extends AbstractTestCase {
 
 	@Test
 	public void testImportAmount_1() throws Exception {
-		execImport(1, 1, 0, 1, 1, 1);
+		execImport(1, 0, 12);
 	}
 
 	@Test
 	public void testImportAmount_3() throws Exception {
-		execImport(3, 3, 0, 1, 3, 3);
+		execImport(3, 0, 6);
 	}
 
 	@Test
 	public void testImportAmount_6() throws Exception {
-		execImport(6, 6, 0, 4, 9, 6);
+		execImport(6, 0, 21);
 	}
 
 	@Test
 	public void testImportAmount_7() throws Exception {
-		execImport(7, 7, 0, 4, 10, 7);
+		execImport(7, 0, 28);
 	}
 
 	@Test
 	public void testImportAmount_8() throws Exception {
-		execImport(8, 8, 0, 4, 11, 8);
+		execImport(8, 1, 30);
 	}
 
 	@Test
 	public void testImportAmount_9() throws Exception {
-		execImport(9, 9, 0, 4, 12, 9);
+		execImport(9, 0, 45);
 	}
 
 	@Test
 	public void testImportAmount_15() throws Exception {
-		execImport(15, 15, 0, 0, 14, 15);
+		execImport(15, 0, 120);
 	}
 
 	@Test
 	public void testImportAmount_32() throws Exception {
-		execImport(31, 32, 0, 0, 30, 32);
+		execImport(32, 0, 528);
 	}
 
 	@Test
 	public void testImportAmount_116() throws Exception {
-		execImport(119, 116, 0, 0, 119, 116);
+		execImport(116, 3, 6613);
 	}
 
-	private void execImport(int impcolSize, int scriptQueries, int amountError, int vmin, int vmax, int scrNr)
-			throws Exception {
+	private void execImport(int scrNr, int amountError, long counterValue) throws Exception {
 		String script = "/cql/testImportOneCol_" + scrNr + ".cql";
 		try (InputStream fio = getClass().getResourceAsStream(script)) {
 			ResultConsumer rc = new ResultConsumer();
 			ImportStats stats = getImporter().importScript(fio, rc,
-					new ImportConfig().withContinueWithErrors(false).withUpdateHistory(true));
+					new ImportConfig().withContinueWithErrors(true).withUpdateHistory(true));
 
-			assertEquals(script, scriptQueries + amountError, rc.size());
-			assertEquals(script, amountError, rc.error.size());
-			assertEquals(script, scriptQueries, rc.success.size());
-			assertEquals(script, amountError, stats.errorCount);
-			assertEquals(script, scriptQueries, stats.successCount);
+			assertEquals(script + "- " + rc, amountError, rc.error.size());
+			assertEquals(script + "- " + rc, scrNr - amountError, rc.success.size());
+			assertEquals(script + "- " + rc, scrNr, rc.size());
+			assertEquals(script + "- " + rc, amountError, stats.errorCount);
+			assertEquals(script + "- " + rc, scrNr, stats.successCount + stats.errorCount);
 		}
 
 		{
 			CqlQueryResult res = queryService.execute(new CqlQuery(CqlQueryType.SELECT,
-					"select impcol from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
+					"select cval from CqlDemo.MyCounter where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
 
-			assertEquals(script, 1, res.rowMetadata.columns.size());
+			assertEquals(script + " - " + res, 1, res.rowMetadata.columns.size());
 			assertTrue(res.iterator().hasNext());
-			Set<Integer> impcol = res.iterator().next().getSet("impcol", Integer.class);
-			assertEquals(script, impcolSize, impcol.size());
-			for (Integer val : impcol) {
-				assertTrue(script + " - " + val + ">=" + vmin, val >= vmin);
-				assertTrue(script + " - " + val + "<=" + vmax, val <= vmax);
-			}
+			long foundCounterVal = res.iterator().next().getLong("cval");
+			assertEquals(script, counterValue, foundCounterVal);
 		}
 	}
 
 	@Before
 	public void before() throws Exception {
 		super.setup();
-		queryService.execute(new CqlQuery(CqlQueryType.SELECT,
-				"delete from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
+		{
+			queryService.execute(new CqlQuery(CqlQueryType.DELETE,
+					"delete from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
 
-		CqlQueryResult res = queryService.execute(new CqlQuery(CqlQueryType.SELECT,
-				"select impcol from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
-		assertFalse(res.toString(), res.iterator().hasNext());
+			CqlQueryResult res = queryService.execute(new CqlQuery(CqlQueryType.SELECT,
+					"select impcol from CqlDemo.MyBooks where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
+			assertFalse(res.toString(), res.iterator().hasNext());
+		}
+
+		{
+			CqlQueryResult res = queryService.execute(new CqlQuery(CqlQueryType.SELECT,
+					"select cval from CqlDemo.MyCounter where id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
+			if (!res.isEmpty()) {
+				long foundCounterVal = res.iterator().next().getLong("cval");
+				queryService.execute(new CqlQuery(CqlQueryType.UPDATE, "UPDATE CqlDemo.MyCounter SET cval=cval-"
+						+ foundCounterVal + " WHERE id=44a2054c-f98b-43a7-833d-0e1358fdaa82"));
+			}
+		}
+
 	}
 }

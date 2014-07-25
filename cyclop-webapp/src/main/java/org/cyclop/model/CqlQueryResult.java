@@ -2,11 +2,13 @@ package org.cyclop.model;
 
 import com.datastax.driver.core.Row;
 import com.google.common.base.Objects;
+
 import org.apache.commons.collections4.iterators.EmptyIterator;
 import org.cyclop.common.SerializationUtil;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -23,6 +25,7 @@ public class CqlQueryResult implements Iterable<Row>, Serializable {
 	@NotNull
 	private final transient Iterator<Row> rows;
 
+	@SuppressWarnings("unchecked")
 	CqlQueryResult() {
 		rows = EmptyIterator.INSTANCE;
 		rowMetadata = CqlRowMetadata.EMPTY;
@@ -46,5 +49,9 @@ public class CqlQueryResult implements Iterable<Row>, Serializable {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("rowMetadata", rowMetadata).toString();
+	}
+
+	public boolean isEmpty() {
+		return !rows.hasNext();
 	}
 }
