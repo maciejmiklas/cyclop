@@ -16,6 +16,9 @@
  */
 package org.cyclop.service.completion.impl.parser.template;
 
+import java.util.Optional;
+
+import org.apache.commons.lang.Validate;
 import org.cyclop.common.QueryHelper;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
@@ -36,20 +39,19 @@ public abstract class AfterTableNameCompletionTemplate implements OffsetBasedCom
 	private CqlKeyword cqlKeyword;
 
 	public AfterTableNameCompletionTemplate(CqlKeyword cqlKeyword) {
-		if (cqlKeyword == null) {
-			throw new IllegalArgumentException("Null cqlKeyword");
-		}
+		Validate.notNull(cqlKeyword, "Null cqlKeyword");
 		this.cqlKeyword = cqlKeyword;
 	}
 
 	@Override
 	public final int canApply(CqlQuery query, int queryPosition) {
-		CqlTable table = QueryHelper.extractTableName(cqlKeyword, query);
-		if (table == null) {
+		Optional<CqlTable> tableOpt = QueryHelper.extractTableName(cqlKeyword, query);
+		if (!tableOpt.isPresent()) {
 			return -1;
 		}
 
 		int index = -1;
+		CqlTable table = tableOpt.get();
 		if (queryService.checkTableExists(table)) {
 			index = query.partLc.indexOf(table.partLc) + table.partLc.length();
 		}

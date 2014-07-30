@@ -16,14 +16,18 @@
  */
 package org.cyclop.service.cassandra.impl;
 
-import com.datastax.driver.core.ColumnDefinitions;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedSet;
+import static org.cyclop.common.QueryHelper.extractSpace;
+import static org.cyclop.common.QueryHelper.extractTableName;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
@@ -46,13 +50,13 @@ import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Iterator;
-import java.util.Map;
-
-import static org.cyclop.common.QueryHelper.extractSpace;
-import static org.cyclop.common.QueryHelper.extractTableName;
+import com.datastax.driver.core.ColumnDefinitions;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @EnableValidation
@@ -76,33 +80,32 @@ class QueryServiceImpl implements QueryService {
 
 	@Override
 	public boolean checkTableExists(CqlTable table) {
-		if (table == null) {
-			return false;
-		}
+		Validate.notNull(table, "null CqlTable");
+
 		StringBuilder cql = new StringBuilder("select columnfamily_name from system.schema_columnfamilies");
 		cql.append(" where columnfamily_name='").append(table.partLc).append("' allow filtering");
 
-		ResultSet result = executeSilent(cql.toString());
-		boolean tableExists = result != null && !result.isExhausted();
+		Optional<ResultSet> result = executeSilent(cql.toString());
+		boolean tableExists = result.filter(r -> !r.isExhausted()).isPresent();
 		return tableExists;
 	}
 
 	@Override
-	public ImmutableSortedSet<CqlIndex> findAllIndexes(CqlKeySpace keySpace) {
+	public ImmutableSortedSet<CqlIndex> findAllIndexes(Optional<CqlKeySpace> keySpace) {
 
 		StringBuilder cql = new StringBuilder("SELECT index_name FROM system.schema_columns");
-		if (keySpace != null) {
-			cql.append(" where keyspace_name='").append(keySpace.partLc).append("'");
+		if (keySpace.isPresent()) {
+			cql.append(" where keyspace_name='").append(keySpace.get().partLc).append("'");
 		}
 
-		ResultSet result = executeSilent(cql.toString());
-		if (result == null) {
+		Optional<ResultSet> result = executeSilent(cql.toString());
+		if (!result.isPresent()) {
 			LOG.debug("No indexes found for keyspace: " + keySpace);
 			return ImmutableSortedSet.of();
 		}
 
 		ImmutableSortedSet.Builder<CqlIndex> indexes = ImmutableSortedSet.naturalOrder();
-		for (Row row : result) {
+		for (Row row : result.get()) {
 			String indexName = row.getString("index_name");
 			indexName = StringUtils.trimToNull(indexName);
 			if (indexName == null) {
@@ -117,35 +120,34 @@ class QueryServiceImpl implements QueryService {
 	@Override
 	public ImmutableSortedSet<CqlKeySpace> findAllKeySpaces() {
 
-		ResultSet result = executeSilent("select keyspace_name from system.schema_keyspaces");
-
-		if (result == null) {
+		Optional<ResultSet> result = executeSilent("select keyspace_name from system.schema_keyspaces");
+		if (!result.isPresent()) {
 			LOG.debug("Cannot readIdentifier keyspace info");
 			return ImmutableSortedSet.of();
 		}
 
 		ImmutableSortedSet.Builder<CqlKeySpace> keyspaces = ImmutableSortedSet.naturalOrder();
-		for (Row row : result) {
+		for (Row row : result.get()) {
 			keyspaces.add(new CqlKeySpace(row.getString("keyspace_name")));
 		}
 		return keyspaces.build();
 	}
 
 	@Override
-	public ImmutableSortedSet<CqlTable> findTableNames(CqlKeySpace keySpace) {
+	public ImmutableSortedSet<CqlTable> findTableNames(Optional<CqlKeySpace> keySpace) {
 
 		StringBuilder cql = new StringBuilder("select columnfamily_name from system.schema_columnfamilies");
-		if (keySpace != null) {
-			cql.append(" where keyspace_name='").append(keySpace.partLc).append("'");
+		if (keySpace.isPresent()) {
+			cql.append(" where keyspace_name='").append(keySpace.get().partLc).append("'");
 		}
-		ResultSet result = executeSilent(cql.toString());
-		if (result == null) {
+		Optional<ResultSet> result = executeSilent(cql.toString());
+		if (!result.isPresent()) {
 			LOG.debug("No table names found for keyspace: " + keySpace);
 			return ImmutableSortedSet.of();
 		}
 
 		ImmutableSortedSet.Builder<CqlTable> tables = ImmutableSortedSet.naturalOrder();
-		for (Row row : result) {
+		for (Row row : result.get()) {
 			String columnFamily = row.getString("columnfamily_name");
 			columnFamily = StringUtils.trimToNull(columnFamily);
 			if (columnFamily == null) {
@@ -158,7 +160,7 @@ class QueryServiceImpl implements QueryService {
 	}
 
 	private void setActiveKeySpace(CqlQuery query) {
-		CqlKeySpace space = extractSpace(query);
+		Optional<CqlKeySpace> space = extractSpace(query);
 		queryScope.setActiveKeySpace(space);
 	}
 
@@ -248,22 +250,21 @@ class QueryServiceImpl implements QueryService {
 
 	protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
 
-		CqlTable table = extractTableName(CqlKeyword.Def.FROM.value, query);
-		if (table == null) {
+		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.FROM.value, query);
+		if (!table.isPresent()) {
 			LOG.warn("Could not extract table name from: {}. Column type information is not available.");
 			return ImmutableMap.of();
 		}
 
-		ResultSet result = executeSilent(
-				"select column_name, type from system.schema_columns where " + "columnfamily_name='" + table.part +
-						"' allow filtering");
-		if (result == null) {
+		Optional<ResultSet> result = executeSilent("select column_name, type from system.schema_columns where "
+				+ "columnfamily_name='" + table.get().part + "' allow filtering");
+		if (!result.isPresent()) {
 			LOG.warn("Could not readIdentifier types for columns of table: " + table);
 			return ImmutableMap.of();
 		}
 
 		ImmutableMap.Builder<String, CqlColumnType> typesBuild = ImmutableMap.builder();
-		for (Row row : result) {
+		for (Row row : result.get()) {
 			String typeText = StringUtils.trimToNull(row.getString("type"));
 			String name = StringUtils.trimToNull(row.getString("column_name"));
 			if (typeText == null || name == null) {
@@ -277,26 +278,26 @@ class QueryServiceImpl implements QueryService {
 	}
 
 	@Override
-	public ImmutableSortedSet<CqlColumnName> findColumnNames(CqlTable table) {
+	public ImmutableSortedSet<CqlColumnName> findColumnNames(Optional<CqlTable> table) {
 
 		StringBuilder buf = new StringBuilder("select column_name from system.schema_columns");
-		if (table != null) {
+		if (table.isPresent()) {
 			buf.append(" where columnfamily_name='");
-			buf.append(table.partLc);
+			buf.append(table.get().partLc);
 			buf.append("'");
 		}
 		buf.append(" limit ");
 		buf.append(config.cassandra.columnsLimit);
 		buf.append(" allow filtering");
 
-		ResultSet result = executeSilent(buf.toString());
-		if (result == null) {
+		Optional<ResultSet> result = executeSilent(buf.toString());
+		if (!result.isPresent()) {
 			LOG.warn("Cannot readIdentifier column names");
 			return ImmutableSortedSet.of();
 		}
 
 		ImmutableSortedSet.Builder<CqlColumnName> cqlColumnNames = ImmutableSortedSet.naturalOrder();
-		for (Row row : result) {
+		for (Row row : result.get()) {
 			String name = StringUtils.trimToNull(row.getString("column_name"));
 			if (name == null) {
 				continue;
@@ -310,7 +311,8 @@ class QueryServiceImpl implements QueryService {
 	}
 
 	// required only for cassandra 1.x
-	protected void loadPartitionKeyNames(CqlTable table, ImmutableSortedSet.Builder<CqlColumnName> cqlColumnNames) {
+	protected void loadPartitionKeyNames(Optional<CqlTable> table,
+			ImmutableSortedSet.Builder<CqlColumnName> cqlColumnNames) {
 
 	}
 
@@ -329,11 +331,10 @@ class QueryServiceImpl implements QueryService {
 
 	@Override
 	public ImmutableSortedSet<CqlColumnName> findAllColumnNames() {
-
-		return findColumnNames(null);
+		return findColumnNames(Optional.empty());
 	}
 
-	protected ResultSet executeSilent(String cql) {
+	protected Optional<ResultSet> executeSilent(String cql) {
 
 		LOG.debug("Executing: {}", cql);
 		ResultSet resultSet = null;
@@ -343,7 +344,7 @@ class QueryServiceImpl implements QueryService {
 			LOG.warn("Error executing CQL: '" + cql + "', reason: " + e.getMessage());
 			LOG.debug(e.getMessage(), e);
 		}
-		return resultSet;
+		return Optional.ofNullable(resultSet);
 	}
 
 	protected ResultSet execute(String cql) {
@@ -398,6 +399,5 @@ class QueryServiceImpl implements QueryService {
 			throw new UnsupportedOperationException("Remove is not supported");
 		}
 	}
-
 
 }

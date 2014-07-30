@@ -16,6 +16,9 @@
  */
 package org.cyclop.common;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
@@ -29,27 +32,27 @@ public class QueryHelper {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryHelper.class);
 
-	public static CqlKeySpace extractSpace(CqlQuery query) {
+	public static Optional<CqlKeySpace> extractSpace(CqlQuery query) {
 		String cqlLc = query.partLc.replaceAll("[;]", "");
 		if (!cqlLc.startsWith("use")) {
-			return null;
+			return Optional.empty();
 		}
 
 		String space = cqlLc.substring(3, cqlLc.length()).trim();
 		space = StringUtils.trimToNull(space);
 		if (space == null) {
-			return null;
+			return Optional.empty();
 		}
 		CqlKeySpace exspace = new CqlKeySpace(space);
 		LOG.debug("Extrancted space {} from {}", exspace, query);
-		return exspace;
+		return Optional.of(exspace);
 	}
 
-	public static CqlTable extractTableName(CqlKeyword cqlKeyword, CqlQuery query) {
+	public static Optional<CqlTable> extractTableName(CqlKeyword cqlKeyword, CqlQuery query) {
 		String cqlLc = query.partLc;
 		int kwStart = cqlLc.indexOf(cqlKeyword.valueSp);
 		if (kwStart == -1) {
-			return null;
+			return Optional.empty();
 		}
 		kwStart += cqlKeyword.valueSp.length();
 
@@ -61,7 +64,7 @@ public class QueryHelper {
 		String candidate = cqlLc.substring(kwStart, end);
 		candidate = StringUtils.trimToNull(candidate);
 		if (candidate == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		// check whether we have table with keyspace
@@ -85,40 +88,36 @@ public class QueryHelper {
 		}
 
 		LOG.debug("Extracted table {} from {}, {}", result, cqlKeyword, query);
-		return result;
+		return Optional.ofNullable(result);
 	}
 
-	public static CqlKeySpace extractKeyspace(CqlQuery query, CqlKeyword... cqlKeyword) {
-		for (CqlKeyword kw : cqlKeyword) {
-			CqlKeySpace keySpace = extractKeyspaceSingle(query, kw);
-			if (keySpace != null) {
-				LOG.debug("Extracted {} from {} for {}", keySpace, query, kw);
-				return keySpace;
-			}
-		}
-		return null;
+	public static Optional<CqlKeySpace> extractKeyspace(CqlQuery query, CqlKeyword... cqlKeyword) {
+		Optional<CqlKeySpace> foundKeyspace = Arrays.asList(cqlKeyword).stream()
+				.map(kw -> extractKeyspaceSingle(query, kw)).filter(f -> f.isPresent()).findFirst()
+				.orElse(Optional.empty());
+		return foundKeyspace;
 	}
 
-	private static CqlKeySpace extractKeyspaceSingle(CqlQuery query, CqlKeyword cqlKeyword) {
+	private static Optional<CqlKeySpace> extractKeyspaceSingle(CqlQuery query, CqlKeyword cqlKeyword) {
 		String cqlLc = query.partLc;
 		int kwStart = cqlLc.indexOf(cqlKeyword.valueSp);
 		if (kwStart == -1) {
-			return null;
+			return Optional.empty();
 		}
 		kwStart += cqlKeyword.valueSp.length();
 
 		int end = cqlLc.indexOf(".", kwStart + 1);
 		if (end == -1) {
-			return null;
+			return Optional.empty();
 		}
 
 		String candidate = cqlLc.substring(kwStart, end);
 		candidate = StringUtils.trimToNull(candidate);
 		if (candidate == null) {
-			return null;
+			return Optional.empty();
 		}
 
 		CqlKeySpace space = new CqlKeySpace(candidate);
-		return space;
+		return Optional.of(space);
 	}
 }

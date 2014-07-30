@@ -17,15 +17,24 @@
 package org.cyclop.service.completion.impl.parser;
 
 import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 
 /** @author Maciej Miklas */
 public interface DecisionListSupport {
 
-	/** @return two dimensionless array: x - next completion, y - optional compilations for current position in x */
+	/**
+	 * @return two dimensionless array: x - next completion, y - optional
+	 *         compilations for current position in x. NEVER NULL.
+	 */
 	CqlPartCompletion[][] getDecisionList();
 
-	CqlKeyword supports();
+	CqlKeyword beginnsWith();
 
 	CqlQueryType queryName();
+
+	default boolean supports(CqlQuery query) {
+		return query.partLc.startsWith(beginnsWith().partLc);
+	}
+
 }

@@ -16,7 +16,10 @@
  */
 package org.cyclop.service.cassandra;
 
-import com.google.common.collect.ImmutableSortedSet;
+import java.util.Optional;
+
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
@@ -24,22 +27,20 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlTable;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 public interface QueryService {
 
-	@NotNull
-	ImmutableSortedSet<CqlColumnName> findColumnNames(@Valid CqlTable table);
-
+	ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull Optional<CqlTable> table);
+	
 	boolean checkTableExists(CqlTable table);
 
 	@NotNull
 	ImmutableSortedSet<CqlColumnName> findAllColumnNames();
 
 	@NotNull
-	ImmutableSortedSet<CqlIndex> findAllIndexes(@Valid CqlKeySpace keySpace);
+	ImmutableSortedSet<CqlIndex> findAllIndexes(@NotNull Optional<CqlKeySpace> keySpace);
 
 	@NotNull
 	ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
@@ -53,5 +54,5 @@ public interface QueryService {
 	CqlQueryResult execute(@NotNull CqlQuery query, boolean updateHistory);
 
 	@NotNull
-	ImmutableSortedSet<CqlTable> findTableNames(@Valid CqlKeySpace keySpace);
+	ImmutableSortedSet<CqlTable> findTableNames(@NotNull Optional<CqlKeySpace> keySpace);
 }

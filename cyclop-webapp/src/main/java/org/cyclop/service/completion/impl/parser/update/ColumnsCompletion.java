@@ -16,8 +16,11 @@
  */
 package org.cyclop.service.completion.impl.parser.update;
 
+import java.util.Optional;
+
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
+
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
@@ -55,7 +58,7 @@ class ColumnsCompletion extends MarkerBasedCompletion {
 	public CqlCompletion getCompletion(CqlQuery query) {
 		CqlCompletion.Builder builder = builderTemplate.naturalOrder();
 
-		CqlTable table = extractTableName(CqlKeyword.Def.UPDATE.value, query);
+		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.UPDATE.value, query);
 		ImmutableSortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 		builder.all(columnNames);
 

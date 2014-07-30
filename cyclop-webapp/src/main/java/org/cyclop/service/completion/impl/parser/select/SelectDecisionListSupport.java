@@ -50,7 +50,8 @@ public class SelectDecisionListSupport implements DecisionListSupport {
 
 	@PostConstruct
 	public void init() {
-		decisionList = new CqlPartCompletion[][]{{selectCompletion}, {fromCompletion}, {afterFromCompletion}, {whereCompletion, orderByClausePartCompletion}, {orderByClausePartCompletion}};
+		decisionList = new CqlPartCompletion[][] { { selectCompletion }, { fromCompletion }, { afterFromCompletion },
+				{ whereCompletion, orderByClausePartCompletion }, { orderByClausePartCompletion } };
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class SelectDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlKeyword supports() {
+	public CqlKeyword beginnsWith() {
 		return supports;
 	}
 

@@ -16,9 +16,17 @@
  */
 package org.cyclop.service.cassandra;
 
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableSortedSet;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlDataType;
@@ -38,14 +46,9 @@ import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.util.UUID;
-
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 public class TestQueryService extends AbstractTestCase {
@@ -61,7 +64,7 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Test
 	public void testFindColumnNames_TableDoesNotExist() {
-		ImmutableSortedSet<CqlColumnName> col = qs.findColumnNames(new CqlTable("not-existing"));
+		ImmutableSortedSet<CqlColumnName> col = qs.findColumnNames(Optional.of(new CqlTable("not-existing")));
 		vh.verifyIsEmpty(col);
 	}
 
@@ -72,7 +75,7 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Test
 	public void testFindColumnNames_KeyspaceWithTable() {
-		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("cqldemo", "MyBooks"));
+		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(Optional.of(new CqlTable("cqldemo", "MyBooks")));
 		assertNotNull(resp);
 		assertTrue("readSize: " + resp.size(), resp.size() > 5);
 		vh.verifyContainsMybooksColumns(resp, true);
@@ -81,31 +84,36 @@ public class TestQueryService extends AbstractTestCase {
 	}
 
 	@Test(expected = BeanValidationException.class)
-	public void testFindTableNames_SpaceCqlDemo_Violation() {
-		qs.findTableNames(new CqlKeySpace(" "));
+	public void testFindTableNames_SpaceCqlDemo_Violation_Incorrect() {
+		qs.findTableNames(Optional.of(new CqlKeySpace(" ")));
+	}
+
+	@Test(expected = BeanValidationException.class)
+	public void testFindTableNames_SpaceCqlDemo_Violation_Null() {
+		qs.findTableNames(null);
 	}
 
 	@Test
 	public void testFindTableNames_SpaceCqlDemo() {
-		ImmutableSortedSet<CqlTable> col = qs.findTableNames(new CqlKeySpace("cqldemo"));
+		ImmutableSortedSet<CqlTable> col = qs.findTableNames(Optional.of(new CqlKeySpace("cqldemo")));
 		vh.verifyContainsTableNamesCqlDemo(col, true);
 	}
 
 	@Test
 	public void testFindTableNames_SpaceSystem() {
-		ImmutableSortedSet<CqlTable> col = qs.findTableNames(new CqlKeySpace("system"));
+		ImmutableSortedSet<CqlTable> col = qs.findTableNames(Optional.of(new CqlKeySpace("system")));
 		vh.verifyContainsTableNamesSystem(col, true);
 	}
 
 	@Test
 	public void testFindTableNames_SpaceDoesNotExist() {
-		ImmutableSortedSet<CqlTable> col = qs.findTableNames(new CqlKeySpace("abcx"));
+		ImmutableSortedSet<CqlTable> col = qs.findTableNames(Optional.of(new CqlKeySpace("abcx")));
 		vh.verifyIsEmpty(col);
 	}
 
 	@Test
 	public void testFindAllIndexes_CqlDemo() {
-		ImmutableSortedSet<CqlIndex> index = qs.findAllIndexes(new CqlKeySpace("cqldemo"));
+		ImmutableSortedSet<CqlIndex> index = qs.findAllIndexes(Optional.of(new CqlKeySpace("cqldemo")));
 		vh.verifyContainsIndexFromCqlDemo(index, true);
 	}
 
@@ -117,7 +125,7 @@ public class TestQueryService extends AbstractTestCase {
 
 	@Test
 	public void testFindAllIndexes_KeyspaceDoesNotExist() {
-		ImmutableSortedSet<CqlIndex> index = qs.findAllIndexes(new CqlKeySpace("space..."));
+		ImmutableSortedSet<CqlIndex> index = qs.findAllIndexes(Optional.of(new CqlKeySpace("space...")));
 		vh.verifyIsEmpty(index);
 	}
 
@@ -134,7 +142,7 @@ public class TestQueryService extends AbstractTestCase {
 	@Test
 	public void testFindColumnNames_KeyspaceInSession() {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
-		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(new CqlTable("MyBooks"));
+		ImmutableSortedSet<CqlColumnName> resp = qs.findColumnNames(Optional.of(new CqlTable("MyBooks")));
 		assertNotNull(resp);
 		assertTrue("readSize: " + resp.size(), resp.size() > 5);
 		vh.verifyContainsMybooksColumns(resp, true);
@@ -169,17 +177,17 @@ public class TestQueryService extends AbstractTestCase {
 		assertEquals(4, rowMetadata.columns.size());
 
 		String comColsStr = rowMetadata.columns.toString();
-		assertTrue(comColsStr, rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.create(DataType.uuid()), "id")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY,
+				CqlDataType.create(DataType.uuid()), "id")));
 
-		assertTrue(comColsStr, rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.cint()), "id2")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY,
+				CqlDataType.create(DataType.cint()), "id2")));
 
-		assertTrue(comColsStr, rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.varchar()), "id3")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY,
+				CqlDataType.create(DataType.varchar()), "id3")));
 
-		assertTrue(comColsStr, rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()), "deesc")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
+				CqlDataType.create(DataType.varchar()), "deesc")));
 
 		int rowsCnt = 0;
 		for (Row row : res) {
@@ -215,8 +223,8 @@ public class TestQueryService extends AbstractTestCase {
 	}
 
 	private void executeSimpleSelect(boolean updateHistory) {
-		CqlQuery testCql = new CqlQuery(CqlQueryType.SELECT,
-				"select title from cqldemo.mybooks where id=" + UUID.randomUUID());
+		CqlQuery testCql = new CqlQuery(CqlQueryType.SELECT, "select title from cqldemo.mybooks where id="
+				+ UUID.randomUUID());
 
 		try (QueryHistory.HistoryIterator iterator1 = hs.read().iterator()) {
 			if (iterator1.hasNext()) {
@@ -267,19 +275,18 @@ public class TestQueryService extends AbstractTestCase {
 		CqlQueryResult res = qs.execute(new CqlQuery(CqlQueryType.SELECT, "select * from MyBooks where pages=2212"));
 
 		CqlRowMetadata rowMetadata = res.rowMetadata;
-		assertTrue(res.toString(), rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()), "title")));
+		assertTrue(res.toString(), rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
+				CqlDataType.create(DataType.varchar()), "title")));
 
 		String comColsStr = rowMetadata.columns.toString();
-		assertTrue(comColsStr, rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.create(DataType.uuid()), "id")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY,
+				CqlDataType.create(DataType.uuid()), "id")));
 
-		assertTrue(comColsStr, rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.set(DataType.varchar())),
-						"authors")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
+				CqlDataType.create(DataType.set(DataType.varchar())), "authors")));
 
-		assertTrue(comColsStr, rowMetadata.columns.contains(
-				new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.cint()), "pages")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
+				CqlDataType.create(DataType.cint()), "pages")));
 
 		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
 				CqlDataType.create(DataType.map(DataType.varchar(), DataType.cdouble())), "price")));
@@ -292,6 +299,24 @@ public class TestQueryService extends AbstractTestCase {
 		}
 
 		assertEquals(100, rowsSize);
+	}
 
+	@Test
+	public void testCheckTableExists_NoKeyspce() {
+		assertFalse(qs.checkTableExists(new CqlTable("bra")));
+		assertFalse(qs.checkTableExists(new CqlTable("CqlDemo")));
+		assertFalse(qs.checkTableExists(new CqlTable("sd dd ")));
+		assertFalse(qs.checkTableExists(new CqlTable("CQLDEMO MYBOOKS")));
+		assertFalse(qs.checkTableExists(new CqlTable("CqlDemo.MyBooks")));
+		assertFalse(qs.checkTableExists(new CqlTable("CqlDemo.MyBooks ")));
+		assertFalse(qs.checkTableExists(new CqlTable("  CqlDemo.MyBooks ")));
+		assertFalse(qs.checkTableExists(new CqlTable("CqlDEmo.MyBOoks ")));
+		assertFalse(qs.checkTableExists(new CqlTable("cqldemo.mybooks")));
+		assertFalse(qs.checkTableExists(new CqlTable("CQLDEMO.MYBOOKS")));
+
+		assertTrue(qs.checkTableExists(new CqlTable("MYBOOKS")));
+		assertTrue(qs.checkTableExists(new CqlTable("MYBoOKS")));
+		assertTrue(qs.checkTableExists(new CqlTable("mybooks")));
+		assertTrue(qs.checkTableExists(new CqlTable("asd", "mybooks")));
 	}
 }

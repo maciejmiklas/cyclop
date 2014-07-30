@@ -16,9 +16,6 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import net.jcip.annotations.Immutable;
-
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -26,6 +23,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import net.jcip.annotations.Immutable;
+
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Immutable

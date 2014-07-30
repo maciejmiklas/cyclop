@@ -16,13 +16,20 @@
  */
 package org.cyclop.model;
 
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.DataType.Name;
-
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import net.jcip.annotations.Immutable;
+
+import org.apache.commons.lang.Validate;
+
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.DataType.Name;
+
+@Immutable
 public final class CqlDataType implements Serializable {
 
 	public final static CqlDataType TEXT = CqlDataType.create(DataType.text());
@@ -31,10 +38,17 @@ public final class CqlDataType implements Serializable {
 	@NotNull
 	public final DataType.Name name;
 
-	/** dataType.getTypeArguments().get(0) - set only for maps - it's the map key */
+	/**
+	 * dataType.getTypeArguments().get(0) - set only for maps - it's the map key
+	 */
+	@Valid
 	public final Class<?> keyClass;
 
-	/** dataType.getTypeArguments().get(1) - set only for sets and maps. For set it's set class, for map its value class */
+	/**
+	 * dataType.getTypeArguments().get(1) - set only for sets and maps. For set
+	 * it's set class, for map its value class
+	 */
+	@Valid
 	public final Class<?> valueClass;
 
 	private final boolean collection;
@@ -59,14 +73,12 @@ public final class CqlDataType implements Serializable {
 	}
 
 	public boolean isString() {
-		return name == DataType.ascii().getName() || name == DataType.text().getName() ||
-				name == DataType.varchar().getName();
+		return name == DataType.ascii().getName() || name == DataType.text().getName()
+				|| name == DataType.varchar().getName();
 	}
 
 	public static CqlDataType create(DataType dataType) {
-		if (dataType == null) {
-			throw new IllegalArgumentException("Null DataType");
-		}
+		Validate.notNull(dataType, "Null DataType");
 		Class<?> keyClass = null;
 		Class<?> valueClass = null;
 
@@ -101,8 +113,8 @@ public final class CqlDataType implements Serializable {
 		}
 
 		final CqlDataType other = (CqlDataType) obj;
-		return java.util.Objects.equals(name, other.name) && java.util.Objects.equals(keyClass, other.keyClass) &&
-				java.util.Objects.equals(valueClass, other.valueClass);
+		return java.util.Objects.equals(name, other.name) && java.util.Objects.equals(keyClass, other.keyClass)
+				&& java.util.Objects.equals(valueClass, other.valueClass);
 	}
 
 }

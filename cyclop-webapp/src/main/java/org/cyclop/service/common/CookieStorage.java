@@ -16,6 +16,15 @@
  */
 package org.cyclop.service.common;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.http.Cookie;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
@@ -25,13 +34,6 @@ import org.cyclop.service.converter.JsonMarshaller;
 import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.servlet.http.Cookie;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.List;
 
 /** @author Maciej Miklas */
 @Named
@@ -47,8 +49,7 @@ public class CookieStorage {
 	private final static Logger LOG = LoggerFactory.getLogger(CookieStorage.class);
 
 	public static enum CookieName {
-		cyclop_prefs,
-		cyclop_userid;
+		cyclop_prefs, cyclop_userid;
 	}
 
 	public void storeCookieAsJson(@NotNull CookieName cookieName, @NotNull Object obj) {
@@ -56,24 +57,19 @@ public class CookieStorage {
 		storeCookie(cookieName, objStr);
 	}
 
-	public
-	@Valid
-	<T> T readCookieAsJson(@NotNull CookieName cookieName, @NotNull Class<T> clazz) {
+	public @Valid <T> Optional<T> readCookieAsJson(@NotNull CookieName cookieName, @NotNull Class<T> clazz) {
 		try {
-			Cookie cookie = readCookie(cookieName);
-			if (cookie == null) {
-				return null;
+			Optional<Cookie> cookie = readCookie(cookieName);
+			Optional<String> cookieValue = cookie.map(c -> StringUtils.trimToNull(c.getValue()));
+			if (!cookieValue.isPresent()) {
+				return Optional.empty();
 			}
-			String cookieValue = StringUtils.trimToNull(cookie.getValue());
-			if (cookieValue == null) {
-				return null;
-			}
-			T obj = marshaller.unmarshal(clazz, cookieValue);
-			return obj;
+			T obj = marshaller.unmarshal(clazz, cookieValue.get());
+			return Optional.of(obj);
 		} catch (Exception e) {
 			LOG.warn("Error reading cookie {}, Reason: {}", cookieName, e.getMessage());
 			LOG.debug(e.getMessage(), e);
-			return null;
+			return Optional.empty();
 		}
 	}
 
@@ -89,32 +85,30 @@ public class CookieStorage {
 		response.addCookie(cookie);
 	}
 
-	protected
-	@Valid
-	Cookie readCookie(@NotNull CookieName name) {
+	protected @NotNull Optional<Cookie> readCookie(@NotNull CookieName name) {
 		try {
 			RequestCycle requestCycle = RequestCycle.get();
 			if (requestCycle == null) {
 				LOG.warn("RequestCycle is null - cannot read cookies");
-				return null;
+				return Optional.empty();
 			}
 			WebRequest request = (WebRequest) requestCycle.getRequest();
 			List<Cookie> cookies = request.getCookies();
 			LOG.debug("Found cookies {} for {}", cookies, request);
 			if (cookies == null || cookies.isEmpty()) {
-				return null;
+				return Optional.empty();
 			}
 			for (Cookie cookie : cookies) {
 				if (name.name().equals(cookie.getName())) {
 					LOG.debug("Found cookie: {}", cookie);
-					return cookie;
+					return Optional.of(cookie);
 				}
 			}
-			return null;
+			return Optional.empty();
 		} catch (Exception e) {
 			LOG.warn("Error reading cookie {}, Reason: {}", name, e.getMessage());
 			LOG.debug(e.getMessage(), e);
-			return null;
+			return Optional.empty();
 		}
 	}
 

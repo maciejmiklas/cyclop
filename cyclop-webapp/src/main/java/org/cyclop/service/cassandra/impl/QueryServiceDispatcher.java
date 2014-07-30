@@ -16,7 +16,11 @@
  */
 package org.cyclop.service.cassandra.impl;
 
-import com.google.common.collect.ImmutableSortedSet;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
@@ -26,8 +30,7 @@ import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
 import org.springframework.context.annotation.Primary;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Named
@@ -63,23 +66,18 @@ public class QueryServiceDispatcher implements QueryService {
 	}
 
 	@Override
-	public ImmutableSortedSet<CqlTable> findTableNames(CqlKeySpace keySpace) {
+	public ImmutableSortedSet<CqlTable> findTableNames(Optional<CqlKeySpace> keySpace) {
 		return get().findTableNames(keySpace);
 	}
 
 	@Override
-	public ImmutableSortedSet<CqlIndex> findAllIndexes(CqlKeySpace keySpace) {
+	public ImmutableSortedSet<CqlIndex> findAllIndexes(Optional<CqlKeySpace> keySpace) {
 		return get().findAllIndexes(keySpace);
 	}
 
 	@Override
 	public boolean checkTableExists(CqlTable table) {
 		return get().checkTableExists(table);
-	}
-
-	@Override
-	public ImmutableSortedSet<CqlColumnName> findColumnNames(CqlTable table) {
-		return get().findColumnNames(table);
 	}
 
 	@Override
@@ -100,5 +98,10 @@ public class QueryServiceDispatcher implements QueryService {
 	@Override
 	public CqlQueryResult execute(CqlQuery query, boolean updateHistory) {
 		return get().execute(query, updateHistory);
+	}
+
+	@Override
+	public ImmutableSortedSet<CqlColumnName> findColumnNames(Optional<CqlTable> table) {
+		return get().findColumnNames(table);
 	}
 }

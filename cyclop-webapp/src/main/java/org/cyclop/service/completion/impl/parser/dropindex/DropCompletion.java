@@ -16,8 +16,12 @@
  */
 package org.cyclop.service.completion.impl.parser.dropindex;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSortedSet;
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
@@ -27,9 +31,8 @@ import org.cyclop.service.cassandra.QueryScope;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Named("dropindex.DropCompletion")
@@ -50,7 +53,7 @@ class DropCompletion implements OffsetBasedCompletion {
 
 	@Override
 	public CqlCompletion getCompletion(CqlQuery query) {
-		CqlKeySpace activeKeySpace = queryScope.getActiveKeySpace();
+		Optional<CqlKeySpace> activeKeySpace = queryScope.getActiveKeySpace();
 		ImmutableSortedSet<CqlIndex> allIndexesForActiveKeySpace = queryService.findAllIndexes(activeKeySpace);
 		return completion.naturalOrder().all(allIndexesForActiveKeySpace).build();
 	}

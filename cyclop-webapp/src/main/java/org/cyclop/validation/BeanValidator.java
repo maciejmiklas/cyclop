@@ -16,20 +16,23 @@
  */
 package org.cyclop.validation;
 
-import com.google.common.collect.ImmutableSet;
-import org.cyclop.model.Synchronizable;
-import org.cyclop.model.exception.BeanValidationException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.locks.Lock;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Path;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.metadata.ConstraintDescriptor;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.locks.Lock;
+
+import org.cyclop.model.Synchronizable;
+import org.cyclop.model.exception.BeanValidationException;
+
+import com.google.common.collect.ImmutableSet;
 
 /** @author Maciej Miklas */
 public final class BeanValidator {
@@ -85,6 +88,13 @@ public final class BeanValidator {
 	}
 
 	private Set<ConstraintViolation<Object>> validateObject(Object obj) {
+		if (obj instanceof Optional) {
+			Optional<?> opt = (Optional<?>) obj;
+			if (opt.isPresent()) {
+				obj = opt.get();
+			}
+		}
+
 		Set<ConstraintViolation<Object>> violation = null;
 		if (obj instanceof Synchronizable) {
 			Lock lock = ((Synchronizable) obj).getLock();

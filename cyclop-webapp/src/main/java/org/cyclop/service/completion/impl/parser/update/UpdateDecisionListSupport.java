@@ -56,7 +56,7 @@ public class UpdateDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlKeyword supports() {
+	public CqlKeyword beginnsWith() {
 		return supports;
 	}
 

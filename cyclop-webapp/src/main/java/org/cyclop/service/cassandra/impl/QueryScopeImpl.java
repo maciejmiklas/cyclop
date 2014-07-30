@@ -16,7 +16,11 @@
  */
 package org.cyclop.service.cassandra.impl;
 
+import java.util.Optional;
+
 import net.jcip.annotations.NotThreadSafe;
+
+import org.apache.commons.lang.Validate;
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.service.cassandra.QueryScope;
 import org.springframework.context.annotation.Scope;
@@ -30,13 +34,14 @@ import javax.inject.Named;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class QueryScopeImpl implements QueryScope {
 
-	private CqlKeySpace activeKeySpace;
+	private Optional<CqlKeySpace> activeKeySpace;
 
-	public CqlKeySpace getActiveKeySpace() {
+	public Optional<CqlKeySpace> getActiveKeySpace() {
 		return activeKeySpace;
 	}
 
-	protected void setActiveKeySpace(CqlKeySpace activeSpace) {
+	protected void setActiveKeySpace(Optional<CqlKeySpace> activeSpace) {
+		Validate.notNull(activeSpace, "null activeSpace");
 		this.activeKeySpace = activeSpace;
 	}
 }

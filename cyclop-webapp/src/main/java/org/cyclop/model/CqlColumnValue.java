@@ -31,6 +31,7 @@ public class CqlColumnValue implements Serializable {
 	public final Class<?> valueClass;
 
 	@NotNull
+	@Valid
 	public final Object value;
 
 	@NotNull

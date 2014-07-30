@@ -17,6 +17,7 @@
 package org.cyclop.service.common;
 
 import net.jcip.annotations.NotThreadSafe;
+
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.exception.ServiceException;
@@ -30,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -44,6 +46,7 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /** @author Maciej Miklas */
@@ -123,26 +126,24 @@ public class FileStorage {
 			int written = channel.write(buf);
 			channel.truncate(written);
 		} catch (IOException | SecurityException | IllegalStateException e) {
-			throw new ServiceException(
-					"Error storing query history in:" + histPath + " - " + e.getClass() + " - " + e.getMessage(), e);
+			throw new ServiceException("Error storing query history in:" + histPath + " - " + e.getClass() + " - "
+					+ e.getMessage(), e);
 		}
 		LOG.trace("File has been sotred {}", entity);
 	}
 
-	public
-	@Valid
-	<T> T read(@NotNull UserIdentifier userId, @NotNull Class<T> clazz) throws ServiceException {
+	public @Valid <T> Optional<T> read(@NotNull UserIdentifier userId, @NotNull Class<T> clazz) throws ServiceException {
 		Path filePath = getPath(userId, clazz);
 		LOG.debug("Reading file {} for {}", filePath, userId);
 		try (FileChannel channel = openForRead(filePath)) {
 			if (channel == null) {
 				LOG.debug("File not found: {}", filePath);
-				return null;
+				return Optional.empty();
 			}
 			int fileSize = (int) channel.size();
 			if (fileSize > config.fileStore.maxFileSize) {
 				LOG.info("File: {} too large: {} - skipping it", filePath, fileSize);
-				return null;
+				return Optional.empty();
 			}
 			ByteBuffer buf = ByteBuffer.allocate(fileSize);
 			channel.read(buf);
@@ -151,7 +152,7 @@ public class FileStorage {
 			T content = jsonMarshaller.unmarshal(clazz, decoded);
 
 			LOG.debug("File read");
-			return content;
+			return Optional.ofNullable(content);
 		} catch (IOException | SecurityException | IllegalStateException e) {
 			throw new ServiceException("Error reading filr from:" + filePath + " - " + e.getMessage(), e);
 		}
@@ -159,9 +160,8 @@ public class FileStorage {
 	}
 
 	private FileChannel openForWrite(Path histPath) throws IOException {
-		FileChannel byteChannel = FileChannel
-				.open(histPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING,
-						StandardOpenOption.WRITE);
+		FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
 		byteChannel.force(true);
 		FileChannel lockChannel = lock(histPath, byteChannel);
 		return lockChannel;

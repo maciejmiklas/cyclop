@@ -16,12 +16,13 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
-import net.jcip.annotations.NotThreadSafe;
-import net.jcip.annotations.ThreadSafe;
-import org.apache.commons.collections4.queue.CircularFifoQueue;
-import org.cyclop.common.AppConfig;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -31,13 +32,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+
+import net.jcip.annotations.NotThreadSafe;
+import net.jcip.annotations.ThreadSafe;
+
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+import org.cyclop.common.AppConfig;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 
 /**
  * Favorites are sorted by change date, history is queued.
@@ -176,8 +179,9 @@ public final class QueryHistory implements Serializable, Synchronizable {
 	}
 
 	/**
-	 * CALL CLOSE ON ITERATOR BECAUSE IT HOLDS READ-LOCK <br> Iterates over history entries from newest to oldest entry
-	 * (reversed fifo col)
+	 * CALL CLOSE ON ITERATOR BECAUSE IT HOLDS READ-LOCK <br>
+	 * Iterates over history entries from newest to oldest entry (reversed fifo
+	 * col)
 	 */
 	@XmlTransient
 	@ThreadSafe

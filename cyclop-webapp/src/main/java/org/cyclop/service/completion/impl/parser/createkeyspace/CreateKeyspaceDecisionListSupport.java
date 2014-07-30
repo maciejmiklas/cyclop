@@ -50,7 +50,7 @@ public class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlKeyword supports() {
+	public CqlKeyword beginnsWith() {
 		return supports;
 	}
 

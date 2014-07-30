@@ -16,10 +16,12 @@
  */
 package org.cyclop.service.converter;
 
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import java.util.Collection;
+import java.util.Map;
+
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.CqlColumnValue;
 import org.cyclop.model.CqlDataType;
 import org.cyclop.model.CqlExtendedColumnName;
@@ -29,10 +31,10 @@ import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.Map;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /** @author Maciej Miklas */
 @Named
@@ -40,9 +42,8 @@ import java.util.Map;
 public class DataExtractor {
 	private final static Logger LOG = LoggerFactory.getLogger(DataExtractor.class);
 
-	public
-	@NotNull
-	ImmutableList<CqlColumnValue> extractCollection(@NotNull Row row, @NotNull CqlExtendedColumnName column) {
+	public @NotNull ImmutableList<CqlColumnValue> extractCollection(@NotNull Row row,
+			@NotNull CqlExtendedColumnName column) {
 		String partLc = column.partLc;
 		CqlDataType dataType = column.dataType;
 		if (dataType.name != DataType.Name.SET && dataType.name != DataType.Name.LIST) {
@@ -68,9 +69,8 @@ public class DataExtractor {
 		return collection;
 	}
 
-	public
-	@NotNull
-	ImmutableMap<CqlColumnValue, CqlColumnValue> extractMap(@NotNull Row row, @NotNull CqlExtendedColumnName column) {
+	public @NotNull ImmutableMap<CqlColumnValue, CqlColumnValue> extractMap(@NotNull Row row,
+			@NotNull CqlExtendedColumnName column) {
 		String partLc = column.partLc;
 		CqlDataType dataType = column.dataType;
 		if (dataType.name != DataType.Name.MAP) {
@@ -95,18 +95,14 @@ public class DataExtractor {
 		return map;
 	}
 
-	public
-	@NotNull
-	CqlPartitionKeyValue extractPartitionKey(@NotNull Row row, @NotNull CqlPartitionKey partitionKey) {
+	public @NotNull CqlPartitionKeyValue extractPartitionKey(@NotNull Row row, @NotNull CqlPartitionKey partitionKey) {
 		CqlColumnValue colSv = extractSingleValue(row, partitionKey);
 		CqlPartitionKeyValue key = new CqlPartitionKeyValue(colSv.valueClass, colSv.value, partitionKey);
 		LOG.trace("Extracted: {}", key);
 		return key;
 	}
 
-	public
-	@NotNull
-	CqlColumnValue extractSingleValue(@NotNull Row row, @NotNull CqlExtendedColumnName column) {
+	public @NotNull CqlColumnValue extractSingleValue(@NotNull Row row, @NotNull CqlExtendedColumnName column) {
 		String partLc = column.partLc;
 		CqlDataType dataType = column.dataType;
 		if (dataType.isCollection()) {

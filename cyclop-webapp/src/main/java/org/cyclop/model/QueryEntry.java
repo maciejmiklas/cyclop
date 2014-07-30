@@ -16,10 +16,7 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import net.jcip.annotations.Immutable;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import java.io.Serializable;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -29,7 +26,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.io.Serializable;
+
+import net.jcip.annotations.Immutable;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import com.google.common.base.Objects;
 
 /**
  * Unique by query, sorted by date
@@ -45,6 +48,7 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 	public final CqlQuery query;
 
 	@NotNull
+	@Valid
 	public final DateTime executedOnUtc;
 
 	public final long runTime;

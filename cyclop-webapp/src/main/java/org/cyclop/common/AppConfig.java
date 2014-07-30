@@ -17,7 +17,10 @@
 package org.cyclop.common;
 
 import com.google.common.base.Objects;
+
 import net.jcip.annotations.Immutable;
+
+import org.apache.commons.lang.Validate;
 import org.cyclop.model.exception.ServiceException;
 import org.cyclop.validation.BeanValidator;
 import org.cyclop.validation.SimpleDate;
@@ -32,6 +35,7 @@ import javax.inject.Named;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
@@ -108,9 +112,7 @@ public final class AppConfig implements Serializable {
 	}
 
 	public static AppConfig get() {
-		if (instance == null) {
-			throw new IllegalArgumentException("Can not access AppConfig because spring initialization is not trough");
-		}
+		Validate.notNull(instance, "Can not access AppConfig because spring initialization is not trough");
 		return instance;
 	}
 

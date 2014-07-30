@@ -16,7 +16,14 @@
  */
 package org.cyclop.service.converter;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import javax.inject.Named;
+import javax.validation.Valid;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.Validate;
 import org.codehaus.jackson.map.AnnotationIntrospector;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -27,11 +34,6 @@ import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.cyclop.model.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Named;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 /** @author Maciej Miklas */
 @Named
@@ -63,10 +65,9 @@ public class JsonMarshaller {
 
 	public <T> T unmarshal(Class<T> clazz, String input) {
 		input = StringUtils.trimToNull(input);
-		if (input == null) {
-			return null;
-		}
-
+		Validate.notNull(clazz, "clazz");
+		Validate.notNull(input, "input");
+		
 		T unmarshalObj;
 		try {
 			unmarshalObj = objectMapper.get().readValue(input, clazz);
@@ -79,9 +80,8 @@ public class JsonMarshaller {
 	}
 
 	public String marshal(@Valid Object obj) {
-		if (obj == null) {
-			return null;
-		}
+		Validate.notNull(obj, "obj");
+		
 		byte[] marshalBytes;
 		try {
 			marshalBytes = objectMapper.get().writeValueAsBytes(obj);

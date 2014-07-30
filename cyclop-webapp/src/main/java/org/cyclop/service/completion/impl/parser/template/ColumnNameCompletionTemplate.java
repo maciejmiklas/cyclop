@@ -27,6 +27,8 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import java.util.Optional;
 import java.util.SortedSet;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
@@ -52,8 +54,8 @@ public abstract class ColumnNameCompletionTemplate extends MarkerBasedCompletion
 		CqlCompletion.Builder builder = builderTemplate.naturalOrder();
 
 		SortedSet<CqlColumnName> columnNames;
-		CqlTable table = extractTableName(cqlKeyword, query);
-		if (queryService.checkTableExists(table)) {
+		Optional<CqlTable> table = extractTableName(cqlKeyword, query);
+		if (table.isPresent() && queryService.checkTableExists(table.get())) {
 			columnNames = queryService.findColumnNames(table);
 		} else {
 			columnNames = queryService.findAllColumnNames();

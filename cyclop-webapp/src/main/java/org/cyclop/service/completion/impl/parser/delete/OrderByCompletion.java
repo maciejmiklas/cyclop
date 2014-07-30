@@ -17,6 +17,7 @@
 package org.cyclop.service.completion.impl.parser.delete;
 
 import com.google.common.base.Objects;
+
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
@@ -28,6 +29,8 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import java.util.Optional;
 import java.util.SortedSet;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
@@ -56,7 +59,7 @@ class OrderByCompletion extends MarkerBasedCompletion {
 	public CqlCompletion getCompletion(CqlQuery query) {
 		CqlCompletion.Builder builder = builderTemplate.naturalOrder();
 
-		CqlTable table = extractTableName(CqlKeyword.Def.FROM.value, query);
+		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.FROM.value, query);
 		SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 		builder.all(columnNames);
 

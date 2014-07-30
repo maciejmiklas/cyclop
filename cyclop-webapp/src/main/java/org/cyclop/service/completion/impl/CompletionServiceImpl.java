@@ -16,9 +16,14 @@
  */
 package org.cyclop.service.completion.impl;
 
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.cyclop.model.ContextCqlCompletion;
-import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.CompletionService;
@@ -26,9 +31,6 @@ import org.cyclop.service.completion.impl.parser.CqlParser;
 import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @Named
@@ -61,10 +63,8 @@ class CompletionServiceImpl implements CompletionService {
 		if (cursorPosition == 0 || cursorPosition == 1) {
 			return findInitialCompletion();
 		}
-		ContextCqlCompletion comp = parser.findCompletion(cqlQuery, cursorPosition);
-		if (comp == null) {
-			comp = new ContextCqlCompletion(CqlQueryType.UNKNOWN, CqlCompletion.Builder.naturalOrder().build());
-		}
+		Optional<ContextCqlCompletion> fcomp = parser.findCompletion(cqlQuery, cursorPosition);
+		ContextCqlCompletion comp = fcomp.orElse(ContextCqlCompletion.EMPTY);
 		LOG.debug("Found completion for query {} -> {} - > {}", cqlQuery, cursorPosition, comp);
 		return comp;
 	}

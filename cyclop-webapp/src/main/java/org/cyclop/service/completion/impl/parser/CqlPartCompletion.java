@@ -16,11 +16,14 @@
  */
 package org.cyclop.service.completion.impl.parser;
 
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlQuery;
 
 /** @author Maciej Miklas */
 public interface CqlPartCompletion {
 
+	@NotNull
 	CqlCompletion getCompletion(CqlQuery query);
 }

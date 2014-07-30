@@ -48,7 +48,7 @@ public class BatchDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlKeyword supports() {
+	public CqlKeyword beginnsWith() {
 		return supports;
 	}
 

@@ -56,7 +56,7 @@ public class InsertDecisionListSupport implements DecisionListSupport {
 	}
 
 	@Override
-	public CqlKeyword supports() {
+	public CqlKeyword beginnsWith() {
 		return supports;
 	}
 

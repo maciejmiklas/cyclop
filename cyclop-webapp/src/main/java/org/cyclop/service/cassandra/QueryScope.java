@@ -16,6 +16,8 @@
  */
 package org.cyclop.service.cassandra;
 
+import java.util.Optional;
+
 import org.cyclop.model.CqlKeySpace;
 
 /**
@@ -25,5 +27,5 @@ import org.cyclop.model.CqlKeySpace;
  */
 public interface QueryScope {
 
-	CqlKeySpace getActiveKeySpace();
+	Optional<CqlKeySpace> getActiveKeySpace();
 }

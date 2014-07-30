@@ -18,15 +18,21 @@ package org.cyclop.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.sun.istack.NotNull;
 
 import java.io.Serializable;
+
+import javax.validation.Valid;
 
 /** @author Maciej Miklas */
 public class FilterResult<T> implements Serializable {
 
+	@NotNull
+	@Valid
 	public final ImmutableList<T> result;
 
 	/** trimmed, lower case */
+	@NotNull
 	public final ImmutableSet<String> normalizedKeywords;
 
 	public FilterResult(ImmutableList<T> result, ImmutableSet<String> normalizedKeywords) {

@@ -20,12 +20,16 @@ import net.jcip.annotations.Immutable;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 /** @author Maciej Miklas */
 @Immutable
 public final class ContextCqlCompletion implements Serializable {
+
+	public final static ContextCqlCompletion EMPTY = new ContextCqlCompletion(CqlQueryType.UNKNOWN,
+			CqlCompletion.Builder.naturalOrder().build());
 	@NotNull
 	@Valid
 	public final CqlQueryType queryName;

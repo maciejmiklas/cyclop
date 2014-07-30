@@ -47,7 +47,6 @@ public final class UserPreferences implements Serializable {
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean importContinueWithErrors = false;
 
-
 	@XmlElement(name = "i_pa")
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean importParallel = false;
@@ -143,9 +142,8 @@ public final class UserPreferences implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects
-				.hash(showCqlCompletionHint, showCqlHelp, importIncludeInHistory, importContinueWithErrors,
-						pagerEditorItems, pagerHistoryItems, pagerImportItems, importParallel);
+		return java.util.Objects.hash(showCqlCompletionHint, showCqlHelp, importIncludeInHistory,
+				importContinueWithErrors, pagerEditorItems, pagerHistoryItems, pagerImportItems, importParallel);
 	}
 
 	@Override
@@ -154,13 +152,13 @@ public final class UserPreferences implements Serializable {
 			return false;
 		}
 		final UserPreferences other = (UserPreferences) obj;
-		return java.util.Objects.equals(showCqlCompletionHint, other.showCqlCompletionHint) &&
-				java.util.Objects.equals(showCqlHelp, other.showCqlHelp) &&
-				java.util.Objects.equals(importIncludeInHistory, other.importIncludeInHistory) &&
-				java.util.Objects.equals(importContinueWithErrors, other.importContinueWithErrors) &&
-				java.util.Objects.equals(pagerEditorItems, other.pagerEditorItems) &&
-				java.util.Objects.equals(pagerHistoryItems, other.pagerHistoryItems) &&
-				java.util.Objects.equals(pagerImportItems, other.pagerImportItems) &&
-				java.util.Objects.equals(importParallel, other.importParallel);
+		return java.util.Objects.equals(showCqlCompletionHint, other.showCqlCompletionHint)
+				&& java.util.Objects.equals(showCqlHelp, other.showCqlHelp)
+				&& java.util.Objects.equals(importIncludeInHistory, other.importIncludeInHistory)
+				&& java.util.Objects.equals(importContinueWithErrors, other.importContinueWithErrors)
+				&& java.util.Objects.equals(pagerEditorItems, other.pagerEditorItems)
+				&& java.util.Objects.equals(pagerHistoryItems, other.pagerHistoryItems)
+				&& java.util.Objects.equals(pagerImportItems, other.pagerImportItems)
+				&& java.util.Objects.equals(importParallel, other.importParallel);
 	}
 }

@@ -16,6 +16,13 @@
  */
 package org.cyclop.service.completion.impl.parser;
 
+import java.util.List;
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlQuery;
@@ -23,11 +30,6 @@ import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.List;
 
 /**
  * LL(1) like cql parser
@@ -39,7 +41,7 @@ public class CqlParser {
 	private final static Logger LOG = LoggerFactory.getLogger(CqlParser.class);
 
 	@Inject
-	private List<DecisionListSupport> decisionListFactoryList;
+	private List<DecisionListSupport> decisionListSupportDef;
 
 	private CqlCompletion initialCqlCompletion = null;
 
@@ -47,31 +49,32 @@ public class CqlParser {
 	public void init() {
 
 		CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
-		for (DecisionListSupport cf : decisionListFactoryList) {
-			cb.all(cf.supports());
+		for (DecisionListSupport cf : decisionListSupportDef) {
+			cb.all(cf.beginnsWith());
 		}
 		initialCqlCompletion = cb.build();
 
 		LOG.debug("Initial completion {}", initialCqlCompletion);
 	}
 
-	private DecisionListSupport findCompletionDecisionList(CqlQuery query) {
+	private Optional<DecisionListSupport> findCompletionDecision(CqlQuery query) {
 		DecisionListSupport found = null;
-		for (DecisionListSupport cf : decisionListFactoryList) {
-			if (query.partLc.startsWith(cf.supports().partLc)) {
-				found = cf;
+		for (DecisionListSupport dl : decisionListSupportDef) {
+			if (dl.supports(query)) {
+				found = dl;
 				break;
 			}
 		}
 		LOG.debug("Found Decision List for query {} -> {}", query, found);
-		return found;
+
+		return Optional.ofNullable(found);
 	}
 
 	public CqlCompletion findInitialCompletion() {
 		return initialCqlCompletion;
 	}
 
-	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
+	public Optional<ContextCqlCompletion> findCompletion(CqlQuery cqlQuery, int cursorPosition) {
 		LOG.debug("Find completion for {} on {}", cqlQuery, cursorPosition);
 		if (cursorPosition == -1) {
 			cursorPosition = cqlQuery.part.length() - 1;
@@ -79,24 +82,25 @@ public class CqlParser {
 
 		cursorPosition++;
 
-		DecisionListSupport dls = findCompletionDecisionList(cqlQuery);
-		if (dls == null) {
+		Optional<DecisionListSupport> dlsOp = findCompletionDecision(cqlQuery);
+		if (!dlsOp.isPresent()) {
 			// user started typing, has first world and there is no decision
 			// list for it
+			ContextCqlCompletion initial = null;
 			if (!cqlQuery.partLc.isEmpty() && !cqlQuery.partLc.contains(" ")) {
-				ContextCqlCompletion initial = new ContextCqlCompletion(CqlQueryType.UNKNOWN, initialCqlCompletion);
-				return initial;
+				initial = new ContextCqlCompletion(CqlQueryType.UNKNOWN, initialCqlCompletion);
 			}
-			return null;
+			return Optional.ofNullable(initial);
 		}
 
 		if (cursorPosition < 0) {
 			cursorPosition = 0;
 		}
 
+		DecisionListSupport dls = dlsOp.get();
 		CqlPartCompletion[][] decisionList = dls.getDecisionList();
-		if (decisionList == null || decisionList.length == 0) {
-			return null;
+		if (decisionList.length == 0) {
+			return Optional.empty();
 		}
 
 		int cqLength = cqlQuery.partLc.length();
@@ -133,8 +137,7 @@ public class CqlParser {
 				LOG.debug("completionStartMarker: {}", completionStartMarker);
 
 				if (completionStartMarker == -1) {
-					// next decision cannot be applied - so the last selected
-					// one will be taken
+					// this decision cannot be applied - try next one
 					continue;
 				}
 				found = true;
@@ -147,16 +150,16 @@ public class CqlParser {
 				break;
 			}
 		}
-
-		if (lastMatchingCompletion == null) {
-			LOG.debug("Completion not found");
-			return null;
-		} else {
+		ContextCqlCompletion cqc = null;
+		if (lastMatchingCompletion != null) {
 			CqlCompletion cqlCompletion = lastMatchingCompletion.getCompletion(cqlQuery);
-			ContextCqlCompletion cqc = new ContextCqlCompletion(dls.queryName(), cqlCompletion);
-			LOG.debug("Completion foudn: {}", cqc);
-			return cqc;
+			cqc = new ContextCqlCompletion(dls.queryName(), cqlCompletion);
+			LOG.debug("Completion found: {}", cqc);
+		} else {
+			LOG.debug("Completion not found");
 		}
+
+		return Optional.ofNullable(cqc);
 	}
 
 }

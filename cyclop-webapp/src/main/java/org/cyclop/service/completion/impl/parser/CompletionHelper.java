@@ -16,7 +16,11 @@
  */
 package org.cyclop.service.completion.impl.parser;
 
-import com.google.common.collect.ImmutableSortedSet;
+import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.common.QueryHelper;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeySpace;
@@ -26,8 +30,7 @@ import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryScope;
 import org.cyclop.service.cassandra.QueryService;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Named
@@ -40,37 +43,36 @@ public final class CompletionHelper {
 	private QueryScope queryScope;
 
 	public CqlCompletion.Builder computeTableNameCompletion(CqlQuery query, CqlKeyword... kw) {
-		CqlCompletion.Builder completion = computeTableNameCompletionWithKeyspaceInQuery(query, kw);
-		if (completion == null) {
-			completion = computeTableNameCompletionWithoutKeyspaceInQuery();
-		}
+		CqlCompletion.Builder completion = computeTableNameCompletionWithKeyspaceInQuery(query, kw).orElse(
+				computeTableNameCompletionWithoutKeyspaceInQuery());
 		return completion;
 	}
 
-	private CqlCompletion.Builder computeTableNameCompletionWithKeyspaceInQuery(CqlQuery query, CqlKeyword... kw) {
-		CqlKeySpace keySpace = QueryHelper.extractKeyspace(query, kw);
-		if (keySpace == null) {
-			return null;
+	private Optional<CqlCompletion.Builder> computeTableNameCompletionWithKeyspaceInQuery(CqlQuery query,
+			CqlKeyword... kw) {
+		Optional<CqlKeySpace> keySpace = QueryHelper.extractKeyspace(query, kw);
+		if (!keySpace.isPresent()) {
+			return Optional.empty();
 		}
 		ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(keySpace);
 		if (tables.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
 		CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
 		builder.all(tables);
 
 		for (CqlTable ta : tables) {
-			builder.full(new CqlTable(keySpace.part, ta.part));
+			builder.full(new CqlTable(keySpace.get().part, ta.part));
 		}
 
-		return builder;
+		return Optional.of(builder);
 	}
 
 	private CqlCompletion.Builder computeTableNameCompletionWithoutKeyspaceInQuery() {
 		CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
 
-		CqlKeySpace activeKeySpace = queryScope.getActiveKeySpace();
+		Optional<CqlKeySpace> activeKeySpace = queryScope.getActiveKeySpace();
 		ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(activeKeySpace);
 		builder.all(tables);
 

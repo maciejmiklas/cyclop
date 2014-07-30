@@ -16,6 +16,8 @@
  */
 package org.cyclop.service.um.impl;
 
+import java.util.Optional;
+
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.common.CookieStorage;
@@ -51,11 +53,12 @@ public class CookieBasedUserManager implements UserManager {
 
 	@Override
 	public UserPreferences readPreferences() {
-		UserPreferences preferences = cookieStorage
-				.readCookieAsJson(CookieStorage.CookieName.cyclop_prefs, UserPreferences.class);
-		if (preferences == null) {
+		Optional<UserPreferences> preferencesOpt = cookieStorage.readCookieAsJson(
+				CookieStorage.CookieName.cyclop_prefs, UserPreferences.class);
+		UserPreferences preferences = preferencesOpt.orElseGet(UserPreferences::new);
+		// TODO move log statement to optional above
+		if (!preferencesOpt.isPresent()) {
 			LOG.debug("User preferences not found as cookie - using default");
-			preferences = new UserPreferences();
 		}
 		return preferences;
 	}
@@ -68,14 +71,14 @@ public class CookieBasedUserManager implements UserManager {
 	@Override
 	public UserIdentifier readIdentifier() {
 		UserIdentifier id = null;
-		UserIdentifierCookie cookie = cookieStorage
-				.readCookieAsJson(CookieStorage.CookieName.cyclop_userid, UserIdentifierCookie.class);
-		if (cookie == null) {
+		Optional<UserIdentifierCookie> cookie = cookieStorage.readCookieAsJson(CookieStorage.CookieName.cyclop_userid,
+				UserIdentifierCookie.class);
+		if (!cookie.isPresent()) {
 			id = new UserIdentifier();
 			storeIdentifier(id);
 			LOG.info("Generated new User Identifier: " + id.id);
 		} else {
-			id = cookie.getId();
+			id = cookie.get().getId();
 		}
 
 		return id;
