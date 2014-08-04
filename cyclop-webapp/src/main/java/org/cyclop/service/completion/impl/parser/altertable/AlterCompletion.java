@@ -16,11 +16,12 @@
  */
 package org.cyclop.service.completion.impl.parser.altertable;
 
-import com.google.common.base.Objects;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
 
-import javax.inject.Named;
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Named("altertable.AlterCompletion")

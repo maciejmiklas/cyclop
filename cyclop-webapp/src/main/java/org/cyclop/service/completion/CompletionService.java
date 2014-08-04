@@ -16,10 +16,10 @@
  */
 package org.cyclop.service.completion;
 
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlQuery;
-
-import javax.validation.constraints.NotNull;
 
 /** @author Maciej Miklas */
 public interface CompletionService {

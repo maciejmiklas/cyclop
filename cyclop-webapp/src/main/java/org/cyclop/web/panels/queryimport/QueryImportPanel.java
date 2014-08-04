@@ -16,7 +16,13 @@
  */
 package org.cyclop.web.panels.queryimport;
 
-import com.google.common.collect.ImmutableList;
+import java.io.ByteArrayInputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -48,11 +54,7 @@ import org.cyclop.web.components.pagination.PagerConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.ByteArrayInputStream;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 public class QueryImportPanel extends Panel {

@@ -16,11 +16,11 @@
  */
 package org.cyclop.service.um.impl;
 
-import org.cyclop.model.UserIdentifier;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.cyclop.model.UserIdentifier;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

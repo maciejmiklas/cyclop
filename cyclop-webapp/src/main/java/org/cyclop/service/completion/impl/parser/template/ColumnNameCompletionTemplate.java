@@ -16,6 +16,14 @@
  */
 package org.cyclop.service.completion.impl.parser.template;
 
+import static org.cyclop.common.QueryHelper.extractTableName;
+
+import java.util.Optional;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
@@ -24,14 +32,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import java.util.Optional;
-import java.util.SortedSet;
-
-import static org.cyclop.common.QueryHelper.extractTableName;
 
 @Named
 public abstract class ColumnNameCompletionTemplate extends MarkerBasedCompletion {

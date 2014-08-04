@@ -18,6 +18,9 @@ package org.cyclop.service.um.impl;
 
 import java.util.Optional;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.UserPreferences;
 import org.cyclop.service.common.CookieStorage;
@@ -25,9 +28,6 @@ import org.cyclop.service.um.UserManager;
 import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @Named

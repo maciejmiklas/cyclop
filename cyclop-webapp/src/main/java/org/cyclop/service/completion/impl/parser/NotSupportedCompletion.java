@@ -16,13 +16,13 @@
  */
 package org.cyclop.service.completion.impl.parser;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @Named

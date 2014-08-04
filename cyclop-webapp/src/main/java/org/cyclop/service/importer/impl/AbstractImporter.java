@@ -16,6 +16,11 @@
  */
 package org.cyclop.service.importer.impl;
 
+import java.io.InputStream;
+import java.util.Scanner;
+
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.time.StopWatch;
 import org.cyclop.common.AppConfig;
 import org.cyclop.service.importer.QueryImporter;
@@ -24,10 +29,6 @@ import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import java.io.InputStream;
-import java.util.Scanner;
 
 /** @author Maciej Miklas */
 abstract class AbstractImporter implements QueryImporter {

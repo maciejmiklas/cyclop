@@ -18,6 +18,9 @@ package org.cyclop.service.completion.impl.parser.template;
 
 import java.util.Optional;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.commons.lang.Validate;
 import org.cyclop.common.QueryHelper;
 import org.cyclop.model.CqlKeyword;
@@ -25,9 +28,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @Named

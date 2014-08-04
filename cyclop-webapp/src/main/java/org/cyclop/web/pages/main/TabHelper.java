@@ -16,15 +16,15 @@
  */
 package org.cyclop.web.pages.main;
 
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
-import org.cyclop.web.common.AjaxReloadSupport;
-import org.cyclop.web.common.JsFunctionBuilder;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.cyclop.web.common.AjaxReloadSupport;
+import org.cyclop.web.common.JsFunctionBuilder;
 
 class TabHelper {
 

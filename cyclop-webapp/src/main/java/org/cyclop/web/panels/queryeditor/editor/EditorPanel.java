@@ -16,12 +16,19 @@
  */
 package org.cyclop.web.panels.queryeditor.editor;
 
+import static org.cyclop.web.resources.ScriptsRef.SUGGEST;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
-import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -35,13 +42,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.CompletionService;
 import org.cyclop.web.common.JsFunctionBuilder;
-
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.SortedSet;
-
-import static org.cyclop.web.resources.ScriptsRef.SUGGEST;
 
 /** @author Maciej Miklas */
 public class EditorPanel extends Panel {
@@ -61,7 +61,6 @@ public class EditorPanel extends Panel {
 
 	public EditorPanel(String id, String editorContent) {
 		super(id);
-		Injector.get().inject(this);
 
 		editor = initEditor(StringUtils.trimToNull(editorContent));
 		editorMarkupIdJq = "#" + editor.getMarkupId();
@@ -134,8 +133,8 @@ public class EditorPanel extends Panel {
 
 			@Override
 			protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
-				attributes.getDynamicExtraParameters().add("return {'cursorPos' : getCaretPosition(" +
-						editorMarkupIdJs + ")}");
+				attributes.getDynamicExtraParameters().add(
+						"return {'cursorPos' : getCaretPosition(" + editorMarkupIdJs + ")}");
 				super.updateAjaxAttributes(attributes);
 			}
 		});
@@ -169,8 +168,7 @@ public class EditorPanel extends Panel {
 		return generateSuggests("replaceSuggests", editorMarkupId, suggestValues);
 	}
 
-	private String generateSuggests(String function, String editorMarkupId,
-									SortedSet<? extends CqlPart> suggestValues) {
+	private String generateSuggests(String function, String editorMarkupId, SortedSet<? extends CqlPart> suggestValues) {
 
 		String js = JsFunctionBuilder.function(function).param(editorMarkupId).array(suggestValues).build();
 		return js;

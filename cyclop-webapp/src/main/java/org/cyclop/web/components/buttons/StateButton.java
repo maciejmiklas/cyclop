@@ -26,15 +26,14 @@ public abstract class StateButton extends AjaxFallbackLink<Void> {
 
 	private boolean pressed;
 
-	public StateButton(final String id, final boolean initialPressed, final String cssEnabled,
-					   final String cssPressed) {
+	public StateButton(final String id, final boolean initialPressed, final String cssReleased, final String cssPressed) {
 		super(id);
 		this.pressed = initialPressed;
 
 		add(new AttributeModifier("class", new IModel<String>() {
 			@Override
 			public String getObject() {
-				String css = pressed ? cssPressed : cssEnabled;
+				String css = pressed ? cssPressed : cssReleased;
 				return css;
 			}
 

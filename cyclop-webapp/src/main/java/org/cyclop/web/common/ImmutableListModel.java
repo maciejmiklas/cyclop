@@ -16,11 +16,12 @@
  */
 package org.cyclop.web.common;
 
-import com.google.common.collect.ImmutableList;
-import org.apache.wicket.model.util.GenericBaseModel;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.wicket.model.util.GenericBaseModel;
+
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 public class ImmutableListModel<T> extends GenericBaseModel<ImmutableList<? extends T>> {

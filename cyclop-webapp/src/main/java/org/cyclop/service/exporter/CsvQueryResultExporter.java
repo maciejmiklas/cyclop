@@ -16,10 +16,9 @@
  */
 package org.cyclop.service.exporter;
 
-import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryResult;
-
 import java.io.OutputStream;
+
+import org.cyclop.model.CqlQuery;
 
 /** @author Maciej Miklas */
 public interface CsvQueryResultExporter {

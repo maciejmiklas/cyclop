@@ -16,23 +16,27 @@
  */
 package org.cyclop.model;
 
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.DataType.Name;
-import com.google.common.testing.EqualsTester;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.CompletionService;
 import org.cyclop.test.AbstractTestCase;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.DataType.Name;
+import com.google.common.collect.ImmutableList;
+import com.google.common.testing.EqualsTester;
 
 public class TestBeans extends AbstractTestCase {
 	@Inject
@@ -48,9 +52,26 @@ public class TestBeans extends AbstractTestCase {
 	}
 
 	@Test
+	public void testSerialize_CqlRowMetadata() throws Exception {
+		ImmutableList.Builder<CqlExtendedColumnName> extendedColumnBuild = ImmutableList.builder();
+		extendedColumnBuild.add(new CqlExtendedColumnName(CqlColumnType.COMPACT_VALUE, CqlDataType.create(DataType
+				.bigint()), "col"));
+		extendedColumnBuild.add(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.create(DataType
+				.inet()), "col 2"));
+
+		CqlRowMetadata obj = new CqlRowMetadata(extendedColumnBuild.build(),
+				CqlPartitionKey.fromColumn(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType
+						.create(DataType.inet()), "col 4")));
+		CqlRowMetadata des = execSerialize(obj, CqlRowMetadata.class);
+		assertEquals(obj.columns, des.columns);
+		assertNotNull(obj.partitionKey);
+		assertNull(des.partitionKey);
+	}
+
+	@Test
 	public void testSerialize_CqlColumnValue() throws Exception {
-		CqlColumnValue obj = new CqlColumnValue(Long.class, new Long(11),
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol"));
+		CqlColumnValue obj = new CqlColumnValue(Long.class, new Long(11), new CqlExtendedColumnName(
+				CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol"));
 		execSerializeEquals(obj, CqlColumnValue.class);
 	}
 
@@ -82,15 +103,12 @@ public class TestBeans extends AbstractTestCase {
 	@Test
 	public void testSerialize_QueryFavourites() throws Exception {
 		QueryFavourites obj = new QueryFavourites();
-		obj.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(),
-						2312));
-		obj.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
-						DateTime.now(), 234));
-		obj.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), DateTime.now(),
-						345));
+		obj.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."),
+				DateTime.now(), 2312));
+		obj.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE,
+				"alter sapce cqldemo.mybooks ...."), DateTime.now(), 234));
+		obj.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"),
+				DateTime.now(), 345));
 
 		byte[] serialized = serialize(obj);
 
@@ -98,18 +116,16 @@ public class TestBeans extends AbstractTestCase {
 		assertTrue(des.copyAsSortedSet().containsAll(obj.copyAsSortedSet()));
 
 		// check whether lock has been deserialized
-		des.addWithSizeCheck(
-				new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), DateTime.now(),
-						542));
+		des.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"),
+				DateTime.now(), 542));
 	}
 
 	@Test
 	public void testSerialize_QueryHistory() throws Exception {
 		QueryHistory obj = new QueryHistory();
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(),
-				23));
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
-				DateTime.now(), 7654));
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(), 23));
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."), DateTime
+				.now(), 7654));
 		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), DateTime.now(),
 				987656));
 
@@ -216,8 +232,8 @@ public class TestBeans extends AbstractTestCase {
 
 	@Test
 	public void testSerialize_CqlPartitionKeyValue() throws Exception {
-		CqlPartitionKeyValue obj = new CqlPartitionKeyValue(Long.class, new Long(11),
-				new CqlPartitionKey(CqlDataType.TEXT, "abc"));
+		CqlPartitionKeyValue obj = new CqlPartitionKeyValue(Long.class, new Long(11), new CqlPartitionKey(
+				CqlDataType.TEXT, "abc"));
 		execSerializeEquals(obj, CqlPartitionKeyValue.class);
 	}
 
@@ -231,13 +247,10 @@ public class TestBeans extends AbstractTestCase {
 		et.addEqualityGroup(new CqlColumnName(CqlDataType.create(DataType.ascii()), "cqldemo.mybooks"));
 
 		et.addEqualityGroup();
-		et.addEqualityGroup(
-				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.TEXT, "cqldemo.mybooks"));
-		et.addEqualityGroup(
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "cqldemo.mybooks"));
-		et.addEqualityGroup(
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.ascii()),
-						"cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.TEXT, "cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "cqldemo.mybooks"));
+		et.addEqualityGroup(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY,
+				CqlDataType.create(DataType.ascii()), "cqldemo.mybooks"));
 
 		et.addEqualityGroup(new CqlIndex("cqldemo"));
 		et.addEqualityGroup(new CqlIndex("cqldemo.mybooks"));
@@ -256,8 +269,9 @@ public class TestBeans extends AbstractTestCase {
 		et.addEqualityGroup(new CqlPart("cqldemo"));
 		et.addEqualityGroup(new CqlPart("cqldemo.mybooks"));
 
-		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.TEXT, "cqldemo.mybooks"), CqlPartitionKey.fromColumn(
-				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.TEXT, "cqldemo.mybooks")));
+		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.TEXT, "cqldemo.mybooks"),
+				CqlPartitionKey.fromColumn(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.TEXT,
+						"cqldemo.mybooks")));
 		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.TEXT, "cqldemo"));
 		et.addEqualityGroup(new CqlPartitionKey(CqlDataType.create(DataType.counter()), "cqldemo.mybooks"));
 
@@ -293,18 +307,21 @@ public class TestBeans extends AbstractTestCase {
 		userPreferences.setShowCqlHelp(true);
 		et.addEqualityGroup(new UserPreferences(), userPreferences);
 
-		et.addEqualityGroup(new CqlColumnValue(Long.class, new Long(11),
-				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol")),
-				new CqlColumnValue(Long.class, 11L,
-						new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol")));
+		et.addEqualityGroup(new CqlColumnValue(Long.class, new Long(11), new CqlExtendedColumnName(
+				CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol")), new CqlColumnValue(Long.class, 11L,
+				new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.TEXT, "testcol")));
 		et.testEquals();
 	}
 
 	private <T> T execSerializeEquals(T obj, Class<T> clazz) throws Exception {
-		byte[] serialized = serialize(obj);
-
-		T ddt = deserialize(serialized, clazz);
+		T ddt = execSerialize(obj, clazz);
 		assertEquals(obj, ddt);
+		return ddt;
+	}
+
+	private <T> T execSerialize(T obj, Class<T> clazz) throws Exception {
+		byte[] serialized = serialize(obj);
+		T ddt = deserialize(serialized, clazz);
 		return ddt;
 	}
 }

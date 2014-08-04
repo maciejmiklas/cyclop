@@ -16,12 +16,12 @@
  */
 package org.cyclop.service.cassandra.impl;
 
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
+import static org.cyclop.common.QueryHelper.extractTableName;
+
+import java.util.Optional;
+import java.util.Set;
+
+import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.model.CqlColumnName;
@@ -33,12 +33,12 @@ import org.cyclop.model.CqlTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Named;
-
-import java.util.Optional;
-import java.util.Set;
-
-import static org.cyclop.common.QueryHelper.extractTableName;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Named

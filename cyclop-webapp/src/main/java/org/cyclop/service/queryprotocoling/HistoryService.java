@@ -16,10 +16,10 @@
  */
 package org.cyclop.service.queryprotocoling;
 
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * HTTP session scoped history service.

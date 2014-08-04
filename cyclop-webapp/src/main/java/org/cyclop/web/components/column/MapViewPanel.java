@@ -16,7 +16,10 @@
  */
 package org.cyclop.web.components.column;
 
-import com.google.common.collect.ImmutableMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -25,9 +28,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.cyclop.model.CqlColumnValue;
 import org.cyclop.model.CqlPartitionKeyValue;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
 /** @author Maciej Miklas */
 class MapViewPanel extends Panel {

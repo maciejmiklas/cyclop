@@ -16,10 +16,10 @@
  */
 package org.cyclop.model.adapter;
 
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /** @author Maciej Miklas */
 public class DateAdapter extends XmlAdapter<String, DateTime> {

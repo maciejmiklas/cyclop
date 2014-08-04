@@ -16,122 +16,38 @@
  */
 package org.cyclop.web.panels.queryeditor.verticalresult;
 
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
-import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
-import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.model.UserPreferences;
-import org.cyclop.service.cassandra.QueryService;
-import org.cyclop.service.um.UserManager;
-import org.cyclop.web.common.TransientModel;
-import org.cyclop.web.components.column.WidgetFactory;
-import org.cyclop.web.components.iterablegrid.IterableDataProvider;
 import org.cyclop.web.components.iterablegrid.IterableGridView;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.components.pagination.PagerConfigurator;
+import org.cyclop.web.panels.queryeditor.QueryResultPanel;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import com.datastax.driver.core.Row;
 
 /** @author Maciej Miklas */
-public class QueryResultVerticalPanel extends Panel {
+public class QueryResultVerticalPanel extends QueryResultPanel {
 
-	private final RowDataProvider rowDataProvider;
-
-	private final ColumnsModel columnsModel;
-
-	private final WebMarkupContainer resultTable;
-
-	private final Label cqlResultText;
-
-	private final CqlResultTextModel cqlResultTextModel;
-
-	private final RowsModel rowsModel;
-
-	private final AppConfig config = AppConfig.get();
-
-	@Inject
-	private UserManager um;
-
-	@Inject
-	private QueryService queryService;
-
-	@Inject
-	private WidgetFactory widgetFactory;
-
-	private BootstrapPagingNavigator pager;
-
-	public QueryResultVerticalPanel(String id) {
-		super(id);
-		Injector.get().inject(this);
-		setOutputMarkupPlaceholderTag(true);
-
-		cqlResultTextModel = new CqlResultTextModel();
-		columnsModel = new ColumnsModel();
-		rowDataProvider = new RowDataProvider();
-		rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
-
-		cqlResultText = new Label("cqlResultText", cqlResultTextModel);
-		cqlResultText.setVisible(false);
-		cqlResultText.setOutputMarkupPlaceholderTag(true);
-		add(cqlResultText);
-
-		resultTable = new WebMarkupContainer("resultTable");
-		resultTable.setOutputMarkupPlaceholderTag(true);
-		resultTable.setVisible(false);
-		add(resultTable);
-
-		rowsModel = initRowNamesList(resultTable, rowDataProvider);
-		initColumnList(resultTable, columnsModel, rowsModel);
+	public QueryResultVerticalPanel(String id, IModel<CqlQueryResult> model) {
+		super(id, model);
+		initColumnList();
 	}
 
-	public CqlQueryResult executeQuery(CqlQuery query, AjaxRequestTarget target) {
-		target.add(this);
-		CqlQueryResult result;
-		try {
-			result = queryService.execute(query);
-		} catch (Exception e) {
-			showCqlResultText("CQL error: " + e.getMessage());
-			return null;
-		}
-
-		if (!result.iterator().hasNext()) {
-			showCqlResultText("Query executed successfully, result is empty");
-		} else {
-			showResultsTable(result);
-		}
-		return result;
-	}
-
-	private void hideCqlResultText() {
-		cqlResultText.setVisible(false);
-		cqlResultTextModel.clean();
-	}
-
-	private void hideResultsTable() {
-		resultTable.setVisible(false);
-		rowDataProvider.clean();
-		columnsModel.clean();
-		rowsModel.getObject().clear();
-	}
-
-	private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel, final RowsModel rowsModel) {
+	private void initColumnList() {
 		ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>("columnList", columnsModel) {
 			@Override
 			protected void populateItem(ListItem<CqlExtendedColumnName> item) {
@@ -153,8 +69,8 @@ public class QueryResultVerticalPanel extends Panel {
 					protected void populateItem(ListItem<Row> item) {
 						Row row = item.getModelObject();
 
-						Component component = widgetFactory
-								.createForColumn(row, partitionKey, columnName, "columnValue");
+						Component component = widgetFactory.createForColumn(row, partitionKey, columnName,
+								"columnValue");
 						item.add(component);
 						component.setRenderBodyOnly(true);
 					}
@@ -165,7 +81,7 @@ public class QueryResultVerticalPanel extends Panel {
 		resultTable.add(columnList);
 	}
 
-	private RowsModel initRowNamesList(WebMarkupContainer resultTable, final RowDataProvider rowDataProvider) {
+	protected BootstrapPagingNavigator initPagingProvider() {
 
 		final List<Row> displayedRows = new ArrayList<>();
 		IterableGridView<Row> rowNamesList = new IterableGridView<Row>("rowNamesList", rowDataProvider) {
@@ -185,8 +101,7 @@ public class QueryResultVerticalPanel extends Panel {
 			protected void populateItem(Item<Row> item) {
 				Row row = item.getModel().getObject();
 				displayedRows.add(row);
-				CqlQueryResult result = rowDataProvider.result;
-				CqlPartitionKey partitionKey = result.rowMetadata.partitionKey;
+				CqlPartitionKey partitionKey = model.getObject().rowMetadata.partitionKey;
 
 				Component component;
 				if (partitionKey != null) {
@@ -201,152 +116,24 @@ public class QueryResultVerticalPanel extends Panel {
 		resultTable.add(rowNamesList);
 		rowNamesList.setColumns(1);
 
-		pager = new BootstrapPagingNavigator("rowNamesListPager", rowNamesList, new PagerConfigurator() {
+		BootstrapPagingNavigator pager = new BootstrapPagingNavigator("rowNamesListPager", rowNamesList,
+				new PagerConfigurator() {
 
-			@Override
-			public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
-				UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
-				um.storePreferences(prefs);
-			}
+					@Override
+					public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
+						UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
+						um.storePreferences(prefs);
+					}
 
-			@Override
-			public long getInitialItemsPerPage() {
-				return um.readPreferences().getPagerEditorItems();
-			}
-		});
+					@Override
+					public long getInitialItemsPerPage() {
+						return um.readPreferences().getPagerEditorItems();
+					}
+				});
 		resultTable.add(pager);
+		rowsModel.setObject(displayedRows);
 
-		return new RowsModel(displayedRows);
+		return pager;
 	}
 
-	private void showCqlResultText(String text) {
-		hideResultsTable();
-		cqlResultText.setVisible(true);
-		cqlResultTextModel.setObject(text);
-	}
-
-	private void showResultsTable(CqlQueryResult result) {
-		hideCqlResultText();
-		pager.reset();
-		resultTable.setVisible(true);
-		rowDataProvider.replaceModel(result);
-	}
-
-	private final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
-		private CqlRowMetadata result;
-
-		private List<CqlExtendedColumnName> content = ImmutableList.of();
-
-		public ColumnsModel() {
-			this.content = ImmutableList.of();
-		}
-
-		public void clean() {
-			this.content = ImmutableList.of();
-			this.result = CqlRowMetadata.EMPTY;
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public List<CqlExtendedColumnName> getObject() {
-			return content;
-		}
-
-		@Override
-		public void setObject(List<CqlExtendedColumnName> object) {
-			content = object;
-		}
-
-		private CqlRowMetadata getResult() {
-			return result;
-		}
-
-		public void updateResult(CqlRowMetadata result) {
-			this.result = result;
-			setObject(result.columns);
-		}
-	}
-
-	private final static class CqlResultTextModel implements IModel<String> {
-		private String label = "";
-
-		public void clean() {
-			this.label = "";
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public String getObject() {
-			return label;
-		}
-
-		@Override
-		public void setObject(String label) {
-			this.label = label;
-		}
-	}
-
-	private final static class RowsModel implements IModel<List<Row>> {
-
-		private List<Row> content;
-
-		public RowsModel(List<Row> content) {
-			this.content = content;
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public List<Row> getObject() {
-			return content;
-		}
-
-		@Override
-		public void setObject(List<Row> object) {
-			content = object;
-		}
-
-	}
-
-	private final class RowDataProvider extends IterableDataProvider<Row> {
-
-		private CqlQueryResult result;
-
-		protected RowDataProvider() {
-			super(um.readPreferences().getPagerEditorItems());
-		}
-
-		public void replaceModel(CqlQueryResult result) {
-			this.result = result;
-			replaceModel();
-		}
-
-		@Override
-		protected Iterator<Row> iterator() {
-			CqlQueryResult res = result == null ? CqlQueryResult.EMPTY : result;
-			columnsModel.updateResult(res.rowMetadata);
-			return res.iterator();
-		}
-
-		@Override
-		public IModel<Row> model(Row row) {
-			return new TransientModel(row);
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		public void clean() {
-			result = null;
-		}
-	}
 }

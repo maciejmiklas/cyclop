@@ -16,13 +16,13 @@
  */
 package org.cyclop.model;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.sun.istack.NotNull;
-
 import java.io.Serializable;
 
 import javax.validation.Valid;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.sun.istack.NotNull;
 
 /** @author Maciej Miklas */
 public class FilterResult<T> implements Serializable {

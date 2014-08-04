@@ -17,6 +17,7 @@
 package org.cyclop.service.importer;
 
 import net.jcip.annotations.ThreadSafe;
+
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.exception.QueryException;
 

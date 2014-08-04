@@ -16,18 +16,20 @@
  */
 package org.cyclop.service.queryprotocoling.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.QueryHistory;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.service.common.FileStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.HashMap;
-import java.util.Map;
 
 /** @author Maciej Miklas */
 @Named
@@ -48,12 +50,12 @@ class AsyncFileStore<H> {
 		}
 	}
 
-	public H getFromWriteQueue(UserIdentifier identifier) {
+	public Optional<H> getFromWriteQueue(UserIdentifier identifier) {
 		LOG.debug("Reading history from queue for: {}", identifier);
 		synchronized (diskQueue) {
 			H hist = diskQueue.get(identifier);
 			LOG.trace("Found history: {}", hist);
-			return hist;
+			return Optional.ofNullable(hist);
 		}
 	}
 

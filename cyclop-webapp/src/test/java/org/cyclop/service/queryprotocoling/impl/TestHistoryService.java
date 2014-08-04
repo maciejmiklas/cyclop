@@ -16,21 +16,13 @@
  */
 package org.cyclop.service.queryprotocoling.impl;
 
-import com.google.common.collect.ImmutableList;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryType;
-import org.cyclop.model.QueryEntry;
-import org.cyclop.model.QueryHistory;
-import org.cyclop.model.UserIdentifier;
-import org.cyclop.model.exception.BeanValidationException;
-import org.cyclop.service.common.FileStorage;
-import org.cyclop.test.AbstractTestCase;
-import org.cyclop.test.ThreadTestScope;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,12 +36,22 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import javax.inject.Inject;
+
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.QueryEntry;
+import org.cyclop.model.QueryHistory;
+import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.exception.BeanValidationException;
+import org.cyclop.service.common.FileStorage;
+import org.cyclop.test.AbstractTestCase;
+import org.cyclop.test.ThreadTestScope;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 public class TestHistoryService extends AbstractTestCase {
@@ -96,10 +98,9 @@ public class TestHistoryService extends AbstractTestCase {
 		QueryHistory history = historyService.read();
 
 		for (int i = 0; i < 600; i++) {
-			historyService.addAndStore(new QueryEntry(
-					new CqlQuery(CqlQueryType.SELECT, "select * " + CR + "from HistoryTest where " + CR + "id=" + i),
-					1000 + i));
-			QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user);
+			historyService.addAndStore(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * " + CR
+					+ "from HistoryTest where " + CR + "id=" + i), 1000 + i));
+			QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user).get();
 			assertNotNull(historyQueue);
 
 			// should be the same instance
@@ -108,16 +109,16 @@ public class TestHistoryService extends AbstractTestCase {
 		assertEquals(500, history.size());
 
 		asyncFileStore.flush();
-		assertNull(asyncFileStore.getFromWriteQueue(user));
+		assertFalse(asyncFileStore.getFromWriteQueue(user).isPresent());
 
 		assertSame(history, historyService.read());
 
-		QueryHistory readHist = storage.read(user, QueryHistory.class);
+		QueryHistory readHist = storage.read(user, QueryHistory.class).get();
 		assertNotSame(history, readHist);
 
 		for (int i = 100; i < 600; i++) {
-			QueryEntry tofind = new QueryEntry(
-					new CqlQuery(CqlQueryType.SELECT, "select * from HistoryTest where id=" + i), 2000 + i);
+			QueryEntry tofind = new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from HistoryTest where id="
+					+ i), 2000 + i);
 			assertTrue(tofind + " NOT FOUND IN: " + readHist, readHist.contains(tofind));
 
 			ImmutableList<QueryEntry> readList = readHist.copyAsList();
@@ -133,7 +134,7 @@ public class TestHistoryService extends AbstractTestCase {
 			assertEquals(0, history.size());
 			historyService.store(history);
 			asyncFileStore.flush();
-			assertEquals(0, storage.read(user, QueryHistory.class).size());
+			assertEquals(0, storage.read(user, QueryHistory.class).get().size());
 		}
 	}
 

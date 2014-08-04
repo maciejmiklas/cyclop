@@ -16,10 +16,9 @@
  */
 package org.cyclop.web.components.column;
 
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.cyclop.model.CqlColumnValue;
@@ -30,8 +29,10 @@ import org.cyclop.model.CqlPartitionKeyValue;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.converter.DataExtractor;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /** @author Maciej Miklas */
 @Named

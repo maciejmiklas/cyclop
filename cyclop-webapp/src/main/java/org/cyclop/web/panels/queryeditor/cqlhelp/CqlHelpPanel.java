@@ -16,15 +16,16 @@
  */
 package org.cyclop.web.panels.queryeditor.cqlhelp;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
+import java.io.IOException;
+import java.net.URL;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.cyclop.model.ContextCqlCompletion;
 
-import java.io.IOException;
-import java.net.URL;
+import com.google.common.base.Charsets;
+import com.google.common.io.Resources;
 
 /** @author Maciej Miklas */
 public class CqlHelpPanel extends Panel {

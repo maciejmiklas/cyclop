@@ -48,7 +48,6 @@ public class QueryServiceDispatcher implements QueryService {
 	@Inject
 	private CassandraSessionImpl session;
 
-	// TODO does this need to be threadsave?
 	private QueryService get() {
 		QueryService instance;
 		CassandraVersion ver = session.getCassandraVersion();

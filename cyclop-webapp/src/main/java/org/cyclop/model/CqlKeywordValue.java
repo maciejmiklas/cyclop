@@ -23,14 +23,9 @@ import net.jcip.annotations.Immutable;
 public final class CqlKeywordValue extends CqlKeyword {
 
 	public static enum Def {
-		CLASS("class"),
-		SIMPLE_STRATEGY("simplestrategy"),
-		REPLICATION_FACTOR("replication_factor"),
-		NETWORK_TOPOLOGY_STRATEGY("networktopologystrategy"),
-		DURABLE_WRITES("durable_writes"),
-		TRUE("true"),
-		FALSE("false"),
-		OLD_NETWORK_TOPOLOGY_STRATEGY("OldNetworkTopologyStrategy");
+		CLASS("class"), SIMPLE_STRATEGY("simplestrategy"), REPLICATION_FACTOR("replication_factor"), NETWORK_TOPOLOGY_STRATEGY(
+				"networktopologystrategy"), DURABLE_WRITES("durable_writes"), TRUE("true"), FALSE("false"), OLD_NETWORK_TOPOLOGY_STRATEGY(
+				"OldNetworkTopologyStrategy");
 
 		private Def(String value) {
 			this.value = new CqlKeywordValue(value.toLowerCase());
@@ -60,7 +55,7 @@ public final class CqlKeywordValue extends CqlKeyword {
 			return false;
 		}
 		CqlPart cqlObj = (CqlPart) obj;
-		return partLc.equals(cqlObj.partLc);
+		return java.util.Objects.equals(partLc, cqlObj.partLc);
 	}
 
 	@Override

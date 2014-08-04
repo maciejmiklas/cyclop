@@ -16,16 +16,19 @@
  */
 package org.cyclop.model;
 
-import com.google.common.collect.ImmutableSortedSet;
-import net.jcip.annotations.Immutable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import net.jcip.annotations.Immutable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Immutable

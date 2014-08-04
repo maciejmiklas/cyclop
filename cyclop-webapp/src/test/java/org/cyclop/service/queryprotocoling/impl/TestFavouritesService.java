@@ -16,21 +16,13 @@
  */
 package org.cyclop.service.queryprotocoling.impl;
 
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.UnmodifiableIterator;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.model.CqlQueryType;
-import org.cyclop.model.QueryEntry;
-import org.cyclop.model.QueryFavourites;
-import org.cyclop.model.UserIdentifier;
-import org.cyclop.service.common.FileStorage;
-import org.cyclop.test.AbstractTestCase;
-import org.cyclop.test.ThreadTestScope;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static junit.framework.Assert.assertNotSame;
+import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -44,12 +36,22 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertSame;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import javax.inject.Inject;
+
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.CqlQueryType;
+import org.cyclop.model.QueryEntry;
+import org.cyclop.model.QueryFavourites;
+import org.cyclop.model.UserIdentifier;
+import org.cyclop.service.common.FileStorage;
+import org.cyclop.test.AbstractTestCase;
+import org.cyclop.test.ThreadTestScope;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.UnmodifiableIterator;
 
 /** @author Maciej Miklas */
 public class TestFavouritesService extends AbstractTestCase {
@@ -106,7 +108,7 @@ public class TestFavouritesService extends AbstractTestCase {
 							2000 + i)));
 
 			favService.store(favourites);
-			QueryFavourites favQueue = asyncFileStore.getFromWriteQueue(user);
+			QueryFavourites favQueue = asyncFileStore.getFromWriteQueue(user).get();
 			assertNotNull(favQueue);
 
 			// should be the same instance
@@ -114,14 +116,14 @@ public class TestFavouritesService extends AbstractTestCase {
 		}
 		assertEquals(20, favourites.size());
 
-		assertNull(storage.read(user, QueryFavourites.class));
+		assertFalse(storage.read(user, QueryFavourites.class).isPresent());
 
 		asyncFileStore.flush();
-		assertNull(asyncFileStore.getFromWriteQueue(user));
+		assertFalse(asyncFileStore.getFromWriteQueue(user).isPresent());
 
 		assertSame(favourites, favService.read());
 
-		QueryFavourites readFavs = storage.read(user, QueryFavourites.class);
+		QueryFavourites readFavs = storage.read(user, QueryFavourites.class).get();
 		assertNotSame(favourites, readFavs);
 
 		{
@@ -137,7 +139,7 @@ public class TestFavouritesService extends AbstractTestCase {
 			assertEquals(0, favourites.size());
 			favService.store(favourites);
 			asyncFileStore.flush();
-			assertEquals(0, storage.read(user, QueryFavourites.class).size());
+			assertEquals(0, storage.read(user, QueryFavourites.class).get().size());
 		}
 
 	}

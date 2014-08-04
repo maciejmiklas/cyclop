@@ -16,9 +16,10 @@
  */
 package org.cyclop.validation;
 
+import java.text.SimpleDateFormat;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.text.SimpleDateFormat;
 
 /** @author Maciej Miklas */
 public class SimpleDateValidator implements ConstraintValidator<SimpleDate, String> {

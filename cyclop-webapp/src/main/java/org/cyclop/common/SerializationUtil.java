@@ -16,11 +16,11 @@
  */
 package org.cyclop.common;
 
+import java.lang.reflect.Field;
+
 import org.cyclop.model.exception.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
 
 public class SerializationUtil {
 	private final static Logger LOG = LoggerFactory.getLogger(SerializationUtil.class);

@@ -17,6 +17,7 @@
 package org.cyclop.model;
 
 import net.jcip.annotations.Immutable;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**

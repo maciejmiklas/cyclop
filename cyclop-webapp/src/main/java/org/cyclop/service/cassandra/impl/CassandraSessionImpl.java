@@ -16,13 +16,13 @@
  */
 package org.cyclop.service.cassandra.impl;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.HostDistance;
-import com.datastax.driver.core.PoolingOptions;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.SocketOptions;
-import com.datastax.driver.core.exceptions.InvalidQueryException;
+import javax.annotation.PreDestroy;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
+
 import net.jcip.annotations.NotThreadSafe;
+
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.exception.AuthenticationRequiredException;
 import org.cyclop.service.cassandra.CassandraSession;
@@ -32,12 +32,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.constraints.NotNull;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.HostDistance;
+import com.datastax.driver.core.PoolingOptions;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.SocketOptions;
+import com.datastax.driver.core.exceptions.InvalidQueryException;
 
 /** @author Maciej Miklas */
+
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -74,8 +77,10 @@ public class CassandraSessionImpl implements CassandraSession {
 		PoolingOptions pooling = new PoolingOptions();
 		pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.coreConnectionsPerHost);
 		pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.maxConnectionsPerHost);
-		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, appConfig.cassandra.minSimultaneousRequestsPerConnectionThreshold);
-		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL, appConfig.cassandra.maxSimultaneousRequestsPerConnectionThreshold);
+		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
+				appConfig.cassandra.minSimultaneousRequestsPerConnectionThreshold);
+		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
+				appConfig.cassandra.maxSimultaneousRequestsPerConnectionThreshold);
 
 		cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions)
 				.withPoolingOptions(pooling).build();

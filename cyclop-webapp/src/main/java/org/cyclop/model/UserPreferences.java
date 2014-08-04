@@ -16,15 +16,17 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import org.cyclop.model.adapter.BooleanDefaultTrueAdapter;
+import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.io.Serializable;
+
+import org.cyclop.model.adapter.BooleanDefaultTrueAdapter;
+
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @XmlRootElement
@@ -38,6 +40,9 @@ public final class UserPreferences implements Serializable {
 	@XmlElement(name = "e_he")
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
 	private boolean showCqlHelp = true;
+
+	@XmlElement(name = "e_ro")
+	private int resultOrientation = 0;
 
 	@XmlElement(name = "i_hi")
 	@XmlJavaTypeAdapter(BooleanDefaultTrueAdapter.class)
@@ -92,7 +97,8 @@ public final class UserPreferences implements Serializable {
 		return Objects.toStringHelper(this).add("showCqlCompletionHint", showCqlCompletionHint)
 				.add("showCqlHelp", showCqlHelp).add("importIncludeInHistory", importIncludeInHistory)
 				.add("importContinueWithErrors", importContinueWithErrors).add("pagerEditorItems", pagerEditorItems)
-				.add("pagerHistoryItems", pagerHistoryItems).add("pagerImportItems", pagerImportItems).toString();
+				.add("pagerHistoryItems", pagerHistoryItems).add("pagerImportItems", pagerImportItems)
+				.add("resultOrientation", resultOrientation).toString();
 	}
 
 	public boolean isImportIncludeInHistory() {
@@ -143,7 +149,8 @@ public final class UserPreferences implements Serializable {
 	@Override
 	public int hashCode() {
 		return java.util.Objects.hash(showCqlCompletionHint, showCqlHelp, importIncludeInHistory,
-				importContinueWithErrors, pagerEditorItems, pagerHistoryItems, pagerImportItems, importParallel);
+				importContinueWithErrors, pagerEditorItems, pagerHistoryItems, pagerImportItems, importParallel,
+				resultOrientation);
 	}
 
 	@Override
@@ -159,6 +166,7 @@ public final class UserPreferences implements Serializable {
 				&& java.util.Objects.equals(pagerEditorItems, other.pagerEditorItems)
 				&& java.util.Objects.equals(pagerHistoryItems, other.pagerHistoryItems)
 				&& java.util.Objects.equals(pagerImportItems, other.pagerImportItems)
-				&& java.util.Objects.equals(importParallel, other.importParallel);
+				&& java.util.Objects.equals(importParallel, other.importParallel)
+				&& java.util.Objects.equals(resultOrientation, other.resultOrientation);
 	}
 }

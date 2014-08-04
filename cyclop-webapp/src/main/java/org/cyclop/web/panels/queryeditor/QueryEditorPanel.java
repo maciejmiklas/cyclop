@@ -16,18 +16,23 @@
  */
 package org.cyclop.web.panels.queryeditor;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.injection.Injector;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.UserPreferences;
+import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.exporter.CsvQueryResultExporter;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.panels.queryeditor.buttons.ButtonListener;
@@ -40,8 +45,6 @@ import org.cyclop.web.panels.queryeditor.export.QueryResultExport;
 import org.cyclop.web.panels.queryeditor.verticalresult.QueryResultVerticalPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
 
 /** @author Maciej Miklas */
 @AuthorizeInstantiation(Roles.ADMIN)
@@ -57,7 +60,7 @@ public class QueryEditorPanel extends Panel {
 
 	private CqlQuery lastQuery;
 
-	private QueryResultExport queryResultExport;
+	private final QueryResultExport queryResultExport;
 
 	@Inject
 	private CsvQueryResultExporter exporter;
@@ -65,9 +68,15 @@ public class QueryEditorPanel extends Panel {
 	@Inject
 	private UserManager userManager;
 
+	@Inject
+	private QueryService queryService;
+
+	private final IModel<CqlQueryResult> queryResultModel = Model.of(CqlQueryResult.EMPTY);
+
+	private final Label queryErrorLabel;
+
 	public QueryEditorPanel(String id, PageParameters params) {
 		super(id);
-		Injector.get().inject(this);
 		setRenderBodyOnly(true);
 
 		cqlHelpPanel = new CqlHelpPanel("cqlHelp");
@@ -76,8 +85,8 @@ public class QueryEditorPanel extends Panel {
 		cqlCompletionHintPanel = new CompletionHintPanel("cqlInfoHint", "Completion Hint");
 		add(cqlCompletionHintPanel);
 
-		QueryResultVerticalPanel queryResultVerticalPanel = initQueryResultPanel();
-		org.cyclop.web.panels.queryeditor.editor.EditorPanel queryEditorPanel = initQueryEditorPanel(params);
+		Panel queryResultVerticalPanel = initQueryResultPanel();
+		EditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
 		UserPreferences preferences = userManager.readPreferences();
 		boolean completionEnabled = preferences.isShowCqlCompletionHint();
@@ -85,21 +94,32 @@ public class QueryEditorPanel extends Panel {
 		initButtons(queryEditorPanel, queryResultVerticalPanel, completionEnabled);
 
 		queryResultExport = new QueryResultExport(this, exporter);
+
+		queryErrorLabel = initQueryErrorLabel();
 	}
 
-	private QueryResultVerticalPanel initQueryResultPanel() {
-		QueryResultVerticalPanel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResultVerticalPanel");
+	private Label initQueryErrorLabel() {
+		Label queryErrorLabel = new Label("queryError", Model.of(""));
+		add(queryErrorLabel);
+		queryErrorLabel.setVisible(false);
+		queryErrorLabel.setOutputMarkupPlaceholderTag(true);
+		return queryErrorLabel;
+	}
+
+	private Panel initQueryResultPanel() {
+		Panel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResult", queryResultModel);
+		queryResultVerticalPanel.setOutputMarkupPlaceholderTag(true);
+		queryResultVerticalPanel.setOutputMarkupId(true);
 		add(queryResultVerticalPanel);
 		return queryResultVerticalPanel;
 	}
 
-	private org.cyclop.web.panels.queryeditor.editor.EditorPanel initQueryEditorPanel(PageParameters params) {
+	private EditorPanel initQueryEditorPanel(PageParameters params) {
 
 		StringValue editorContentVal = params.get("cql");
 		String editorContent = editorContentVal == null ? null : editorContentVal.toString();
 
-		org.cyclop.web.panels.queryeditor.editor.EditorPanel queryEditorPanel = new org.cyclop.web.panels.queryeditor.editor.EditorPanel(
-				"queryEditorPanel", editorContent);
+		EditorPanel queryEditorPanel = new EditorPanel("queryEditorPanel", editorContent);
 		add(queryEditorPanel);
 		queryEditorPanel.setOutputMarkupPlaceholderTag(true);
 		queryEditorPanel.setOutputMarkupId(true);
@@ -109,9 +129,8 @@ public class QueryEditorPanel extends Panel {
 		return queryEditorPanel;
 	}
 
-	private ButtonsPanel initButtons(final EditorPanel editorPanel,
-									 final QueryResultVerticalPanel queryResultVerticalPanel,
-									 boolean completionEnabled) {
+	private ButtonsPanel initButtons(final EditorPanel editorPanel, final Panel queryResultPanel,
+			boolean completionEnabled) {
 		ButtonListener buttonListener = new ButtonListener() {
 
 			@Override
@@ -121,31 +140,7 @@ public class QueryEditorPanel extends Panel {
 
 			@Override
 			public void onClickExecCql(AjaxRequestTarget target) {
-
-				// this cannot happen, because java script disables execute
-				// button - it's DOS prevention
-				if (queryRunning) {
-					LOG.warn("Query still running - cannot execute second one");
-					return;
-				}
-
-				queryResultVerticalPanel.setVisible(true);
-				target.add(queryResultVerticalPanel);
-				CqlQuery query = editorPanel.getEditorContent();
-
-				if (query == null) {
-					return;
-				}
-				queryRunning = true;
-				try {
-					CqlQueryResult queryResult = queryResultVerticalPanel.executeQuery(query, target);
-					if (queryResult != null) {
-						lastQuery = query;
-					}
-				} finally {
-					queryRunning = false;
-				}
-				editorPanel.resetCompletion();
+				handleExecQuery(target, editorPanel, queryResultPanel);
 			}
 
 			@Override
@@ -158,11 +153,51 @@ public class QueryEditorPanel extends Panel {
 				userManager.storePreferences(preferences);
 			}
 
+			@Override
+			public void onEesultOrientation(AjaxRequestTarget target, int orientation) {
+				// TODO Auto-generated method stub
+
+			}
 		};
 
 		ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", buttonListener, completionEnabled);
 		add(buttonsPanel);
 		return buttonsPanel;
+	}
+
+	private void handleExecQuery(AjaxRequestTarget target, EditorPanel editorPanel, Panel queryResultPanel) {
+
+		// this cannot happen, because java script disables execute
+		// button - it's DOS prevention
+		if (queryRunning) {
+			LOG.warn("Query still running - cannot execute second one");
+			return;
+		}
+
+		CqlQuery query = editorPanel.getEditorContent();
+
+		if (query == null) {
+			return;
+		}
+		queryRunning = true;
+		try {
+			CqlQueryResult queryResult = queryService.execute(query);
+			lastQuery = query;
+			queryResultModel.setObject(queryResult);
+			queryResultPanel.modelChanged();
+			queryErrorLabel.setVisible(false);
+			queryResultPanel.setVisible(true);
+		} catch (Exception e) {
+			queryErrorLabel.setVisible(true);
+			queryResultPanel.setVisible(false);
+			queryErrorLabel.setDefaultModelObject(e.getMessage());
+		} finally {
+			queryRunning = false;
+		}
+		editorPanel.resetCompletion();
+
+		target.add(queryErrorLabel);
+		target.add(queryResultPanel);
 	}
 
 	private final class CompletionChangeHelp implements CompletionChangeListener {

@@ -16,9 +16,9 @@
  */
 package org.cyclop.web.panels.queryimport;
 
-import com.google.common.base.Objects;
-
 import java.io.Serializable;
+
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 public final class ImportOptions implements Serializable {

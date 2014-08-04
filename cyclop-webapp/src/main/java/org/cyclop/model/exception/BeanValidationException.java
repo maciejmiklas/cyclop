@@ -16,9 +16,10 @@
  */
 package org.cyclop.model.exception;
 
-import javax.validation.ConstraintViolation;
 import java.util.Map;
 import java.util.Set;
+
+import javax.validation.ConstraintViolation;
 
 /** @author Maciej Miklas */
 public final class BeanValidationException extends IllegalArgumentException {

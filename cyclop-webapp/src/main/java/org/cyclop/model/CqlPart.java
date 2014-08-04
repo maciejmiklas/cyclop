@@ -16,12 +16,14 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
+import java.io.Serializable;
+
 import net.jcip.annotations.Immutable;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.io.Serializable;
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -56,7 +58,7 @@ public class CqlPart implements Comparable<CqlPart>, Serializable, DisplaySuppor
 			return false;
 		}
 		CqlPart cqlObj = (CqlPart) obj;
-		return partLc.equals(cqlObj.partLc);
+		return java.util.Objects.equals(partLc, cqlObj.partLc);
 	}
 
 	@Override

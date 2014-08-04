@@ -16,14 +16,15 @@
  */
 package org.cyclop.service.queryprotocoling.impl;
 
+import javax.inject.Named;
+
 import net.jcip.annotations.NotThreadSafe;
+
 import org.cyclop.model.QueryFavourites;
 import org.cyclop.service.queryprotocoling.FavouritesService;
 import org.cyclop.validation.EnableValidation;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-
-import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
