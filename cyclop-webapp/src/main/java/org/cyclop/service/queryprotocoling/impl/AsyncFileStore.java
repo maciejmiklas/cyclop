@@ -35,56 +35,57 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Named
 class AsyncFileStore<H> {
 
-	private final static int FLUSH_MILIS = 30000;
+    private final static int FLUSH_MILIS = 30000;
 
-	@Inject
-	private FileStorage fileStorage;
+    @Inject
+    private FileStorage fileStorage;
 
-	private final static Logger LOG = LoggerFactory.getLogger(AsyncFileStore.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AsyncFileStore.class);
 
-	private final Map<UserIdentifier, H> diskQueue = new HashMap<>();
+    private final Map<UserIdentifier, H> diskQueue = new HashMap<>();
 
-	public void store(UserIdentifier identifier, H history) {
-		synchronized (diskQueue) {
-			diskQueue.put(identifier, history);
-		}
+    public void store(UserIdentifier identifier, H history) {
+	synchronized (diskQueue) {
+	    diskQueue.put(identifier, history);
 	}
+    }
 
-	public Optional<H> getFromWriteQueue(UserIdentifier identifier) {
-		LOG.debug("Reading history from queue for: {}", identifier);
-		synchronized (diskQueue) {
-			H hist = diskQueue.get(identifier);
-			LOG.trace("Found history: {}", hist);
-			return Optional.ofNullable(hist);
-		}
+    public Optional<H> getFromWriteQueue(UserIdentifier identifier) {
+	LOG.debug("Reading history from queue for: {}", identifier);
+	synchronized (diskQueue) {
+	    final H hist = diskQueue.get(identifier);
+	    LOG.trace("Found history: {}", hist);
+	    return Optional.ofNullable(hist);
 	}
+    }
 
-	/**
-	 * method must be synchronized to avoid parallel write access on files for single user-id. Second synchronization block
-	 * on map ensures short lock time on map, so that {@link #store(UserIdentifier, QueryHistory)} method block time is
-	 * reduced
-	 */
-	@Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
-	@PreDestroy
-	public synchronized void flush() {
-		LOG.debug("Flushing history");
-		while (true) {
-			UserIdentifier identifier;
-			H history;
+    /**
+     * method must be synchronized to avoid parallel write access on files for
+     * single user-id. Second synchronization block on map ensures short lock
+     * time on map, so that {@link #store(UserIdentifier, QueryHistory)} method
+     * block time is reduced
+     */
+    @Scheduled(initialDelay = FLUSH_MILIS, fixedDelay = FLUSH_MILIS)
+    @PreDestroy
+    public synchronized void flush() {
+	LOG.debug("Flushing history");
+	while (true) {
+	    UserIdentifier identifier;
+	    H history;
 
-			// synchronize #historyMap only for short time to not block
-			// store(...) function by file operation
-			synchronized (diskQueue) {
-				LOG.debug("Got into mutex");
-				if (diskQueue.isEmpty()) {
-					LOG.debug("Flush done - no more entries found");
-					return;
-				}
-				identifier = diskQueue.keySet().iterator().next();
-				history = diskQueue.remove(identifier);
-			}
-			fileStorage.store(identifier, history);
+	    // synchronize #historyMap only for short time to not block
+	    // store(...) function by file operation
+	    synchronized (diskQueue) {
+		LOG.debug("Got into mutex");
+		if (diskQueue.isEmpty()) {
+		    LOG.debug("Flush done - no more entries found");
+		    return;
 		}
+		identifier = diskQueue.keySet().iterator().next();
+		history = diskQueue.remove(identifier);
+	    }
+	    fileStorage.store(identifier, history);
 	}
+    }
 
 }

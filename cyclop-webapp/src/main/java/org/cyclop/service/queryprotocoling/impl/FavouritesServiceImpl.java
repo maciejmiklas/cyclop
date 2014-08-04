@@ -31,16 +31,17 @@ import org.springframework.context.annotation.ScopedProxyMode;
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @EnableValidation
-class FavouritesServiceImpl extends AbstractQueryProtocolingService<QueryFavourites> implements FavouritesService {
+class FavouritesServiceImpl extends AbstractQueryProtocolingService<QueryFavourites> implements
+FavouritesService {
 
-	@Override
-	protected Class<QueryFavourites> getClazz() {
-		return QueryFavourites.class;
-	}
+    @Override
+    protected Class<QueryFavourites> getClazz() {
+	return QueryFavourites.class;
+    }
 
-	@Override
-	protected QueryFavourites createEmpty() {
-		return new QueryFavourites();
-	}
+    @Override
+    protected QueryFavourites createEmpty() {
+	return new QueryFavourites();
+    }
 
 }
