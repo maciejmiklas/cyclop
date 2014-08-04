@@ -16,11 +16,12 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import net.jcip.annotations.Immutable;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import net.jcip.annotations.Immutable;
+
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -39,5 +40,22 @@ public final class CqlPartitionKeyValue extends CqlColumnValue {
 	public String toString() {
 		return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value)
 				.add("cqlPartitionKey", cqlPartitionKey).toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(cqlPartitionKey, valueClass, value, columnName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final CqlPartitionKeyValue other = (CqlPartitionKeyValue) obj;
+		return java.util.Objects.equals(cqlPartitionKey, other.cqlPartitionKey)
+				&& java.util.Objects.equals(valueClass, other.valueClass)
+				&& java.util.Objects.equals(value, other.value)
+				&& java.util.Objects.equals(columnName, other.columnName);
 	}
 }

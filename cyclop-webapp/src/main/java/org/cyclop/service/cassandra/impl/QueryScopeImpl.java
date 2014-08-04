@@ -18,6 +18,8 @@ package org.cyclop.service.cassandra.impl;
 
 import java.util.Optional;
 
+import javax.inject.Named;
+
 import net.jcip.annotations.NotThreadSafe;
 
 import org.apache.commons.lang.Validate;
@@ -26,15 +28,13 @@ import org.cyclop.service.cassandra.QueryScope;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 
-import javax.inject.Named;
-
 /** @author Maciej Miklas */
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class QueryScopeImpl implements QueryScope {
 
-	private Optional<CqlKeySpace> activeKeySpace;
+	private Optional<CqlKeySpace> activeKeySpace = Optional.empty();
 
 	public Optional<CqlKeySpace> getActiveKeySpace() {
 		return activeKeySpace;

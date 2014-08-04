@@ -16,10 +16,11 @@
  */
 package org.cyclop.service.importer.impl;
 
-import com.google.common.base.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @ThreadSafe

@@ -16,10 +16,10 @@
  */
 package org.cyclop.web.panels.queryeditor.editor;
 
+import java.io.Serializable;
+
 import org.apache.wicket.Component;
 import org.cyclop.model.ContextCqlCompletion;
-
-import java.io.Serializable;
 
 /** @author Maciej Miklas */
 public interface CompletionChangeListener extends Serializable {

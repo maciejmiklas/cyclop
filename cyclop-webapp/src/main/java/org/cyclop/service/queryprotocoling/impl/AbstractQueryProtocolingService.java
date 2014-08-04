@@ -16,7 +16,15 @@
  */
 package org.cyclop.service.queryprotocoling.impl;
 
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
+
 import net.jcip.annotations.NotThreadSafe;
+
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.service.common.FileStorage;
 import org.cyclop.service.queryprotocoling.QueryProtocolingService;
@@ -26,11 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.constraints.NotNull;
-import java.util.concurrent.atomic.AtomicReference;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
@@ -90,9 +93,7 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 	}
 
 	@Override
-	public
-	@NotNull
-	H read() {
+	public @NotNull H read() {
 		LOG.debug("Accessing history");
 		if (history.get() == null) {
 			synchronized (asyncFileStore) {
@@ -103,12 +104,10 @@ abstract class AbstractQueryProtocolingService<H> implements QueryProtocolingSer
 					// history can be in write queue when user closes http
 					// session and opens new few seconds later.
 					// in this case async queue might be not flushed to disk yet
-					H read = asyncFileStore.getFromWriteQueue(user);
-					if (read == null) {
-						read = storage.read(user, getClazz());
-					}
-					if (read == null) {
-						read = createEmpty();
+					Optional<H> readOpt = asyncFileStore.getFromWriteQueue(user);
+					H read = null;
+					if (!readOpt.isPresent()) {
+						read = storage.read(user, getClazz()).orElse(createEmpty());
 					}
 					history.set(read);
 				}

@@ -86,7 +86,7 @@ public final class CqlQuery extends CqlPart {
 			return false;
 		}
 		CqlQuery cqlObj = (CqlQuery) obj;
-		return partLc.equals(cqlObj.partLc) && type.equals(cqlObj.type);
+		return java.util.Objects.equals(partLc, cqlObj.partLc) && java.util.Objects.equals(type, cqlObj.type);
 	}
 
 	@Override

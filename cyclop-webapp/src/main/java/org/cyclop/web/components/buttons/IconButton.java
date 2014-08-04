@@ -16,24 +16,41 @@
  */
 package org.cyclop.web.components.buttons;
 
+import org.apache.commons.lang.Validate;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 
 /** @author Maciej Miklas */
-public abstract class StateButton extends AjaxFallbackLink<Void> {
+public abstract class IconButton extends AjaxFallbackLink<Void> {
 
-	private boolean pressed;
+	private final String[] cssStates;
+	private int stateIdx;
 
-	public StateButton(final String id, final boolean initialPressed, final String cssReleased, final String cssPressed) {
+	public IconButton(final String id, int initialState, String... cssStates) {
 		super(id);
-		this.pressed = initialPressed;
 
-		add(new AttributeModifier("class", new IModel<String>() {
+		Validate.notNull(cssStates, "cssStates");
+		Validate.isTrue(cssStates.length > 0, "cssStates empty");
+		this.cssStates = cssStates;
+
+		if (initialState >= cssStates.length) {
+			throw new IllegalArgumentException("stateIdx >= cssStates.length");
+		}
+		this.stateIdx = initialState;
+
+		initIcon();
+	}
+
+	private void initIcon() {
+		WebMarkupContainer icon = new WebMarkupContainer("icon");
+		add(icon);
+		icon.add(new AttributeModifier("class", new IModel<String>() {
 			@Override
 			public String getObject() {
-				String css = pressed ? cssPressed : cssReleased;
+				String css = cssStates[stateIdx];
 				return css;
 			}
 
@@ -51,9 +68,16 @@ public abstract class StateButton extends AjaxFallbackLink<Void> {
 	@Override
 	public final void onClick(AjaxRequestTarget target) {
 		target.add(this);
-		pressed = !pressed;
-		onClick(target, pressed);
+		onClick(target, next());
 	}
 
-	protected abstract void onClick(AjaxRequestTarget target, boolean pressed);
+	private int next() {
+		int state = stateIdx++;
+		if (stateIdx == cssStates.length) {
+			stateIdx = 0;
+		}
+		return state;
+	}
+
+	protected abstract void onClick(AjaxRequestTarget target, int stateIdx);
 }

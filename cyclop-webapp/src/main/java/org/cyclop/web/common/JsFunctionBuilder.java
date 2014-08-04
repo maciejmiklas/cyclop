@@ -16,14 +16,15 @@
  */
 package org.cyclop.web.common;
 
-import org.cyclop.model.DisplaySupport;
-import org.cyclop.web.common.JsUtils.ObjPrinter;
-
-import java.util.Collection;
-
 import static org.cyclop.web.common.JsUtils.escape;
 import static org.cyclop.web.common.JsUtils.escapeArray;
 import static org.cyclop.web.common.JsUtils.escapeStrArray;
+
+import java.util.Collection;
+
+import org.apache.commons.lang.Validate;
+import org.cyclop.model.DisplaySupport;
+import org.cyclop.web.common.JsUtils.ObjPrinter;
 
 public final class JsFunctionBuilder {
 
@@ -34,51 +35,40 @@ public final class JsFunctionBuilder {
 	private boolean build = false;
 
 	public static JsFunctionBuilder function(String functionName) {
-		if (functionName == null) {
-			throw new IllegalArgumentException("Null functionName");
-		}
+		Validate.notNull(functionName, "Null functionName");
 		return new JsFunctionBuilder(functionName);
 	}
 
 	private JsFunctionBuilder(String functionName) {
-		if (functionName == null) {
-			throw new IllegalArgumentException("Null functionName");
-		}
+		Validate.notNull(functionName, "Null functionName");
 		buf = new StringBuilder(functionName);
 		buf.append("(");
 	}
 
 	public JsFunctionBuilder param(String param) {
-		if (param == null) {
-			throw new IllegalArgumentException("Null param");
-		}
+		Validate.notNull(param, "Null param");
 		sep();
 		buf.append(escape(param));
 		return this;
 	}
 
 	public JsFunctionBuilder array(Collection<? extends DisplaySupport> col) {
-		if (col == null) {
-			throw new IllegalArgumentException("Null col");
-		}
+		Validate.notNull(col, "Null col");
 		sep();
 		buf.append(escapeArray(col));
 		return this;
 	}
 
 	public JsFunctionBuilder arrayStr(Collection<String> col) {
-		if (col == null) {
-			throw new IllegalArgumentException("col");
-		}
+		Validate.notNull(col, "Null col");
 		sep();
 		buf.append(escapeStrArray(col));
 		return this;
 	}
 
 	public <T> JsFunctionBuilder array(Collection<T> col, ObjPrinter<T> printer) {
-		if (col == null || printer == null) {
-			throw new IllegalArgumentException("Null col or printer");
-		}
+		Validate.notNull(col, "Null col");
+		Validate.notNull(printer, "Null printer");
 		sep();
 		buf.append(escapeArray(col, printer));
 		return this;

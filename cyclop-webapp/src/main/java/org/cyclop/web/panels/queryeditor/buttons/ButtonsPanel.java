@@ -16,33 +16,75 @@
  */
 package org.cyclop.web.panels.queryeditor.buttons;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.cyclop.model.UserPreferences;
+import org.cyclop.service.um.UserManager;
+import org.cyclop.web.components.buttons.IconButton;
 import org.cyclop.web.components.buttons.StateButton;
 
 /** @author Maciej Miklas */
 public class ButtonsPanel extends Panel {
+
+	@Inject
+	private UserManager userManager;
 
 	private static final JavaScriptResourceReference JS_BUTTONS = new JavaScriptResourceReference(ButtonsPanel.class,
 			"buttons.js");
 
 	public ButtonsPanel(String id, final ButtonListener buttonListener, boolean completionPressed) {
 		super(id);
-		setRenderBodyOnly(true);
 
-		AjaxFallbackLink<Void> addToFavourites = new AjaxFallbackLink<Void>("addToFavourites") {
+		UserPreferences preferences = userManager.readPreferences();
+
+		setRenderBodyOnly(true);
+		initAddToFavourites();
+		initExecQuery(buttonListener);
+		initExportQueryResult(buttonListener);
+		initCompletion(buttonListener, preferences);
+		initResultOrientation(buttonListener, preferences);
+	}
+
+	private void initResultOrientation(final ButtonListener buttonListener, UserPreferences preferences) {
+		int initialState = 0;
+		AjaxFallbackLink<Void> completion = new IconButton("resultOrientation", initialState,
+				"glyphicon glyphicon-arrow-right", "glyphicon glyphicon-arrow-down") {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
-				// buttonListener.onClickExecCql(target);
+			protected void onClick(AjaxRequestTarget target, int state) {
 			}
 		};
-		add(addToFavourites);
-		addToFavourites.setVisible(false);
+		add(completion);
+	}
 
+	private void initCompletion(final ButtonListener buttonListener, UserPreferences preferences) {
+		boolean completionEnabled = preferences.isShowCqlCompletionHint();
+		AjaxFallbackLink<Void> completion = new StateButton("completion", completionEnabled, "btn btn-sm btn-primary",
+				"btn btn-sm btn-primary active") {
+			@Override
+			protected void onClick(AjaxRequestTarget target, boolean pressed) {
+				buttonListener.onClickCompletion(target, pressed);
+			}
+		};
+		add(completion);
+	}
+
+	private void initExportQueryResult(final ButtonListener buttonListener) {
+		AjaxFallbackLink<Void> exportQueryResult = new AjaxFallbackLink<Void>("exportQueryResult") {
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				buttonListener.onClickQueryResultExport(target);
+			}
+		};
+		add(exportQueryResult);
+	}
+
+	private void initExecQuery(final ButtonListener buttonListener) {
 		AjaxFallbackLink<Void> execQuery = new AjaxFallbackLink<Void>("execQuery") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
@@ -51,23 +93,17 @@ public class ButtonsPanel extends Panel {
 			}
 		};
 		add(execQuery);
+	}
 
-		AjaxFallbackLink<Void> exportQueryResult = new AjaxFallbackLink<Void>("exportQueryResult") {
+	private void initAddToFavourites() {
+		AjaxFallbackLink<Void> addToFavourites = new AjaxFallbackLink<Void>("addToFavourites") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				buttonListener.onClickQueryResultExport(target);
+				// buttonListener.onClickExecCql(target);
 			}
 		};
-		add(exportQueryResult);
-
-		AjaxFallbackLink<Void> completion = new StateButton("completion", completionPressed, "btn btn-sm btn-primary",
-				"btn btn-sm btn-primary active") {
-			@Override
-			protected void onClick(AjaxRequestTarget target, boolean pressed) {
-				buttonListener.onClickCompletion(target, pressed);
-			}
-		};
-		add(completion);
+		add(addToFavourites);
+		addToFavourites.setVisible(false);
 	}
 
 	@Override

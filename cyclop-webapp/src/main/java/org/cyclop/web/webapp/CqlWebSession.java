@@ -16,6 +16,12 @@
  */
 package org.cyclop.web.webapp;
 
+import java.io.IOException;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.injection.Injector;
@@ -27,18 +33,14 @@ import org.cyclop.service.cassandra.CassandraSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 /** @author Maciej Miklas */
 public class CqlWebSession extends AuthenticatedWebSession {
 	private final static Logger LOG = LoggerFactory.getLogger(CqlWebSession.class);
 
 	@Inject
-	private CassandraSession cassandraSession;
+	private transient CassandraSession cassandraSession;
 
-	private AppConfig conf = AppConfig.get();
+	private final AppConfig conf = AppConfig.get();
 
 	private boolean authenticated = false;
 
@@ -46,6 +48,11 @@ public class CqlWebSession extends AuthenticatedWebSession {
 
 	public CqlWebSession(Request request) {
 		super(request);
+		Injector.get().inject(this);
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws ClassNotFoundException, IOException {
+		in.defaultReadObject();
 		Injector.get().inject(this);
 	}
 

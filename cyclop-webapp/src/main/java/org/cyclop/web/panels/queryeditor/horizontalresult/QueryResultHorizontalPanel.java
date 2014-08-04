@@ -14,30 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cyclop.service.completion.impl.parser.insert;
+package org.cyclop.web.panels.queryeditor.horizontalresult;
 
-import javax.inject.Named;
-
-import net.jcip.annotations.ThreadSafe;
-
-import org.cyclop.model.CqlCompletion;
-import org.cyclop.model.CqlKeyword;
-import org.cyclop.model.CqlPart;
-import org.cyclop.service.completion.impl.parser.template.StaticMarkerBasedCompletion;
-
-import com.google.common.base.Objects;
+import org.apache.wicket.model.IModel;
+import org.cyclop.model.CqlQueryResult;
+import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
+import org.cyclop.web.panels.queryeditor.QueryResultPanel;
 
 /** @author Maciej Miklas */
-@Named("insert.AfterColumnsCompletion")
-@ThreadSafe
-class AfterColumnsCompletion extends StaticMarkerBasedCompletion {
+public class QueryResultHorizontalPanel extends QueryResultPanel {
 
-	public AfterColumnsCompletion() {
-		super(new CqlPart(")"), CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).build());
+	public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
+		super(id, model);
 	}
 
 	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
+	protected BootstrapPagingNavigator initPagingProvider() {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
 }

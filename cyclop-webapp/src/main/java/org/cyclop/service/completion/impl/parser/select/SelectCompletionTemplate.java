@@ -16,12 +16,13 @@
  */
 package org.cyclop.service.completion.impl.parser.select;
 
-import com.google.common.base.Objects;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.service.completion.impl.parser.template.ColumnNameCompletionTemplate;
 
-import javax.inject.Named;
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Named("select.SelectCompletionTemplate")

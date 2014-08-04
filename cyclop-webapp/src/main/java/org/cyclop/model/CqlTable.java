@@ -16,10 +16,11 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
+import javax.validation.Valid;
+
 import net.jcip.annotations.Immutable;
 
-import javax.validation.Valid;
+import com.google.common.base.Objects;
 
 /**
  * Cql keyword

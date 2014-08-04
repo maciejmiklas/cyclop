@@ -71,8 +71,8 @@ public class AopValidator {
 
 		BeanValidator validator = null;
 		for (Annotation respAnnotatioin : method.getDeclaredAnnotations()) {
-			if (respAnnotatioin.annotationType().isAssignableFrom(NotNull.class) ||
-					(respAnnotatioin.annotationType().isAssignableFrom(Valid.class) && response != null)) {
+			if (respAnnotatioin.annotationType().isAssignableFrom(NotNull.class)
+					|| (respAnnotatioin.annotationType().isAssignableFrom(Valid.class) && response != null)) {
 				if (validator == null) {
 					validator = createValidator(pjp);
 				}

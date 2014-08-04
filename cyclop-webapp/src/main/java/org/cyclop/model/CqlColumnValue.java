@@ -16,12 +16,14 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import net.jcip.annotations.Immutable;
+import java.io.Serializable;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+
+import net.jcip.annotations.Immutable;
+
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Immutable

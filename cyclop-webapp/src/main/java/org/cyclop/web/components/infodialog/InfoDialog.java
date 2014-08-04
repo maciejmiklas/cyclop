@@ -16,6 +16,9 @@
  */
 package org.cyclop.web.components.infodialog;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -24,9 +27,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.template.PackageTextTemplate;
 import org.cyclop.web.common.JsTextTemplate;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /** @author Maciej Miklas */
 public class InfoDialog extends Panel {

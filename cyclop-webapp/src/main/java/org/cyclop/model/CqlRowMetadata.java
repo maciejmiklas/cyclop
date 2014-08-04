@@ -16,15 +16,16 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableList;
-import net.jcip.annotations.Immutable;
+import java.io.Serializable;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 
-// TODO test serialization
+import net.jcip.annotations.Immutable;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
+
 /** @author Maciej Miklas */
 @Immutable
 public final class CqlRowMetadata implements Serializable {
@@ -36,7 +37,10 @@ public final class CqlRowMetadata implements Serializable {
 	@Valid
 	public final ImmutableList<CqlExtendedColumnName> columns;
 
-	/** could be null, it not found in result, or in case of error while reading meta data info */
+	/**
+	 * could be null, it not found in result, or in case of error while reading
+	 * meta data info
+	 */
 	public final transient CqlPartitionKey partitionKey;
 
 	public CqlRowMetadata(ImmutableList<CqlExtendedColumnName> columns, CqlPartitionKey partitionKey) {
@@ -52,5 +56,20 @@ public final class CqlRowMetadata implements Serializable {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).add("columns", columns).add("partitionKey", partitionKey).toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		CqlRowMetadata cqlObj = (CqlRowMetadata) obj;
+		return java.util.Objects.equals(columns, cqlObj.columns)
+				&& java.util.Objects.equals(partitionKey, cqlObj.partitionKey);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(columns, partitionKey);
 	}
 }

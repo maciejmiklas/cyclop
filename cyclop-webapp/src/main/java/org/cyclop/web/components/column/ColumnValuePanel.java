@@ -16,11 +16,12 @@
  */
 package org.cyclop.web.components.column;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
-import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -31,8 +32,6 @@ import org.cyclop.model.CqlPartitionKeyValue;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.web.components.infodialog.InfoDialog;
 
-import javax.inject.Inject;
-
 /** @author Maciej Miklas */
 class ColumnValuePanel extends Panel {
 
@@ -42,10 +41,8 @@ class ColumnValuePanel extends Panel {
 	private DataConverter converter;
 
 	ColumnValuePanel(String componentId, final CqlPartitionKeyValue cqlPartitionKeyValue,
-					 final CqlColumnValue cqlColumnValue, boolean embeddedColumn) {
+			final CqlColumnValue cqlColumnValue, boolean embeddedColumn) {
 		super(componentId);
-		Injector injector = Injector.get();
-		injector.inject(this);
 
 		String convertedValue = converter.convert(cqlColumnValue.value);
 		final String convertedValueNotNull = convertedValue == null ? "" : convertedValue;

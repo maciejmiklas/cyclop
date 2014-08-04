@@ -16,10 +16,10 @@
  */
 package org.cyclop.web.common;
 
-import org.cyclop.model.DisplaySupport;
-
 import java.util.Collection;
 import java.util.Iterator;
+
+import org.cyclop.model.DisplaySupport;
 
 /** @author Maciej Miklas */
 public final class JsUtils {
@@ -35,11 +35,11 @@ public final class JsUtils {
 		if (col == null) {
 			throw new IllegalArgumentException("Null param");
 		}
-		return escapeArray(col, new DisplayObjPrinter<T>());
+		return escapeArray(col, o -> o.toDisplayString());
 	}
 
 	public static String escapeStrArray(Collection<String> col) {
-		return escapeArray(col, new StringObjPrinter());
+		return escapeArray(col, s -> s.toString());
 	}
 
 	public static <T> String escapeArray(Collection<T> col, ObjPrinter<T> printer) {
@@ -64,27 +64,9 @@ public final class JsUtils {
 		return buf.toString();
 	}
 
+	@FunctionalInterface
 	public static interface ObjPrinter<T> {
 		String print(T obj);
 	}
 
-	private final static class DisplayObjPrinter<T extends DisplaySupport> implements ObjPrinter<T> {
-
-		@Override
-		public String print(T obj) {
-			return obj.toDisplayString();
-		}
-	}
-
-	;
-
-	private final static class StringObjPrinter implements ObjPrinter<String> {
-
-		@Override
-		public String print(String obj) {
-			return obj.toString();
-		}
-	}
-
-	;
 }

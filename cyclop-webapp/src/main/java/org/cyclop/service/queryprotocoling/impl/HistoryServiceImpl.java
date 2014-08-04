@@ -16,16 +16,17 @@
  */
 package org.cyclop.service.queryprotocoling.impl;
 
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
+
 import net.jcip.annotations.NotThreadSafe;
+
 import org.cyclop.model.QueryEntry;
 import org.cyclop.model.QueryHistory;
 import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.validation.EnableValidation;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-
-import javax.inject.Named;
-import javax.validation.constraints.NotNull;
 
 /** @author Maciej Miklas */
 @NotThreadSafe

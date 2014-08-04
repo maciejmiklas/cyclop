@@ -16,14 +16,15 @@
  */
 package org.cyclop.service.completion.impl.parser.delete;
 
-import com.google.common.base.Objects;
+import javax.annotation.PostConstruct;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.service.completion.impl.parser.template.AfterTableNameCompletionTemplate;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Named;
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Named("delete.AfterFromCompletion")

@@ -16,7 +16,17 @@
  */
 package org.cyclop.common;
 
-import com.google.common.base.Objects;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import net.jcip.annotations.Immutable;
 
@@ -29,17 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Named

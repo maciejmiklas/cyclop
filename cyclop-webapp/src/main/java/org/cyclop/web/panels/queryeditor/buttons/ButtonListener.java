@@ -16,9 +16,9 @@
  */
 package org.cyclop.web.panels.queryeditor.buttons;
 
-import org.apache.wicket.ajax.AjaxRequestTarget;
-
 import java.io.Serializable;
+
+import org.apache.wicket.ajax.AjaxRequestTarget;
 
 /** @author Maciej Miklas */
 public interface ButtonListener extends Serializable {
@@ -28,4 +28,7 @@ public interface ButtonListener extends Serializable {
 	void onClickQueryResultExport(AjaxRequestTarget target);
 
 	void onClickCompletion(AjaxRequestTarget target, boolean pressed);
+
+	void onEesultOrientation(AjaxRequestTarget target, int orientation);
+
 }

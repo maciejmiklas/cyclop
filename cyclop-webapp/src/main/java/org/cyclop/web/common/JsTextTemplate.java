@@ -16,10 +16,10 @@
  */
 package org.cyclop.web.common;
 
+import java.util.Map;
+
 import org.apache.wicket.util.template.TextTemplate;
 import org.apache.wicket.util.template.TextTemplateDecorator;
-
-import java.util.Map;
 
 /** @author Maciej Miklas */
 public class JsTextTemplate extends TextTemplateDecorator {

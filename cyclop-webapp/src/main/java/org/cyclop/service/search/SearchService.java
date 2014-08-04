@@ -16,8 +16,9 @@
  */
 package org.cyclop.service.search;
 
-import com.google.common.collect.ImmutableCollection;
 import org.cyclop.model.FilterResult;
+
+import com.google.common.collect.ImmutableCollection;
 
 public interface SearchService<T> {
 

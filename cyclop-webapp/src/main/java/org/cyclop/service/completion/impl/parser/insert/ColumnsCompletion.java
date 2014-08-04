@@ -16,10 +16,12 @@
  */
 package org.cyclop.service.completion.impl.parser.insert;
 
+import static org.cyclop.common.QueryHelper.extractTableName;
+
 import java.util.Optional;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.ImmutableSortedSet;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlCompletion;
@@ -30,10 +32,8 @@ import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import static org.cyclop.common.QueryHelper.extractTableName;
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Named("insert.ColumnsCompletion")

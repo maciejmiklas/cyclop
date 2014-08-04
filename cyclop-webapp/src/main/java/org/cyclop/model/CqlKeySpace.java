@@ -43,7 +43,7 @@ public final class CqlKeySpace extends CqlPart {
 			return false;
 		}
 		CqlPart cqlObj = (CqlPart) obj;
-		return partLc.equals(cqlObj.partLc);
+		return java.util.Objects.equals(partLc, cqlObj.partLc);
 	}
 
 	@Override

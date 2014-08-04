@@ -16,11 +16,12 @@
  */
 package org.cyclop.service.importer;
 
-import org.cyclop.service.importer.model.ImportConfig;
-import org.cyclop.service.importer.model.ImportStats;
+import java.io.InputStream;
 
 import javax.validation.constraints.NotNull;
-import java.io.InputStream;
+
+import org.cyclop.service.importer.model.ImportConfig;
+import org.cyclop.service.importer.model.ImportStats;
 
 
 /** @author Maciej Miklas */

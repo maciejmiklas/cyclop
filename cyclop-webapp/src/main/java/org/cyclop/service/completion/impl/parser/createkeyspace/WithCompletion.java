@@ -16,13 +16,14 @@
  */
 package org.cyclop.service.completion.impl.parser.createkeyspace;
 
-import com.google.common.base.Objects;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlKeywordValue;
 import org.cyclop.service.completion.impl.parser.template.StaticMarkerBasedCompletion;
 
-import javax.inject.Named;
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Named("createkeyspace.WithCompletion")

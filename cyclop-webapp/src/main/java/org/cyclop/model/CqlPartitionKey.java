@@ -16,9 +16,9 @@
  */
 package org.cyclop.model;
 
-import net.jcip.annotations.Immutable;
-
 import java.util.Objects;
+
+import net.jcip.annotations.Immutable;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -52,4 +52,5 @@ public final class CqlPartitionKey extends CqlExtendedColumnName {
 		return Objects.equals(partLc, other.partLc) && Objects.equals(columnType, other.columnType) &&
 				Objects.equals(dataType, other.dataType);
 	}
+	
 }

@@ -16,11 +16,13 @@
  */
 package org.cyclop.service.importer.model;
 
-import com.google.common.base.Objects;
+import java.io.Serializable;
+
 import net.jcip.annotations.Immutable;
+
 import org.apache.commons.lang3.time.StopWatch;
 
-import java.io.Serializable;
+import com.google.common.base.Objects;
 
 @Immutable
 public class ImportStats implements Serializable {

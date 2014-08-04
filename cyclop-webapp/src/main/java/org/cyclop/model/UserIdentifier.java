@@ -16,15 +16,17 @@
  */
 package org.cyclop.model;
 
-import com.google.common.base.Objects;
-import net.jcip.annotations.Immutable;
+import java.io.Serializable;
+import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.io.Serializable;
-import java.util.UUID;
+
+import net.jcip.annotations.Immutable;
+
+import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
 @Immutable

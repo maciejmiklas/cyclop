@@ -16,15 +16,17 @@
  */
 package org.cyclop.web.panels.queryimport;
 
-import com.google.common.collect.ImmutableList;
+import java.util.UUID;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.importer.ResultWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 @ThreadSafe

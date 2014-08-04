@@ -16,6 +16,8 @@
  */
 package org.cyclop.web.panels.queryeditor.completionhint;
 
+import java.util.Iterator;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -23,8 +25,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlPart;
-
-import java.util.Iterator;
 
 /** @author Maciej Miklas */
 public class CompletionHintPanel extends Panel {

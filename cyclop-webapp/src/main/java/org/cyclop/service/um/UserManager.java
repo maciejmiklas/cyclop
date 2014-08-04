@@ -16,10 +16,10 @@
  */
 package org.cyclop.service.um;
 
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.UserPreferences;
-
-import javax.validation.constraints.NotNull;
 
 /** @author Maciej Miklas */
 public interface UserManager {

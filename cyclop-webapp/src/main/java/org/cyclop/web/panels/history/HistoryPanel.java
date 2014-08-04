@@ -16,8 +16,8 @@
  */
 package org.cyclop.web.panels.history;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import javax.inject.Inject;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -52,7 +52,8 @@ import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.components.pagination.PagerConfigurator;
 import org.cyclop.web.pages.main.MainPage;
 
-import javax.inject.Inject;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 /** @author Maciej Miklas */
 public class HistoryPanel extends Panel implements AjaxReloadSupport {
@@ -64,7 +65,6 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private final AbstractDefaultAjaxBehavior browserCallback;
 
-	// TODO replace with listener
 	private BootstrapPagingNavigator pager;
 
 	@Inject

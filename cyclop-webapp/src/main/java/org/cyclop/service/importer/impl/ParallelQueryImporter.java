@@ -16,8 +16,14 @@
  */
 package org.cyclop.service.importer.impl;
 
-import com.datastax.driver.core.Session;
-import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -32,14 +38,8 @@ import org.cyclop.service.queryprotocoling.HistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
+import com.datastax.driver.core.Session;
+import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 @Named(QueryImporter.IMPL_PARALLEL)

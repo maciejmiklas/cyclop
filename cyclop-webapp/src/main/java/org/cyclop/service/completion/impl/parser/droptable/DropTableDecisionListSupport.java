@@ -16,15 +16,16 @@
  */
 package org.cyclop.service.completion.impl.parser.droptable;
 
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import net.jcip.annotations.ThreadSafe;
+
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.completion.impl.parser.CqlPartCompletion;
 import org.cyclop.service.completion.impl.parser.DecisionListSupport;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /** @author Maciej Miklas */
 @Named("droptable.DropTableDecisionListSupport")

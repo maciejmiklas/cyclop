@@ -16,12 +16,14 @@
  */
 package org.cyclop.model;
 
-import com.datastax.driver.core.DataType;
-import net.jcip.annotations.Immutable;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
+
+import net.jcip.annotations.Immutable;
+
+import com.datastax.driver.core.DataType;
 
 /** @author Maciej Miklas */
 @Immutable

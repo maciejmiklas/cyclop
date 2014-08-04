@@ -16,6 +16,12 @@
  */
 package org.cyclop.web.panels.queryeditor.export;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.util.resource.AbstractResourceStreamWriter;
@@ -26,12 +32,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.service.exporter.CsvQueryResultExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /** @author Maciej Miklas */
 public class QueryResultExport implements Serializable {

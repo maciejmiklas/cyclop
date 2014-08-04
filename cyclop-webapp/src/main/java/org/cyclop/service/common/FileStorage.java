@@ -16,22 +16,6 @@
  */
 package org.cyclop.service.common;
 
-import net.jcip.annotations.NotThreadSafe;
-
-import org.cyclop.common.AppConfig;
-import org.cyclop.model.UserIdentifier;
-import org.cyclop.model.exception.ServiceException;
-import org.cyclop.service.converter.JsonMarshaller;
-import org.cyclop.validation.EnableValidation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,6 +32,22 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import net.jcip.annotations.NotThreadSafe;
+
+import org.cyclop.common.AppConfig;
+import org.cyclop.model.UserIdentifier;
+import org.cyclop.model.exception.ServiceException;
+import org.cyclop.service.converter.JsonMarshaller;
+import org.cyclop.validation.EnableValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 @Named

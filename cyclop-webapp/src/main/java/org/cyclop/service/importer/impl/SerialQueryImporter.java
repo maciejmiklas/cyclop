@@ -16,6 +16,11 @@
  */
 package org.cyclop.service.importer.impl;
 
+import java.util.Scanner;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.commons.lang.StringUtils;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
@@ -26,10 +31,6 @@ import org.cyclop.service.importer.ResultWriter;
 import org.cyclop.service.importer.model.ImportConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Scanner;
 
 /** @author Maciej Miklas */
 @Named(QueryImporter.IMPL_SERIAL)

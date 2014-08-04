@@ -16,20 +16,22 @@
  */
 package org.cyclop.service.search.impl;
 
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import javax.inject.Named;
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.FilterResult;
 import org.cyclop.service.search.FieldAccessor;
 import org.cyclop.service.search.SearchService;
 import org.cyclop.validation.EnableValidation;
 
-import javax.inject.Named;
-import javax.validation.constraints.NotNull;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 @Named
 @EnableValidation
@@ -76,7 +78,6 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 		return resList.build();
 	}
 
-	// TODO !!!! remove larger keywords if they contain shorter ones
 	private ImmutableSet<String> normalize(String... strArray) {
 		ImmutableSet.Builder<String> resSet = ImmutableSet.builder();
 		for (int idx = 0; idx < strArray.length; idx++) {
