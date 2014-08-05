@@ -42,6 +42,7 @@ import org.cyclop.web.panels.queryeditor.cqlhelp.CqlHelpPanel;
 import org.cyclop.web.panels.queryeditor.editor.CompletionChangeListener;
 import org.cyclop.web.panels.queryeditor.editor.EditorPanel;
 import org.cyclop.web.panels.queryeditor.export.QueryResultExport;
+import org.cyclop.web.panels.queryeditor.horizontalresult.QueryResultHorizontalPanel;
 import org.cyclop.web.panels.queryeditor.verticalresult.QueryResultVerticalPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,180 +51,181 @@ import org.slf4j.LoggerFactory;
 @AuthorizeInstantiation(Roles.ADMIN)
 public class QueryEditorPanel extends Panel {
 
-	private final static Logger LOG = LoggerFactory.getLogger(QueryEditorPanel.class);
+    private final static Logger LOG = LoggerFactory.getLogger(QueryEditorPanel.class);
 
-	private final CqlHelpPanel cqlHelpPanel;
+    private final CqlHelpPanel cqlHelpPanel;
 
-	private final CompletionHintPanel cqlCompletionHintPanel;
+    private final CompletionHintPanel cqlCompletionHintPanel;
 
-	private boolean queryRunning = false;
+    private boolean queryRunning = false;
 
-	private CqlQuery lastQuery;
+    private CqlQuery lastQuery;
 
-	private final QueryResultExport queryResultExport;
+    private final QueryResultExport queryResultExport;
 
-	@Inject
-	private CsvQueryResultExporter exporter;
+    @Inject
+    private CsvQueryResultExporter exporter;
 
-	@Inject
-	private UserManager userManager;
+    @Inject
+    private UserManager userManager;
 
-	@Inject
-	private QueryService queryService;
+    @Inject
+    private QueryService queryService;
 
-	private final IModel<CqlQueryResult> queryResultModel = Model.of(CqlQueryResult.EMPTY);
+    private final IModel<CqlQueryResult> queryResultModel = Model.of(CqlQueryResult.EMPTY);
 
-	private final Label queryErrorLabel;
+    private final Label queryErrorLabel;
 
-	public QueryEditorPanel(String id, PageParameters params) {
-		super(id);
-		setRenderBodyOnly(true);
+    public QueryEditorPanel(String id, PageParameters params) {
+	super(id);
+	setRenderBodyOnly(true);
 
-		cqlHelpPanel = new CqlHelpPanel("cqlHelp");
-		add(cqlHelpPanel);
+	cqlHelpPanel = new CqlHelpPanel("cqlHelp");
+	add(cqlHelpPanel);
 
-		cqlCompletionHintPanel = new CompletionHintPanel("cqlInfoHint", "Completion Hint");
-		add(cqlCompletionHintPanel);
+	cqlCompletionHintPanel = new CompletionHintPanel("cqlInfoHint", "Completion Hint");
+	add(cqlCompletionHintPanel);
 
-		Panel queryResultVerticalPanel = initQueryResultPanel();
-		EditorPanel queryEditorPanel = initQueryEditorPanel(params);
+	Panel queryResultPanel = initQueryResultPanel();
+	EditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
-		UserPreferences preferences = userManager.readPreferences();
-		boolean completionEnabled = preferences.isShowCqlCompletionHint();
-		cqlCompletionHintPanel.setVisible(completionEnabled);
-		initButtons(queryEditorPanel, queryResultVerticalPanel, completionEnabled);
+	UserPreferences preferences = userManager.readPreferences();
+	boolean completionEnabled = preferences.isShowCqlCompletionHint();
+	cqlCompletionHintPanel.setVisible(completionEnabled);
+	initButtons(queryEditorPanel, queryResultPanel, completionEnabled);
 
-		queryResultExport = new QueryResultExport(this, exporter);
+	queryResultExport = new QueryResultExport(this, exporter);
 
-		queryErrorLabel = initQueryErrorLabel();
+	queryErrorLabel = initQueryErrorLabel();
+    }
+
+    private Label initQueryErrorLabel() {
+	Label queryErrorLabel = new Label("queryError", Model.of(""));
+	add(queryErrorLabel);
+	queryErrorLabel.setVisible(false);
+	queryErrorLabel.setOutputMarkupPlaceholderTag(true);
+	return queryErrorLabel;
+    }
+
+    private Panel initQueryResultPanel() {
+	Panel queryResultVerticalPanel = new QueryResultHorizontalPanel("queryResult", queryResultModel);
+	//Panel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResult", queryResultModel);
+	queryResultVerticalPanel.setOutputMarkupPlaceholderTag(true);
+	queryResultVerticalPanel.setOutputMarkupId(true);
+	add(queryResultVerticalPanel);
+	return queryResultVerticalPanel;
+    }
+
+    private EditorPanel initQueryEditorPanel(PageParameters params) {
+
+	StringValue editorContentVal = params.get("cql");
+	String editorContent = editorContentVal == null ? null : editorContentVal.toString();
+
+	EditorPanel queryEditorPanel = new EditorPanel("queryEditorPanel", editorContent);
+	add(queryEditorPanel);
+	queryEditorPanel.setOutputMarkupPlaceholderTag(true);
+	queryEditorPanel.setOutputMarkupId(true);
+
+	queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHelp());
+	queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHint());
+	return queryEditorPanel;
+    }
+
+    private ButtonsPanel initButtons(
+	    final EditorPanel editorPanel,
+	    final Panel queryResultPanel,
+	    boolean completionEnabled) {
+	ButtonListener buttonListener = new ButtonListener() {
+
+	    @Override
+	    public void onClickQueryResultExport(AjaxRequestTarget target) {
+		queryResultExport.initiateDownload(target, lastQuery);
+	    }
+
+	    @Override
+	    public void onClickExecCql(AjaxRequestTarget target) {
+		handleExecQuery(target, editorPanel, queryResultPanel);
+	    }
+
+	    @Override
+	    public void onClickCompletion(AjaxRequestTarget target, boolean pressed) {
+		cqlCompletionHintPanel.setVisible(pressed);
+		target.add(cqlCompletionHintPanel);
+	    }
+
+	    @Override
+	    public void onEesultOrientation(AjaxRequestTarget target, int orientation) {
+		// TODO Auto-generated method stub
+
+	    }
+	};
+
+	ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", buttonListener, completionEnabled);
+	add(buttonsPanel);
+	return buttonsPanel;
+    }
+
+    private void handleExecQuery(AjaxRequestTarget target, EditorPanel editorPanel, Panel queryResultPanel) {
+
+	// this cannot happen, because java script disables execute
+	// button - it's DOS prevention
+	if (queryRunning) {
+	    LOG.warn("Query still running - cannot execute second one");
+	    return;
 	}
 
-	private Label initQueryErrorLabel() {
-		Label queryErrorLabel = new Label("queryError", Model.of(""));
-		add(queryErrorLabel);
-		queryErrorLabel.setVisible(false);
-		queryErrorLabel.setOutputMarkupPlaceholderTag(true);
-		return queryErrorLabel;
+	CqlQuery query = editorPanel.getEditorContent();
+
+	if (query == null) {
+	    return;
+	}
+	queryRunning = true;
+	try {
+	    CqlQueryResult queryResult = queryService.execute(query);
+	    lastQuery = query;
+	    queryResultModel.setObject(queryResult);
+	    queryResultPanel.modelChanged();
+	    queryErrorLabel.setVisible(false);
+	    queryResultPanel.setVisible(true);
+	}
+	catch (Exception e) {
+	    queryErrorLabel.setVisible(true);
+	    queryResultPanel.setVisible(false);
+	    queryErrorLabel.setDefaultModelObject(e.getMessage());
+	}
+	finally {
+	    queryRunning = false;
+	}
+	editorPanel.resetCompletion();
+
+	target.add(queryErrorLabel);
+	target.add(queryResultPanel);
+    }
+
+    private final class CompletionChangeHelp implements CompletionChangeListener {
+
+	@Override
+	public void onCompletionChange(ContextCqlCompletion currentCompletion) {
+	    cqlHelpPanel.changeCompletion(currentCompletion);
 	}
 
-	private Panel initQueryResultPanel() {
-		Panel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResult", queryResultModel);
-		queryResultVerticalPanel.setOutputMarkupPlaceholderTag(true);
-		queryResultVerticalPanel.setOutputMarkupId(true);
-		add(queryResultVerticalPanel);
-		return queryResultVerticalPanel;
+	@Override
+	public Component getReferencesForRefresh() {
+	    return cqlHelpPanel;
+	}
+    }
+
+    private final class CompletionChangeHint implements CompletionChangeListener {
+
+	@Override
+	public void onCompletionChange(ContextCqlCompletion currentCompletion) {
+	    cqlCompletionHintPanel.changeCompletion(currentCompletion);
 	}
 
-	private EditorPanel initQueryEditorPanel(PageParameters params) {
-
-		StringValue editorContentVal = params.get("cql");
-		String editorContent = editorContentVal == null ? null : editorContentVal.toString();
-
-		EditorPanel queryEditorPanel = new EditorPanel("queryEditorPanel", editorContent);
-		add(queryEditorPanel);
-		queryEditorPanel.setOutputMarkupPlaceholderTag(true);
-		queryEditorPanel.setOutputMarkupId(true);
-
-		queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHelp());
-		queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHint());
-		return queryEditorPanel;
+	@Override
+	public Component getReferencesForRefresh() {
+	    return cqlCompletionHintPanel;
 	}
-
-	private ButtonsPanel initButtons(final EditorPanel editorPanel, final Panel queryResultPanel,
-			boolean completionEnabled) {
-		ButtonListener buttonListener = new ButtonListener() {
-
-			@Override
-			public void onClickQueryResultExport(AjaxRequestTarget target) {
-				queryResultExport.initiateDownload(target, lastQuery);
-			}
-
-			@Override
-			public void onClickExecCql(AjaxRequestTarget target) {
-				handleExecQuery(target, editorPanel, queryResultPanel);
-			}
-
-			@Override
-			public void onClickCompletion(AjaxRequestTarget target, boolean pressed) {
-				cqlCompletionHintPanel.setVisible(pressed);
-				target.add(cqlCompletionHintPanel);
-
-				UserPreferences preferences = userManager.readPreferences();
-				preferences.setShowCqlCompletionHint(pressed);
-				userManager.storePreferences(preferences);
-			}
-
-			@Override
-			public void onEesultOrientation(AjaxRequestTarget target, int orientation) {
-				// TODO Auto-generated method stub
-
-			}
-		};
-
-		ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", buttonListener, completionEnabled);
-		add(buttonsPanel);
-		return buttonsPanel;
-	}
-
-	private void handleExecQuery(AjaxRequestTarget target, EditorPanel editorPanel, Panel queryResultPanel) {
-
-		// this cannot happen, because java script disables execute
-		// button - it's DOS prevention
-		if (queryRunning) {
-			LOG.warn("Query still running - cannot execute second one");
-			return;
-		}
-
-		CqlQuery query = editorPanel.getEditorContent();
-
-		if (query == null) {
-			return;
-		}
-		queryRunning = true;
-		try {
-			CqlQueryResult queryResult = queryService.execute(query);
-			lastQuery = query;
-			queryResultModel.setObject(queryResult);
-			queryResultPanel.modelChanged();
-			queryErrorLabel.setVisible(false);
-			queryResultPanel.setVisible(true);
-		} catch (Exception e) {
-			queryErrorLabel.setVisible(true);
-			queryResultPanel.setVisible(false);
-			queryErrorLabel.setDefaultModelObject(e.getMessage());
-		} finally {
-			queryRunning = false;
-		}
-		editorPanel.resetCompletion();
-
-		target.add(queryErrorLabel);
-		target.add(queryResultPanel);
-	}
-
-	private final class CompletionChangeHelp implements CompletionChangeListener {
-
-		@Override
-		public void onCompletionChange(ContextCqlCompletion currentCompletion) {
-			cqlHelpPanel.changeCompletion(currentCompletion);
-		}
-
-		@Override
-		public Component getReferencesForRefresh() {
-			return cqlHelpPanel;
-		}
-	}
-
-	private final class CompletionChangeHint implements CompletionChangeListener {
-
-		@Override
-		public void onCompletionChange(ContextCqlCompletion currentCompletion) {
-			cqlCompletionHintPanel.changeCompletion(currentCompletion);
-		}
-
-		@Override
-		public Component getReferencesForRefresh() {
-			return cqlCompletionHintPanel;
-		}
-	}
+    }
 
 }

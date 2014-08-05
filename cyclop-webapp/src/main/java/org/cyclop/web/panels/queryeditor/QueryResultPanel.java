@@ -42,205 +42,206 @@ import com.google.common.collect.ImmutableList;
 /** @author Maciej Miklas */
 public abstract class QueryResultPanel extends Panel {
 
-	protected final RowDataProvider rowDataProvider;
+    protected final RowDataProvider rowDataProvider;
 
-	protected final IModel<CqlQueryResult> model;
+    protected final IModel<CqlQueryResult> model;
 
-	protected final ColumnsModel columnsModel;
+    protected final ColumnsModel columnsModel;
 
-	protected final RowsModel rowsModel;
+    protected final RowsModel rowsModel;
 
-	private final Label cqlResultText;
+    private final Label cqlResultText;
 
-	private final CqlResultTextModel cqlResultTextModel;
+    private final CqlResultTextModel cqlResultTextModel;
 
-	protected final WebMarkupContainer resultTable;
+    protected final WebMarkupContainer resultTable;
 
-	protected final AppConfig config = AppConfig.get();
+    protected final AppConfig config = AppConfig.get();
 
-	private final BootstrapPagingNavigator pager;
+    private final BootstrapPagingNavigator pager;
 
-	@Inject
-	protected UserManager um;
+    @Inject
+    protected UserManager um;
 
-	@Inject
-	protected WidgetFactory widgetFactory;
+    @Inject
+    protected WidgetFactory widgetFactory;
 
-	public QueryResultPanel(String id, IModel<CqlQueryResult> model) {
-		super(id, model);
-		this.model = model;
+    public QueryResultPanel(String id, IModel<CqlQueryResult> model) {
+	super(id, model);
+	this.model = model;
 
-		columnsModel = new ColumnsModel();
-		rowsModel = new RowsModel();
+	columnsModel = new ColumnsModel();
+	rowsModel = new RowsModel();
 
-		rowDataProvider = new RowDataProvider();
-		rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
+	rowDataProvider = new RowDataProvider();
+	rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
 
-		cqlResultTextModel = new CqlResultTextModel();
-		cqlResultText = initClqReslutText();
-		resultTable = initResultsTable();
-		pager = initPagingProvider();
+	cqlResultTextModel = new CqlResultTextModel();
+	cqlResultText = initClqReslutText();
+	resultTable = initResultsTable();
+	pager = initPagingProvider();
+    }
+
+    @Override
+    protected void onModelChanged() {
+	super.onModelChanged();
+	if (model.getObject().isEmpty()) {
+	    showCqlResultText("Query executed successfully, result is empty");
+	}
+	else {
+	    showResultsTable();
+	}
+    }
+
+    protected abstract BootstrapPagingNavigator initPagingProvider();
+
+    protected void hideResultsTable() {
+	resultTable.setVisible(false);
+	columnsModel.clean();
+	rowsModel.getObject().clear();
+    }
+
+    protected void showCqlResultText(String text) {
+	hideResultsTable();
+	cqlResultText.setVisible(true);
+	cqlResultTextModel.setObject(text);
+    }
+
+    protected void showResultsTable() {
+	hideCqlResultText();
+	resultTable.setVisible(true);
+	pager.reset();
+	rowDataProvider.replaceModel();
+	columnsModel.updateResult(model.getObject().rowMetadata);
+    }
+
+    protected void hideCqlResultText() {
+	cqlResultText.setVisible(false);
+	cqlResultTextModel.clean();
+    }
+
+    private WebMarkupContainer initResultsTable() {
+	WebMarkupContainer resultTable = new WebMarkupContainer("resultTable");
+	resultTable.setOutputMarkupPlaceholderTag(true);
+	resultTable.setVisible(false);
+	add(resultTable);
+	return resultTable;
+    }
+
+    private Label initClqReslutText() {
+	Label cqlResultText = new Label("cqlResultText", cqlResultTextModel);
+	cqlResultText.setVisible(false);
+	cqlResultText.setOutputMarkupPlaceholderTag(true);
+	add(cqlResultText);
+	return cqlResultText;
+    }
+
+    protected final static class RowsModel implements IModel<List<Row>> {
+
+	private List<Row> content;
+
+	public RowsModel() {
+	    this.content = Collections.emptyList();
+	}
+
+	public RowsModel(List<Row> content) {
+	    this.content = content;
 	}
 
 	@Override
-	protected void onModelChanged() {
-		super.onModelChanged();
-		if (model.getObject().isEmpty()) {
-			showCqlResultText("Query executed successfully, result is empty");
-		} else {
-			showResultsTable();
-		}
+	public void detach() {
 	}
 
-	protected abstract BootstrapPagingNavigator initPagingProvider();
-
-	protected void hideResultsTable() {
-		resultTable.setVisible(false);
-		columnsModel.clean();
-		rowsModel.getObject().clear();
+	@Override
+	public List<Row> getObject() {
+	    return content;
 	}
 
-	protected void showCqlResultText(String text) {
-		hideResultsTable();
-		cqlResultText.setVisible(true);
-		cqlResultTextModel.setObject(text);
+	@Override
+	public void setObject(List<Row> object) {
+	    content = object;
+	}
+    }
+
+    protected final static class CqlResultTextModel implements IModel<String> {
+	private String label = "";
+
+	public void clean() {
+	    this.label = "";
 	}
 
-	protected void showResultsTable() {
-		hideCqlResultText();
-		resultTable.setVisible(true);
-		pager.reset();
-		rowDataProvider.replaceModel();
+	@Override
+	public void detach() {
 	}
 
-	protected void hideCqlResultText() {
-		cqlResultText.setVisible(false);
-		cqlResultTextModel.clean();
+	@Override
+	public String getObject() {
+	    return label;
 	}
 
-	private WebMarkupContainer initResultsTable() {
-		WebMarkupContainer resultTable = new WebMarkupContainer("resultTable");
-		resultTable.setOutputMarkupPlaceholderTag(true);
-		resultTable.setVisible(false);
-		add(resultTable);
-		return resultTable;
+	@Override
+	public void setObject(String label) {
+	    this.label = label;
+	}
+    }
+
+    protected final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
+	private CqlRowMetadata result;
+
+	private List<CqlExtendedColumnName> content = ImmutableList.of();
+
+	public ColumnsModel() {
+	    this.content = ImmutableList.of();
 	}
 
-	private Label initClqReslutText() {
-		Label cqlResultText = new Label("cqlResultText", cqlResultTextModel);
-		cqlResultText.setVisible(false);
-		cqlResultText.setOutputMarkupPlaceholderTag(true);
-		add(cqlResultText);
-		return cqlResultText;
+	public void clean() {
+	    this.content = ImmutableList.of();
+	    this.result = CqlRowMetadata.EMPTY;
 	}
 
-	protected final static class RowsModel implements IModel<List<Row>> {
-
-		private List<Row> content;
-
-		public RowsModel() {
-			this.content = Collections.emptyList();
-		}
-
-		public RowsModel(List<Row> content) {
-			this.content = content;
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public List<Row> getObject() {
-			return content;
-		}
-
-		@Override
-		public void setObject(List<Row> object) {
-			content = object;
-		}
+	@Override
+	public void detach() {
 	}
 
-	protected final static class CqlResultTextModel implements IModel<String> {
-		private String label = "";
-
-		public void clean() {
-			this.label = "";
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public String getObject() {
-			return label;
-		}
-
-		@Override
-		public void setObject(String label) {
-			this.label = label;
-		}
+	@Override
+	public List<CqlExtendedColumnName> getObject() {
+	    return content;
 	}
 
-	protected final static class ColumnsModel implements IModel<List<CqlExtendedColumnName>> {
-		private CqlRowMetadata result;
-
-		private List<CqlExtendedColumnName> content = ImmutableList.of();
-
-		public ColumnsModel() {
-			this.content = ImmutableList.of();
-		}
-
-		public void clean() {
-			this.content = ImmutableList.of();
-			this.result = CqlRowMetadata.EMPTY;
-		}
-
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public List<CqlExtendedColumnName> getObject() {
-			return content;
-		}
-
-		@Override
-		public void setObject(List<CqlExtendedColumnName> object) {
-			content = object;
-		}
-
-		public CqlRowMetadata getResult() {
-			return result;
-		}
-
-		public void updateResult(CqlRowMetadata result) {
-			this.result = result;
-			setObject(result.columns);
-		}
+	@Override
+	public void setObject(List<CqlExtendedColumnName> object) {
+	    content = object;
 	}
 
-	protected final class RowDataProvider extends IterableDataProvider<Row> {
-
-		protected RowDataProvider() {
-			super(um.readPreferences().getPagerEditorItems());
-		}
-
-		@Override
-		protected Iterator<Row> iterator() {
-			CqlQueryResult res = model.getObject();
-			columnsModel.updateResult(res.rowMetadata);
-			return res.iterator();
-		}
-
-		@Override
-		public IModel<Row> model(Row row) {
-			return new TransientModel<Row>(row);
-		}
-
-		@Override
-		public void detach() {
-		}
+	public CqlRowMetadata getResult() {
+	    return result;
 	}
+
+	public void updateResult(CqlRowMetadata result) {
+	    this.result = result;
+	    setObject(result.columns);
+	}
+    }
+
+    protected final class RowDataProvider extends IterableDataProvider<Row> {
+
+	protected RowDataProvider() {
+	    super(um.readPreferences().getPagerEditorItems());
+	}
+
+	@Override
+	protected Iterator<Row> iterator() {
+	    CqlQueryResult res = model.getObject();
+	    return res.iterator();
+	}
+
+	@Override
+	public IModel<Row> model(Row row) {
+	    return new TransientModel<Row>(row);
+	}
+
+	@Override
+	public void detach() {
+	}
+    }
 }

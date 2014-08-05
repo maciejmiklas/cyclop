@@ -27,17 +27,17 @@ import com.google.common.base.Objects;
 @Named("alterkeyspace.AlterCompletion")
 class AlterCompletion extends NotSupportedCompletion {
 
-	public AlterCompletion() {
-		super(new CqlNotSupported("alter"));
-	}
+    public AlterCompletion() {
+	super(new CqlNotSupported("alter"));
+    }
 
-	@Override
-	protected String getNotSupportedText() {
-		return "alter keyspace";
-	}
+    @Override
+    protected String getNotSupportedText() {
+	return "alter keyspace";
+    }
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
+    @Override
+    public String toString() {
+	return Objects.toStringHelper(this).toString();
+    }
 }

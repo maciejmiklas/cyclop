@@ -32,27 +32,27 @@ import com.google.common.collect.ImmutableSortedSet;
 /** @author Maciej Miklas */
 public interface QueryService {
 
-	ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull Optional<CqlTable> table);
-	
-	boolean checkTableExists(CqlTable table);
+    ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull Optional<CqlTable> table);
 
-	@NotNull
-	ImmutableSortedSet<CqlColumnName> findAllColumnNames();
+    boolean checkTableExists(CqlTable table);
 
-	@NotNull
-	ImmutableSortedSet<CqlIndex> findAllIndexes(@NotNull Optional<CqlKeySpace> keySpace);
+    @NotNull
+    ImmutableSortedSet<CqlColumnName> findAllColumnNames();
 
-	@NotNull
-	ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
+    @NotNull
+    ImmutableSortedSet<CqlIndex> findAllIndexes(@NotNull Optional<CqlKeySpace> keySpace);
 
-	@NotNull
-	CqlQueryResult execute(@NotNull CqlQuery query);
+    @NotNull
+    ImmutableSortedSet<CqlKeySpace> findAllKeySpaces();
 
-	void executeSimple(@NotNull CqlQuery query, boolean updateHistory);
+    @NotNull
+    CqlQueryResult execute(@NotNull CqlQuery query);
 
-	@NotNull
-	CqlQueryResult execute(@NotNull CqlQuery query, boolean updateHistory);
+    void executeSimple(@NotNull CqlQuery query, boolean updateHistory);
 
-	@NotNull
-	ImmutableSortedSet<CqlTable> findTableNames(@NotNull Optional<CqlKeySpace> keySpace);
+    @NotNull
+    CqlQueryResult execute(@NotNull CqlQuery query, boolean updateHistory);
+
+    @NotNull
+    ImmutableSortedSet<CqlTable> findTableNames(@NotNull Optional<CqlKeySpace> keySpace);
 }

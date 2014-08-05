@@ -30,31 +30,31 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class CreateTableDecisionListSupport implements DecisionListSupport {
 
-	private final CqlKeyword supports = new CqlNotSupported("create table");
+    private final CqlKeyword supports = new CqlNotSupported("create table");
 
-	private CqlPartCompletion[][] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	CreateCompletion createCompletion;
+    @Inject
+    CreateCompletion createCompletion;
 
-	@PostConstruct
-	public void init() {
-		decisionList = new CqlPartCompletion[][]{{createCompletion}};
-	}
+    @PostConstruct
+    public void init() {
+	decisionList = new CqlPartCompletion[][] { { createCompletion } };
+    }
 
-	@Override
-	public CqlPartCompletion[][] getDecisionList() {
-		return decisionList;
-	}
+    @Override
+    public CqlPartCompletion[][] getDecisionList() {
+	return decisionList;
+    }
 
-	@Override
-	public CqlKeyword beginnsWith() {
-		return supports;
-	}
+    @Override
+    public CqlKeyword beginnsWith() {
+	return supports;
+    }
 
-	@Override
-	public CqlQueryType queryName() {
-		return CqlQueryType.CREATE_TABLE;
-	}
+    @Override
+    public CqlQueryType queryName() {
+	return CqlQueryType.CREATE_TABLE;
+    }
 
 }

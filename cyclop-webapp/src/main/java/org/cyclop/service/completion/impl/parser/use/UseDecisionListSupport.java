@@ -29,31 +29,31 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class UseDecisionListSupport implements DecisionListSupport {
 
-	private final CqlKeyword supports = CqlKeyword.Def.USE.value;
+    private final CqlKeyword supports = CqlKeyword.Def.USE.value;
 
-	private CqlPartCompletion[][] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	UseCompletion useCompletion;
+    @Inject
+    UseCompletion useCompletion;
 
-	@PostConstruct
-	public void init() {
-		decisionList = new CqlPartCompletion[][]{{useCompletion}};
-	}
+    @PostConstruct
+    public void init() {
+	decisionList = new CqlPartCompletion[][] { { useCompletion } };
+    }
 
-	@Override
-	public CqlPartCompletion[][] getDecisionList() {
-		return decisionList;
-	}
+    @Override
+    public CqlPartCompletion[][] getDecisionList() {
+	return decisionList;
+    }
 
-	@Override
-	public CqlKeyword beginnsWith() {
-		return supports;
-	}
+    @Override
+    public CqlKeyword beginnsWith() {
+	return supports;
+    }
 
-	@Override
-	public CqlQueryType queryName() {
-		return CqlQueryType.USE;
-	}
+    @Override
+    public CqlQueryType queryName() {
+	return CqlQueryType.USE;
+    }
 
 }

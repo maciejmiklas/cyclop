@@ -42,98 +42,106 @@ import com.datastax.driver.core.Row;
 /** @author Maciej Miklas */
 public class QueryResultVerticalPanel extends QueryResultPanel {
 
-	public QueryResultVerticalPanel(String id, IModel<CqlQueryResult> model) {
-		super(id, model);
-		initColumnList();
-	}
+    public QueryResultVerticalPanel(String id, IModel<CqlQueryResult> model) {
+	super(id, model);
+	initColumnList();
+    }
 
-	private void initColumnList() {
-		ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>("columnList", columnsModel) {
-			@Override
-			protected void populateItem(ListItem<CqlExtendedColumnName> item) {
-				final CqlExtendedColumnName columnName = item.getModelObject();
+    private void initColumnList() {
+	ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>(
+		"columnList",
+		columnsModel) {
+	    @Override
+	    protected void populateItem(ListItem<CqlExtendedColumnName> item) {
+		final CqlExtendedColumnName columnName = item.getModelObject();
 
-				WebMarkupContainer columnListRow = new WebMarkupContainer("columnListRow");
-				item.add(columnListRow);
+		WebMarkupContainer columnListRow = new WebMarkupContainer("columnListRow");
+		item.add(columnListRow);
 
-				Label columnNameLabel = new Label("columnName", columnName.part);
-				columnListRow.add(columnNameLabel);
+		Label columnNameLabel = new Label("columnName", columnName.part);
+		columnListRow.add(columnNameLabel);
 
-				ColumnsModel model = (ColumnsModel) getModel();
-				CqlRowMetadata result = model.getResult();
-				final CqlPartitionKey partitionKey = result == null ? null : result.partitionKey;
+		ColumnsModel model = (ColumnsModel) getModel();
+		CqlRowMetadata result = model.getResult();
+		final CqlPartitionKey partitionKey = result == null ? null : result.partitionKey;
 
-				ListView<Row> columnValueList = new ListView<Row>("columnValueList", rowsModel) {
+		ListView<Row> columnValueList = new ListView<Row>("columnValueList", rowsModel) {
 
-					@Override
-					protected void populateItem(ListItem<Row> item) {
-						Row row = item.getModelObject();
+		    @Override
+		    protected void populateItem(ListItem<Row> item) {
+			Row row = item.getModelObject();
 
-						Component component = widgetFactory.createForColumn(row, partitionKey, columnName,
-								"columnValue");
-						item.add(component);
-						component.setRenderBodyOnly(true);
-					}
-				};
-				columnListRow.add(columnValueList);
-			}
+			Component component = widgetFactory.createForColumn(
+				row,
+				partitionKey,
+				columnName,
+				"columnValue");
+			item.add(component);
+			component.setRenderBodyOnly(true);
+		    }
 		};
-		resultTable.add(columnList);
-	}
+		columnListRow.add(columnValueList);
+	    }
+	};
+	resultTable.add(columnList);
+    }
 
-	protected BootstrapPagingNavigator initPagingProvider() {
+    protected BootstrapPagingNavigator initPagingProvider() {
 
-		final List<Row> displayedRows = new ArrayList<>();
-		IterableGridView<Row> rowNamesList = new IterableGridView<Row>("rowNamesList", rowDataProvider) {
+	final List<Row> displayedRows = new ArrayList<>();
+	IterableGridView<Row> rowNamesList = new IterableGridView<Row>("rowNamesList", rowDataProvider) {
 
-			@Override
-			protected void onBeforeRender() {
-				displayedRows.clear();
-				super.onBeforeRender();
-			}
+	    @Override
+	    protected void onBeforeRender() {
+		displayedRows.clear();
+		super.onBeforeRender();
+	    }
 
-			@Override
-			protected void populateEmptyItem(Item<Row> item) {
-				item.add(new Label("rowName", ""));
-			}
+	    @Override
+	    protected void populateEmptyItem(Item<Row> item) {
+		item.add(new Label("rowName", ""));
+	    }
 
-			@Override
-			protected void populateItem(Item<Row> item) {
-				Row row = item.getModel().getObject();
-				displayedRows.add(row);
-				CqlPartitionKey partitionKey = model.getObject().rowMetadata.partitionKey;
+	    @Override
+	    protected void populateItem(Item<Row> item) {
+		Row row = item.getModel().getObject();
+		displayedRows.add(row);
+		CqlPartitionKey partitionKey = model.getObject().rowMetadata.partitionKey;
 
-				Component component;
-				if (partitionKey != null) {
-					component = widgetFactory.createForColumn(row, partitionKey, partitionKey, "rowName");
-				} else {
-					component = new Label("rowName", displayedRows.size());
-				}
+		Component component;
+		if (partitionKey != null) {
+		    component = widgetFactory.createForColumn(row, partitionKey, partitionKey, "rowName");
+		}
+		else {
+		    component = new Label("rowName", displayedRows.size());
+		}
 
-				item.add(component);
-			}
-		};
-		resultTable.add(rowNamesList);
-		rowNamesList.setColumns(1);
+		item.add(component);
+	    }
+	};
+	resultTable.add(rowNamesList);
+	rowNamesList.setColumns(1);
 
-		BootstrapPagingNavigator pager = new BootstrapPagingNavigator("rowNamesListPager", rowNamesList,
-				new PagerConfigurator() {
+	BootstrapPagingNavigator pager = new BootstrapPagingNavigator(
+		"rowNamesListPager",
+		rowNamesList,
+		new PagerConfigurator() {
 
-					@Override
-					public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
-						UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
-						um.storePreferences(prefs);
-					}
+		    @Override
+		    public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
+			UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
+			um.storePreferences(prefs);
+		    }
 
-					@Override
-					public long getInitialItemsPerPage() {
-						return um.readPreferences().getPagerEditorItems();
-					}
-				});
-		resultTable.add(pager);
-		rowsModel.setObject(displayedRows);
+		    @Override
+		    public long getInitialItemsPerPage() {
+			return um.readPreferences().getPagerEditorItems();
+		    }
+		});
+	resultTable.add(pager);
+	rowsModel.setObject(displayedRows);
 
-		return pager;
-	}
+	return pager;
+    }
 
 }

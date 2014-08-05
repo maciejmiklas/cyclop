@@ -16,19 +16,19 @@
  */
 package org.cyclop.validation;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import javax.inject.Inject;
+
 import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlTable;
 import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.model.exception.ServiceException;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Test;
-
-import javax.inject.Inject;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class TestAopValidator extends AbstractTestCase {
 

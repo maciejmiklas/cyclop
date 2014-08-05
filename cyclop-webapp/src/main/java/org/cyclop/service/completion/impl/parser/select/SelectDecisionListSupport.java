@@ -29,44 +29,47 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class SelectDecisionListSupport implements DecisionListSupport {
 
-	private CqlPartCompletion[][] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
-	private final CqlKeyword supports = CqlKeyword.Def.SELECT.value;
+    private final CqlKeyword supports = CqlKeyword.Def.SELECT.value;
 
-	@Inject
-	private SelectCompletionTemplate selectCompletion;
+    @Inject
+    private SelectCompletionTemplate selectCompletion;
 
-	@Inject
-	private FromCompletion fromCompletion;
+    @Inject
+    private FromCompletion fromCompletion;
 
-	@Inject
-	private AfterFromCompletion afterFromCompletion;
+    @Inject
+    private AfterFromCompletion afterFromCompletion;
 
-	@Inject
-	private WhereCompletion whereCompletion;
+    @Inject
+    private WhereCompletion whereCompletion;
 
-	@Inject
-	private OrderByClausePartCompletion orderByClausePartCompletion;
+    @Inject
+    private OrderByClausePartCompletion orderByClausePartCompletion;
 
-	@PostConstruct
-	public void init() {
-		decisionList = new CqlPartCompletion[][] { { selectCompletion }, { fromCompletion }, { afterFromCompletion },
-				{ whereCompletion, orderByClausePartCompletion }, { orderByClausePartCompletion } };
-	}
+    @PostConstruct
+    public void init() {
+	decisionList = new CqlPartCompletion[][] { { selectCompletion },
+		{ fromCompletion },
+		{ afterFromCompletion },
+		{ whereCompletion, orderByClausePartCompletion },
+		{ orderByClausePartCompletion } };
+    }
 
-	@Override
-	public CqlPartCompletion[][] getDecisionList() {
-		return decisionList;
-	}
+    @Override
+    public CqlPartCompletion[][] getDecisionList() {
+	return decisionList;
+    }
 
-	@Override
-	public CqlKeyword beginnsWith() {
-		return supports;
-	}
+    @Override
+    public CqlKeyword beginnsWith() {
+	return supports;
+    }
 
-	@Override
-	public CqlQueryType queryName() {
-		return CqlQueryType.SELECT;
-	}
+    @Override
+    public CqlQueryType queryName() {
+	return CqlQueryType.SELECT;
+    }
 
 }

@@ -46,99 +46,103 @@ import com.datastax.driver.core.exceptions.InvalidQueryException;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @EnableValidation
 public class CassandraSessionImpl implements CassandraSession {
-	private final static Logger LOG = LoggerFactory.getLogger(CassandraSessionImpl.class);
+    private final static Logger LOG = LoggerFactory.getLogger(CassandraSessionImpl.class);
 
-	private Session session;
+    private Session session;
 
-	@Inject
-	private AppConfig appConfig;
+    @Inject
+    private AppConfig appConfig;
 
-	private CassandraVersion cassandraVersion;
+    private CassandraVersion cassandraVersion;
 
-	private Cluster cluster;
+    private Cluster cluster;
 
-	public synchronized void authenticate(@NotNull String userName, @NotNull String password) {
-		if (cluster != null) {
-			return;
-		}
-		Cluster.Builder builder = Cluster.builder();
-		for (String host : appConfig.cassandra.hosts.split("[,]")) {
-			builder.addContactPoint(host);
-		}
-		builder.withCredentials(userName, password);
+    public synchronized void authenticate(@NotNull String userName, @NotNull String password) {
+	if (cluster != null) {
+	    return;
+	}
+	Cluster.Builder builder = Cluster.builder();
+	for (String host : appConfig.cassandra.hosts.split("[,]")) {
+	    builder.addContactPoint(host);
+	}
+	builder.withCredentials(userName, password);
 
-		if (appConfig.cassandra.useSsl) {
-			builder.withSSL();
-		}
-
-		SocketOptions socketOptions = new SocketOptions();
-		socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMillis);
-
-		PoolingOptions pooling = new PoolingOptions();
-		pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.coreConnectionsPerHost);
-		pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.maxConnectionsPerHost);
-		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
-				appConfig.cassandra.minSimultaneousRequestsPerConnectionThreshold);
-		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
-				appConfig.cassandra.maxSimultaneousRequestsPerConnectionThreshold);
-
-		cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions)
-				.withPoolingOptions(pooling).build();
-		session = cluster.connect();
-
-		cassandraVersion = determineVersion(session);
+	if (appConfig.cassandra.useSsl) {
+	    builder.withSSL();
 	}
 
-	private CassandraVersion determineVersion(Session session) {
-		CassandraVersion ver = CassandraVersion.VER_2_x;
+	SocketOptions socketOptions = new SocketOptions();
+	socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMillis);
 
-		// this way to check version sucks and works at the same time ....
-		try {
-			session.execute("select type FROM system.schema_columns LIMIT 1 ALLOW FILTERING");
-		} catch (InvalidQueryException e) {
-			ver = CassandraVersion.VER_1_x;
-		}
-		return ver;
+	PoolingOptions pooling = new PoolingOptions();
+	pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.coreConnectionsPerHost);
+	pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.maxConnectionsPerHost);
+	pooling.setMinSimultaneousRequestsPerConnectionThreshold(
+		HostDistance.LOCAL,
+		appConfig.cassandra.minSimultaneousRequestsPerConnectionThreshold);
+	pooling.setMaxSimultaneousRequestsPerConnectionThreshold(
+		HostDistance.LOCAL,
+		appConfig.cassandra.maxSimultaneousRequestsPerConnectionThreshold);
+
+	cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions)
+		.withPoolingOptions(pooling).build();
+	session = cluster.connect();
+
+	cassandraVersion = determineVersion(session);
+    }
+
+    private CassandraVersion determineVersion(Session session) {
+	CassandraVersion ver = CassandraVersion.VER_2_x;
+
+	// this way to check version sucks and works at the same time ....
+	try {
+	    session.execute("select type FROM system.schema_columns LIMIT 1 ALLOW FILTERING");
 	}
-
-	protected CassandraVersion getCassandraVersion() {
-		checkAuthenticated();
-		return cassandraVersion;
+	catch (InvalidQueryException e) {
+	    ver = CassandraVersion.VER_1_x;
 	}
+	return ver;
+    }
 
-	@Override
-	public Session getSession() {
-		checkAuthenticated();
-		return session;
+    protected CassandraVersion getCassandraVersion() {
+	checkAuthenticated();
+	return cassandraVersion;
+    }
+
+    @Override
+    public Session getSession() {
+	checkAuthenticated();
+	return session;
+    }
+
+    public synchronized void close() {
+	if (cluster != null) {
+	    try {
+		cluster.close();
+	    }
+	    catch (Exception e) {
+		LOG.warn("Error while shutting down the cluster", e);
+	    }
+	    cluster = null;
+	    session = null;
 	}
+    }
 
-	public synchronized void close() {
-		if (cluster != null) {
-			try {
-				cluster.close();
-			} catch (Exception e) {
-				LOG.warn("Error while shutting down the cluster", e);
-			}
-			cluster = null;
-			session = null;
-		}
+    private void checkAuthenticated() {
+	if (!isOpen()) {
+	    throw new AuthenticationRequiredException("Cassandra session not found");
 	}
+    }
 
-	private void checkAuthenticated() {
-		if (!isOpen()) {
-			throw new AuthenticationRequiredException("Cassandra session not found");
-		}
-	}
+    @Override
+    public synchronized boolean isOpen() {
+	return session != null;
 
-	@Override
-	public synchronized boolean isOpen() {
-		return session != null;
+    }
 
-	}
-
-	@PreDestroy
-	public void cleanup() {
-		close();
-	}
+    @PreDestroy
+    public void cleanup() {
+	close();
+    }
 
 }

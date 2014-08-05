@@ -16,13 +16,13 @@
  */
 package org.cyclop.service.converter;
 
-import org.cyclop.model.UserPreferences;
-import org.cyclop.test.AbstractTestCase;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
+import org.cyclop.model.UserPreferences;
+import org.cyclop.test.AbstractTestCase;
+import org.junit.Test;
 
 /** @author Maciej Miklas */
 public class TestJsonMarshaller extends AbstractTestCase {

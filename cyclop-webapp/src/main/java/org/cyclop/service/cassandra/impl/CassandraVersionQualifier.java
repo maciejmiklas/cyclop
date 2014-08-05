@@ -24,10 +24,10 @@ import java.lang.annotation.Target;
 import javax.inject.Qualifier;
 
 /** @author Maciej Miklas */
-@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+@Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
 public @interface CassandraVersionQualifier {
 
-	CassandraVersion value();
+    CassandraVersion value();
 }

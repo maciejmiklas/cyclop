@@ -36,91 +36,96 @@ import org.slf4j.LoggerFactory;
 @Named
 public class AopValidator {
 
-	private final static Logger LOG = LoggerFactory.getLogger(AopValidator.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AopValidator.class);
 
-	@Pointcut("execution(* org.cyclop..*.*(..)) && @within(org.cyclop.validation.EnableValidation)")
-	protected void validate() {
+    @Pointcut("execution(* org.cyclop..*.*(..)) && @within(org.cyclop.validation.EnableValidation)")
+    protected void validate() {
+    }
+
+    @Around("validate()")
+    protected Object doValidate(ProceedingJoinPoint pjp) throws Throwable {
+	try {
+	    executeParamValidation(pjp);
+	}
+	catch (BeanValidationException be) {
+	    throw be;
+	}
+	catch (Exception e) {
+	    LOG.error("Error executing param validation", e);
 	}
 
-	@Around("validate()")
-	protected Object doValidate(ProceedingJoinPoint pjp) throws Throwable {
-		try {
-			executeParamValidation(pjp);
-		} catch (BeanValidationException be) {
-			throw be;
-		} catch (Exception e) {
-			LOG.error("Error executing param validation", e);
-		}
+	Object response = pjp.proceed();
 
-		Object response = pjp.proceed();
-
-		try {
-			executeResponseValidation(pjp, response);
-		} catch (BeanValidationException be) {
-			throw be;
-		} catch (Exception e) {
-			LOG.error("Error executing response validation", e);
-		}
-
-		return response;
+	try {
+	    executeResponseValidation(pjp, response);
+	}
+	catch (BeanValidationException be) {
+	    throw be;
+	}
+	catch (Exception e) {
+	    LOG.error("Error executing response validation", e);
 	}
 
-	private void executeResponseValidation(ProceedingJoinPoint pjp, Object response) {
-		MethodSignature sig = (MethodSignature) pjp.getSignature();
-		Method method = sig.getMethod();
+	return response;
+    }
 
-		BeanValidator validator = null;
-		for (Annotation respAnnotatioin : method.getDeclaredAnnotations()) {
-			if (respAnnotatioin.annotationType().isAssignableFrom(NotNull.class)
-					|| (respAnnotatioin.annotationType().isAssignableFrom(Valid.class) && response != null)) {
-				if (validator == null) {
-					validator = createValidator(pjp);
-				}
-				validator.add("METHOD_RETURN_VALUE", response);
-			}
-		}
+    private void executeResponseValidation(ProceedingJoinPoint pjp, Object response) {
+	MethodSignature sig = (MethodSignature) pjp.getSignature();
+	Method method = sig.getMethod();
 
-		if (validator != null) {
-			validator.validate();
+	BeanValidator validator = null;
+	for (Annotation respAnnotatioin : method.getDeclaredAnnotations()) {
+	    if (respAnnotatioin.annotationType().isAssignableFrom(NotNull.class)
+		    || (respAnnotatioin.annotationType().isAssignableFrom(Valid.class) && response != null)) {
+		if (validator == null) {
+		    validator = createValidator(pjp);
 		}
+		validator.add("METHOD_RETURN_VALUE", response);
+	    }
 	}
 
-	private void executeParamValidation(ProceedingJoinPoint pjp) {
-		Object[] args = pjp.getArgs();
-		MethodSignature sig = (MethodSignature) pjp.getSignature();
-		Method method = sig.getMethod();
-		Annotation[][] allParamAnnotations = method.getParameterAnnotations();
-
-		BeanValidator validator = null;
-		for (int paramIdx = 0; paramIdx < allParamAnnotations.length; paramIdx++) {
-			Annotation[] paramAnnotations = allParamAnnotations[paramIdx];
-			if (paramAnnotations == null || paramAnnotations.length == 0) {
-				continue;
-			}
-			Object obj = args[paramIdx];
-			if (contains(paramAnnotations, NotNull.class) || (contains(paramAnnotations, Valid.class) && obj != null)) {
-				if (validator == null) {
-					validator = createValidator(pjp);
-				}
-				validator.add("METHOD_PARAM_INDEX_" + paramIdx, obj);
-			}
-		}
-		if (validator != null) {
-			validator.validate();
-		}
+	if (validator != null) {
+	    validator.validate();
 	}
+    }
 
-	private BeanValidator createValidator(ProceedingJoinPoint pjp) {
-		BeanValidator validator = BeanValidator.create(pjp.getSignature().toString());
-		return validator;
-	}
+    private void executeParamValidation(ProceedingJoinPoint pjp) {
+	Object[] args = pjp.getArgs();
+	MethodSignature sig = (MethodSignature) pjp.getSignature();
+	Method method = sig.getMethod();
+	Annotation[][] allParamAnnotations = method.getParameterAnnotations();
 
-	private boolean contains(Annotation[] annotations, Class<?> annotation) {
-		for (Annotation ann : annotations) {
-			if (ann.annotationType().isAssignableFrom(annotation)) {
-				return true;
-			}
+	BeanValidator validator = null;
+	for (int paramIdx = 0; paramIdx < allParamAnnotations.length; paramIdx++) {
+	    Annotation[] paramAnnotations = allParamAnnotations[paramIdx];
+	    if (paramAnnotations == null || paramAnnotations.length == 0) {
+		continue;
+	    }
+	    Object obj = args[paramIdx];
+	    if (contains(paramAnnotations, NotNull.class)
+		    || (contains(paramAnnotations, Valid.class) && obj != null)) {
+		if (validator == null) {
+		    validator = createValidator(pjp);
 		}
-		return false;
+		validator.add("METHOD_PARAM_INDEX_" + paramIdx, obj);
+	    }
 	}
+	if (validator != null) {
+	    validator.validate();
+	}
+    }
+
+    private BeanValidator createValidator(ProceedingJoinPoint pjp) {
+	BeanValidator validator = BeanValidator.create(pjp.getSignature().toString());
+	return validator;
+    }
+
+    private boolean contains(Annotation[] annotations, Class<?> annotation) {
+	for (Annotation ann : annotations) {
+	    if (ann.annotationType().isAssignableFrom(annotation)) {
+		return true;
+	    }
+	}
+	return false;
+    }
 }

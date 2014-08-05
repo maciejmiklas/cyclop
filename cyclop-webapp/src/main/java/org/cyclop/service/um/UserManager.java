@@ -24,13 +24,13 @@ import org.cyclop.model.UserPreferences;
 /** @author Maciej Miklas */
 public interface UserManager {
 
-	void storeIdentifier(@NotNull UserIdentifier id);
+    void storeIdentifier(@NotNull UserIdentifier id);
 
-	@NotNull
-	UserIdentifier readIdentifier();
+    @NotNull
+    UserIdentifier readIdentifier();
 
-	boolean storePreferences(@NotNull UserPreferences preferences);
+    boolean storePreferences(@NotNull UserPreferences preferences);
 
-	@NotNull
-	UserPreferences readPreferences();
+    @NotNull
+    UserPreferences readPreferences();
 }

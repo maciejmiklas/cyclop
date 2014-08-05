@@ -16,12 +16,12 @@
  */
 package org.cyclop.service.um;
 
+import javax.inject.Inject;
+
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Test;
-
-import javax.inject.Inject;
 
 /** @author Maciej Miklas */
 public class TestUserManager extends AbstractTestCase {

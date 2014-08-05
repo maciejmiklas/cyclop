@@ -37,103 +37,118 @@ import org.slf4j.LoggerFactory;
 @Named
 public class DataConverter {
 
-	private final ThreadLocal<SimpleDateFormat> dateFomrat;
+    private final ThreadLocal<SimpleDateFormat> dateFomrat;
 
-	private final DateTimeFormatter timeFormatter;
+    private final DateTimeFormatter timeFormatter;
 
-	public final static String EMPTY_COL_VALUE = "";
+    public final static String EMPTY_COL_VALUE = "";
 
-	private final static Logger LOG = LoggerFactory.getLogger(DataConverter.class);
+    private final static Logger LOG = LoggerFactory.getLogger(DataConverter.class);
 
-	private final static String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
+    private final static String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS";
 
-	@Inject
-	private AppConfig appConfig;
+    @Inject
+    private AppConfig appConfig;
 
-	protected DataConverter() {
-		dateFomrat = new ThreadLocal<SimpleDateFormat>() {
-			@Override
-			protected SimpleDateFormat initialValue() {
-				return new SimpleDateFormat(DATE_PATTERN);
-			}
-		};
+    protected DataConverter() {
+	dateFomrat = new ThreadLocal<SimpleDateFormat>() {
+	    @Override
+	    protected SimpleDateFormat initialValue() {
+		return new SimpleDateFormat(DATE_PATTERN);
+	    }
+	};
 
-		timeFormatter = DateTimeFormat.forPattern(DATE_PATTERN);
+	timeFormatter = DateTimeFormat.forPattern(DATE_PATTERN);
+    }
+
+    public String trimColumnContent(String content, boolean embeddedColumn) {
+	if (content == null) {
+	    return null;
 	}
 
-	public String trimColumnContent(String content, boolean embeddedColumn) {
-		if (content == null) {
-			return null;
-		}
+	int limit = embeddedColumn ? appConfig.queryEditor.maxColumnEmbeddedDisplayChars
+		: appConfig.queryEditor.maxColumnDisplayChars;
+	if (content.length() > limit) {
+	    return content.trim().substring(0, limit) + ".....";
+	}
+	else {
+	    return content.trim();
+	}
+    }
 
-		int limit = embeddedColumn ? appConfig.queryEditor.maxColumnEmbeddedDisplayChars : appConfig.queryEditor.maxColumnDisplayChars;
-		if (content.length() > limit) {
-			return content.trim().substring(0, limit) + ".....";
-		} else {
-			return content.trim();
-		}
+    public String trimColumnTooltipContent(String content) {
+	if (content == null) {
+	    return null;
 	}
 
-	public String trimColumnTooltipContent(String content) {
-		if (content == null) {
-			return null;
-		}
+	if (content.length() > appConfig.queryEditor.maxColumnTooltipDisplayChars) {
+	    return content.trim().substring(0, appConfig.queryEditor.maxColumnTooltipDisplayChars) + ".....";
+	}
+	else {
+	    return content.trim();
+	}
+    }
 
-		if (content.length() > appConfig.queryEditor.maxColumnTooltipDisplayChars) {
-			return content.trim().substring(0, appConfig.queryEditor.maxColumnTooltipDisplayChars) + ".....";
-		} else {
-			return content.trim();
-		}
+    public String convert(Object val) {
+	if (val == null) {
+	    return null;
+	}
+	String converted;
+	if (val instanceof String) {
+	    converted = val.toString();
+
+	}
+	else if (val instanceof InetAddress) {
+	    converted = val.toString();
+
+	}
+	else if (val instanceof UUID) {
+	    converted = val.toString();
+
+	}
+	else if (val instanceof Date) {
+	    converted = dateFomrat.get().format(val);
+
+	}
+	else if (val instanceof DateTime) {
+	    converted = timeFormatter.print((DateTime) val);
+
+	}
+	else if (val instanceof BigInteger) {
+	    converted = val.toString();
+
+	}
+	else if (val instanceof Double) {
+	    converted = Double.toString((Double) val);
+
+	}
+	else if (val instanceof BigDecimal) {
+	    converted = val.toString();
+
+	}
+	else if (val instanceof Boolean) {
+	    converted = Boolean.toString((Boolean) val);
+
+	}
+	else if (val instanceof Integer) {
+	    converted = Integer.toString((Integer) val);
+
+	}
+	else if (val instanceof Long) {
+	    converted = Long.toString((Long) val);
+
+	}
+	else if (val instanceof Float) {
+	    converted = Float.toString((Float) val);
+
+	}
+	else {
+	    LOG.warn("Could not find mapping for type: {}", val.getClass());
+	    converted = val.toString();
 	}
 
-	public String convert(Object val) {
-		if (val == null) {
-			return null;
-		}
-		String converted;
-		if (val instanceof String) {
-			converted = val.toString();
-
-		} else if (val instanceof InetAddress) {
-			converted = val.toString();
-
-		} else if (val instanceof UUID) {
-			converted = val.toString();
-
-		} else if (val instanceof Date) {
-			converted = dateFomrat.get().format(val);
-
-		} else if (val instanceof DateTime) {
-			converted = timeFormatter.print((DateTime) val);
-
-		} else if (val instanceof BigInteger) {
-			converted = val.toString();
-
-		} else if (val instanceof Double) {
-			converted = Double.toString((Double) val);
-
-		} else if (val instanceof BigDecimal) {
-			converted = val.toString();
-
-		} else if (val instanceof Boolean) {
-			converted = Boolean.toString((Boolean) val);
-
-		} else if (val instanceof Integer) {
-			converted = Integer.toString((Integer) val);
-
-		} else if (val instanceof Long) {
-			converted = Long.toString((Long) val);
-
-		} else if (val instanceof Float) {
-			converted = Float.toString((Float) val);
-
-		} else {
-			LOG.warn("Could not find mapping for type: {}", val.getClass());
-			converted = val.toString();
-		}
-
-		LOG.trace("Converted: {} to {}", val, converted);
-		return converted;
-	}
+	LOG.trace("Converted: {} to {}", val, converted);
+	return converted;
+    }
 
 }

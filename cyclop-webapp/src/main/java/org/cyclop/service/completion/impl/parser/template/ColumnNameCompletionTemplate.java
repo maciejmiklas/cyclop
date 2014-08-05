@@ -36,35 +36,39 @@ import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 @Named
 public abstract class ColumnNameCompletionTemplate extends MarkerBasedCompletion {
 
-	@Inject
-	private QueryService queryService;
+    @Inject
+    private QueryService queryService;
 
-	private final CqlCompletion.BuilderTemplate builderTemplate;
+    private final CqlCompletion.BuilderTemplate builderTemplate;
 
-	private CqlKeyword cqlKeyword;
+    private CqlKeyword cqlKeyword;
 
-	public ColumnNameCompletionTemplate(CqlCompletion.Builder builder, CqlKeyword cqlKeyword, CqlPart startMarker) {
-		super(startMarker);
-		this.builderTemplate = builder.template();
-		this.cqlKeyword = cqlKeyword;
+    public ColumnNameCompletionTemplate(
+	    CqlCompletion.Builder builder,
+	    CqlKeyword cqlKeyword,
+	    CqlPart startMarker) {
+	super(startMarker);
+	this.builderTemplate = builder.template();
+	this.cqlKeyword = cqlKeyword;
+    }
+
+    @Override
+    public final CqlCompletion getCompletion(CqlQuery query) {
+	CqlCompletion.Builder builder = builderTemplate.naturalOrder();
+
+	SortedSet<CqlColumnName> columnNames;
+	Optional<CqlTable> table = extractTableName(cqlKeyword, query);
+	if (table.isPresent() && queryService.checkTableExists(table.get())) {
+	    columnNames = queryService.findColumnNames(table);
+	}
+	else {
+	    columnNames = queryService.findAllColumnNames();
 	}
 
-	@Override
-	public final CqlCompletion getCompletion(CqlQuery query) {
-		CqlCompletion.Builder builder = builderTemplate.naturalOrder();
+	builder.all(columnNames);
 
-		SortedSet<CqlColumnName> columnNames;
-		Optional<CqlTable> table = extractTableName(cqlKeyword, query);
-		if (table.isPresent() && queryService.checkTableExists(table.get())) {
-			columnNames = queryService.findColumnNames(table);
-		} else {
-			columnNames = queryService.findAllColumnNames();
-		}
-
-		builder.all(columnNames);
-
-		CqlCompletion cmp = builder.build();
-		return cmp;
-	}
+	CqlCompletion cmp = builder.build();
+	return cmp;
+    }
 
 }

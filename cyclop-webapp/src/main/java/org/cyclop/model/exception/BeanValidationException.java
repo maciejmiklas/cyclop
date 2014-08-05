@@ -24,15 +24,15 @@ import javax.validation.ConstraintViolation;
 /** @author Maciej Miklas */
 public final class BeanValidationException extends IllegalArgumentException {
 
-	private Map<String, Set<ConstraintViolation<Object>>> violations;
+    private Map<String, Set<ConstraintViolation<Object>>> violations;
 
-	public BeanValidationException(Map<String, Set<ConstraintViolation<Object>>> violations) {
-		super("Constraint violation: " + violations);
-		this.violations = violations;
-	}
+    public BeanValidationException(Map<String, Set<ConstraintViolation<Object>>> violations) {
+	super("Constraint violation: " + violations);
+	this.violations = violations;
+    }
 
-	public Map<String, Set<ConstraintViolation<Object>>> getViolations() {
-		return violations;
-	}
+    public Map<String, Set<ConstraintViolation<Object>>> getViolations() {
+	return violations;
+    }
 
 }

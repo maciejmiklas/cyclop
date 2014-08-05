@@ -22,62 +22,65 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 public abstract class IconButton extends AjaxFallbackLink<Void> {
+    private final static Logger LOG = LoggerFactory.getLogger(IconButton.class);
+    private final String[] cssStates;
+    private int stateIdx;
 
-	private final String[] cssStates;
-	private int stateIdx;
+    public IconButton(final String id, int initialState, String... cssStates) {
+	super(id);
 
-	public IconButton(final String id, int initialState, String... cssStates) {
-		super(id);
+	Validate.notNull(cssStates, "cssStates");
+	Validate.isTrue(cssStates.length > 0, "cssStates empty");
+	this.cssStates = cssStates;
 
-		Validate.notNull(cssStates, "cssStates");
-		Validate.isTrue(cssStates.length > 0, "cssStates empty");
-		this.cssStates = cssStates;
-
-		if (initialState >= cssStates.length) {
-			throw new IllegalArgumentException("stateIdx >= cssStates.length");
-		}
-		this.stateIdx = initialState;
-
-		initIcon();
+	if (initialState >= cssStates.length) {
+	    LOG.info("Reseting initial state: {} >= {}", initialState, cssStates.length);
+	    initialState = 0;
 	}
+	this.stateIdx = initialState;
 
-	private void initIcon() {
-		WebMarkupContainer icon = new WebMarkupContainer("icon");
-		add(icon);
-		icon.add(new AttributeModifier("class", new IModel<String>() {
-			@Override
-			public String getObject() {
-				String css = cssStates[stateIdx];
-				return css;
-			}
+	initIcon();
+    }
 
-			@Override
-			public void setObject(String object) {
+    private void initIcon() {
+	WebMarkupContainer icon = new WebMarkupContainer("icon");
+	add(icon);
+	icon.add(new AttributeModifier("class", new IModel<String>() {
+	    @Override
+	    public String getObject() {
+		String css = cssStates[stateIdx];
+		return css;
+	    }
 
-			}
+	    @Override
+	    public void setObject(String object) {
 
-			@Override
-			public void detach() {
-			}
-		}));
+	    }
+
+	    @Override
+	    public void detach() {
+	    }
+	}));
+    }
+
+    @Override
+    public final void onClick(AjaxRequestTarget target) {
+	target.add(this);
+	onClick(target, next());
+    }
+
+    private int next() {
+	stateIdx++;
+	if (stateIdx == cssStates.length) {
+	    stateIdx = 0;
 	}
+	return stateIdx;
+    }
 
-	@Override
-	public final void onClick(AjaxRequestTarget target) {
-		target.add(this);
-		onClick(target, next());
-	}
-
-	private int next() {
-		int state = stateIdx++;
-		if (stateIdx == cssStates.length) {
-			stateIdx = 0;
-		}
-		return state;
-	}
-
-	protected abstract void onClick(AjaxRequestTarget target, int stateIdx);
+    protected abstract void onClick(AjaxRequestTarget target, int stateIdx);
 }

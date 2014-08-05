@@ -26,22 +26,22 @@ import org.cyclop.model.UserIdentifier;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class UserIdentifierCookie {
 
-	private UserIdentifier id;
+    private UserIdentifier id;
 
-	@Override
-	public String toString() {
-		return "UserIdentifierCookie [id=" + id + "]";
-	}
+    @Override
+    public String toString() {
+	return "UserIdentifierCookie [id=" + id + "]";
+    }
 
-	public UserIdentifierCookie() {
-	}
+    public UserIdentifierCookie() {
+    }
 
-	public UserIdentifierCookie(UserIdentifier id) {
-		this.id = id;
-	}
+    public UserIdentifierCookie(UserIdentifier id) {
+	this.id = id;
+    }
 
-	public UserIdentifier getId() {
-		return id;
-	}
+    public UserIdentifier getId() {
+	return id;
+    }
 
 }

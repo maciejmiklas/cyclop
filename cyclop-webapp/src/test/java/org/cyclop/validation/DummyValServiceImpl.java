@@ -16,13 +16,13 @@
  */
 package org.cyclop.validation;
 
-import org.cyclop.model.CqlKeySpace;
-import org.cyclop.model.CqlTable;
-import org.cyclop.model.exception.ServiceException;
+import static org.junit.Assert.assertNotNull;
 
 import javax.inject.Named;
 
-import static org.junit.Assert.assertNotNull;
+import org.cyclop.model.CqlKeySpace;
+import org.cyclop.model.CqlTable;
+import org.cyclop.model.exception.ServiceException;
 
 @EnableValidation
 @Named

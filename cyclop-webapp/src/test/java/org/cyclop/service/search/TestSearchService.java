@@ -16,19 +16,20 @@
  */
 package org.cyclop.service.search;
 
-import com.google.common.collect.ImmutableSet;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import javax.inject.Inject;
+
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.model.FilterResult;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Test;
 
-import javax.inject.Inject;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import com.google.common.collect.ImmutableSet;
 
 public class TestSearchService extends AbstractTestCase {
 

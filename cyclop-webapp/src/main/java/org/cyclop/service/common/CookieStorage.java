@@ -40,76 +40,78 @@ import org.slf4j.LoggerFactory;
 @EnableValidation
 public class CookieStorage {
 
-	@Inject
-	private JsonMarshaller marshaller;
+    @Inject
+    private JsonMarshaller marshaller;
 
-	@Inject
-	private AppConfig appConfig;
+    @Inject
+    private AppConfig appConfig;
 
-	private final static Logger LOG = LoggerFactory.getLogger(CookieStorage.class);
+    private final static Logger LOG = LoggerFactory.getLogger(CookieStorage.class);
 
-	public static enum CookieName {
-		cyclop_prefs, cyclop_userid;
+    public static enum CookieName {
+	cyclop_prefs, cyclop_userid;
+    }
+
+    public void storeCookieAsJson(@NotNull CookieName cookieName, @NotNull Object obj) {
+	String objStr = marshaller.marshal(obj);
+	storeCookie(cookieName, objStr);
+    }
+
+    public @Valid <T> Optional<T> readCookieAsJson(@NotNull CookieName cookieName, @NotNull Class<T> clazz) {
+	try {
+	    Optional<Cookie> cookie = readCookie(cookieName);
+	    Optional<String> cookieValue = cookie.map(c -> StringUtils.trimToNull(c.getValue()));
+	    if (!cookieValue.isPresent()) {
+		return Optional.empty();
+	    }
+	    T obj = marshaller.unmarshal(clazz, cookieValue.get());
+	    return Optional.of(obj);
 	}
-
-	public void storeCookieAsJson(@NotNull CookieName cookieName, @NotNull Object obj) {
-		String objStr = marshaller.marshal(obj);
-		storeCookie(cookieName, objStr);
+	catch (Exception e) {
+	    LOG.warn("Error reading cookie {}, Reason: {}", cookieName, e.getMessage());
+	    LOG.debug(e.getMessage(), e);
+	    return Optional.empty();
 	}
+    }
 
-	public @Valid <T> Optional<T> readCookieAsJson(@NotNull CookieName cookieName, @NotNull Class<T> clazz) {
-		try {
-			Optional<Cookie> cookie = readCookie(cookieName);
-			Optional<String> cookieValue = cookie.map(c -> StringUtils.trimToNull(c.getValue()));
-			if (!cookieValue.isPresent()) {
-				return Optional.empty();
-			}
-			T obj = marshaller.unmarshal(clazz, cookieValue.get());
-			return Optional.of(obj);
-		} catch (Exception e) {
-			LOG.warn("Error reading cookie {}, Reason: {}", cookieName, e.getMessage());
-			LOG.debug(e.getMessage(), e);
-			return Optional.empty();
+    protected void storeCookie(@NotNull CookieName name, @NotNull String value) {
+	RequestCycle requestCycle = RequestCycle.get();
+	if (requestCycle == null) {
+	    LOG.warn("RequestCycle is null - cannot read cookies");
+	    return;
+	}
+	WebResponse response = (WebResponse) requestCycle.getResponse();
+	Cookie cookie = new Cookie(name.name(), value);
+	cookie.setMaxAge(appConfig.cookie.expirySeconds);
+	response.addCookie(cookie);
+    }
+
+    protected @NotNull Optional<Cookie> readCookie(@NotNull CookieName name) {
+	try {
+	    RequestCycle requestCycle = RequestCycle.get();
+	    if (requestCycle == null) {
+		LOG.warn("RequestCycle is null - cannot read cookies");
+		return Optional.empty();
+	    }
+	    WebRequest request = (WebRequest) requestCycle.getRequest();
+	    List<Cookie> cookies = request.getCookies();
+	    LOG.debug("Found cookies {} for {}", cookies, request);
+	    if (cookies == null || cookies.isEmpty()) {
+		return Optional.empty();
+	    }
+	    for (Cookie cookie : cookies) {
+		if (name.name().equals(cookie.getName())) {
+		    LOG.debug("Found cookie: {}", cookie);
+		    return Optional.of(cookie);
 		}
+	    }
+	    return Optional.empty();
 	}
-
-	protected void storeCookie(@NotNull CookieName name, @NotNull String value) {
-		RequestCycle requestCycle = RequestCycle.get();
-		if (requestCycle == null) {
-			LOG.warn("RequestCycle is null - cannot read cookies");
-			return;
-		}
-		WebResponse response = (WebResponse) requestCycle.getResponse();
-		Cookie cookie = new Cookie(name.name(), value);
-		cookie.setMaxAge(appConfig.cookie.expirySeconds);
-		response.addCookie(cookie);
+	catch (Exception e) {
+	    LOG.warn("Error reading cookie {}, Reason: {}", name, e.getMessage());
+	    LOG.debug(e.getMessage(), e);
+	    return Optional.empty();
 	}
-
-	protected @NotNull Optional<Cookie> readCookie(@NotNull CookieName name) {
-		try {
-			RequestCycle requestCycle = RequestCycle.get();
-			if (requestCycle == null) {
-				LOG.warn("RequestCycle is null - cannot read cookies");
-				return Optional.empty();
-			}
-			WebRequest request = (WebRequest) requestCycle.getRequest();
-			List<Cookie> cookies = request.getCookies();
-			LOG.debug("Found cookies {} for {}", cookies, request);
-			if (cookies == null || cookies.isEmpty()) {
-				return Optional.empty();
-			}
-			for (Cookie cookie : cookies) {
-				if (name.name().equals(cookie.getName())) {
-					LOG.debug("Found cookie: {}", cookie);
-					return Optional.of(cookie);
-				}
-			}
-			return Optional.empty();
-		} catch (Exception e) {
-			LOG.warn("Error reading cookie {}, Reason: {}", name, e.getMessage());
-			LOG.debug(e.getMessage(), e);
-			return Optional.empty();
-		}
-	}
+    }
 
 }

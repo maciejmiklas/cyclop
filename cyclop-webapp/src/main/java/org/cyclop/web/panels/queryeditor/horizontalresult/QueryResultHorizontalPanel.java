@@ -16,7 +16,11 @@
  */
 package org.cyclop.web.panels.queryeditor.horizontalresult;
 
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.IModel;
+import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.panels.queryeditor.QueryResultPanel;
@@ -24,14 +28,28 @@ import org.cyclop.web.panels.queryeditor.QueryResultPanel;
 /** @author Maciej Miklas */
 public class QueryResultHorizontalPanel extends QueryResultPanel {
 
-	public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
-		super(id, model);
-	}
+    public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
+	super(id, model);
+    }
 
-	@Override
-	protected BootstrapPagingNavigator initPagingProvider() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    protected BootstrapPagingNavigator initPagingProvider() {
+	// TODO Auto-generated method stub
+	return null;
+    }
+
+    private void initColumnList() {
+	ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>(
+		"columnList",
+		columnsModel) {
+	    @Override
+	    protected void populateItem(ListItem<CqlExtendedColumnName> item) {
+		final CqlExtendedColumnName columnName = item.getModelObject();
+		Label columnNameLabel = new Label("columnName", columnName.part);
+		item.add(columnNameLabel);
+	    }
+	};
+	resultTable.add(columnList);
+    }
 
 }

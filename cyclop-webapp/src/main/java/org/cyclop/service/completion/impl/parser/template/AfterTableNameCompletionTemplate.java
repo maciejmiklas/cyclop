@@ -33,28 +33,28 @@ import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
 @Named
 public abstract class AfterTableNameCompletionTemplate implements OffsetBasedCompletion {
 
-	@Inject
-	private QueryService queryService;
+    @Inject
+    private QueryService queryService;
 
-	private CqlKeyword cqlKeyword;
+    private CqlKeyword cqlKeyword;
 
-	public AfterTableNameCompletionTemplate(CqlKeyword cqlKeyword) {
-		Validate.notNull(cqlKeyword, "Null cqlKeyword");
-		this.cqlKeyword = cqlKeyword;
+    public AfterTableNameCompletionTemplate(CqlKeyword cqlKeyword) {
+	Validate.notNull(cqlKeyword, "Null cqlKeyword");
+	this.cqlKeyword = cqlKeyword;
+    }
+
+    @Override
+    public final int canApply(CqlQuery query, int queryPosition) {
+	Optional<CqlTable> tableOpt = QueryHelper.extractTableName(cqlKeyword, query);
+	if (!tableOpt.isPresent()) {
+	    return -1;
 	}
 
-	@Override
-	public final int canApply(CqlQuery query, int queryPosition) {
-		Optional<CqlTable> tableOpt = QueryHelper.extractTableName(cqlKeyword, query);
-		if (!tableOpt.isPresent()) {
-			return -1;
-		}
-
-		int index = -1;
-		CqlTable table = tableOpt.get();
-		if (queryService.checkTableExists(table)) {
-			index = query.partLc.indexOf(table.partLc) + table.partLc.length();
-		}
-		return index;
+	int index = -1;
+	CqlTable table = tableOpt.get();
+	if (queryService.checkTableExists(table)) {
+	    index = query.partLc.indexOf(table.partLc) + table.partLc.length();
 	}
+	return index;
+    }
 }

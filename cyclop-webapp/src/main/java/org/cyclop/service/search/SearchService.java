@@ -22,5 +22,5 @@ import com.google.common.collect.ImmutableCollection;
 
 public interface SearchService<T> {
 
-	FilterResult<T> filter(ImmutableCollection<T> input, FieldAccessor<T> accessor, String... keywords);
+    FilterResult<T> filter(ImmutableCollection<T> input, FieldAccessor<T> accessor, String... keywords);
 }

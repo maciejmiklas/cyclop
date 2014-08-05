@@ -16,8 +16,19 @@
  */
 package org.cyclop.test;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Named;
+
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlIndex;
@@ -26,17 +37,8 @@ import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlTable;
 
-import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Named

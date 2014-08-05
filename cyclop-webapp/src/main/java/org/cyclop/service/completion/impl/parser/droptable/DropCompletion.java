@@ -31,24 +31,26 @@ import com.google.common.base.Objects;
 @Named("droptable.DropCompletion")
 class DropCompletion extends MarkerBasedCompletion {
 
-	@Inject
-	private CompletionHelper completionHelper;
+    @Inject
+    private CompletionHelper completionHelper;
 
-	public DropCompletion() {
-		super(CqlKeyword.Def.DROP_TABLE.value);
-	}
+    public DropCompletion() {
+	super(CqlKeyword.Def.DROP_TABLE.value);
+    }
 
-	@Override
-	public CqlCompletion getCompletion(CqlQuery query) {
-		CqlCompletion.Builder completion = completionHelper
-				.computeTableNameCompletion(query, CqlKeyword.Def.DROP_TABLE.value, CqlKeyword.Def.IF_EXISTS.value);
-		completion.all(CqlKeyword.Def.IF_EXISTS.value);
-		return completion.build();
-	}
+    @Override
+    public CqlCompletion getCompletion(CqlQuery query) {
+	CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(
+		query,
+		CqlKeyword.Def.DROP_TABLE.value,
+		CqlKeyword.Def.IF_EXISTS.value);
+	completion.all(CqlKeyword.Def.IF_EXISTS.value);
+	return completion.build();
+    }
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
+    @Override
+    public String toString() {
+	return Objects.toStringHelper(this).toString();
+    }
 
 }

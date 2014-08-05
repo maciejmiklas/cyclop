@@ -32,31 +32,31 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @ThreadSafe
 public class DropTableDecisionListSupport implements DecisionListSupport {
 
-	private final CqlKeyword supports = CqlKeyword.Def.DROP_TABLE.value;
+    private final CqlKeyword supports = CqlKeyword.Def.DROP_TABLE.value;
 
-	private CqlPartCompletion[][] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	DropCompletion dropCompletion;
+    @Inject
+    DropCompletion dropCompletion;
 
-	@PostConstruct
-	public void init() {
-		decisionList = new CqlPartCompletion[][]{{dropCompletion}};
-	}
+    @PostConstruct
+    public void init() {
+	decisionList = new CqlPartCompletion[][] { { dropCompletion } };
+    }
 
-	@Override
-	public CqlPartCompletion[][] getDecisionList() {
-		return decisionList;
-	}
+    @Override
+    public CqlPartCompletion[][] getDecisionList() {
+	return decisionList;
+    }
 
-	@Override
-	public CqlKeyword beginnsWith() {
-		return supports;
-	}
+    @Override
+    public CqlKeyword beginnsWith() {
+	return supports;
+    }
 
-	@Override
-	public CqlQueryType queryName() {
-		return CqlQueryType.DROP_TABLE;
-	}
+    @Override
+    public CqlQueryType queryName() {
+	return CqlQueryType.DROP_TABLE;
+    }
 
 }

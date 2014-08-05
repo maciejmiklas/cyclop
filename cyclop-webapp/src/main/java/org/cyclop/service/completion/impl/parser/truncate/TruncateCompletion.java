@@ -31,24 +31,24 @@ import com.google.common.base.Objects;
 @Named("truncate.TruncateCompletion")
 class TruncateCompletion extends MarkerBasedCompletion {
 
-	@Inject
-	private CompletionHelper completionHelper;
+    @Inject
+    private CompletionHelper completionHelper;
 
-	public TruncateCompletion() {
-		super(CqlKeyword.Def.TRUNCATE.value);
-	}
+    public TruncateCompletion() {
+	super(CqlKeyword.Def.TRUNCATE.value);
+    }
 
-	@Override
-	public CqlCompletion getCompletion(CqlQuery query) {
-		CqlCompletion.Builder completion = completionHelper
-				.computeTableNameCompletion(query, CqlKeyword.Def.TRUNCATE.value);
-		return completion.build();
-	}
+    @Override
+    public CqlCompletion getCompletion(CqlQuery query) {
+	CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(
+		query,
+		CqlKeyword.Def.TRUNCATE.value);
+	return completion.build();
+    }
 
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
+    @Override
+    public String toString() {
+	return Objects.toStringHelper(this).toString();
+    }
 
 }

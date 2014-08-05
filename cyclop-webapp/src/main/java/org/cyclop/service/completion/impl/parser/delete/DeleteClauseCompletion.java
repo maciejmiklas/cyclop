@@ -38,35 +38,36 @@ import com.google.common.base.Objects;
 @Named("delete.DeleteClauseCompletion")
 class DeleteClauseCompletion extends MarkerBasedCompletion {
 
-	@Inject
-	private QueryService queryService;
+    @Inject
+    private QueryService queryService;
 
-	public DeleteClauseCompletion() {
-		super(CqlKeyword.Def.DELETE.value);
+    public DeleteClauseCompletion() {
+	super(CqlKeyword.Def.DELETE.value);
+    }
+
+    @Override
+    public CqlCompletion getCompletion(CqlQuery query) {
+
+	CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
+	cb.all(CqlKeyword.Def.FROM.value);
+
+	SortedSet<CqlColumnName> columnNames;
+	Optional<CqlTable> table = extractTableName(CqlKeyword.Def.FROM.value, query);
+	if (table.isPresent() && queryService.checkTableExists(table.get())) {
+	    columnNames = queryService.findColumnNames(table);
+	}
+	else {
+	    columnNames = queryService.findAllColumnNames();
 	}
 
-	@Override
-	public CqlCompletion getCompletion(CqlQuery query) {
+	cb.all(columnNames);
 
-		CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
-		cb.all(CqlKeyword.Def.FROM.value);
+	return cb.build();
+    }
 
-		SortedSet<CqlColumnName> columnNames;
-		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.FROM.value, query);
-		if (table.isPresent() && queryService.checkTableExists(table.get())) {
-			columnNames = queryService.findColumnNames(table);
-		} else {
-			columnNames = queryService.findAllColumnNames();
-		}
-
-		cb.all(columnNames);
-
-		return cb.build();
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
+    @Override
+    public String toString() {
+	return Objects.toStringHelper(this).toString();
+    }
 
 }

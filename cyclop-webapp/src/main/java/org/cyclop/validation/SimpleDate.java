@@ -33,25 +33,25 @@ import javax.validation.constraints.NotNull;
 
 @Documented
 @Constraint(validatedBy = SimpleDateValidator.class)
-@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
 @Retention(RUNTIME)
 @NotNull
 public @interface SimpleDate {
 
-	String MSG = "INCORRECT_DATE_FORMAT";
+    String MSG = "INCORRECT_DATE_FORMAT";
 
-	String message() default MSG;
+    String message() default MSG;
 
-	Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
-	Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 
-	@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
-	@Retention(RUNTIME)
-	@Documented
-	public @interface List {
+    @Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
+    @Retention(RUNTIME)
+    @Documented
+    public @interface List {
 
-		SimpleDate[] value();
-	}
+	SimpleDate[] value();
+    }
 
 }

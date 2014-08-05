@@ -16,7 +16,14 @@
  */
 package org.cyclop.service.completion;
 
-import com.google.common.collect.ImmutableSortedSet;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+
+import java.util.Collection;
+
+import javax.inject.Inject;
+
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlKeywordValue;
@@ -29,12 +36,7 @@ import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
 import org.junit.Test;
 
-import javax.inject.Inject;
-import java.util.Collection;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 public class TestCompletionService extends AbstractTestCase {

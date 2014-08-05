@@ -24,6 +24,6 @@ import org.cyclop.model.CqlQuery;
 /** @author Maciej Miklas */
 public interface CqlPartCompletion {
 
-	@NotNull
-	CqlCompletion getCompletion(CqlQuery query);
+    @NotNull
+    CqlCompletion getCompletion(CqlQuery query);
 }

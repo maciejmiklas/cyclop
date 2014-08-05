@@ -29,31 +29,31 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 class DropIndexDecisionListSupport implements DecisionListSupport {
 
-	private final CqlKeyword supports = CqlKeyword.Def.DROP_INDEX.value;
+    private final CqlKeyword supports = CqlKeyword.Def.DROP_INDEX.value;
 
-	private CqlPartCompletion[][] decisionList;
+    private CqlPartCompletion[][] decisionList;
 
-	@Inject
-	private DropCompletion dropCompletion;
+    @Inject
+    private DropCompletion dropCompletion;
 
-	@PostConstruct
-	public void init() {
-		decisionList = new CqlPartCompletion[][]{{dropCompletion}};
-	}
+    @PostConstruct
+    public void init() {
+	decisionList = new CqlPartCompletion[][] { { dropCompletion } };
+    }
 
-	@Override
-	public CqlPartCompletion[][] getDecisionList() {
-		return decisionList;
-	}
+    @Override
+    public CqlPartCompletion[][] getDecisionList() {
+	return decisionList;
+    }
 
-	@Override
-	public CqlKeyword beginnsWith() {
-		return supports;
-	}
+    @Override
+    public CqlKeyword beginnsWith() {
+	return supports;
+    }
 
-	@Override
-	public CqlQueryType queryName() {
-		return CqlQueryType.DROP_INDEX;
-	}
+    @Override
+    public CqlQueryType queryName() {
+	return CqlQueryType.DROP_INDEX;
+    }
 
 }

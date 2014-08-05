@@ -16,19 +16,20 @@
  */
 package org.cyclop.service.importer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.io.InputStream;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
 import org.junit.Test;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.io.InputStream;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class TestSerialQueryImporter extends AbstractImporterCase {
 

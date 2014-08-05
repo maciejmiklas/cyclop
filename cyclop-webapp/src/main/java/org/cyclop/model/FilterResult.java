@@ -27,22 +27,22 @@ import com.sun.istack.NotNull;
 /** @author Maciej Miklas */
 public class FilterResult<T> implements Serializable {
 
-	@NotNull
-	@Valid
-	public final ImmutableList<T> result;
+    @NotNull
+    @Valid
+    public final ImmutableList<T> result;
 
-	/** trimmed, lower case */
-	@NotNull
-	public final ImmutableSet<String> normalizedKeywords;
+    /** trimmed, lower case */
+    @NotNull
+    public final ImmutableSet<String> normalizedKeywords;
 
-	public FilterResult(ImmutableList<T> result, ImmutableSet<String> normalizedKeywords) {
-		this.result = result;
-		this.normalizedKeywords = normalizedKeywords;
-	}
+    public FilterResult(ImmutableList<T> result, ImmutableSet<String> normalizedKeywords) {
+	this.result = result;
+	this.normalizedKeywords = normalizedKeywords;
+    }
 
-	@Override
-	public String toString() {
-		return "FilterResult [result=" + result + ", normalizedKeywords=" + normalizedKeywords + "]";
-	}
+    @Override
+    public String toString() {
+	return "FilterResult [result=" + result + ", normalizedKeywords=" + normalizedKeywords + "]";
+    }
 
 }

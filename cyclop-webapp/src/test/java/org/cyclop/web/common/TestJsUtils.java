@@ -16,12 +16,13 @@
  */
 package org.cyclop.web.common;
 
-import com.google.common.collect.ImmutableSet;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import org.cyclop.model.CqlColumnName;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import com.google.common.collect.ImmutableSet;
 
 /** @author Maciej Miklas */
 public class TestJsUtils {

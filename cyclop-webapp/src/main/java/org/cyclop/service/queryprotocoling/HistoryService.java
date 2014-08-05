@@ -28,5 +28,5 @@ import org.cyclop.model.QueryHistory;
  */
 public interface HistoryService extends QueryProtocolingService<QueryHistory> {
 
-	void addAndStore(@NotNull QueryEntry entry);
+    void addAndStore(@NotNull QueryEntry entry);
 }

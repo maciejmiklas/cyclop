@@ -16,10 +16,10 @@
  */
 package org.cyclop.common;
 
+import static org.junit.Assert.assertEquals;
+
 import org.cyclop.common.StringHelper.StringDecorator;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class TestStringHelper {
 

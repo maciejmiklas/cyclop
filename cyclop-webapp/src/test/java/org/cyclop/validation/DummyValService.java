@@ -16,11 +16,11 @@
  */
 package org.cyclop.validation;
 
-import org.cyclop.model.CqlKeySpace;
-import org.cyclop.model.CqlTable;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import org.cyclop.model.CqlKeySpace;
+import org.cyclop.model.CqlTable;
 
 public interface DummyValService {
 

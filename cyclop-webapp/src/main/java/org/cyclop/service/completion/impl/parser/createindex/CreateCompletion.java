@@ -27,17 +27,17 @@ import com.google.common.base.Objects;
 @Named("createindex.CreateCompletion")
 class CreateCompletion extends NotSupportedCompletion {
 
-	public CreateCompletion() {
-		super(new CqlNotSupported("create"));
-	}
+    public CreateCompletion() {
+	super(new CqlNotSupported("create"));
+    }
 
-	@Override
-	protected String getNotSupportedText() {
-		return "create index";
-	}
+    @Override
+    protected String getNotSupportedText() {
+	return "create index";
+    }
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
+    @Override
+    public String toString() {
+	return Objects.toStringHelper(this).toString();
+    }
 }

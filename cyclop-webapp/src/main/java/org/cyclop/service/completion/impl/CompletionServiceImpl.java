@@ -38,34 +38,36 @@ import org.slf4j.LoggerFactory;
 @EnableValidation
 class CompletionServiceImpl implements CompletionService {
 
-	private final static Logger LOG = LoggerFactory.getLogger(CompletionServiceImpl.class);
+    private final static Logger LOG = LoggerFactory.getLogger(CompletionServiceImpl.class);
 
-	@Inject
-	private CqlParser parser;
+    @Inject
+    private CqlParser parser;
 
-	@Override
-	public ContextCqlCompletion findInitialCompletion() {
-		ContextCqlCompletion compl = new ContextCqlCompletion(CqlQueryType.UNKNOWN, parser.findInitialCompletion());
+    @Override
+    public ContextCqlCompletion findInitialCompletion() {
+	ContextCqlCompletion compl = new ContextCqlCompletion(
+		CqlQueryType.UNKNOWN,
+		parser.findInitialCompletion());
 
-		LOG.debug("Found initial completion: {}", compl);
-		return compl;
+	LOG.debug("Found initial completion: {}", compl);
+	return compl;
+    }
+
+    @Override
+    public ContextCqlCompletion findCompletion(CqlQuery cqlQuery) {
+	ContextCqlCompletion compl = findCompletion(cqlQuery, -1);
+	LOG.debug("Found completion for query {} - > {}", cqlQuery, compl);
+	return compl;
+    }
+
+    @Override
+    public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
+	if (cursorPosition == 0 || cursorPosition == 1) {
+	    return findInitialCompletion();
 	}
-
-	@Override
-	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery) {
-		ContextCqlCompletion compl = findCompletion(cqlQuery, -1);
-		LOG.debug("Found completion for query {} - > {}", cqlQuery, compl);
-		return compl;
-	}
-
-	@Override
-	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery, int cursorPosition) {
-		if (cursorPosition == 0 || cursorPosition == 1) {
-			return findInitialCompletion();
-		}
-		Optional<ContextCqlCompletion> fcomp = parser.findCompletion(cqlQuery, cursorPosition);
-		ContextCqlCompletion comp = fcomp.orElse(ContextCqlCompletion.EMPTY);
-		LOG.debug("Found completion for query {} -> {} - > {}", cqlQuery, cursorPosition, comp);
-		return comp;
-	}
+	Optional<ContextCqlCompletion> fcomp = parser.findCompletion(cqlQuery, cursorPosition);
+	ContextCqlCompletion comp = fcomp.orElse(ContextCqlCompletion.EMPTY);
+	LOG.debug("Found completion for query {} -> {} - > {}", cqlQuery, cursorPosition, comp);
+	return comp;
+    }
 }

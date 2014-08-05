@@ -16,17 +16,18 @@
  */
 package org.cyclop.service.importer;
 
-import net.jcip.annotations.ThreadSafe;
-import org.cyclop.model.CqlQuery;
-import org.cyclop.model.exception.QueryException;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import net.jcip.annotations.ThreadSafe;
+
+import org.cyclop.model.CqlQuery;
+import org.cyclop.model.exception.QueryException;
 
 /** @author Maciej Miklas */
 @ThreadSafe

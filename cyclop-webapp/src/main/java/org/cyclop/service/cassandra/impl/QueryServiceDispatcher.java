@@ -37,70 +37,71 @@ import com.google.common.collect.ImmutableSortedSet;
 @Primary
 public class QueryServiceDispatcher implements QueryService {
 
-	@Inject
-	@CassandraVersionQualifier(CassandraVersion.VER_2_x)
-	private QueryService defaultQs;
+    @Inject
+    @CassandraVersionQualifier(CassandraVersion.VER_2_x)
+    private QueryService defaultQs;
 
-	@Inject
-	@CassandraVersionQualifier(CassandraVersion.VER_1_x)
-	private QueryService fallbackQs;
+    @Inject
+    @CassandraVersionQualifier(CassandraVersion.VER_1_x)
+    private QueryService fallbackQs;
 
-	@Inject
-	private CassandraSessionImpl session;
+    @Inject
+    private CassandraSessionImpl session;
 
-	private QueryService get() {
-		QueryService instance;
-		CassandraVersion ver = session.getCassandraVersion();
-		if (ver == CassandraVersion.VER_2_x) {
-			instance = defaultQs;
-		} else {
-			instance = fallbackQs;
-		}
-		return instance;
+    private QueryService get() {
+	QueryService instance;
+	CassandraVersion ver = session.getCassandraVersion();
+	if (ver == CassandraVersion.VER_2_x) {
+	    instance = defaultQs;
 	}
-
-	@Override
-	public void executeSimple(CqlQuery query, boolean updateHistory) {
-		get().executeSimple(query, updateHistory);
+	else {
+	    instance = fallbackQs;
 	}
+	return instance;
+    }
 
-	@Override
-	public ImmutableSortedSet<CqlTable> findTableNames(Optional<CqlKeySpace> keySpace) {
-		return get().findTableNames(keySpace);
-	}
+    @Override
+    public void executeSimple(CqlQuery query, boolean updateHistory) {
+	get().executeSimple(query, updateHistory);
+    }
 
-	@Override
-	public ImmutableSortedSet<CqlIndex> findAllIndexes(Optional<CqlKeySpace> keySpace) {
-		return get().findAllIndexes(keySpace);
-	}
+    @Override
+    public ImmutableSortedSet<CqlTable> findTableNames(Optional<CqlKeySpace> keySpace) {
+	return get().findTableNames(keySpace);
+    }
 
-	@Override
-	public boolean checkTableExists(CqlTable table) {
-		return get().checkTableExists(table);
-	}
+    @Override
+    public ImmutableSortedSet<CqlIndex> findAllIndexes(Optional<CqlKeySpace> keySpace) {
+	return get().findAllIndexes(keySpace);
+    }
 
-	@Override
-	public ImmutableSortedSet<CqlColumnName> findAllColumnNames() {
-		return get().findAllColumnNames();
-	}
+    @Override
+    public boolean checkTableExists(CqlTable table) {
+	return get().checkTableExists(table);
+    }
 
-	@Override
-	public ImmutableSortedSet<CqlKeySpace> findAllKeySpaces() {
-		return get().findAllKeySpaces();
-	}
+    @Override
+    public ImmutableSortedSet<CqlColumnName> findAllColumnNames() {
+	return get().findAllColumnNames();
+    }
 
-	@Override
-	public CqlQueryResult execute(CqlQuery query) {
-		return get().execute(query);
-	}
+    @Override
+    public ImmutableSortedSet<CqlKeySpace> findAllKeySpaces() {
+	return get().findAllKeySpaces();
+    }
 
-	@Override
-	public CqlQueryResult execute(CqlQuery query, boolean updateHistory) {
-		return get().execute(query, updateHistory);
-	}
+    @Override
+    public CqlQueryResult execute(CqlQuery query) {
+	return get().execute(query);
+    }
 
-	@Override
-	public ImmutableSortedSet<CqlColumnName> findColumnNames(Optional<CqlTable> table) {
-		return get().findColumnNames(table);
-	}
+    @Override
+    public CqlQueryResult execute(CqlQuery query, boolean updateHistory) {
+	return get().execute(query, updateHistory);
+    }
+
+    @Override
+    public ImmutableSortedSet<CqlColumnName> findColumnNames(Optional<CqlTable> table) {
+	return get().findColumnNames(table);
+    }
 }

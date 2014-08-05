@@ -24,7 +24,7 @@ import org.cyclop.model.ContextCqlCompletion;
 /** @author Maciej Miklas */
 public interface CompletionChangeListener extends Serializable {
 
-	void onCompletionChange(ContextCqlCompletion currentCompletion);
+    void onCompletionChange(ContextCqlCompletion currentCompletion);
 
-	Component getReferencesForRefresh();
+    Component getReferencesForRefresh();
 }

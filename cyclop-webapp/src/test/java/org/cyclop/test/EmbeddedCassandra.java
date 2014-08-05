@@ -16,10 +16,7 @@
  */
 package org.cyclop.test;
 
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
-import org.apache.commons.lang.StringUtils;
-import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
+import static junit.framework.Assert.assertNotNull;
 
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -29,7 +26,11 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
-import static junit.framework.Assert.assertNotNull;
+import org.apache.commons.lang.StringUtils;
+import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
+
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
 
 /** @author Maciej Miklas */
 public class EmbeddedCassandra {

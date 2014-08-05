@@ -30,48 +30,49 @@ import com.google.common.io.Resources;
 /** @author Maciej Miklas */
 public class CqlHelpPanel extends Panel {
 
-	private Label cqlHelpContent;
+    private Label cqlHelpContent;
 
-	private ContextCqlCompletion currentCompletion;
+    private ContextCqlCompletion currentCompletion;
 
-	public CqlHelpPanel(String id) {
-		super(id);
-		setOutputMarkupId(true);
-		cqlHelpContent = new Label("helpContent", new CqlHelpContentModel());
-		cqlHelpContent.setEscapeModelStrings(false);
-		add(cqlHelpContent);
+    public CqlHelpPanel(String id) {
+	super(id);
+	setOutputMarkupId(true);
+	cqlHelpContent = new Label("helpContent", new CqlHelpContentModel());
+	cqlHelpContent.setEscapeModelStrings(false);
+	add(cqlHelpContent);
+    }
+
+    public void changeCompletion(ContextCqlCompletion currentCompletion) {
+	this.currentCompletion = currentCompletion;
+    }
+
+    private class CqlHelpContentModel implements IModel<String> {
+
+	@Override
+	public String getObject() {
+	    if (currentCompletion == null) {
+		return ";-)";
+	    }
+
+	    String name = "help_" + currentCompletion.queryName.name().toLowerCase() + ".html";
+	    try {
+
+		URL url = Resources.getResource("/org/cyclop/web/panels/queryeditor/cqlhelp/help/" + name);
+
+		String text = Resources.toString(url, Charsets.UTF_8);
+		return text;
+	    }
+	    catch (IOException | IllegalArgumentException e) {
+		return "Help file:'" + name + "' found :-(";
+	    }
 	}
 
-	public void changeCompletion(ContextCqlCompletion currentCompletion) {
-		this.currentCompletion = currentCompletion;
+	@Override
+	public void setObject(String object) {
 	}
 
-	private class CqlHelpContentModel implements IModel<String> {
-
-		@Override
-		public String getObject() {
-			if (currentCompletion == null) {
-				return ";-)";
-			}
-
-			String name = "help_" + currentCompletion.queryName.name().toLowerCase() + ".html";
-			try {
-
-				URL url = Resources.getResource("/org/cyclop/web/panels/queryeditor/cqlhelp/help/" + name);
-
-				String text = Resources.toString(url, Charsets.UTF_8);
-				return text;
-			} catch (IOException | IllegalArgumentException e) {
-				return "Help file:'" + name + "' found :-(";
-			}
-		}
-
-		@Override
-		public void setObject(String object) {
-		}
-
-		@Override
-		public void detach() {
-		}
+	@Override
+	public void detach() {
 	}
+    }
 }

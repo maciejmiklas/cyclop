@@ -27,17 +27,17 @@ import com.google.common.base.Objects;
 @Named("batch.BatchCompletion")
 class BatchCompletion extends NotSupportedCompletion {
 
-	public BatchCompletion() {
-		super(new CqlNotSupported("batch"));
-	}
+    public BatchCompletion() {
+	super(new CqlNotSupported("batch"));
+    }
 
-	@Override
-	protected String getNotSupportedText() {
-		return "batch";
-	}
+    @Override
+    protected String getNotSupportedText() {
+	return "batch";
+    }
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
+    @Override
+    public String toString() {
+	return Objects.toStringHelper(this).toString();
+    }
 }

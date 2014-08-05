@@ -16,12 +16,13 @@
  */
 package org.cyclop.test;
 
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.context.support.SimpleThreadScope;
-
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Named;
+
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.context.support.SimpleThreadScope;
 
 /** @author Maciej Miklas */
 @Named

@@ -22,7 +22,7 @@ import net.jcip.annotations.Immutable;
 @Immutable
 public final class QueryException extends ServiceException {
 
-	public QueryException(String message, Exception cause) {
-		super(message, cause);
-	}
+    public QueryException(String message, Exception cause) {
+	super(message, cause);
+    }
 }
