@@ -20,8 +20,8 @@ package org.cyclop.web.common;
 public interface AjaxReloadSupport {
 
     /**
-     * @return ajax link that can be used to trigger reload of this component (or
-     *         part of it).
+     * @return ajax link that can be used to trigger reload of this component
+     *         (or part of it).
      */
     String getReloadCallbackUrl();
 

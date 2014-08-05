@@ -56,173 +56,180 @@ import com.google.common.collect.ImmutableList;
 /** @author Maciej Miklas */
 public class TestHistoryService extends AbstractTestCase {
 
-	public static String CR = System.getProperty("line.separator");
+    public static String CR = System.getProperty("line.separator");
 
-	@Inject
-	private HistoryServiceImpl historyService;
+    @Inject
+    private HistoryServiceImpl historyService;
 
-	@Inject
-	private AsyncFileStore<QueryHistory> asyncFileStore;
+    @Inject
+    private AsyncFileStore<QueryHistory> asyncFileStore;
 
-	private UserIdentifier user;
+    private UserIdentifier user;
 
-	@Inject
-	private FileStorage storage;
+    @Inject
+    private FileStorage storage;
 
-	@Inject
-	private ThreadTestScope threadTestScope;
+    @Inject
+    private ThreadTestScope threadTestScope;
 
-	@After
-	public void cleanUp() {
-		super.cleanUp();
-		threadTestScope.setSingleThread(false);
+    @After
+    public void cleanUp() {
+	super.cleanUp();
+	threadTestScope.setSingleThread(false);
+    }
+
+    @Before
+    public void setup() throws Exception {
+	super.setup();
+	asyncFileStore.flush();
+	QueryHistory history = historyService.read();
+	assertNotNull(history);
+	history.clear();
+
+	assertEquals(0, history.size());
+
+	user = historyService.getUser();
+	assertNotNull(user);
+	assertNotNull(user.id);
+    }
+
+    @Test
+    public void testCreateReadAndClear() throws Exception {
+	QueryHistory history = historyService.read();
+
+	for (int i = 0; i < 600; i++) {
+	    historyService.addAndStore(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * "
+		    + CR
+		    + "from HistoryTest where "
+		    + CR
+		    + "id="
+		    + i), 1000 + i));
+	    QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user).get();
+	    assertNotNull(historyQueue);
+
+	    // should be the same instance
+	    assertSame(history, historyQueue);
+	}
+	assertEquals(500, history.size());
+
+	asyncFileStore.flush();
+	assertFalse(asyncFileStore.getFromWriteQueue(user).isPresent());
+
+	assertSame(history, historyService.read());
+
+	QueryHistory readHist = storage.read(user, QueryHistory.class).get();
+	assertNotSame(history, readHist);
+
+	for (int i = 100; i < 600; i++) {
+	    QueryEntry tofind = new QueryEntry(new CqlQuery(
+		    CqlQueryType.SELECT,
+		    "select * from HistoryTest where id=" + i), 2000 + i);
+	    assertTrue(tofind + " NOT FOUND IN: " + readHist, readHist.contains(tofind));
+
+	    ImmutableList<QueryEntry> readList = readHist.copyAsList();
+	    int index = readList.indexOf(tofind);
+	    assertTrue(index >= 0);
+	    QueryEntry read = readList.get(index);
+	    assertNotNull(read.executedOnUtc);
+	    assertEquals(1000 + i, read.runTime);
 	}
 
-	@Before
-	public void setup() throws Exception {
-		super.setup();
-		asyncFileStore.flush();
-		QueryHistory history = historyService.read();
-		assertNotNull(history);
-		history.clear();
-
-		assertEquals(0, history.size());
-
-		user = historyService.getUser();
-		assertNotNull(user);
-		assertNotNull(user.id);
+	{
+	    history.clear();
+	    assertEquals(0, history.size());
+	    historyService.store(history);
+	    asyncFileStore.flush();
+	    assertEquals(0, storage.read(user, QueryHistory.class).get().size());
 	}
+    }
 
-	@Test
-	public void testCreateReadAndClear() throws Exception {
-		QueryHistory history = historyService.read();
+    @Test(expected = BeanValidationException.class)
+    public void testAddAndStore_NullParams() {
+	historyService.addAndStore(null);
+    }
 
-		for (int i = 0; i < 600; i++) {
-			historyService.addAndStore(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * " + CR
-					+ "from HistoryTest where " + CR + "id=" + i), 1000 + i));
-			QueryHistory historyQueue = asyncFileStore.getFromWriteQueue(user).get();
-			assertNotNull(historyQueue);
+    @Test(expected = BeanValidationException.class)
+    public void testAddAndStore_InvalidParams() {
+	historyService.addAndStore(new QueryEntry(new CqlQuery(null, null), 1));
+    }
 
-			// should be the same instance
-			assertSame(history, historyQueue);
-		}
-		assertEquals(500, history.size());
+    @Test(expected = BeanValidationException.class)
+    public void testStore_InvalidParams() {
+	historyService.store(null);
+    }
 
-		asyncFileStore.flush();
-		assertFalse(asyncFileStore.getFromWriteQueue(user).isPresent());
+    @Test
+    public void testMultiThreadForMultipleUsers() throws Exception {
+	threadTestScope.setSingleThread(false);
 
-		assertSame(history, historyService.read());
+	Set<QueryHistory> histories = executeMultiThreadTest(300);
+	assertEquals(3, histories.size());
+    }
 
-		QueryHistory readHist = storage.read(user, QueryHistory.class).get();
-		assertNotSame(history, readHist);
+    @Test
+    public void testMultiThreadForSingleUsers() throws Exception {
+	threadTestScope.setSingleThread(true);
 
-		for (int i = 100; i < 600; i++) {
-			QueryEntry tofind = new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from HistoryTest where id="
-					+ i), 2000 + i);
-			assertTrue(tofind + " NOT FOUND IN: " + readHist, readHist.contains(tofind));
+	Set<QueryHistory> histories = executeMultiThreadTest(100);
+	assertEquals(1, histories.size());
+    }
 
-			ImmutableList<QueryEntry> readList = readHist.copyAsList();
-			int index = readList.indexOf(tofind);
-			assertTrue(index >= 0);
-			QueryEntry read = readList.get(index);
-			assertNotNull(read.executedOnUtc);
-			assertEquals(1000 + i, read.runTime);
-		}
+    public Set<QueryHistory> executeMultiThreadTest(final int repeatInTest) throws Exception {
+	ExecutorService executor = Executors.newFixedThreadPool(3);
+	final Set<QueryHistory> histories = Collections.synchronizedSet(new HashSet<QueryHistory>());
 
-		{
-			history.clear();
-			assertEquals(0, history.size());
+	List<Callable<Void>> tasks = new ArrayList<>(3);
+	final AtomicInteger executedCount = new AtomicInteger(0);
+	for (int i = 0; i < 3; i++) {
+	    tasks.add(new Callable<Void>() {
+
+		@Override
+		public Void call() throws Exception {
+		    for (int i = 0; i < repeatInTest; i++) {
+			QueryHistory history = historyService.read();
+			histories.add(history);
+
+			QueryEntry histEntry = new QueryEntry(new CqlQuery(
+				CqlQueryType.SELECT,
+				"select * from MyTable2 where id=" + UUID.randomUUID()), 4000 + i);
+			history.add(histEntry);
+
+			verifyHistEntry(history, histEntry);
+
 			historyService.store(history);
-			asyncFileStore.flush();
-			assertEquals(0, storage.read(user, QueryHistory.class).get().size());
-		}
-	}
+			if (i % 20 == 0) {
+			    asyncFileStore.flush();
+			}
 
-	@Test(expected = BeanValidationException.class)
-	public void testAddAndStore_NullParams() {
-		historyService.addAndStore(null);
-	}
+			QueryHistory readHist = historyService.read();
+			verifyHistEntry(readHist, histEntry);
 
-	@Test(expected = BeanValidationException.class)
-	public void testAddAndStore_InvalidParams() {
-		historyService.addAndStore(new QueryEntry(new CqlQuery(null, null), 1));
-	}
-
-	@Test(expected = BeanValidationException.class)
-	public void testStore_InvalidParams() {
-		historyService.store(null);
-	}
-
-	@Test
-	public void testMultiThreadForMultipleUsers() throws Exception {
-		threadTestScope.setSingleThread(false);
-
-		Set<QueryHistory> histories = executeMultiThreadTest(300);
-		assertEquals(3, histories.size());
-	}
-
-	@Test
-	public void testMultiThreadForSingleUsers() throws Exception {
-		threadTestScope.setSingleThread(true);
-
-		Set<QueryHistory> histories = executeMultiThreadTest(100);
-		assertEquals(1, histories.size());
-	}
-
-	public Set<QueryHistory> executeMultiThreadTest(final int repeatInTest) throws Exception {
-		ExecutorService executor = Executors.newFixedThreadPool(3);
-		final Set<QueryHistory> histories = Collections.synchronizedSet(new HashSet<QueryHistory>());
-
-		List<Callable<Void>> tasks = new ArrayList<>(3);
-		final AtomicInteger executedCount = new AtomicInteger(0);
-		for (int i = 0; i < 3; i++) {
-			tasks.add(new Callable<Void>() {
-
-				@Override
-				public Void call() throws Exception {
-					for (int i = 0; i < repeatInTest; i++) {
-						QueryHistory history = historyService.read();
-						histories.add(history);
-
-						QueryEntry histEntry = new QueryEntry(new CqlQuery(CqlQueryType.SELECT,
-								"select * from MyTable2 where id=" + UUID.randomUUID()), 4000 + i);
-						history.add(histEntry);
-
-						verifyHistEntry(history, histEntry);
-
-						historyService.store(history);
-						if (i % 20 == 0) {
-							asyncFileStore.flush();
-						}
-
-						QueryHistory readHist = historyService.read();
-						verifyHistEntry(readHist, histEntry);
-
-						executedCount.incrementAndGet();
-						assertEquals(0, storage.getLockRetryCount());
-					}
-					return null;
-				}
-
-				void verifyHistEntry(QueryHistory history, QueryEntry histEntry) {
-					assertNotNull(history);
-
-					assertTrue("History (" + executedCount + "):" + histEntry + " not found in: " + history,
-							history.contains(histEntry));
-				}
-			});
+			executedCount.incrementAndGet();
+			assertEquals(0, storage.getLockRetryCount());
+		    }
+		    return null;
 		}
 
-		List<Future<Void>> results = executor.invokeAll(tasks);
-		executor.shutdown();
-		executor.awaitTermination(5, TimeUnit.MINUTES);
+		void verifyHistEntry(QueryHistory history, QueryEntry histEntry) {
+		    assertNotNull(history);
 
-		for (Future<Void> result : results) {
-			result.get();
+		    assertTrue(
+			    "History (" + executedCount + "):" + histEntry + " not found in: " + history,
+			    history.contains(histEntry));
 		}
-		assertEquals(3 * repeatInTest, executedCount.get());
-		return histories;
+	    });
 	}
+
+	List<Future<Void>> results = executor.invokeAll(tasks);
+	executor.shutdown();
+	executor.awaitTermination(5, TimeUnit.MINUTES);
+
+	for (Future<Void> result : results) {
+	    result.get();
+	}
+	assertEquals(3 * repeatInTest, executedCount.get());
+	return histories;
+    }
 
 }
 /*

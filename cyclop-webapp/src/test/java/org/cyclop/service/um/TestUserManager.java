@@ -26,17 +26,17 @@ import org.junit.Test;
 /** @author Maciej Miklas */
 public class TestUserManager extends AbstractTestCase {
 
-	@Inject
-	private UserManager um;
+    @Inject
+    private UserManager um;
 
-	@Test(expected = BeanValidationException.class)
-	public void testRegisterIdentifier_Validation() {
-		um.storeIdentifier(new UserIdentifier(null));
-	}
+    @Test(expected = BeanValidationException.class)
+    public void testRegisterIdentifier_Validation() {
+	um.storeIdentifier(new UserIdentifier(null));
+    }
 
-	@Test(expected = BeanValidationException.class)
-	public void testStorePreferences_Validation() {
-		um.storePreferences(null);
-	}
+    @Test(expected = BeanValidationException.class)
+    public void testStorePreferences_Validation() {
+	um.storePreferences(null);
+    }
 
 }
