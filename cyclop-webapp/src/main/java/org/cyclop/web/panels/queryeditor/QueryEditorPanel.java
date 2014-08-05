@@ -108,7 +108,7 @@ public class QueryEditorPanel extends Panel {
 
     private Panel initQueryResultPanel() {
 	Panel queryResultVerticalPanel = new QueryResultHorizontalPanel("queryResult", queryResultModel);
-	//Panel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResult", queryResultModel);
+	//Panel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResulta", queryResultModel);
 	queryResultVerticalPanel.setOutputMarkupPlaceholderTag(true);
 	queryResultVerticalPanel.setOutputMarkupId(true);
 	add(queryResultVerticalPanel);
