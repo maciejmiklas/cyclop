@@ -43,7 +43,6 @@ import org.cyclop.web.panels.queryeditor.editor.CompletionChangeListener;
 import org.cyclop.web.panels.queryeditor.editor.EditorPanel;
 import org.cyclop.web.panels.queryeditor.export.QueryResultExport;
 import org.cyclop.web.panels.queryeditor.horizontalresult.QueryResultHorizontalPanel;
-import org.cyclop.web.panels.queryeditor.verticalresult.QueryResultVerticalPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
