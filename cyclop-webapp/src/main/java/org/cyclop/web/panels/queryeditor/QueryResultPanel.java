@@ -16,25 +16,28 @@
  */
 package org.cyclop.web.panels.queryeditor;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
+import org.cyclop.model.UserPreferences;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.common.TransientModel;
 import org.cyclop.web.components.column.WidgetFactory;
 import org.cyclop.web.components.iterablegrid.IterableDataProvider;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
+import org.cyclop.web.components.pagination.PagerConfigurator;
 
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
@@ -42,23 +45,22 @@ import com.google.common.collect.ImmutableList;
 /** @author Maciej Miklas */
 public abstract class QueryResultPanel extends Panel {
 
+    protected final static String EMPTYVAL = "-";
     protected final RowDataProvider rowDataProvider;
 
-    protected final IModel<CqlQueryResult> model;
+    protected final IModel<CqlQueryResult> queryResultModel;
 
     protected final ColumnsModel columnsModel;
 
-    protected final RowsModel rowsModel;
-
-    private final Label cqlResultText;
+    private Label cqlResultText;
 
     private final CqlResultTextModel cqlResultTextModel;
 
-    protected final WebMarkupContainer resultTable;
+    protected WebMarkupContainer resultTable;
 
     protected final AppConfig config = AppConfig.get();
 
-    private final BootstrapPagingNavigator pager;
+    private BootstrapPagingNavigator pager;
 
     @Inject
     protected UserManager um;
@@ -68,24 +70,26 @@ public abstract class QueryResultPanel extends Panel {
 
     public QueryResultPanel(String id, IModel<CqlQueryResult> model) {
 	super(id, model);
-	this.model = model;
-
-	columnsModel = new ColumnsModel();
-	rowsModel = new RowsModel();
-
+	this.queryResultModel = model;
 	rowDataProvider = new RowDataProvider();
-	rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
-
+	columnsModel = new ColumnsModel();
 	cqlResultTextModel = new CqlResultTextModel();
+    }
+
+    @Override
+    protected void onInitialize() {
+	super.onInitialize();
+	rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
 	cqlResultText = initClqReslutText();
 	resultTable = initResultsTable();
-	pager = initPagingProvider();
+	IPageableItems pagable = initPagingProvider();
+	pager = createPager(pagable);
     }
 
     @Override
     protected void onModelChanged() {
 	super.onModelChanged();
-	if (model.getObject().isEmpty()) {
+	if (queryResultModel.getObject().isEmpty()) {
 	    showCqlResultText("Query executed successfully, result is empty");
 	}
 	else {
@@ -93,12 +97,11 @@ public abstract class QueryResultPanel extends Panel {
 	}
     }
 
-    protected abstract BootstrapPagingNavigator initPagingProvider();
+    protected abstract IPageableItems initPagingProvider();
 
     protected void hideResultsTable() {
 	resultTable.setVisible(false);
 	columnsModel.clean();
-	rowsModel.getObject().clear();
     }
 
     protected void showCqlResultText(String text) {
@@ -112,7 +115,7 @@ public abstract class QueryResultPanel extends Panel {
 	resultTable.setVisible(true);
 	pager.reset();
 	rowDataProvider.replaceModel();
-	columnsModel.updateResult(model.getObject().rowMetadata);
+	columnsModel.updateResult(queryResultModel.getObject().rowMetadata);
     }
 
     protected void hideCqlResultText() {
@@ -134,33 +137,6 @@ public abstract class QueryResultPanel extends Panel {
 	cqlResultText.setOutputMarkupPlaceholderTag(true);
 	add(cqlResultText);
 	return cqlResultText;
-    }
-
-    protected final static class RowsModel implements IModel<List<Row>> {
-
-	private List<Row> content;
-
-	public RowsModel() {
-	    this.content = Collections.emptyList();
-	}
-
-	public RowsModel(List<Row> content) {
-	    this.content = content;
-	}
-
-	@Override
-	public void detach() {
-	}
-
-	@Override
-	public List<Row> getObject() {
-	    return content;
-	}
-
-	@Override
-	public void setObject(List<Row> object) {
-	    content = object;
-	}
     }
 
     protected final static class CqlResultTextModel implements IModel<String> {
@@ -223,6 +199,27 @@ public abstract class QueryResultPanel extends Panel {
 	}
     }
 
+    private BootstrapPagingNavigator createPager(IPageableItems pageable) {
+	BootstrapPagingNavigator pager = new BootstrapPagingNavigator(
+		"rowsPager",
+		pageable,
+		new PagerConfigurator() {
+
+		    @Override
+		    public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
+			UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
+			um.storePreferences(prefs);
+		    }
+
+		    @Override
+		    public long getInitialItemsPerPage() {
+			return um.readPreferences().getPagerEditorItems();
+		    }
+		});
+	resultTable.add(pager);
+	return pager;
+    }
+
     protected final class RowDataProvider extends IterableDataProvider<Row> {
 
 	protected RowDataProvider() {
@@ -231,7 +228,7 @@ public abstract class QueryResultPanel extends Panel {
 
 	@Override
 	protected Iterator<Row> iterator() {
-	    CqlQueryResult res = model.getObject();
+	    CqlQueryResult res = queryResultModel.getObject();
 	    return res.iterator();
 	}
 

@@ -16,14 +16,20 @@
  */
 package org.cyclop.web.panels.queryeditor.horizontalresult;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
+import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQueryResult;
-import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
+import org.cyclop.web.components.iterablegrid.IterableGridView;
 import org.cyclop.web.panels.queryeditor.QueryResultPanel;
+
+import com.datastax.driver.core.Row;
 
 /** @author Maciej Miklas */
 public class QueryResultHorizontalPanel extends QueryResultPanel {
@@ -33,9 +39,9 @@ public class QueryResultHorizontalPanel extends QueryResultPanel {
     }
 
     @Override
-    protected BootstrapPagingNavigator initPagingProvider() {
-	// TODO Auto-generated method stub
-	return null;
+    protected void onInitialize() {
+	super.onInitialize();
+	initColumnList();
     }
 
     private void initColumnList() {
@@ -50,6 +56,53 @@ public class QueryResultHorizontalPanel extends QueryResultPanel {
 	    }
 	};
 	resultTable.add(columnList);
+    }
+
+    @Override
+    protected IPageableItems initPagingProvider() {
+	IterableGridView<Row> rowsList = new IterableGridView<Row>("rowsList", rowDataProvider) {
+
+	    @Override
+	    protected void populateEmptyItem(Item<Row> item) {
+	    }
+
+	    @Override
+	    protected void populateItem(Item<Row> item) {
+		Row row = item.getModel().getObject();
+		CqlPartitionKey partitionKey = queryResultModel.getObject().rowMetadata.partitionKey;
+
+		Component rowKey;
+		if (partitionKey != null) {
+		    rowKey = widgetFactory.createForColumn(row, partitionKey, partitionKey, "rowKey");
+		}
+		else {
+		    rowKey = new Label("rowKey", EMPTYVAL);
+		}
+		item.add(rowKey);
+
+		ListView<CqlExtendedColumnName> columnValueList = new ListView<CqlExtendedColumnName>(
+			"columnValueList",
+			columnsModel) {
+
+		    @Override
+		    protected void populateItem(ListItem<CqlExtendedColumnName> item) {
+			CqlExtendedColumnName column = item.getModelObject();
+
+			Component component = widgetFactory.createForColumn(
+				row,
+				partitionKey,
+				column,
+				"columnValue");
+			item.add(component);
+			component.setRenderBodyOnly(true);
+		    }
+		};
+		item.add(columnValueList);
+	    }
+	};
+	resultTable.add(rowsList);
+	rowsList.setColumns(1);
+	return rowsList;
     }
 
 }

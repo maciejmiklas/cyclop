@@ -43,6 +43,7 @@ import org.cyclop.web.panels.queryeditor.editor.CompletionChangeListener;
 import org.cyclop.web.panels.queryeditor.editor.EditorPanel;
 import org.cyclop.web.panels.queryeditor.export.QueryResultExport;
 import org.cyclop.web.panels.queryeditor.horizontalresult.QueryResultHorizontalPanel;
+import org.cyclop.web.panels.queryeditor.verticalresult.QueryResultVerticalPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,14 +72,14 @@ public class QueryEditorPanel extends Panel {
     @Inject
     private QueryService queryService;
 
-    private final IModel<CqlQueryResult> queryResultModel = Model.of(CqlQueryResult.EMPTY);
+    private final IModel<CqlQueryResult> queryResultModel;
 
     private final Label queryErrorLabel;
 
     public QueryEditorPanel(String id, PageParameters params) {
 	super(id);
 	setRenderBodyOnly(true);
-
+	queryResultModel = Model.of(CqlQueryResult.EMPTY);
 	cqlHelpPanel = new CqlHelpPanel("cqlHelp");
 	add(cqlHelpPanel);
 
@@ -107,9 +108,8 @@ public class QueryEditorPanel extends Panel {
     }
 
     private Panel initQueryResultPanel() {
-	Panel queryResultVerticalPanel = new QueryResultHorizontalPanel("queryResult", queryResultModel);
-	// Panel queryResultVerticalPanel = new
-	// QueryResultVerticalPanel("queryResulta", queryResultModel);
+	 Panel queryResultVerticalPanel = new QueryResultHorizontalPanel("queryResult", queryResultModel);
+	//Panel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResult", queryResultModel);
 	queryResultVerticalPanel.setOutputMarkupPlaceholderTag(true);
 	queryResultVerticalPanel.setOutputMarkupId(true);
 	add(queryResultVerticalPanel);

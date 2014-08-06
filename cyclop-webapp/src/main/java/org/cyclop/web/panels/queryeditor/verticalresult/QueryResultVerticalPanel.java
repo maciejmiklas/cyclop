@@ -17,24 +17,22 @@
 package org.cyclop.web.panels.queryeditor.verticalresult;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
-import org.cyclop.model.UserPreferences;
 import org.cyclop.web.components.iterablegrid.IterableGridView;
-import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
-import org.cyclop.web.components.pagination.PagerConfigurator;
 import org.cyclop.web.panels.queryeditor.QueryResultPanel;
 
 import com.datastax.driver.core.Row;
@@ -42,9 +40,23 @@ import com.datastax.driver.core.Row;
 /** @author Maciej Miklas */
 public class QueryResultVerticalPanel extends QueryResultPanel {
 
+    protected final RowsModel rowsModel;
+
     public QueryResultVerticalPanel(String id, IModel<CqlQueryResult> model) {
 	super(id, model);
+	rowsModel = new RowsModel();
+    }
+
+    @Override
+    protected void onInitialize() {
+	super.onInitialize();
 	initColumnList();
+    }
+
+    @Override
+    protected void hideResultsTable() {
+	super.hideResultsTable();
+	rowsModel.getObject().clear();
     }
 
     private void initColumnList() {
@@ -86,7 +98,8 @@ public class QueryResultVerticalPanel extends QueryResultPanel {
 	resultTable.add(columnList);
     }
 
-    protected BootstrapPagingNavigator initPagingProvider() {
+    @Override
+    protected IPageableItems initPagingProvider() {
 
 	final List<Row> displayedRows = new ArrayList<>();
 	IterableGridView<Row> rowNamesList = new IterableGridView<Row>("rowNamesList", rowDataProvider) {
@@ -99,14 +112,14 @@ public class QueryResultVerticalPanel extends QueryResultPanel {
 
 	    @Override
 	    protected void populateEmptyItem(Item<Row> item) {
-		item.add(new Label("rowName", ""));
+		item.add(new Label("rowName", EMPTYVAL));
 	    }
 
 	    @Override
 	    protected void populateItem(Item<Row> item) {
 		Row row = item.getModel().getObject();
 		displayedRows.add(row);
-		CqlPartitionKey partitionKey = model.getObject().rowMetadata.partitionKey;
+		CqlPartitionKey partitionKey = queryResultModel.getObject().rowMetadata.partitionKey;
 
 		Component component;
 		if (partitionKey != null) {
@@ -122,26 +135,30 @@ public class QueryResultVerticalPanel extends QueryResultPanel {
 	resultTable.add(rowNamesList);
 	rowNamesList.setColumns(1);
 
-	BootstrapPagingNavigator pager = new BootstrapPagingNavigator(
-		"rowNamesListPager",
-		rowNamesList,
-		new PagerConfigurator() {
-
-		    @Override
-		    public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
-			UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
-			um.storePreferences(prefs);
-		    }
-
-		    @Override
-		    public long getInitialItemsPerPage() {
-			return um.readPreferences().getPagerEditorItems();
-		    }
-		});
-	resultTable.add(pager);
 	rowsModel.setObject(displayedRows);
-
-	return pager;
+	return rowNamesList;
     }
 
+    private final static class RowsModel implements IModel<List<Row>> {
+
+	private List<Row> content;
+
+	public RowsModel() {
+	    this.content = Collections.emptyList();
+	}
+
+	@Override
+	public void detach() {
+	}
+
+	@Override
+	public List<Row> getObject() {
+	    return content;
+	}
+
+	@Override
+	public void setObject(List<Row> object) {
+	    content = object;
+	}
+    }
 }
