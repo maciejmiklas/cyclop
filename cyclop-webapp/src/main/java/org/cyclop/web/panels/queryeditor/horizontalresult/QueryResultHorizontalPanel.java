@@ -17,6 +17,7 @@
 package org.cyclop.web.panels.queryeditor.horizontalresult;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -26,25 +27,32 @@ import org.apache.wicket.model.IModel;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQueryResult;
+import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.web.components.iterablegrid.IterableGridView;
 import org.cyclop.web.panels.queryeditor.QueryResultPanel;
 
 import com.datastax.driver.core.Row;
 
 /** @author Maciej Miklas */
-public class QueryResultHorizontalPanel extends QueryResultPanel {
+public final class QueryResultHorizontalPanel extends QueryResultPanel {
 
     public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
 	super(id, model);
     }
 
     @Override
-    protected void onInitialize() {
-	super.onInitialize();
-	initColumnList();
+    protected IPageableItems init(
+	    WebMarkupContainer resultTable,
+	    ColumnsModel columnsModel,
+	    RowDataProvider rowDataProvider,
+	    IModel<CqlRowMetadata> metadataModel) {
+
+	initColumnList(resultTable, columnsModel);
+	IPageableItems rowsList = initRowsList(resultTable, columnsModel, rowDataProvider, metadataModel);
+	return rowsList;
     }
 
-    private void initColumnList() {
+    private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel) {
 	ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>(
 		"columnList",
 		columnsModel) {
@@ -58,8 +66,12 @@ public class QueryResultHorizontalPanel extends QueryResultPanel {
 	resultTable.add(columnList);
     }
 
-    @Override
-    protected IPageableItems initPagingProvider() {
+    protected IPageableItems initRowsList(
+	    WebMarkupContainer resultTable,
+	    ColumnsModel columnsModel,
+	    RowDataProvider rowDataProvider,
+	    IModel<CqlRowMetadata> metadataModel) {
+
 	IterableGridView<Row> rowsList = new IterableGridView<Row>("rowsList", rowDataProvider) {
 
 	    @Override
@@ -69,15 +81,7 @@ public class QueryResultHorizontalPanel extends QueryResultPanel {
 	    @Override
 	    protected void populateItem(Item<Row> item) {
 		Row row = item.getModel().getObject();
-		CqlPartitionKey partitionKey = queryResultModel.getObject().rowMetadata.partitionKey;
-
-		Component rowKey;
-		if (partitionKey != null) {
-		    rowKey = widgetFactory.createForColumn(row, partitionKey, partitionKey, "rowKey");
-		}
-		else {
-		    rowKey = new Label("rowKey", EMPTYVAL);
-		}
+		Component rowKey = createRowKeyColumn("rowKey", row, metadataModel);
 		item.add(rowKey);
 
 		ListView<CqlExtendedColumnName> columnValueList = new ListView<CqlExtendedColumnName>(
@@ -88,6 +92,7 @@ public class QueryResultHorizontalPanel extends QueryResultPanel {
 		    protected void populateItem(ListItem<CqlExtendedColumnName> item) {
 			CqlExtendedColumnName column = item.getModelObject();
 
+			CqlPartitionKey partitionKey = metadataModel.getObject().partitionKey;
 			Component component = widgetFactory.createForColumn(
 				row,
 				partitionKey,

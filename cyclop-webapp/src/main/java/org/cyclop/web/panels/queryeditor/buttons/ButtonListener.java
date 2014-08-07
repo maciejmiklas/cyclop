@@ -29,6 +29,6 @@ public interface ButtonListener extends Serializable {
 
     void onClickCompletion(AjaxRequestTarget target, boolean pressed);
 
-    void onEesultOrientation(AjaxRequestTarget target, int orientation);
+    void onClickResultOrientation(AjaxRequestTarget target, int orientation);
 
 }

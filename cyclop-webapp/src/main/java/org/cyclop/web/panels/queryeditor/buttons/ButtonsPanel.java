@@ -64,6 +64,7 @@ public class ButtonsPanel extends Panel {
 		UserPreferences preferences = userManager.readPreferences();
 		preferences.setResultOrientation(state);
 		userManager.storePreferences(preferences);
+		buttonListener.onClickResultOrientation(target, state);
 	    }
 	};
 	add(completion);

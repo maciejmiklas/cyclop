@@ -17,32 +17,29 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
-	<wicket:panel>
-		<div wicket:id="resultTable">
-			<table class="table table-striped table-bordered table-hover">
-				<thead>
-					<wicket:container wicket:id="rowsPager"></wicket:container>
-					<tr>
-						<th></th>
-						<th wicket:id="rowNamesList"><wicket:container wicket:id="cols">
-								<wicket:container wicket:id="rowName"></wicket:container>
-							</wicket:container></th>
-					</tr>
-				</thead>
+	<table class="table table-striped table-bordered table-hover">
+		<wicket:extend>
+			<wicket:container wicket:id="rowsPager"></wicket:container>
+			<thead>
+				<tr>
+					<th></th>
+					<th wicket:id="rowNamesList"><wicket:container wicket:id="cols">
+							<wicket:container wicket:id="rowName"></wicket:container>
+						</wicket:container></th>
+				</tr>
+			</thead>
 
-				<tbody>
-					<wicket:container wicket:id="columnList">
-						<tr wicket:id="columnListRow">
-							<th wicket:id="columnName"></th>
-							<td class="cq-columnValue" wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container>
-							</td>
-						</tr>
-					</wicket:container>
-				</tbody>
-			</table>
-		</div>
-		<div wicket:id="cqlResultText"></div>
-	</wicket:panel>
+			<tbody>
+				<wicket:container wicket:id="columnList">
+					<tr wicket:id="columnListRow">
+						<th wicket:id="columnName"></th>
+						<td class="cq-columnValue" wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container>
+						</td>
+					</tr>
+				</wicket:container>
+			</tbody>
+		</wicket:extend>
+	</table>
 </body>
 
 </html>

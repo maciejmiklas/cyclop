@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQueryResult;
@@ -38,19 +39,13 @@ import org.cyclop.web.panels.queryeditor.QueryResultPanel;
 import com.datastax.driver.core.Row;
 
 /** @author Maciej Miklas */
-public class QueryResultVerticalPanel extends QueryResultPanel {
+public final class QueryResultVerticalPanel extends QueryResultPanel {
 
-    protected final RowsModel rowsModel;
+    protected final IModel<List<? extends Row>> rowsModel;
 
     public QueryResultVerticalPanel(String id, IModel<CqlQueryResult> model) {
 	super(id, model);
-	rowsModel = new RowsModel();
-    }
-
-    @Override
-    protected void onInitialize() {
-	super.onInitialize();
-	initColumnList();
+	rowsModel = Model.ofList(Collections.emptyList());
     }
 
     @Override
@@ -59,7 +54,54 @@ public class QueryResultVerticalPanel extends QueryResultPanel {
 	rowsModel.getObject().clear();
     }
 
-    private void initColumnList() {
+    @Override
+    protected IPageableItems init(
+	    WebMarkupContainer resultTable,
+	    ColumnsModel columnsModel,
+	    RowDataProvider rowDataProvider,
+	    IModel<CqlRowMetadata> metadataModel) {
+
+	IPageableItems rowNamesList = initRowNamesList(resultTable, metadataModel, rowDataProvider);
+	initColumnList(columnsModel, resultTable);
+	return rowNamesList;
+    }
+
+    protected IPageableItems initRowNamesList(
+	    WebMarkupContainer resultTable,
+	    IModel<CqlRowMetadata> metadataModel,
+	    RowDataProvider rowDataProvider) {
+
+	final List<Row> displayedRows = new ArrayList<>();
+	IterableGridView<Row> rowNamesList = new IterableGridView<Row>("rowNamesList", rowDataProvider) {
+
+	    @Override
+	    protected void onBeforeRender() {
+		displayedRows.clear();
+		super.onBeforeRender();
+	    }
+
+	    @Override
+	    protected void populateEmptyItem(Item<Row> item) {
+		item.add(new Label("rowName", EMPTYVAL));
+	    }
+
+	    @Override
+	    protected void populateItem(Item<Row> item) {
+		Row row = item.getModel().getObject();
+		displayedRows.add(row);
+		Component component = createRowKeyColumn("rowName", row, metadataModel);
+		item.add(component);
+	    }
+	};
+	resultTable.add(rowNamesList);
+	rowNamesList.setColumns(1);
+
+	rowsModel.setObject(displayedRows);
+	return rowNamesList;
+    }
+
+    private void initColumnList(ColumnsModel columnsModel, WebMarkupContainer resultTable) {
+
 	ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>(
 		"columnList",
 		columnsModel) {
@@ -96,69 +138,7 @@ public class QueryResultVerticalPanel extends QueryResultPanel {
 	    }
 	};
 	resultTable.add(columnList);
+
     }
 
-    @Override
-    protected IPageableItems initPagingProvider() {
-
-	final List<Row> displayedRows = new ArrayList<>();
-	IterableGridView<Row> rowNamesList = new IterableGridView<Row>("rowNamesList", rowDataProvider) {
-
-	    @Override
-	    protected void onBeforeRender() {
-		displayedRows.clear();
-		super.onBeforeRender();
-	    }
-
-	    @Override
-	    protected void populateEmptyItem(Item<Row> item) {
-		item.add(new Label("rowName", EMPTYVAL));
-	    }
-
-	    @Override
-	    protected void populateItem(Item<Row> item) {
-		Row row = item.getModel().getObject();
-		displayedRows.add(row);
-		CqlPartitionKey partitionKey = queryResultModel.getObject().rowMetadata.partitionKey;
-
-		Component component;
-		if (partitionKey != null) {
-		    component = widgetFactory.createForColumn(row, partitionKey, partitionKey, "rowName");
-		}
-		else {
-		    component = new Label("rowName", displayedRows.size());
-		}
-
-		item.add(component);
-	    }
-	};
-	resultTable.add(rowNamesList);
-	rowNamesList.setColumns(1);
-
-	rowsModel.setObject(displayedRows);
-	return rowNamesList;
-    }
-
-    private final static class RowsModel implements IModel<List<Row>> {
-
-	private List<Row> content;
-
-	public RowsModel() {
-	    this.content = Collections.emptyList();
-	}
-
-	@Override
-	public void detach() {
-	}
-
-	@Override
-	public List<Row> getObject() {
-	    return content;
-	}
-
-	@Override
-	public void setObject(List<Row> object) {
-	    content = object;
-	}
-    }
 }

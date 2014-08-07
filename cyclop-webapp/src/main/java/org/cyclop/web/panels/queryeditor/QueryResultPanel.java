@@ -21,14 +21,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlExtendedColumnName;
+import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.model.UserPreferences;
@@ -46,17 +49,17 @@ import com.google.common.collect.ImmutableList;
 public abstract class QueryResultPanel extends Panel {
 
     protected final static String EMPTYVAL = "-";
-    protected final RowDataProvider rowDataProvider;
+    private final RowDataProvider rowDataProvider;
 
-    protected final IModel<CqlQueryResult> queryResultModel;
+    private final IModel<CqlQueryResult> queryResultModel;
 
-    protected final ColumnsModel columnsModel;
+    private final ColumnsModel columnsModel;
 
     private Label cqlResultText;
 
     private final CqlResultTextModel cqlResultTextModel;
 
-    protected WebMarkupContainer resultTable;
+    private WebMarkupContainer resultTable;
 
     protected final AppConfig config = AppConfig.get();
 
@@ -77,17 +80,32 @@ public abstract class QueryResultPanel extends Panel {
     }
 
     @Override
-    protected void onInitialize() {
+    protected final void onInitialize() {
 	super.onInitialize();
 	rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
 	cqlResultText = initClqReslutText();
 	resultTable = initResultsTable();
-	IPageableItems pagable = initPagingProvider();
+
+	IModel<CqlRowMetadata> metadataModel = PropertyModel.of(queryResultModel, "rowMetadata");
+	IPageableItems pagable = init(resultTable, columnsModel, rowDataProvider, metadataModel);
 	pager = createPager(pagable);
     }
 
+    protected Component createRowKeyColumn(String wid, Row row, IModel<CqlRowMetadata> metadataModel) {
+	CqlPartitionKey partitionKey = metadataModel.getObject().partitionKey;
+
+	Component component;
+	if (partitionKey != null) {
+	    component = widgetFactory.createForColumn(row, partitionKey, partitionKey, wid);
+	}
+	else {
+	    component = new Label(wid, EMPTYVAL);
+	}
+	return component;
+    }
+
     @Override
-    protected void onModelChanged() {
+    protected final void onModelChanged() {
 	super.onModelChanged();
 	if (queryResultModel.getObject().isEmpty()) {
 	    showCqlResultText("Query executed successfully, result is empty");
@@ -97,20 +115,24 @@ public abstract class QueryResultPanel extends Panel {
 	}
     }
 
-    protected abstract IPageableItems initPagingProvider();
+    protected abstract IPageableItems init(
+	    WebMarkupContainer resultTable,
+	    ColumnsModel columnsModel,
+	    RowDataProvider rowDataProvider,
+	    IModel<CqlRowMetadata> metadataModel);
 
     protected void hideResultsTable() {
 	resultTable.setVisible(false);
 	columnsModel.clean();
     }
 
-    protected void showCqlResultText(String text) {
+    private void showCqlResultText(String text) {
 	hideResultsTable();
 	cqlResultText.setVisible(true);
 	cqlResultTextModel.setObject(text);
     }
 
-    protected void showResultsTable() {
+    private void showResultsTable() {
 	hideCqlResultText();
 	resultTable.setVisible(true);
 	pager.reset();
@@ -118,7 +140,7 @@ public abstract class QueryResultPanel extends Panel {
 	columnsModel.updateResult(queryResultModel.getObject().rowMetadata);
     }
 
-    protected void hideCqlResultText() {
+    private void hideCqlResultText() {
 	cqlResultText.setVisible(false);
 	cqlResultTextModel.clean();
     }

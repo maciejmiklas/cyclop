@@ -22,6 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -75,24 +76,31 @@ public class QueryEditorPanel extends Panel {
     private final IModel<CqlQueryResult> queryResultModel;
 
     private final Label queryErrorLabel;
+    private Panel queryResultPanel;
+    private final WebMarkupContainer queryResultContainer;
 
     public QueryEditorPanel(String id, PageParameters params) {
 	super(id);
 	setRenderBodyOnly(true);
 	queryResultModel = Model.of(CqlQueryResult.EMPTY);
+
 	cqlHelpPanel = new CqlHelpPanel("cqlHelp");
 	add(cqlHelpPanel);
 
+	UserPreferences preferences = userManager.readPreferences();
 	cqlCompletionHintPanel = new CompletionHintPanel("cqlInfoHint", "Completion Hint");
+	cqlCompletionHintPanel.setVisible(preferences.isShowCqlCompletionHint());
 	add(cqlCompletionHintPanel);
 
-	Panel queryResultPanel = initQueryResultPanel();
+	queryResultContainer = new WebMarkupContainer("queryResultContainer");
+	queryResultContainer.setOutputMarkupPlaceholderTag(true);
+	add(queryResultContainer);
+
+	initQueryResultPanel(preferences.getResultOrientation());
+
 	EditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
-	UserPreferences preferences = userManager.readPreferences();
-	boolean completionEnabled = preferences.isShowCqlCompletionHint();
-	cqlCompletionHintPanel.setVisible(completionEnabled);
-	initButtons(queryEditorPanel, queryResultPanel, completionEnabled);
+	initButtons(queryEditorPanel, preferences);
 
 	queryResultExport = new QueryResultExport(this, exporter);
 
@@ -107,13 +115,12 @@ public class QueryEditorPanel extends Panel {
 	return queryErrorLabel;
     }
 
-    private Panel initQueryResultPanel() {
-	 Panel queryResultVerticalPanel = new QueryResultHorizontalPanel("queryResult", queryResultModel);
-	//Panel queryResultVerticalPanel = new QueryResultVerticalPanel("queryResult", queryResultModel);
-	queryResultVerticalPanel.setOutputMarkupPlaceholderTag(true);
-	queryResultVerticalPanel.setOutputMarkupId(true);
-	add(queryResultVerticalPanel);
-	return queryResultVerticalPanel;
+    private void initQueryResultPanel(int orientation) {
+	queryResultPanel = orientation == 1 ? new QueryResultHorizontalPanel(
+		"queryResultPanel",
+		queryResultModel) : new QueryResultVerticalPanel("queryResultPanel", queryResultModel);
+	queryResultContainer.removeAll();
+	queryResultContainer.add(queryResultPanel);
     }
 
     private EditorPanel initQueryEditorPanel(PageParameters params) {
@@ -124,17 +131,13 @@ public class QueryEditorPanel extends Panel {
 	EditorPanel queryEditorPanel = new EditorPanel("queryEditorPanel", editorContent);
 	add(queryEditorPanel);
 	queryEditorPanel.setOutputMarkupPlaceholderTag(true);
-	queryEditorPanel.setOutputMarkupId(true);
 
 	queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHelp());
 	queryEditorPanel.registerCompletionChangeListener(new CompletionChangeHint());
 	return queryEditorPanel;
     }
 
-    private ButtonsPanel initButtons(
-	    final EditorPanel editorPanel,
-	    final Panel queryResultPanel,
-	    boolean completionEnabled) {
+    private ButtonsPanel initButtons(final EditorPanel editorPanel, UserPreferences preferences) {
 	ButtonListener buttonListener = new ButtonListener() {
 
 	    @Override
@@ -144,7 +147,7 @@ public class QueryEditorPanel extends Panel {
 
 	    @Override
 	    public void onClickExecCql(AjaxRequestTarget target) {
-		handleExecQuery(target, editorPanel, queryResultPanel);
+		handleExecQuery(target, editorPanel);
 	    }
 
 	    @Override
@@ -154,18 +157,21 @@ public class QueryEditorPanel extends Panel {
 	    }
 
 	    @Override
-	    public void onEesultOrientation(AjaxRequestTarget target, int orientation) {
-		// TODO Auto-generated method stub
-
+	    public void onClickResultOrientation(AjaxRequestTarget target, int orientation) {
+		initQueryResultPanel(orientation);
+		target.add(queryResultContainer);
 	    }
 	};
 
-	ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", buttonListener, completionEnabled);
+	ButtonsPanel buttonsPanel = new ButtonsPanel(
+		"buttons",
+		buttonListener,
+		preferences.isShowCqlCompletionHint());
 	add(buttonsPanel);
 	return buttonsPanel;
     }
 
-    private void handleExecQuery(AjaxRequestTarget target, EditorPanel editorPanel, Panel queryResultPanel) {
+    private void handleExecQuery(AjaxRequestTarget target, EditorPanel editorPanel) {
 
 	// this cannot happen, because java script disables execute
 	// button - it's DOS prevention
@@ -186,11 +192,11 @@ public class QueryEditorPanel extends Panel {
 	    queryResultModel.setObject(queryResult);
 	    queryResultPanel.modelChanged();
 	    queryErrorLabel.setVisible(false);
-	    queryResultPanel.setVisible(true);
+	    queryResultContainer.setVisible(true);
 	}
 	catch (Exception e) {
 	    queryErrorLabel.setVisible(true);
-	    queryResultPanel.setVisible(false);
+	    queryResultContainer.setVisible(false);
 	    queryErrorLabel.setDefaultModelObject(e.getMessage());
 	}
 	finally {
@@ -199,7 +205,7 @@ public class QueryEditorPanel extends Panel {
 	editorPanel.resetCompletion();
 
 	target.add(queryErrorLabel);
-	target.add(queryResultPanel);
+	target.add(queryResultContainer);
     }
 
     private final class CompletionChangeHelp implements CompletionChangeListener {
