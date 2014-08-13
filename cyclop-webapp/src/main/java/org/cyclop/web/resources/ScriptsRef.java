@@ -32,6 +32,10 @@ public final class ScriptsRef {
     public static final JavaScriptResourceReference COMMON = new JavaScriptResourceReference(
 	    ScriptsRef.class,
 	    "js/common.js");
+    
+    public static final JavaScriptResourceReference COL_RESIZABLE = new JavaScriptResourceReference(
+	    ScriptsRef.class,
+	    "js/colResizable-1.3.min.js");
 
     public static final JavaScriptResourceReference BOOTSTRAP = new JavaScriptResourceReference(
 	    ScriptsRef.class,

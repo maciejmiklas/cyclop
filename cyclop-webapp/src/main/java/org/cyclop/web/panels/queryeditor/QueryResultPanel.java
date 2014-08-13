@@ -16,31 +16,41 @@
  */
 package org.cyclop.web.panels.queryeditor;
 
+import static org.cyclop.web.resources.ScriptsRef.COL_RESIZABLE;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.model.UserPreferences;
+import org.cyclop.model.exception.ServiceException;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.common.TransientModel;
 import org.cyclop.web.components.column.WidgetFactory;
 import org.cyclop.web.components.iterablegrid.IterableDataProvider;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.components.pagination.PagerConfigurator;
+import org.cyclop.web.panels.queryeditor.buttons.ButtonsPanel;
 
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
@@ -50,6 +60,10 @@ public abstract class QueryResultPanel extends Panel {
 
     protected final static String EMPTYVAL = "-";
     private final RowDataProvider rowDataProvider;
+
+    private static final JavaScriptResourceReference JS_REF = new JavaScriptResourceReference(
+	    ButtonsPanel.class,
+	    "queryResultPanel.js");
 
     private final IModel<CqlQueryResult> queryResultModel;
 
@@ -71,12 +85,48 @@ public abstract class QueryResultPanel extends Panel {
     @Inject
     protected WidgetFactory widgetFactory;
 
+    private boolean showResultsTableOnInit = false;
+    private long initPage = 0;
+
     public QueryResultPanel(String id, IModel<CqlQueryResult> model) {
+	this(id, model, Optional.empty());
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+	super.renderHead(response);
+	response.render(JavaScriptHeaderItem.forReference(COL_RESIZABLE));
+	response.render(JavaScriptHeaderItem.forReference(JS_REF));
+    }
+
+    public QueryResultPanel(String id, IModel<CqlQueryResult> model, Optional<RowDataProvider> rowDataProvider) {
 	super(id, model);
 	this.queryResultModel = model;
-	rowDataProvider = new RowDataProvider();
+	this.rowDataProvider = rowDataProvider.orElse(new RowDataProvider());
 	columnsModel = new ColumnsModel();
 	cqlResultTextModel = new CqlResultTextModel();
+    }
+
+    public QueryResultPanel createFromTemplate(Class<? extends QueryResultPanel> panelClass) {
+
+	try {
+	    Constructor<? extends QueryResultPanel> constructor = panelClass.getConstructor(
+		    String.class,
+		    IModel.class,
+		    Optional.class);
+	    QueryResultPanel resPan = constructor.newInstance(
+		    getId(),
+		    queryResultModel,
+		    Optional.of(rowDataProvider));
+	    resPan.showResultsTableOnInit = true;
+	    resPan.initPage = pager.getCurrentPage();
+	    return resPan;
+	}
+	catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException
+		| IllegalArgumentException | InvocationTargetException e) {
+	    throw new ServiceException("Cannot create QueryResultPanel instance: " + e.getMessage(), e);
+	}
+
     }
 
     @Override
@@ -89,6 +139,10 @@ public abstract class QueryResultPanel extends Panel {
 	IModel<CqlRowMetadata> metadataModel = PropertyModel.of(queryResultModel, "rowMetadata");
 	IPageableItems pagable = init(resultTable, columnsModel, rowDataProvider, metadataModel);
 	pager = createPager(pagable);
+
+	if (showResultsTableOnInit) {
+	    blendInResultsTable();
+	}
     }
 
     protected Component createRowKeyColumn(String wid, Row row, IModel<CqlRowMetadata> metadataModel) {
@@ -134,9 +188,13 @@ public abstract class QueryResultPanel extends Panel {
 
     private void showResultsTable() {
 	hideCqlResultText();
-	resultTable.setVisible(true);
+	blendInResultsTable();
 	pager.reset();
 	rowDataProvider.replaceModel();
+    }
+
+    private void blendInResultsTable() {
+	resultTable.setVisible(true);
 	columnsModel.updateResult(queryResultModel.getObject().rowMetadata);
     }
 
@@ -239,10 +297,11 @@ public abstract class QueryResultPanel extends Panel {
 		    }
 		});
 	resultTable.add(pager);
+	pager.setCurrentPage(initPage);
 	return pager;
     }
 
-    protected final class RowDataProvider extends IterableDataProvider<Row> {
+    public final class RowDataProvider extends IterableDataProvider<Row> {
 
 	protected RowDataProvider() {
 	    super(um.readPreferences().getPagerEditorItems());

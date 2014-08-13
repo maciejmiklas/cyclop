@@ -16,6 +16,8 @@
  */
 package org.cyclop.web.panels.queryeditor.horizontalresult;
 
+import java.util.Optional;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -38,6 +40,13 @@ public final class QueryResultHorizontalPanel extends QueryResultPanel {
 
     public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
 	super(id, model);
+    }
+
+    public QueryResultHorizontalPanel(
+	    String id,
+	    IModel<CqlQueryResult> model,
+	    Optional<RowDataProvider> rowDataProvider) {
+	super(id, model, rowDataProvider);
     }
 
     @Override

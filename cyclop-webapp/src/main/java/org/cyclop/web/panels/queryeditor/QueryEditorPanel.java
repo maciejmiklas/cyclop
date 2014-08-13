@@ -76,7 +76,7 @@ public class QueryEditorPanel extends Panel {
     private final IModel<CqlQueryResult> queryResultModel;
 
     private final Label queryErrorLabel;
-    private Panel queryResultPanel;
+    private QueryResultPanel queryResultPanel;
     private final WebMarkupContainer queryResultContainer;
 
     public QueryEditorPanel(String id, PageParameters params) {
@@ -119,8 +119,18 @@ public class QueryEditorPanel extends Panel {
 	queryResultPanel = orientation == 1 ? new QueryResultHorizontalPanel(
 		"queryResultPanel",
 		queryResultModel) : new QueryResultVerticalPanel("queryResultPanel", queryResultModel);
-	queryResultContainer.removeAll();
+
 	queryResultContainer.add(queryResultPanel);
+    }
+
+    private void replaceQueryResultPanel(AjaxRequestTarget target, int orientation) {
+	queryResultContainer.remove(queryResultPanel);
+
+	queryResultPanel = queryResultPanel
+		.createFromTemplate(orientation == 1 ? QueryResultHorizontalPanel.class
+			: QueryResultVerticalPanel.class);
+	queryResultContainer.add(queryResultPanel);
+	target.add(queryResultContainer);
     }
 
     private EditorPanel initQueryEditorPanel(PageParameters params) {
@@ -158,8 +168,7 @@ public class QueryEditorPanel extends Panel {
 
 	    @Override
 	    public void onClickResultOrientation(AjaxRequestTarget target, int orientation) {
-		initQueryResultPanel(orientation);
-		target.add(queryResultContainer);
+		replaceQueryResultPanel(target, orientation);
 	    }
 	};
 

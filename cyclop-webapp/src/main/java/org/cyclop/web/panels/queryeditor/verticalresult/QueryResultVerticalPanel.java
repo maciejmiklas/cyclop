@@ -19,6 +19,7 @@ package org.cyclop.web.panels.queryeditor.verticalresult;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -42,6 +43,14 @@ import com.datastax.driver.core.Row;
 public final class QueryResultVerticalPanel extends QueryResultPanel {
 
     protected final IModel<List<? extends Row>> rowsModel;
+
+    public QueryResultVerticalPanel(
+	    String id,
+	    IModel<CqlQueryResult> model,
+	    Optional<RowDataProvider> rowDataProvider) {
+	super(id, model, rowDataProvider);
+	rowsModel = Model.ofList(Collections.emptyList());
+    }
 
     public QueryResultVerticalPanel(String id, IModel<CqlQueryResult> model) {
 	super(id, model);
