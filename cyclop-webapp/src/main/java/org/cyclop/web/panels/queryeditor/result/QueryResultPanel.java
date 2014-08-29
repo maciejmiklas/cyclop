@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cyclop.web.panels.queryeditor;
-
-import static org.cyclop.web.resources.ScriptsRef.COL_RESIZABLE;
+package org.cyclop.web.panels.queryeditor.result;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -50,7 +48,6 @@ import org.cyclop.web.components.column.WidgetFactory;
 import org.cyclop.web.components.iterablegrid.IterableDataProvider;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.components.pagination.PagerConfigurator;
-import org.cyclop.web.panels.queryeditor.buttons.ButtonsPanel;
 
 import com.datastax.driver.core.Row;
 import com.google.common.collect.ImmutableList;
@@ -58,12 +55,12 @@ import com.google.common.collect.ImmutableList;
 /** @author Maciej Miklas */
 public abstract class QueryResultPanel extends Panel {
 
+    private static final JavaScriptResourceReference JS_REF = new JavaScriptResourceReference(
+	    QueryResultPanel.class,
+	    "queryResultPanel.js");
+
     protected final static String EMPTYVAL = "-";
     private final RowDataProvider rowDataProvider;
-
-    private static final JavaScriptResourceReference JS_REF = new JavaScriptResourceReference(
-	    ButtonsPanel.class,
-	    "queryResultPanel.js");
 
     private final IModel<CqlQueryResult> queryResultModel;
 
@@ -90,13 +87,6 @@ public abstract class QueryResultPanel extends Panel {
 
     public QueryResultPanel(String id, IModel<CqlQueryResult> model) {
 	this(id, model, Optional.empty());
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-	super.renderHead(response);
-	response.render(JavaScriptHeaderItem.forReference(COL_RESIZABLE));
-	response.render(JavaScriptHeaderItem.forReference(JS_REF));
     }
 
     public QueryResultPanel(String id, IModel<CqlQueryResult> model, Optional<RowDataProvider> rowDataProvider) {
@@ -289,6 +279,7 @@ public abstract class QueryResultPanel extends Panel {
 		    public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
 			UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
 			um.storePreferences(prefs);
+			appendTableResizeJs(target);
 		    }
 
 		    @Override
@@ -299,6 +290,14 @@ public abstract class QueryResultPanel extends Panel {
 	resultTable.add(pager);
 	pager.setCurrentPage(initPage);
 	return pager;
+    }
+
+    public static void appendTableResizeJs(AjaxRequestTarget target) {
+	target.appendJavaScript("resizeQueryResultTable();");
+    }
+
+    public static void initTableResizeJs(IHeaderResponse response) {
+	response.render(JavaScriptHeaderItem.forReference(JS_REF));
     }
 
     public final class RowDataProvider extends IterableDataProvider<Row> {

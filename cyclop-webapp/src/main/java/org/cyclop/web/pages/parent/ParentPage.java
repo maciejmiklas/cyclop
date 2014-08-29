@@ -17,7 +17,9 @@
 package org.cyclop.web.pages.parent;
 
 import static org.cyclop.web.resources.ScriptsRef.BOOTSTRAP;
+import static org.cyclop.web.resources.ScriptsRef.COL_RESIZABLE;
 import static org.cyclop.web.resources.ScriptsRef.COMMON;
+import static org.cyclop.web.resources.ScriptsRef.JQUERY_BROWSER;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_TOOLS;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_UI;
 
@@ -37,7 +39,10 @@ public abstract class ParentPage extends WebPage {
 	super.renderHead(response);
 	response.render(JavaScriptHeaderItem.forReference(JQUERY_UI));
 	response.render(JavaScriptHeaderItem.forReference(JQUERY_TOOLS));
+	response.render(JavaScriptHeaderItem.forReference(JQUERY_BROWSER));
 	response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
 	response.render(JavaScriptHeaderItem.forReference(COMMON));
+	response.render(JavaScriptHeaderItem.forReference(COL_RESIZABLE));
+
     }
 }

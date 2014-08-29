@@ -22,7 +22,7 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -43,8 +43,9 @@ import org.cyclop.web.panels.queryeditor.cqlhelp.CqlHelpPanel;
 import org.cyclop.web.panels.queryeditor.editor.CompletionChangeListener;
 import org.cyclop.web.panels.queryeditor.editor.EditorPanel;
 import org.cyclop.web.panels.queryeditor.export.QueryResultExport;
-import org.cyclop.web.panels.queryeditor.horizontalresult.QueryResultHorizontalPanel;
-import org.cyclop.web.panels.queryeditor.verticalresult.QueryResultVerticalPanel;
+import org.cyclop.web.panels.queryeditor.result.QueryResultPanel;
+import org.cyclop.web.panels.queryeditor.result.SwitchableQueryResultPanel;
+import org.cyclop.web.panels.queryeditor.result.SwitchableQueryResultPanel.ViewType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,8 +77,7 @@ public class QueryEditorPanel extends Panel {
     private final IModel<CqlQueryResult> queryResultModel;
 
     private final Label queryErrorLabel;
-    private QueryResultPanel queryResultPanel;
-    private final WebMarkupContainer queryResultContainer;
+    private final SwitchableQueryResultPanel queryResultPanel;
 
     public QueryEditorPanel(String id, PageParameters params) {
 	super(id);
@@ -92,11 +92,12 @@ public class QueryEditorPanel extends Panel {
 	cqlCompletionHintPanel.setVisible(preferences.isShowCqlCompletionHint());
 	add(cqlCompletionHintPanel);
 
-	queryResultContainer = new WebMarkupContainer("queryResultContainer");
-	queryResultContainer.setOutputMarkupPlaceholderTag(true);
-	add(queryResultContainer);
-
-	initQueryResultPanel(preferences.getResultOrientation());
+	queryResultPanel = new SwitchableQueryResultPanel(
+		"queryResultPanel",
+		queryResultModel,
+		ViewType.fromOrientation(preferences.getResultOrientation()));
+	add(queryResultPanel);
+	queryResultPanel.setOutputMarkupPlaceholderTag(true);
 
 	EditorPanel queryEditorPanel = initQueryEditorPanel(params);
 
@@ -107,30 +108,18 @@ public class QueryEditorPanel extends Panel {
 	queryErrorLabel = initQueryErrorLabel();
     }
 
+    @Override
+    public void renderHead(IHeaderResponse response) {
+	super.renderHead(response);
+	QueryResultPanel.initTableResizeJs(response);
+    }
+
     private Label initQueryErrorLabel() {
 	Label queryErrorLabel = new Label("queryError", Model.of(""));
 	add(queryErrorLabel);
 	queryErrorLabel.setVisible(false);
 	queryErrorLabel.setOutputMarkupPlaceholderTag(true);
 	return queryErrorLabel;
-    }
-
-    private void initQueryResultPanel(int orientation) {
-	queryResultPanel = orientation == 1 ? new QueryResultHorizontalPanel(
-		"queryResultPanel",
-		queryResultModel) : new QueryResultVerticalPanel("queryResultPanel", queryResultModel);
-
-	queryResultContainer.add(queryResultPanel);
-    }
-
-    private void replaceQueryResultPanel(AjaxRequestTarget target, int orientation) {
-	queryResultContainer.remove(queryResultPanel);
-
-	queryResultPanel = queryResultPanel
-		.createFromTemplate(orientation == 1 ? QueryResultHorizontalPanel.class
-			: QueryResultVerticalPanel.class);
-	queryResultContainer.add(queryResultPanel);
-	target.add(queryResultContainer);
     }
 
     private EditorPanel initQueryEditorPanel(PageParameters params) {
@@ -168,7 +157,7 @@ public class QueryEditorPanel extends Panel {
 
 	    @Override
 	    public void onClickResultOrientation(AjaxRequestTarget target, int orientation) {
-		replaceQueryResultPanel(target, orientation);
+		queryResultPanel.switchView(target, ViewType.fromOrientation(orientation));
 	    }
 	};
 
@@ -200,12 +189,12 @@ public class QueryEditorPanel extends Panel {
 	    lastQuery = query;
 	    queryResultModel.setObject(queryResult);
 	    queryResultPanel.modelChanged();
+	    queryResultPanel.setVisible(true);
 	    queryErrorLabel.setVisible(false);
-	    queryResultContainer.setVisible(true);
 	}
 	catch (Exception e) {
 	    queryErrorLabel.setVisible(true);
-	    queryResultContainer.setVisible(false);
+	    queryResultPanel.setVisible(false);
 	    queryErrorLabel.setDefaultModelObject(e.getMessage());
 	}
 	finally {
@@ -214,7 +203,8 @@ public class QueryEditorPanel extends Panel {
 	editorPanel.resetCompletion();
 
 	target.add(queryErrorLabel);
-	target.add(queryResultContainer);
+	target.add(queryResultPanel);
+	QueryResultPanel.appendTableResizeJs(target);
     }
 
     private final class CompletionChangeHelp implements CompletionChangeListener {

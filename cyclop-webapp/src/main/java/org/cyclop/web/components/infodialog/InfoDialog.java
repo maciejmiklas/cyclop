@@ -31,7 +31,7 @@ import org.cyclop.web.common.JsTextTemplate;
 /** @author Maciej Miklas */
 public class InfoDialog extends Panel {
 
-    private JsTextTemplate infoJs = new JsTextTemplate(new PackageTextTemplate(
+    private final static JsTextTemplate INFO_JS = new JsTextTemplate(new PackageTextTemplate(
 	    InfoDialog.class,
 	    "infoDialog.js"));
 
@@ -65,7 +65,7 @@ public class InfoDialog extends Panel {
 	Map<String, String> jsVariables = new HashMap<>();
 	jsVariables.put("infoDialogId", "#" + infoDialog.getMarkupId());
 	jsVariables.put("linkNameToDisable", "#" + linkNameToDisable);
-	String jsContent = infoJs.asString(jsVariables);
+	String jsContent = INFO_JS.asString(jsVariables);
 	target.appendJavaScript(jsContent);
     }
 

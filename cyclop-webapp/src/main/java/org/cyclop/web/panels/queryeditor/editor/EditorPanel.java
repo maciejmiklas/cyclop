@@ -16,8 +16,6 @@
  */
 package org.cyclop.web.panels.queryeditor.editor;
 
-import static org.cyclop.web.resources.ScriptsRef.SUGGEST;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -36,6 +34,7 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
@@ -45,6 +44,10 @@ import org.cyclop.web.common.JsFunctionBuilder;
 
 /** @author Maciej Miklas */
 public class EditorPanel extends Panel {
+
+    private static final JavaScriptResourceReference SUGGEST = new JavaScriptResourceReference(
+	    EditorPanel.class,
+	    "asuggest.js");
 
     private final String editorMarkupIdJq;
 
@@ -57,7 +60,7 @@ public class EditorPanel extends Panel {
 
     private final List<CompletionChangeListener> completionChangeListeners = new ArrayList<>();
 
-    private TextArea<String> editor;
+    private final TextArea<String> editor;
 
     public EditorPanel(String id, String editorContent) {
 	super(id);

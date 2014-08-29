@@ -25,17 +25,17 @@ public final class ScriptsRef {
 	    ScriptsRef.class,
 	    "js/jquery.a-tools.js");
 
-    public static final JavaScriptResourceReference SUGGEST = new JavaScriptResourceReference(
-	    ScriptsRef.class,
-	    "js/asuggest.js");
-
     public static final JavaScriptResourceReference COMMON = new JavaScriptResourceReference(
 	    ScriptsRef.class,
 	    "js/common.js");
-    
+
     public static final JavaScriptResourceReference COL_RESIZABLE = new JavaScriptResourceReference(
 	    ScriptsRef.class,
-	    "js/colResizable-1.3.min.js");
+	    "js/colResizable.js");
+
+    public static final JavaScriptResourceReference JQUERY_BROWSER = new JavaScriptResourceReference(
+	    ScriptsRef.class,
+	    "js/jquery.browser.js");
 
     public static final JavaScriptResourceReference BOOTSTRAP = new JavaScriptResourceReference(
 	    ScriptsRef.class,

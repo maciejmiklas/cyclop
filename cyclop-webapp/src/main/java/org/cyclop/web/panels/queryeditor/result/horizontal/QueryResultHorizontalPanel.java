@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cyclop.web.panels.queryeditor.horizontalresult;
+package org.cyclop.web.panels.queryeditor.result.horizontal;
 
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
 import org.cyclop.web.components.iterablegrid.IterableGridView;
-import org.cyclop.web.panels.queryeditor.QueryResultPanel;
+import org.cyclop.web.panels.queryeditor.result.QueryResultPanel;
 
 import com.datastax.driver.core.Row;
 

@@ -14,6 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-$(function () {
-	$(".cq-queryResultTable").colResizable();
+function resizeQueryResultTable() {
+	$(".cq-queryResultTable").colResizable({
+		liveDrag : true,
+		gripInnerHtml : "<div class='grip'></div>",
+		draggingClass : "dragging"
+	});
+}
+
+$(function() {
+	resizeQueryResultTable();
 });

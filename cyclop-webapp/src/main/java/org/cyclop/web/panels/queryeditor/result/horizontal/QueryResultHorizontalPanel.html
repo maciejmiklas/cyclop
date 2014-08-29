@@ -17,14 +17,27 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
-	<wicket:panel>
-		<div wicket:id="resultTable">
-			<table class="cq-queryResultTable table table-striped table-bordered table-hover">
-				<wicket:child/>
-			</table>
-		</div>
-		<div wicket:id="cqlResultText"></div>
-	</wicket:panel>
+	<table class="cq-queryResultTable table table-striped table-bordered table-hover">
+		<wicket:extend>
+			<wicket:container wicket:id="rowsPager"></wicket:container>
+			<thead>
+				<tr>
+					<th>Row Key</th>
+					<wicket:container wicket:id="columnList">
+						<th wicket:id="columnName"></th>
+					</wicket:container>
+				</tr>
+			</thead>
+			<tbody>
+				<tr wicket:id="rowsList">
+					<wicket:container wicket:id="cols">
+						<th wicket:id="rowKey"></th>
+						<td class="cq-columnValue" wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container>
+						</td>
+					</wicket:container>
+				</tr>
+			</tbody>
+		</wicket:extend>
+	</table>
 </body>
-
 </html>
