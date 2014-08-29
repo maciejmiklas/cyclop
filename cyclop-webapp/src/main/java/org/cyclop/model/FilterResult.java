@@ -19,10 +19,10 @@ package org.cyclop.model;
 import java.io.Serializable;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.sun.istack.NotNull;
 
 /** @author Maciej Miklas */
 public class FilterResult<T> implements Serializable {
