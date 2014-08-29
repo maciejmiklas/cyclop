@@ -76,7 +76,7 @@ public class MainPage extends ParentPage {
 	tabSupport.registerSaticTab(".cq-tabQueryEditor");
     }
 
-    private void initFavouritesTab() {
+    void initFavouritesTab() {
 	if (!AppConfig.get().favourites.enabled) {
 	    add(new Label("favouritesPanel", "Favourites are disabled in application-configuration"));
 	    return;

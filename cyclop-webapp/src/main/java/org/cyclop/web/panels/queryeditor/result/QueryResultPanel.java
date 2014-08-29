@@ -286,7 +286,13 @@ public abstract class QueryResultPanel extends Panel {
 		    public long getInitialItemsPerPage() {
 			return um.readPreferences().getPagerEditorItems();
 		    }
-		});
+		}) {
+	    @Override
+	    protected void onAjaxEvent(AjaxRequestTarget target) {
+		super.onAjaxEvent(target);
+		appendTableResizeJs(target);
+	    }
+	};
 	resultTable.add(pager);
 	pager.setCurrentPage(initPage);
 	return pager;
