@@ -197,7 +197,14 @@ ul.cq-cqlCollectionList {
 }
 
 .table th {
-	background-color: #310019 !important;
+	background-color: #1A0000 !important;
+	text-align:center; 
+    vertical-align:middle;
+}
+
+/* ???? */
+.cq-thHorizontal>tr>th {
+	width: 10px;
 }
 
 .cq-historyFilterCont {

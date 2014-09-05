@@ -50,7 +50,7 @@ public final class QueryResultHorizontalPanel extends QueryResultPanel {
     }
 
     @Override
-    protected IPageableItems init(
+    protected IPageableItems initTableHeader(
 	    WebMarkupContainer resultTable,
 	    ColumnsModel columnsModel,
 	    RowDataProvider rowDataProvider,

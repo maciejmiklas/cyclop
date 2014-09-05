@@ -5,6 +5,8 @@
 
 	<groupId>org.cyclop</groupId>
 	<artifactId>cyclop</artifactId>
+	
+	<!-- semantic versioning -->
 	<version>2.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<description>Cyclop is a web based editor for Cassandra Query Language</description>

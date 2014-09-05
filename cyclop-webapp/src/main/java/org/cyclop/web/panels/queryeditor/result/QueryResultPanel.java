@@ -127,7 +127,7 @@ public abstract class QueryResultPanel extends Panel {
 	resultTable = initResultsTable();
 
 	IModel<CqlRowMetadata> metadataModel = PropertyModel.of(queryResultModel, "rowMetadata");
-	IPageableItems pagable = init(resultTable, columnsModel, rowDataProvider, metadataModel);
+	IPageableItems pagable = initTableHeader(resultTable, columnsModel, rowDataProvider, metadataModel);
 	pager = createPager(pagable);
 
 	if (showResultsTableOnInit) {
@@ -159,7 +159,7 @@ public abstract class QueryResultPanel extends Panel {
 	}
     }
 
-    protected abstract IPageableItems init(
+    protected abstract IPageableItems initTableHeader(
 	    WebMarkupContainer resultTable,
 	    ColumnsModel columnsModel,
 	    RowDataProvider rowDataProvider,
