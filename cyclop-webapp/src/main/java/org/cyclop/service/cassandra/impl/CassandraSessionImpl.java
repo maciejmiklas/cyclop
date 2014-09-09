@@ -41,6 +41,7 @@ import com.datastax.driver.core.exceptions.InvalidQueryException;
 
 /** @author Maciej Miklas */
 
+// TODO is there any better way that synchronized keyword for session bean?
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -110,7 +111,7 @@ public class CassandraSessionImpl implements CassandraSession {
     }
 
     @Override
-    public Session getSession() {
+    public synchronized Session getSession() {
 	checkAuthenticated();
 	return session;
     }
@@ -141,7 +142,7 @@ public class CassandraSessionImpl implements CassandraSession {
     }
 
     @PreDestroy
-    public void cleanup() {
+    public synchronized void cleanup() {
 	close();
     }
 
