@@ -52,15 +52,16 @@ final class NavigableIterator<E> implements Iterator<E> {
 
 	public void prepare(int first, int count) {
 		if (first > limit) {
-			throw new IllegalArgumentException(
-					"Cannot skipp " + first + " elements, because iterator is limited to: " + limit);
+			throw new IllegalArgumentException("Cannot skipp " + first + " elements, because iterator is limited to: "
+					+ limit);
 		}
 		this.nextIndex = first;
 		this.count = count;
 	}
 
 	/**
-	 * @return true if there is more data to be cache for current setup done by {@link #prepare(int, int)}
+	 * @return true if there is more data to be cache for current setup done by
+	 *         {@link #prepare(int, int)}
 	 */
 	@Override
 	public boolean hasNext() {
@@ -87,7 +88,8 @@ final class NavigableIterator<E> implements Iterator<E> {
 				next = null;
 			} else {
 
-				// Call on NavigableIterator#prepare(...) could skipp some elements, this has to be reflected in
+				// Call on NavigableIterator#prepare(...) could skipp some
+				// elements, this has to be reflected in
 				// iterator position on #wrapper
 				iterateToIndex(nextIndex);
 

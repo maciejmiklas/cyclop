@@ -34,12 +34,14 @@ import java.util.Iterator;
 // ####################################################################################################################
 
 /**
- * A pageable DataView which breaks the data in the IDataProvider into a number of data-rows, depending on the column
- * readSize. A typical use case is to show items in a table with ie 3 columns where the table is filled left to right
+ * A pageable DataView which breaks the data in the IDataProvider into a number
+ * of data-rows, depending on the column readSize. A typical use case is to show
+ * items in a table with ie 3 columns where the table is filled left to right
  * top-down so that for each third item a new row is created.
  * <p/>
  * Example
  * <p/>
+ * 
  * <pre>
  *   &lt;tbody&gt;
  *     &lt;tr wicket:id=&quot;rows&quot; class&quot;even&quot;&gt;
@@ -52,6 +54,7 @@ import java.util.Iterator;
  * <p/>
  * and in java:
  * <p/>
+ * 
  * <pre>
  * add(new GridView(&quot;rows&quot;, dataProvider).setColumns(3));
  * </pre>
@@ -67,12 +70,11 @@ abstract class GridView<T> extends DataViewBase<T> {
 
 	private int rows = Integer.MAX_VALUE;
 
-
 	/**
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param dataProvider
-	 * 		data provider
+	 *            data provider
 	 */
 	public GridView(String id, IDataProvider<T> dataProvider) {
 		super(id, dataProvider);
@@ -87,7 +89,7 @@ abstract class GridView<T> extends DataViewBase<T> {
 	 * Sets number of columns
 	 *
 	 * @param cols
-	 * 		number of columns
+	 *            number of columns
 	 * @return this for chaining
 	 */
 	public GridView<T> setColumns(int cols) {
@@ -114,7 +116,7 @@ abstract class GridView<T> extends DataViewBase<T> {
 	 * Sets number of rows per page
 	 *
 	 * @param rows
-	 * 		number of rows
+	 *            number of rows
 	 * @return this for chaining
 	 */
 	public GridView<T> setRows(int rows) {
@@ -129,7 +131,8 @@ abstract class GridView<T> extends DataViewBase<T> {
 			this.rows = rows;
 		}
 
-		// TODO Post 1.2: Performance: Can this be moved into the this.rows != rows if
+		// TODO Post 1.2: Performance: Can this be moved into the this.rows !=
+		// rows if
 		// block for optimization?
 		updateItemsPerPage();
 		return this;
@@ -197,15 +200,17 @@ abstract class GridView<T> extends DataViewBase<T> {
 	}
 
 	/**
-	 * Add component to an Item for which there is no model anymore and is shown in a cell
+	 * Add component to an Item for which there is no model anymore and is shown
+	 * in a cell
 	 *
 	 * @param item
-	 * 		Item object
+	 *            Item object
 	 */
 	abstract protected void populateEmptyItem(Item<T> item);
 
 	/**
-	 * Create a Item which represents an empty cell (there is no model for it in the DataProvider)
+	 * Create a Item which represents an empty cell (there is no model for it in
+	 * the DataProvider)
 	 *
 	 * @param id
 	 * @param index
@@ -241,7 +246,7 @@ abstract class GridView<T> extends DataViewBase<T> {
 
 		/**
 		 * @param rows
-		 * 		iterator over child row views
+		 *            iterator over child row views
 		 */
 		public ItemsIterator(Iterator<MarkupContainer> rows) {
 			this.rows = Args.notNull(rows, "rows");

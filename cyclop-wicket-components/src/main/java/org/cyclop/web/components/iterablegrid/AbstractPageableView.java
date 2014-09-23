@@ -16,7 +16,6 @@
  */
 package org.cyclop.web.components.iterablegrid;
 
-
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.model.IModel;
@@ -34,15 +33,22 @@ import java.util.NoSuchElementException;
 // ####################################################################################################################
 
 /**
- * An abstract repeater view that provides paging functionality to its subclasses. <p> The view is populated by
- * overriding the <code>getItemModels(int offset, int count)</code> method and providing an iterator that returns models
- * for items in the current page. The AbstractPageableView builds the items that will be rendered by looping over the
- * models and calling the <code>newItem(String id, int index, IModel model)</code> to generate the child item container
- * followed by <code>populateItem(Component item)</code> to let the user populate the newly created item container with
- * with custom components. </p>
+ * An abstract repeater view that provides paging functionality to its
+ * subclasses.
+ * <p>
+ * The view is populated by overriding the
+ * <code>getItemModels(int offset, int count)</code> method and providing an
+ * iterator that returns models for items in the current page. The
+ * AbstractPageableView builds the items that will be rendered by looping over
+ * the models and calling the
+ * <code>newItem(String id, int index, IModel model)</code> to generate the
+ * child item container followed by <code>populateItem(Component item)</code> to
+ * let the user populate the newly created item container with with custom
+ * components.
+ * </p>
  *
  * @param <T>
- * 		Model object type
+ *            Model object type
  * @author Igor Vaynberg (ivaynberg)
  * @see org.apache.wicket.markup.repeater.RefreshingView
  * @see org.apache.wicket.markup.html.navigation.paging.IPageable
@@ -52,8 +58,8 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Keeps track of the number of items we show per page. The default is Integer.MAX_VALUE which effectively disables
-	 * paging.
+	 * Keeps track of the number of items we show per page. The default is
+	 * Integer.MAX_VALUE which effectively disables paging.
 	 */
 	private long itemsPerPage = Long.MAX_VALUE;
 
@@ -61,9 +67,10 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	private long currentPage;
 
 	/**
-	 * <code>cachedItemCount</code> is used to cache the call to <code>internalGetItemCount()</code> for the duration of
-	 * the request because that call can potentially be expensive ( a select count query ) and so we do not want to execute
-	 * it multiple times.
+	 * <code>cachedItemCount</code> is used to cache the call to
+	 * <code>internalGetItemCount()</code> for the duration of the request
+	 * because that call can potentially be expensive ( a select count query )
+	 * and so we do not want to execute it multiple times.
 	 */
 	private transient long cachedItemCount;
 
@@ -86,8 +93,8 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	}
 
 	/**
-	 * This method retrieves the subset of models for items in the current page and allows RefreshingView to generate
-	 * items.
+	 * This method retrieves the subset of models for items in the current page
+	 * and allows RefreshingView to generate items.
 	 *
 	 * @return iterator over models for items in the current page
 	 */
@@ -114,9 +121,9 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	 * Returns an iterator over models for items in the current page
 	 *
 	 * @param offset
-	 * 		index of first item in this page
+	 *            index of first item in this page
 	 * @param size
-	 * 		number of items that will be shown in the current page
+	 *            number of items that will be shown in the current page
 	 * @return an iterator over models for items in the current page
 	 */
 	protected abstract Iterator<IModel<T>> getItemModels(long offset, long size);
@@ -155,7 +162,8 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	}
 
 	/**
-	 * Sets the maximum number of items to show per page. The current page will also be set to zero
+	 * Sets the maximum number of items to show per page. The current page will
+	 * also be set to zero
 	 *
 	 * @param items
 	 */
@@ -195,7 +203,8 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	}
 
 	/**
-	 * Get the item count. Since dataprovider.readSize() could potentially be expensive, the item count is cached.
+	 * Get the item count. Since dataprovider.readSize() could potentially be
+	 * expensive, the item count is cached.
 	 *
 	 * @return the item count
 	 * @see #getRowCount()
@@ -218,8 +227,8 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 		long page = currentPage;
 
 		/*
-		 * trim current page if its out of bounds this can happen if items are added/deleted between
-		 * requests
+		 * trim current page if its out of bounds this can happen if items are
+		 * added/deleted between requests
 		 */
 
 		if (page > 0 && page >= getPageCount()) {
@@ -286,10 +295,11 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 	}
 
 	/**
-	 * Iterator adapter that makes sure only the specified max number of items can be accessed from its delegate.
+	 * Iterator adapter that makes sure only the specified max number of items
+	 * can be accessed from its delegate.
 	 *
 	 * @param <T>
-	 * 		Model object type
+	 *            Model object type
 	 */
 	private static class CappedIteratorAdapter<T> implements Iterator<IModel<T>> {
 		private final long max;
@@ -302,9 +312,9 @@ abstract class AbstractPageableView<T> extends RefreshingView<T> implements IPag
 		 * Constructor
 		 *
 		 * @param delegate
-		 * 		delegate iterator
+		 *            delegate iterator
 		 * @param max
-		 * 		maximum number of items that can be accessed.
+		 *            maximum number of items that can be accessed.
 		 */
 		public CappedIteratorAdapter(Iterator<IModel<T>> delegate, long max) {
 			this.delegate = delegate;

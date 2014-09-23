@@ -13,7 +13,8 @@ class PagingNavigationLinkCssModel extends PagingNavigationCssModel {
 	@Override
 	public boolean isEnabled() {
 
-		// goto-last-page for IterableGridView can be only enabled if all elements has been read from iterator
+		// goto-last-page for IterableGridView can be only enabled if all
+		// elements has been read from iterator
 		if (pageNumber == -1 && pageable instanceof IterableGridView) {
 			IterableGridView iterableGridView = (IterableGridView) pageable;
 			if (iterableGridView.hasMoreData()) {

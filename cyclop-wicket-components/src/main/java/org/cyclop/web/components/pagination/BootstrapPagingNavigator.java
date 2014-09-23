@@ -38,112 +38,97 @@ import org.apache.wicket.model.PropertyModel;
 /** @author Maciej Miklas */
 public class BootstrapPagingNavigator extends AjaxPagingNavigator {
 
-    private final static ImmutableList<Long> CHOICES = ImmutableList.of(
-	    1L,
-	    2L,
-	    5L,
-	    10L,
-	    20L,
-	    50L,
-	    100L,
-	    200L,
-	    500L,
-	    1000L);
+	private final static ImmutableList<Long> CHOICES = ImmutableList.of(1L, 2L, 5L, 10L, 20L, 50L, 100L, 200L, 500L,
+			1000L);
 
-    public BootstrapPagingNavigator(String id, IPageableItems pageable, PagerConfigurator configurator) {
-	super(id, pageable);
-	initPageSizeChoice(pageable, configurator);
-	if (configurator == null) {
-	    throw new IllegalArgumentException("Null coinfigurator");
+	public BootstrapPagingNavigator(String id, IPageableItems pageable, PagerConfigurator configurator) {
+		super(id, pageable);
+		initPageSizeChoice(pageable, configurator);
+		if (configurator == null) {
+			throw new IllegalArgumentException("Null coinfigurator");
+		}
+		pageable.setItemsPerPage(configurator.getInitialItemsPerPage());
 	}
-	pageable.setItemsPerPage(configurator.getInitialItemsPerPage());
-    }
 
-    public void reset() {
-	getPageable().setCurrentPage(0);
-    }
+	public void reset() {
+		getPageable().setCurrentPage(0);
+	}
 
-    public void setCurrentPage(long page) {
-	getPageable().setCurrentPage(page);
-    }
+	public void setCurrentPage(long page) {
+		getPageable().setCurrentPage(page);
+	}
 
-    public long getCurrentPage() {
-	return getPageable().getCurrentPage();
-    }
+	public long getCurrentPage() {
+		return getPageable().getCurrentPage();
+	}
 
-    // Link for: "1 | 2 | 3 | 4"
-    @Override
-    protected PagingNavigation newNavigation(String id, IPageable pageable, IPagingLabelProvider labelProvider) {
-	return new AjaxPagingNavigation(id, pageable, labelProvider) {
+	// Link for: "1 | 2 | 3 | 4"
+	@Override
+	protected PagingNavigation newNavigation(String id, IPageable pageable, IPagingLabelProvider labelProvider) {
+		return new AjaxPagingNavigation(id, pageable, labelProvider) {
 
-	    @Override
-	    protected LoopItem newItem(int iteration) {
-		LoopItem item = super.newItem(iteration);
+			@Override
+			protected LoopItem newItem(int iteration) {
+				LoopItem item = super.newItem(iteration);
+
+				// add css for enable/disable link
+				long pageIndex = getStartIndex() + iteration;
+				item.add(new AttributeModifier("class", new PagingNavigationCssModel(pageable, pageIndex, "active")));
+
+				return item;
+			}
+		};
+	}
+
+	// Link for: first,last
+	@Override
+	protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, int pageNumber) {
+		ExternalLink navCont = new ExternalLink(id + "Cont", (String) null);
 
 		// add css for enable/disable link
-		long pageIndex = getStartIndex() + iteration;
-		item.add(new AttributeModifier("class", new PagingNavigationCssModel(
-			pageable,
-			pageIndex,
-			"active")));
+		long pageIndex = pageable.getCurrentPage() + pageNumber;
+		navCont.add(new AttributeModifier("class", new PagingNavigationLinkCssModel(pageable, pageIndex, "disabled")));
 
-		return item;
-	    }
-	};
-    }
+		// change original wicket-link, so that it always generates href
+		navCont.add(new AjaxPagingNavigationLink(id, pageable, pageNumber) {
+			@Override
+			protected void disableLink(ComponentTag tag) {
+			}
+		});
+		return navCont;
+	}
 
-    // Link for: first,last
-    @Override
-    protected AbstractLink newPagingNavigationLink(String id, IPageable pageable, int pageNumber) {
-	ExternalLink navCont = new ExternalLink(id + "Cont", (String) null);
+	// Link for: prev,next
+	@Override
+	protected AbstractLink newPagingNavigationIncrementLink(String id, IPageable pageable, int increment) {
+		ExternalLink navCont = new ExternalLink(id + "Cont", (String) null);
 
-	// add css for enable/disable link
-	long pageIndex = pageable.getCurrentPage() + pageNumber;
-	navCont.add(new AttributeModifier("class", new PagingNavigationLinkCssModel(
-		pageable,
-		pageIndex,
-		"disabled")));
+		// add css for enable/disable link
+		long pageIndex = pageable.getCurrentPage() + increment;
+		navCont.add(new AttributeModifier("class", new NavigationIncrementLinkCssModel(pageable, pageIndex)));
 
-	// change original wicket-link, so that it always generates href
-	navCont.add(new AjaxPagingNavigationLink(id, pageable, pageNumber) {
-	    @Override
-	    protected void disableLink(ComponentTag tag) {
-	    }
-	});
-	return navCont;
-    }
+		// change original wicket-link, so that it always generates href
+		navCont.add(new AjaxPagingNavigationIncrementLink(id, pageable, increment) {
+			@Override
+			protected void disableLink(ComponentTag tag) {
+			}
+		});
+		return navCont;
+	}
 
-    // Link for: prev,next
-    @Override
-    protected AbstractLink newPagingNavigationIncrementLink(String id, IPageable pageable, int increment) {
-	ExternalLink navCont = new ExternalLink(id + "Cont", (String) null);
+	private void initPageSizeChoice(final IPageableItems pageable, final PagerConfigurator configurator) {
+		final DropDownChoice<Long> choice = new DropDownChoice<>("pageSize", CHOICES);
+		choice.setDefaultModel(new PropertyModel<Long>(pageable, "itemsPerPage"));
+		add(choice);
 
-	// add css for enable/disable link
-	long pageIndex = pageable.getCurrentPage() + increment;
-	navCont.add(new AttributeModifier("class", new NavigationIncrementLinkCssModel(pageable, pageIndex)));
+		choice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 
-	// change original wicket-link, so that it always generates href
-	navCont.add(new AjaxPagingNavigationIncrementLink(id, pageable, increment) {
-	    @Override
-	    protected void disableLink(ComponentTag tag) {
-	    }
-	});
-	return navCont;
-    }
-
-    private void initPageSizeChoice(final IPageableItems pageable, final PagerConfigurator configurator) {
-	final DropDownChoice<Long> choice = new DropDownChoice<>("pageSize", CHOICES);
-	choice.setDefaultModel(new PropertyModel<Long>(pageable, "itemsPerPage"));
-	add(choice);
-
-	choice.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-
-	    @Override
-	    protected void onUpdate(AjaxRequestTarget target) {
-		reset();
-		onAjaxEvent(target);
-		configurator.onItemsPerPageChanged(target, pageable.getItemsPerPage());
-	    }
-	});
-    }
+			@Override
+			protected void onUpdate(AjaxRequestTarget target) {
+				reset();
+				onAjaxEvent(target);
+				configurator.onItemsPerPageChanged(target, pageable.getItemsPerPage());
+			}
+		});
+	}
 }

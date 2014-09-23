@@ -33,7 +33,10 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 
 	private long currentPage = 0;
 
-	/** max amount of elements read from iterator. This prevents out of memory for large iterators. */
+	/**
+	 * max amount of elements read from iterator. This prevents out of memory
+	 * for large iterators.
+	 */
 	private int elementsLimit = Integer.MAX_VALUE;
 
 	protected IterableDataProvider(long itemsPerPage) {
@@ -55,12 +58,17 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 		if (lastPage > currentPage || !iterator.hasMoreData()) {
 			size = iterator.readSize();
 
-			// user is not on page 2 and click on next page - 3. Pager will show link for page 4, but not for
-			// page 5 - this will first happen when user clicks on page 4. In order to show link for only
-			// following page we have to calculate size right. This is the amount of elements up to
+			// user is not on page 2 and click on next page - 3. Pager will show
+			// link for page 4, but not for
+			// page 5 - this will first happen when user clicks on page 4. In
+			// order to show link for only
+			// following page we have to calculate size right. This is the
+			// amount of elements up to
 			// current page (3) plus element that can be displayed on next page.
-			// If the current page is last page, the link for next page mus not be shown - this is handled by
-			//  iterateToIndex(...) - it narrows calculated size to maximum allowed value.
+			// If the current page is last page, the link for next page mus not
+			// be shown - this is handled by
+			// iterateToIndex(...) - it narrows calculated size to maximum
+			// allowed value.
 		} else {
 			size = iterator.readSize() + itemsPerPage + 1;
 			size = iterator.iterateToIndex((int) size + 1) - 1;
@@ -101,8 +109,9 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 	protected abstract Iterator<E> iterator();
 
 	/**
-	 * Use this method to replace iterator cache with something else. This can be useful, it you need to display results of
-	 * iterators containing large data amounts (BigList, HugeCollections or BigCollections).
+	 * Use this method to replace iterator cache with something else. This can
+	 * be useful, it you need to display results of iterators containing large
+	 * data amounts (BigList, HugeCollections or BigCollections).
 	 */
 	protected List<E> createElementsCache() {
 		return new ArrayList<>();

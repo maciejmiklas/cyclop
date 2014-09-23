@@ -16,7 +16,6 @@
  */
 package org.cyclop.web.components.iterablegrid;
 
-
 import org.apache.wicket.markup.html.navigation.paging.IPageable;
 import org.apache.wicket.markup.repeater.RefreshingView;
 import org.apache.wicket.markup.repeater.data.DataView;
@@ -36,11 +35,12 @@ import java.util.Iterator;
 /**
  * Base class for data views.
  * <p/>
- * Data views aim to make it very simple to populate your repeating view from a database by utilizing {@link
- * IDataProvider} to act as an interface between the database and the dataview.
+ * Data views aim to make it very simple to populate your repeating view from a
+ * database by utilizing {@link IDataProvider} to act as an interface between
+ * the database and the dataview.
  *
  * @param <T>
- * 		Model object type
+ *            Model object type
  * @author Igor Vaynberg (ivaynberg)
  * @see IDataProvider
  * @see DataView
@@ -54,9 +54,9 @@ abstract class DataViewBase<T> extends AbstractPageableView<T> {
 
 	/**
 	 * @param id
-	 * 		component id
+	 *            component id
 	 * @param dataProvider
-	 * 		data provider
+	 *            data provider
 	 */
 	public DataViewBase(String id, IDataProvider<T> dataProvider) {
 		super(id);
@@ -87,10 +87,11 @@ abstract class DataViewBase<T> extends AbstractPageableView<T> {
 	}
 
 	/**
-	 * Helper class that converts input from IDataProvider to an iterator over view items.
+	 * Helper class that converts input from IDataProvider to an iterator over
+	 * view items.
 	 *
 	 * @param <T>
-	 * 		Model object type
+	 *            Model object type
 	 * @author Igor Vaynberg (ivaynberg)
 	 */
 	private static final class ModelIterator<T> implements Iterator<IModel<T>> {
@@ -106,11 +107,11 @@ abstract class DataViewBase<T> extends AbstractPageableView<T> {
 		 * Constructor
 		 *
 		 * @param dataProvider
-		 * 		data provider
+		 *            data provider
 		 * @param offset
-		 * 		index of first item
+		 *            index of first item
 		 * @param count
-		 * 		max number of items to return
+		 *            max number of items to return
 		 */
 		public ModelIterator(IDataProvider<T> dataProvider, long offset, long count) {
 			this.dataProvider = dataProvider;
