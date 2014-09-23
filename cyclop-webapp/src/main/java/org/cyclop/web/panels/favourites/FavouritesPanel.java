@@ -29,69 +29,69 @@ import org.cyclop.web.common.ImmutableListModel;
 /** @author Maciej Miklas */
 public class FavouritesPanel extends Panel implements AjaxReloadSupport {
 
-    private AbstractDefaultAjaxBehavior browserCallback;
+	private AbstractDefaultAjaxBehavior browserCallback;
 
-    private int count = 0;
+	private int count = 0;
 
-    public FavouritesPanel(String id) {
-	super(id);
-	WebMarkupContainer favouritesContainer = initFavouritesContainer();
-	initFavouritesTable(favouritesContainer);
-	browserCallback = initBrowserCallback(favouritesContainer);
+	public FavouritesPanel(String id) {
+		super(id);
+		WebMarkupContainer favouritesContainer = initFavouritesContainer();
+		initFavouritesTable(favouritesContainer);
+		browserCallback = initBrowserCallback(favouritesContainer);
 
-	favouritesContainer.add(new Label("counter", new IModel<String>() {
+		favouritesContainer.add(new Label("counter", new IModel<String>() {
 
-	    @Override
-	    public void detach() {
-	    }
+			@Override
+			public void detach() {
+			}
 
-	    @Override
-	    public String getObject() {
-		return count + "";
-	    }
+			@Override
+			public String getObject() {
+				return count + "";
+			}
 
-	    @Override
-	    public void setObject(String object) {
-	    }
-	}));
-    }
+			@Override
+			public void setObject(String object) {
+			}
+		}));
+	}
 
-    private ImmutableListModel<QueryEntry> initFavouritesTable(final WebMarkupContainer historyContainer) {
-	ImmutableListModel<QueryEntry> model = new ImmutableListModel<>();
-	return model;
-    }
+	private ImmutableListModel<QueryEntry> initFavouritesTable(final WebMarkupContainer historyContainer) {
+		ImmutableListModel<QueryEntry> model = new ImmutableListModel<>();
+		return model;
+	}
 
-    @Override
-    public String getReloadCallbackUrl() {
-	return browserCallback.getCallbackUrl().toString();
-    }
+	@Override
+	public String getReloadCallbackUrl() {
+		return browserCallback.getCallbackUrl().toString();
+	}
 
-    private WebMarkupContainer initFavouritesContainer() {
-	WebMarkupContainer historyContainer = new WebMarkupContainer("favouritesContainer");
-	historyContainer.setOutputMarkupPlaceholderTag(true);
-	historyContainer.setVisible(false);
-	add(historyContainer);
-	return historyContainer;
-    }
+	private WebMarkupContainer initFavouritesContainer() {
+		WebMarkupContainer historyContainer = new WebMarkupContainer("favouritesContainer");
+		historyContainer.setOutputMarkupPlaceholderTag(true);
+		historyContainer.setVisible(false);
+		add(historyContainer);
+		return historyContainer;
+	}
 
-    private AbstractDefaultAjaxBehavior initBrowserCallback(final WebMarkupContainer historyContainer) {
+	private AbstractDefaultAjaxBehavior initBrowserCallback(final WebMarkupContainer historyContainer) {
 
-	AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
+		AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
 
-	    @Override
-	    protected void respond(final AjaxRequestTarget target) {
-		count++;
-		historyContainer.setVisible(true);
-		target.add(historyContainer);
-	    }
-	};
-	add(browserCallback);
-	return browserCallback;
-    }
+			@Override
+			protected void respond(final AjaxRequestTarget target) {
+				count++;
+				historyContainer.setVisible(true);
+				target.add(historyContainer);
+			}
+		};
+		add(browserCallback);
+		return browserCallback;
+	}
 
-    @Override
-    public String getRemovableContentCssRef() {
-	return ".cq-favouritesContainer";
-    }
+	@Override
+	public String getRemovableContentCssRef() {
+		return ".cq-favouritesContainer";
+	}
 
 }

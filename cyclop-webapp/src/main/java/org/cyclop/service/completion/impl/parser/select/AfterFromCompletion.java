@@ -30,26 +30,26 @@ import com.google.common.base.Objects;
 @Named("select.AfterFromCompletion")
 class AfterFromCompletion extends AfterTableNameCompletionTemplate {
 
-    private CqlCompletion completion;
+	private CqlCompletion completion;
 
-    public AfterFromCompletion() {
-	super(CqlKeyword.Def.FROM.value);
-    }
+	public AfterFromCompletion() {
+		super(CqlKeyword.Def.FROM.value);
+	}
 
-    @PostConstruct
-    public void init() {
-	completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.WHERE.value)
-		.all(CqlKeyword.Def.ORDER_BY.value).all(CqlKeyword.Def.LIMIT.value)
-		.all(CqlKeyword.Def.ALLOW_FILTERING.value).build();
-    }
+	@PostConstruct
+	public void init() {
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.WHERE.value)
+				.all(CqlKeyword.Def.ORDER_BY.value).all(CqlKeyword.Def.LIMIT.value)
+				.all(CqlKeyword.Def.ALLOW_FILTERING.value).build();
+	}
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-	return completion;
-    }
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		return completion;
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("completion", completion).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("completion", completion).toString();
+	}
 }

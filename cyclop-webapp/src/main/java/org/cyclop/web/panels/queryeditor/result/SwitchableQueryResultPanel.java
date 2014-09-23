@@ -26,62 +26,61 @@ import org.cyclop.web.panels.queryeditor.result.vertical.QueryResultVerticalPane
 /** @author Maciej Miklas */
 public class SwitchableQueryResultPanel extends Panel {
 
-    private final IModel<CqlQueryResult> model;
-    private ViewType type;
-    private QueryResultPanel queryResultPanel;
+	private final IModel<CqlQueryResult> model;
+	private ViewType type;
+	private QueryResultPanel queryResultPanel;
 
-    public SwitchableQueryResultPanel(String id, IModel<CqlQueryResult> model, ViewType type) {
-	super(id);
-	this.model = model;
-	this.type = type;
-    }
+	public SwitchableQueryResultPanel(String id, IModel<CqlQueryResult> model, ViewType type) {
+		super(id);
+		this.model = model;
+		this.type = type;
+	}
 
-    @Override
-    protected void onInitialize() {
-	super.onInitialize();
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 
-	queryResultPanel = type == ViewType.HORIZONTAL ? new QueryResultHorizontalPanel(
-		"queryResultPanel",
-		model) : new QueryResultVerticalPanel("queryResultPanel", model);
+		queryResultPanel = type == ViewType.HORIZONTAL ? new QueryResultHorizontalPanel("queryResultPanel", model)
+				: new QueryResultVerticalPanel("queryResultPanel", model);
 
 		add(queryResultPanel);
-    }
-
-    public void switchView(AjaxRequestTarget target, ViewType type) {
-	this.type = type;
-
-	remove(queryResultPanel);
-
-	queryResultPanel = queryResultPanel
-		.createFromTemplate(type == ViewType.HORIZONTAL ? QueryResultHorizontalPanel.class
-			: QueryResultVerticalPanel.class);
-	add(queryResultPanel);
-
-	target.add(this);
-	QueryResultPanel.appendTableResizeJs(target);
-    }
-
-    @Override
-    protected void onModelChanged() {
-	super.onModelChanged();
-	queryResultPanel.modelChanged();
-    }
-
-    public static enum ViewType {
-	VERTICAL, HORIZONTAL;
-
-	public static ViewType fromOrientation(int orientation) {
-	    ViewType type = null;
-	    switch (orientation) {
-	    case 1:
-		type = HORIZONTAL;
-		break;
-	    default:
-	    case 2:
-		type = VERTICAL;
-		break;
-	    }
-	    return type;
 	}
-    }
+
+	public void switchView(AjaxRequestTarget target, ViewType type) {
+		this.type = type;
+
+		remove(queryResultPanel);
+
+		queryResultPanel = queryResultPanel
+				.createFromTemplate(type == ViewType.HORIZONTAL ? QueryResultHorizontalPanel.class
+						: QueryResultVerticalPanel.class);
+		add(queryResultPanel);
+
+		target.add(this);
+		QueryResultPanel.appendTableResizeJs(target);
+	}
+
+	@Override
+	protected void onModelChanged() {
+		super.onModelChanged();
+		queryResultPanel.modelChanged();
+	}
+
+	public static enum ViewType {
+		VERTICAL, HORIZONTAL;
+
+		public static ViewType fromOrientation(int orientation) {
+			ViewType type = null;
+			switch (orientation) {
+			case 1:
+				type = HORIZONTAL;
+				break;
+			default:
+			case 2:
+				type = VERTICAL;
+				break;
+			}
+			return type;
+		}
+	}
 }

@@ -34,14 +34,14 @@ import org.springframework.context.annotation.ScopedProxyMode;
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class QueryScopeImpl implements QueryScope {
 
-    private Optional<CqlKeySpace> activeKeySpace = Optional.empty();
+	private Optional<CqlKeySpace> activeKeySpace = Optional.empty();
 
-    public Optional<CqlKeySpace> getActiveKeySpace() {
-	return activeKeySpace;
-    }
+	public Optional<CqlKeySpace> getActiveKeySpace() {
+		return activeKeySpace;
+	}
 
-    protected void setActiveKeySpace(Optional<CqlKeySpace> activeSpace) {
-	Validate.notNull(activeSpace, "null activeSpace");
-	this.activeKeySpace = activeSpace;
-    }
+	protected void setActiveKeySpace(Optional<CqlKeySpace> activeSpace) {
+		Validate.notNull(activeSpace, "null activeSpace");
+		this.activeKeySpace = activeSpace;
+	}
 }

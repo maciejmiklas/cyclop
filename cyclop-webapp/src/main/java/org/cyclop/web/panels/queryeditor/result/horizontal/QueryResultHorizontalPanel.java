@@ -38,85 +38,69 @@ import com.datastax.driver.core.Row;
 /** @author Maciej Miklas */
 public final class QueryResultHorizontalPanel extends QueryResultPanel {
 
-    public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
-	super(id, model);
-    }
+	public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
+		super(id, model);
+	}
 
-    public QueryResultHorizontalPanel(
-	    String id,
-	    IModel<CqlQueryResult> model,
-	    Optional<RowDataProvider> rowDataProvider) {
-	super(id, model, rowDataProvider);
-    }
+	public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model, Optional<RowDataProvider> rowDataProvider) {
+		super(id, model, rowDataProvider);
+	}
 
-    @Override
-    protected IPageableItems initTableHeader(
-	    WebMarkupContainer resultTable,
-	    ColumnsModel columnsModel,
-	    RowDataProvider rowDataProvider,
-	    IModel<CqlRowMetadata> metadataModel) {
+	@Override
+	protected IPageableItems initTableHeader(WebMarkupContainer resultTable, ColumnsModel columnsModel,
+			RowDataProvider rowDataProvider, IModel<CqlRowMetadata> metadataModel) {
 
-	initColumnList(resultTable, columnsModel);
-	IPageableItems rowsList = initRowsList(resultTable, columnsModel, rowDataProvider, metadataModel);
-	return rowsList;
-    }
+		initColumnList(resultTable, columnsModel);
+		IPageableItems rowsList = initRowsList(resultTable, columnsModel, rowDataProvider, metadataModel);
+		return rowsList;
+	}
 
-    private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel) {
-	ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>(
-		"columnList",
-		columnsModel) {
-	    @Override
-	    protected void populateItem(ListItem<CqlExtendedColumnName> item) {
-		final CqlExtendedColumnName columnName = item.getModelObject();
-		Label columnNameLabel = new Label("columnName", columnName.part);
-		item.add(columnNameLabel);
-	    }
-	};
-	resultTable.add(columnList);
-    }
-
-    protected IPageableItems initRowsList(
-	    WebMarkupContainer resultTable,
-	    ColumnsModel columnsModel,
-	    RowDataProvider rowDataProvider,
-	    IModel<CqlRowMetadata> metadataModel) {
-
-	IterableGridView<Row> rowsList = new IterableGridView<Row>("rowsList", rowDataProvider) {
-
-	    @Override
-	    protected void populateEmptyItem(Item<Row> item) {
-	    }
-
-	    @Override
-	    protected void populateItem(Item<Row> item) {
-		Row row = item.getModel().getObject();
-		Component rowKey = createRowKeyColumn("rowKey", row, metadataModel);
-		item.add(rowKey);
-
-		ListView<CqlExtendedColumnName> columnValueList = new ListView<CqlExtendedColumnName>(
-			"columnValueList",
-			columnsModel) {
-
-		    @Override
-		    protected void populateItem(ListItem<CqlExtendedColumnName> item) {
-			CqlExtendedColumnName column = item.getModelObject();
-
-			CqlPartitionKey partitionKey = metadataModel.getObject().partitionKey;
-			Component component = widgetFactory.createForColumn(
-				row,
-				partitionKey,
-				column,
-				"columnValue");
-			item.add(component);
-			component.setRenderBodyOnly(true);
-		    }
+	private void initColumnList(WebMarkupContainer resultTable, ColumnsModel columnsModel) {
+		ListView<CqlExtendedColumnName> columnList = new ListView<CqlExtendedColumnName>("columnList", columnsModel) {
+			@Override
+			protected void populateItem(ListItem<CqlExtendedColumnName> item) {
+				final CqlExtendedColumnName columnName = item.getModelObject();
+				Label columnNameLabel = new Label("columnName", columnName.part);
+				item.add(columnNameLabel);
+			}
 		};
-		item.add(columnValueList);
-	    }
-	};
-	resultTable.add(rowsList);
-	rowsList.setColumns(1);
-	return rowsList;
-    }
+		resultTable.add(columnList);
+	}
+
+	protected IPageableItems initRowsList(WebMarkupContainer resultTable, ColumnsModel columnsModel,
+			RowDataProvider rowDataProvider, IModel<CqlRowMetadata> metadataModel) {
+
+		IterableGridView<Row> rowsList = new IterableGridView<Row>("rowsList", rowDataProvider) {
+
+			@Override
+			protected void populateEmptyItem(Item<Row> item) {
+			}
+
+			@Override
+			protected void populateItem(Item<Row> item) {
+				Row row = item.getModel().getObject();
+				Component rowKey = createRowKeyColumn("rowKey", row, metadataModel);
+				item.add(rowKey);
+
+				ListView<CqlExtendedColumnName> columnValueList = new ListView<CqlExtendedColumnName>(
+						"columnValueList", columnsModel) {
+
+					@Override
+					protected void populateItem(ListItem<CqlExtendedColumnName> item) {
+						CqlExtendedColumnName column = item.getModelObject();
+
+						CqlPartitionKey partitionKey = metadataModel.getObject().partitionKey;
+						Component component = widgetFactory.createForColumn(row, partitionKey, column, "columnValue");
+						item.add(component);
+						component.setRenderBodyOnly(true);
+					}
+				};
+				item.add(columnValueList);
+			}
+		};
+		resultTable.add(rowsList);
+		rowsList.setColumns(1);
+		return rowsList;
+	}
 
 }

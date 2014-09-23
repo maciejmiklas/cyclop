@@ -56,178 +56,172 @@ import com.google.common.collect.UnmodifiableIterator;
 /** @author Maciej Miklas */
 public class TestFavouritesService extends AbstractTestCase {
 
-    public static String CR = System.getProperty("line.separator");
+	public static String CR = System.getProperty("line.separator");
 
-    @Inject
-    private FavouritesServiceImpl favService;
+	@Inject
+	private FavouritesServiceImpl favService;
 
-    @Inject
-    private AsyncFileStore<QueryFavourites> asyncFileStore;
+	@Inject
+	private AsyncFileStore<QueryFavourites> asyncFileStore;
 
-    private UserIdentifier user;
+	private UserIdentifier user;
 
-    @Inject
-    private FileStorage storage;
+	@Inject
+	private FileStorage storage;
 
-    @Inject
-    private ThreadTestScope threadTestScope;
+	@Inject
+	private ThreadTestScope threadTestScope;
 
-    @After
-    public void cleanUp() {
-	super.cleanUp();
-	threadTestScope.setSingleThread(false);
-    }
-
-    @Before
-    public void setup() throws Exception {
-	super.setup();
-	asyncFileStore.flush();
-
-	QueryFavourites favs = favService.read();
-	assertNotNull(favs);
-	favs.clear();
-
-	assertEquals(0, favs.size());
-
-	user = favService.getUser();
-	assertNotNull(user);
-	assertNotNull(user.id);
-    }
-
-    @Test
-    public void testCreateReadAndClear() throws Exception {
-	QueryFavourites favourites = favService.read();
-
-	for (int i = 0; i < 20; i++) {
-	    assertTrue(favourites.addWithSizeCheck(new QueryEntry(new CqlQuery(
-		    CqlQueryType.SELECT,
-		    "select * from HistoryStarTest where id=" + i), 1000 + i)));
-
-	    assertTrue(favourites.addWithSizeCheck(new QueryEntry(new CqlQuery(
-		    CqlQueryType.SELECT,
-		    "select * from HistoryStarTest where id=" + i), 2000 + i)));
-
-	    favService.store(favourites);
-	    QueryFavourites favQueue = asyncFileStore.getFromWriteQueue(user).get();
-	    assertNotNull(favQueue);
-
-	    // should be the same instance
-	    assertSame(favourites, favQueue);
-	}
-	assertEquals(20, favourites.size());
-
-	assertFalse(storage.read(user, QueryFavourites.class).isPresent());
-
-	asyncFileStore.flush();
-	assertFalse(asyncFileStore.getFromWriteQueue(user).isPresent());
-
-	assertSame(favourites, favService.read());
-
-	QueryFavourites readFavs = storage.read(user, QueryFavourites.class).get();
-	assertNotSame(favourites, readFavs);
-
-	{
-	    for (int i = 0; i < 20; i++) {
-		QueryEntry entry = new QueryEntry(new CqlQuery(
-			CqlQueryType.SELECT,
-			"select * from HistoryStarTest where id=" + i), 4000 + i);
-		assertTrue(entry.toString(), readFavs.contains(entry));
-	    }
+	@After
+	public void cleanUp() {
+		super.cleanUp();
+		threadTestScope.setSingleThread(false);
 	}
 
-	{
-	    favourites.clear();
-	    assertEquals(0, favourites.size());
-	    favService.store(favourites);
-	    asyncFileStore.flush();
-	    assertEquals(0, storage.read(user, QueryFavourites.class).get().size());
+	@Before
+	public void setup() throws Exception {
+		super.setup();
+		asyncFileStore.flush();
+
+		QueryFavourites favs = favService.read();
+		assertNotNull(favs);
+		favs.clear();
+
+		assertEquals(0, favs.size());
+
+		user = favService.getUser();
+		assertNotNull(user);
+		assertNotNull(user.id);
 	}
 
-    }
+	@Test
+	public void testCreateReadAndClear() throws Exception {
+		QueryFavourites favourites = favService.read();
 
-    @Test
-    public void testMultiThreadForMultipleUsers() throws Exception {
-	threadTestScope.setSingleThread(false);
+		for (int i = 0; i < 20; i++) {
+			assertTrue(favourites.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.SELECT,
+					"select * from HistoryStarTest where id=" + i), 1000 + i)));
 
-	Set<QueryFavourites> favs = executeMultiThreadTest(300);
-	assertEquals(3, favs.size());
-    }
+			assertTrue(favourites.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.SELECT,
+					"select * from HistoryStarTest where id=" + i), 2000 + i)));
 
-    @Test
-    public void testMultiThreadForSingleUsers() throws Exception {
-	threadTestScope.setSingleThread(true);
+			favService.store(favourites);
+			QueryFavourites favQueue = asyncFileStore.getFromWriteQueue(user).get();
+			assertNotNull(favQueue);
 
-	Set<QueryFavourites> favs = executeMultiThreadTest(100);
-	assertEquals(1, favs.size());
-    }
+			// should be the same instance
+			assertSame(favourites, favQueue);
+		}
+		assertEquals(20, favourites.size());
 
-    public Set<QueryFavourites> executeMultiThreadTest(final int repeatInTest) throws Exception {
-	ExecutorService executor = Executors.newFixedThreadPool(3);
-	final Set<QueryFavourites> favs = Collections.synchronizedSet(new HashSet<QueryFavourites>());
+		assertFalse(storage.read(user, QueryFavourites.class).isPresent());
 
-	List<Callable<Void>> tasks = new ArrayList<>(3);
-	final AtomicInteger executedCount = new AtomicInteger(0);
-	for (int i = 0; i < 3; i++) {
-	    tasks.add(new Callable<Void>() {
+		asyncFileStore.flush();
+		assertFalse(asyncFileStore.getFromWriteQueue(user).isPresent());
 
-		@Override
-		public Void call() throws Exception {
-		    for (int i = 0; i < repeatInTest; i++) {
-			QueryFavourites readFavs = favService.read();
-			favs.add(readFavs);
+		assertSame(favourites, favService.read());
 
-			QueryEntry fav = new QueryEntry(new CqlQuery(
-				CqlQueryType.SELECT,
-				"select * from MyTable2 where id=" + UUID.randomUUID()), 5000 + i);
-			int retry = 0;
-			while (!readFavs.addWithSizeCheck(fav)) {
-			    retry++;
-			    assertTrue(retry < 100);
+		QueryFavourites readFavs = storage.read(user, QueryFavourites.class).get();
+		assertNotSame(favourites, readFavs);
 
-			    ImmutableSortedSet<QueryEntry> favsSorted = readFavs.copyAsSortedSet();
-			    UnmodifiableIterator<QueryEntry> iterator = favsSorted.iterator();
-			    QueryEntry toRemove = null;
-			    for (int a = 0; a < favsSorted.size(); a++) {
-				toRemove = iterator.next();
-			    }
-			    readFavs.remove(toRemove);
+		{
+			for (int i = 0; i < 20; i++) {
+				QueryEntry entry = new QueryEntry(new CqlQuery(CqlQueryType.SELECT,
+						"select * from HistoryStarTest where id=" + i), 4000 + i);
+				assertTrue(entry.toString(), readFavs.contains(entry));
 			}
-
-			verifyHistEntry(readFavs, fav);
-
-			favService.store(readFavs);
-			if (i % 20 == 0) {
-			    asyncFileStore.flush();
-			}
-
-			QueryFavourites readHist = favService.read();
-			verifyHistEntry(readHist, fav);
-
-			executedCount.incrementAndGet();
-			assertEquals(0, storage.getLockRetryCount());
-		    }
-		    return null;
 		}
 
-		void verifyHistEntry(QueryFavourites favs, QueryEntry fav) {
-		    assertNotNull(favs);
-		    assertTrue(
-			    "Starred (" + executedCount + "):" + fav + " not found in: " + favs,
-			    favs.contains(fav));
-
+		{
+			favourites.clear();
+			assertEquals(0, favourites.size());
+			favService.store(favourites);
+			asyncFileStore.flush();
+			assertEquals(0, storage.read(user, QueryFavourites.class).get().size());
 		}
-	    });
+
 	}
 
-	List<Future<Void>> results = executor.invokeAll(tasks);
-	executor.shutdown();
-	executor.awaitTermination(5, TimeUnit.MINUTES);
+	@Test
+	public void testMultiThreadForMultipleUsers() throws Exception {
+		threadTestScope.setSingleThread(false);
 
-	for (Future<Void> result : results) {
-	    result.get();
+		Set<QueryFavourites> favs = executeMultiThreadTest(300);
+		assertEquals(3, favs.size());
 	}
-	assertEquals(3 * repeatInTest, executedCount.get());
-	return favs;
-    }
+
+	@Test
+	public void testMultiThreadForSingleUsers() throws Exception {
+		threadTestScope.setSingleThread(true);
+
+		Set<QueryFavourites> favs = executeMultiThreadTest(100);
+		assertEquals(1, favs.size());
+	}
+
+	public Set<QueryFavourites> executeMultiThreadTest(final int repeatInTest) throws Exception {
+		ExecutorService executor = Executors.newFixedThreadPool(3);
+		final Set<QueryFavourites> favs = Collections.synchronizedSet(new HashSet<QueryFavourites>());
+
+		List<Callable<Void>> tasks = new ArrayList<>(3);
+		final AtomicInteger executedCount = new AtomicInteger(0);
+		for (int i = 0; i < 3; i++) {
+			tasks.add(new Callable<Void>() {
+
+				@Override
+				public Void call() throws Exception {
+					for (int i = 0; i < repeatInTest; i++) {
+						QueryFavourites readFavs = favService.read();
+						favs.add(readFavs);
+
+						QueryEntry fav = new QueryEntry(new CqlQuery(CqlQueryType.SELECT,
+								"select * from MyTable2 where id=" + UUID.randomUUID()), 5000 + i);
+						int retry = 0;
+						while (!readFavs.addWithSizeCheck(fav)) {
+							retry++;
+							assertTrue(retry < 100);
+
+							ImmutableSortedSet<QueryEntry> favsSorted = readFavs.copyAsSortedSet();
+							UnmodifiableIterator<QueryEntry> iterator = favsSorted.iterator();
+							QueryEntry toRemove = null;
+							for (int a = 0; a < favsSorted.size(); a++) {
+								toRemove = iterator.next();
+							}
+							readFavs.remove(toRemove);
+						}
+
+						verifyHistEntry(readFavs, fav);
+
+						favService.store(readFavs);
+						if (i % 20 == 0) {
+							asyncFileStore.flush();
+						}
+
+						QueryFavourites readHist = favService.read();
+						verifyHistEntry(readHist, fav);
+
+						executedCount.incrementAndGet();
+						assertEquals(0, storage.getLockRetryCount());
+					}
+					return null;
+				}
+
+				void verifyHistEntry(QueryFavourites favs, QueryEntry fav) {
+					assertNotNull(favs);
+					assertTrue("Starred (" + executedCount + "):" + fav + " not found in: " + favs, favs.contains(fav));
+
+				}
+			});
+		}
+
+		List<Future<Void>> results = executor.invokeAll(tasks);
+		executor.shutdown();
+		executor.awaitTermination(5, TimeUnit.MINUTES);
+
+		for (Future<Void> result : results) {
+			result.get();
+		}
+		assertEquals(3 * repeatInTest, executedCount.get());
+		return favs;
+	}
 
 }

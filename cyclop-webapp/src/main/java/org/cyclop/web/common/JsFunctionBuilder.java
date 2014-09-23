@@ -28,67 +28,67 @@ import org.cyclop.web.common.JsUtils.ObjPrinter;
 
 public final class JsFunctionBuilder {
 
-    private final StringBuilder buf;
+	private final StringBuilder buf;
 
-    private boolean firstPar = true;
+	private boolean firstPar = true;
 
-    private boolean build = false;
+	private boolean build = false;
 
-    public static JsFunctionBuilder function(String functionName) {
-	Validate.notNull(functionName, "Null functionName");
-	return new JsFunctionBuilder(functionName);
-    }
-
-    private JsFunctionBuilder(String functionName) {
-	Validate.notNull(functionName, "Null functionName");
-	buf = new StringBuilder(functionName);
-	buf.append("(");
-    }
-
-    public JsFunctionBuilder param(String param) {
-	Validate.notNull(param, "Null param");
-	sep();
-	buf.append(escape(param));
-	return this;
-    }
-
-    public JsFunctionBuilder array(Collection<? extends DisplaySupport> col) {
-	Validate.notNull(col, "Null col");
-	sep();
-	buf.append(escapeArray(col));
-	return this;
-    }
-
-    public JsFunctionBuilder arrayStr(Collection<String> col) {
-	Validate.notNull(col, "Null col");
-	sep();
-	buf.append(escapeStrArray(col));
-	return this;
-    }
-
-    public <T> JsFunctionBuilder array(Collection<T> col, ObjPrinter<T> printer) {
-	Validate.notNull(col, "Null col");
-	Validate.notNull(printer, "Null printer");
-	sep();
-	buf.append(escapeArray(col, printer));
-	return this;
-    }
-
-    public String build() {
-	if (build) {
-	    throw new IllegalArgumentException("JsFunctionBuilder.build() can be called only once");
+	public static JsFunctionBuilder function(String functionName) {
+		Validate.notNull(functionName, "Null functionName");
+		return new JsFunctionBuilder(functionName);
 	}
-	build = true;
-	buf.append(")");
-	return buf.toString();
-    }
 
-    private void sep() {
-	if (firstPar) {
-	    firstPar = false;
-	    return;
+	private JsFunctionBuilder(String functionName) {
+		Validate.notNull(functionName, "Null functionName");
+		buf = new StringBuilder(functionName);
+		buf.append("(");
 	}
-	buf.append(",");
-    }
+
+	public JsFunctionBuilder param(String param) {
+		Validate.notNull(param, "Null param");
+		sep();
+		buf.append(escape(param));
+		return this;
+	}
+
+	public JsFunctionBuilder array(Collection<? extends DisplaySupport> col) {
+		Validate.notNull(col, "Null col");
+		sep();
+		buf.append(escapeArray(col));
+		return this;
+	}
+
+	public JsFunctionBuilder arrayStr(Collection<String> col) {
+		Validate.notNull(col, "Null col");
+		sep();
+		buf.append(escapeStrArray(col));
+		return this;
+	}
+
+	public <T> JsFunctionBuilder array(Collection<T> col, ObjPrinter<T> printer) {
+		Validate.notNull(col, "Null col");
+		Validate.notNull(printer, "Null printer");
+		sep();
+		buf.append(escapeArray(col, printer));
+		return this;
+	}
+
+	public String build() {
+		if (build) {
+			throw new IllegalArgumentException("JsFunctionBuilder.build() can be called only once");
+		}
+		build = true;
+		buf.append(")");
+		return buf.toString();
+	}
+
+	private void sep() {
+		if (firstPar) {
+			firstPar = false;
+			return;
+		}
+		buf.append(",");
+	}
 
 }

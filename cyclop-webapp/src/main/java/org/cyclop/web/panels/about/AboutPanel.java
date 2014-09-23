@@ -26,63 +26,63 @@ import org.cyclop.web.common.AjaxReloadSupport;
 
 public class AboutPanel extends Panel implements AjaxReloadSupport {
 
-    private AbstractDefaultAjaxBehavior browserCallback;
+	private AbstractDefaultAjaxBehavior browserCallback;
 
-    public AboutPanel(String id) {
-	super(id);
-	WebMarkupContainer aboutContainer = initAboutContainer();
-	initContent(aboutContainer);
-	browserCallback = initBrowserCallback(aboutContainer);
-    }
+	public AboutPanel(String id) {
+		super(id);
+		WebMarkupContainer aboutContainer = initAboutContainer();
+		initContent(aboutContainer);
+		browserCallback = initBrowserCallback(aboutContainer);
+	}
 
-    private void initContent(final WebMarkupContainer aboutContainer) {
-	aboutContainer.add(new Label("version", new IModel<String>() {
+	private void initContent(final WebMarkupContainer aboutContainer) {
+		aboutContainer.add(new Label("version", new IModel<String>() {
 
-	    @Override
-	    public void detach() {
-	    }
+			@Override
+			public void detach() {
+			}
 
-	    @Override
-	    public String getObject() {
-		return "1.4.0";
-	    }
+			@Override
+			public String getObject() {
+				return "1.4.0";
+			}
 
-	    @Override
-	    public void setObject(String object) {
-	    }
-	}));
-    }
+			@Override
+			public void setObject(String object) {
+			}
+		}));
+	}
 
-    @Override
-    public String getReloadCallbackUrl() {
-	return browserCallback.getCallbackUrl().toString();
-    }
+	@Override
+	public String getReloadCallbackUrl() {
+		return browserCallback.getCallbackUrl().toString();
+	}
 
-    private WebMarkupContainer initAboutContainer() {
-	WebMarkupContainer historyContainer = new WebMarkupContainer("aboutContainer");
-	historyContainer.setOutputMarkupPlaceholderTag(true);
-	historyContainer.setVisible(false);
-	add(historyContainer);
-	return historyContainer;
-    }
+	private WebMarkupContainer initAboutContainer() {
+		WebMarkupContainer historyContainer = new WebMarkupContainer("aboutContainer");
+		historyContainer.setOutputMarkupPlaceholderTag(true);
+		historyContainer.setVisible(false);
+		add(historyContainer);
+		return historyContainer;
+	}
 
-    private AbstractDefaultAjaxBehavior initBrowserCallback(final WebMarkupContainer aboutContainer) {
+	private AbstractDefaultAjaxBehavior initBrowserCallback(final WebMarkupContainer aboutContainer) {
 
-	AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
+		AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
 
-	    @Override
-	    protected void respond(final AjaxRequestTarget target) {
-		aboutContainer.setVisible(true);
-		target.add(aboutContainer);
-	    }
-	};
-	add(browserCallback);
-	return browserCallback;
-    }
+			@Override
+			protected void respond(final AjaxRequestTarget target) {
+				aboutContainer.setVisible(true);
+				target.add(aboutContainer);
+			}
+		};
+		add(browserCallback);
+		return browserCallback;
+	}
 
-    @Override
-    public String getRemovableContentCssRef() {
-	return ".cq-aboutContainer";
-    }
+	@Override
+	public String getRemovableContentCssRef() {
+		return ".cq-aboutContainer";
+	}
 
 }

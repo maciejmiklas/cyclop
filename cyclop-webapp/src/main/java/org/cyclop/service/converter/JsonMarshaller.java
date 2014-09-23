@@ -36,75 +36,62 @@ import org.slf4j.LoggerFactory;
 /** @author Maciej Miklas */
 @Named
 public class JsonMarshaller {
-    private final static Logger LOG = LoggerFactory.getLogger(JsonMarshaller.class);
+	private final static Logger LOG = LoggerFactory.getLogger(JsonMarshaller.class);
 
-    private final ThreadLocal<ObjectMapper> objectMapper;
+	private final ThreadLocal<ObjectMapper> objectMapper;
 
-    public JsonMarshaller() {
+	public JsonMarshaller() {
 
-	objectMapper = new ThreadLocal<ObjectMapper>() {
-	    @Override
-	    protected ObjectMapper initialValue() {
+		objectMapper = new ThreadLocal<ObjectMapper>() {
+			@Override
+			protected ObjectMapper initialValue() {
 
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		AnnotationIntrospector introspector = new AnnotationIntrospector.Pair(
-			new JaxbAnnotationIntrospector(),
-			new JacksonAnnotationIntrospector());
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				AnnotationIntrospector introspector = new AnnotationIntrospector.Pair(new JaxbAnnotationIntrospector(),
+						new JacksonAnnotationIntrospector());
 
-		SerializationConfig sc = mapper.getSerializationConfig().withSerializationInclusion(
-			JsonSerialize.Inclusion.NON_NULL);
-		mapper.setSerializationConfig(sc.withAnnotationIntrospector(introspector));
-		mapper.setDeserializationConfig(mapper.getDeserializationConfig().withAnnotationIntrospector(
-			introspector));
-		return mapper;
-	    }
-	};
-    }
-
-    public @NotNull <T> T unmarshal(@NotNull Class<T> clazz, @NotNull String input) {
-
-	T unmarshalObj;
-	try {
-	    unmarshalObj = objectMapper.get().readValue(input, clazz);
-	}
-	catch (IOException e) {
-	    throw new ServiceException("Got IOException during json unmarshalling: "
-		    + e.getMessage()
-		    + " - input:'"
-		    + input
-		    + "'", e);
-	}
-	LOG.trace("Unmarshaled JSON from {} to {}", input, unmarshalObj);
-	return unmarshalObj;
-    }
-
-    public @NotNull String marshal(@NotNull Object obj) {
-	byte[] marshalBytes;
-	try {
-	    marshalBytes = objectMapper.get().writeValueAsBytes(obj);
-	}
-	catch (IOException e) {
-	    throw new ServiceException("Gout IOException during json marshalling: "
-		    + e.getMessage()
-		    + " - input:'"
-		    + obj
-		    + "'", e);
+				SerializationConfig sc = mapper.getSerializationConfig().withSerializationInclusion(
+						JsonSerialize.Inclusion.NON_NULL);
+				mapper.setSerializationConfig(sc.withAnnotationIntrospector(introspector));
+				mapper.setDeserializationConfig(mapper.getDeserializationConfig().withAnnotationIntrospector(
+						introspector));
+				return mapper;
+			}
+		};
 	}
 
-	try {
-	    String marshal = new String(marshalBytes, "UTF-8");
-	    LOG.trace("Marshalled JSON from {} to {}", obj, marshal);
-	    return marshal;
-	}
-	catch (UnsupportedEncodingException e) {
-	    throw new ServiceException("UnsupportedEncodingException marshalling Json stream: "
-		    + e.getMessage()
-		    + " - input:'"
-		    + obj
-		    + "'", e);
+	public @NotNull <T> T unmarshal(@NotNull Class<T> clazz, @NotNull String input) {
+
+		T unmarshalObj;
+		try {
+			unmarshalObj = objectMapper.get().readValue(input, clazz);
+		} catch (IOException e) {
+			throw new ServiceException("Got IOException during json unmarshalling: " + e.getMessage() + " - input:'"
+					+ input + "'", e);
+		}
+		LOG.trace("Unmarshaled JSON from {} to {}", input, unmarshalObj);
+		return unmarshalObj;
 	}
 
-    }
+	public @NotNull String marshal(@NotNull Object obj) {
+		byte[] marshalBytes;
+		try {
+			marshalBytes = objectMapper.get().writeValueAsBytes(obj);
+		} catch (IOException e) {
+			throw new ServiceException("Gout IOException during json marshalling: " + e.getMessage() + " - input:'"
+					+ obj + "'", e);
+		}
+
+		try {
+			String marshal = new String(marshalBytes, "UTF-8");
+			LOG.trace("Marshalled JSON from {} to {}", obj, marshal);
+			return marshal;
+		} catch (UnsupportedEncodingException e) {
+			throw new ServiceException("UnsupportedEncodingException marshalling Json stream: " + e.getMessage()
+					+ " - input:'" + obj + "'", e);
+		}
+
+	}
 
 }

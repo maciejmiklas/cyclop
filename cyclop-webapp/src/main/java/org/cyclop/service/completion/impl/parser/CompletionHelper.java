@@ -36,54 +36,53 @@ import com.google.common.collect.ImmutableSortedSet;
 @Named
 public final class CompletionHelper {
 
-    @Inject
-    private QueryService queryService;
+	@Inject
+	private QueryService queryService;
 
-    @Inject
-    private QueryScope queryScope;
+	@Inject
+	private QueryScope queryScope;
 
-    public CqlCompletion.Builder computeTableNameCompletion(CqlQuery query, CqlKeyword... kw) {
-	CqlCompletion.Builder completion = computeTableNameCompletionWithKeyspaceInQuery(query, kw).orElse(
-		computeTableNameCompletionWithoutKeyspaceInQuery());
-	return completion;
-    }
-
-    private Optional<CqlCompletion.Builder> computeTableNameCompletionWithKeyspaceInQuery(
-	    CqlQuery query,
-	    CqlKeyword... kw) {
-	Optional<CqlKeySpace> keySpace = QueryHelper.extractKeyspace(query, kw);
-	if (!keySpace.isPresent()) {
-	    return Optional.empty();
-	}
-	ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(keySpace);
-	if (tables.isEmpty()) {
-	    return Optional.empty();
+	public CqlCompletion.Builder computeTableNameCompletion(CqlQuery query, CqlKeyword... kw) {
+		CqlCompletion.Builder completion = computeTableNameCompletionWithKeyspaceInQuery(query, kw).orElse(
+				computeTableNameCompletionWithoutKeyspaceInQuery());
+		return completion;
 	}
 
-	CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
-	builder.all(tables);
+	private Optional<CqlCompletion.Builder> computeTableNameCompletionWithKeyspaceInQuery(CqlQuery query,
+			CqlKeyword... kw) {
+		Optional<CqlKeySpace> keySpace = QueryHelper.extractKeyspace(query, kw);
+		if (!keySpace.isPresent()) {
+			return Optional.empty();
+		}
+		ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(keySpace);
+		if (tables.isEmpty()) {
+			return Optional.empty();
+		}
 
-	for (CqlTable ta : tables) {
-	    builder.full(new CqlTable(keySpace.get().part, ta.part));
+		CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
+		builder.all(tables);
+
+		for (CqlTable ta : tables) {
+			builder.full(new CqlTable(keySpace.get().part, ta.part));
+		}
+
+		return Optional.of(builder);
 	}
 
-	return Optional.of(builder);
-    }
+	private CqlCompletion.Builder computeTableNameCompletionWithoutKeyspaceInQuery() {
+		CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
 
-    private CqlCompletion.Builder computeTableNameCompletionWithoutKeyspaceInQuery() {
-	CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
+		Optional<CqlKeySpace> activeKeySpace = queryScope.getActiveKeySpace();
+		ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(activeKeySpace);
+		builder.all(tables);
 
-	Optional<CqlKeySpace> activeKeySpace = queryScope.getActiveKeySpace();
-	ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(activeKeySpace);
-	builder.all(tables);
+		ImmutableSortedSet<CqlKeySpace> keyspaces = queryService.findAllKeySpaces();
+		for (CqlKeySpace ks : keyspaces) {
+			builder.min(ks);
+			builder.full(new CqlKeySpace(ks.partLc + "."));
+		}
 
-	ImmutableSortedSet<CqlKeySpace> keyspaces = queryService.findAllKeySpaces();
-	for (CqlKeySpace ks : keyspaces) {
-	    builder.min(ks);
-	    builder.full(new CqlKeySpace(ks.partLc + "."));
+		return builder;
 	}
-
-	return builder;
-    }
 
 }

@@ -23,11 +23,11 @@ import com.datastax.driver.core.Session;
 /** @author Maciej Miklas */
 public interface CassandraSession extends AutoCloseable {
 
-    void authenticate(@NotNull String userName, @NotNull String password);
+	void authenticate(@NotNull String userName, @NotNull String password);
 
-    void close();
+	void close();
 
-    boolean isOpen();
+	boolean isOpen();
 
-    Session getSession();
+	Session getSession();
 }

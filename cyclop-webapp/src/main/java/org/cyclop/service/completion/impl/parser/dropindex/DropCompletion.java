@@ -38,44 +38,43 @@ import com.google.common.collect.ImmutableSortedSet;
 @Named("dropindex.DropCompletion")
 class DropCompletion implements OffsetBasedCompletion {
 
-    private CqlCompletion.BuilderTemplate completion;
+	private CqlCompletion.BuilderTemplate completion;
 
-    @Inject
-    private QueryService queryService;
+	@Inject
+	private QueryService queryService;
 
-    @Inject
-    private QueryScope queryScope;
+	@Inject
+	private QueryScope queryScope;
 
-    @PostConstruct
-    public void init() {
-	completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.IF_NOT_EXISTS.value).template();
-    }
-
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-	Optional<CqlKeySpace> activeKeySpace = queryScope.getActiveKeySpace();
-	ImmutableSortedSet<CqlIndex> allIndexesForActiveKeySpace = queryService
-		.findAllIndexes(activeKeySpace);
-	return completion.naturalOrder().all(allIndexesForActiveKeySpace).build();
-    }
-
-    @Override
-    public int canApply(CqlQuery query, int queryPosition) {
-	String cqlLc = query.part;
-	int cqlLcLen = query.partLc.length();
-
-	int indCreate = cqlLc.indexOf(CqlKeyword.Def.DROP_INDEX.value + " ", queryPosition);
-	if (indCreate + 1 >= cqlLcLen) {
-	    return -1;
+	@PostConstruct
+	public void init() {
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.IF_NOT_EXISTS.value).template();
 	}
 
-	int indLastSpace = cqlLc.indexOf(' ', indCreate + 1);
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		Optional<CqlKeySpace> activeKeySpace = queryScope.getActiveKeySpace();
+		ImmutableSortedSet<CqlIndex> allIndexesForActiveKeySpace = queryService.findAllIndexes(activeKeySpace);
+		return completion.naturalOrder().all(allIndexesForActiveKeySpace).build();
+	}
 
-	return indLastSpace;
-    }
+	@Override
+	public int canApply(CqlQuery query, int queryPosition) {
+		String cqlLc = query.part;
+		int cqlLcLen = query.partLc.length();
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("completion", completion).toString();
-    }
+		int indCreate = cqlLc.indexOf(CqlKeyword.Def.DROP_INDEX.value + " ", queryPosition);
+		if (indCreate + 1 >= cqlLcLen) {
+			return -1;
+		}
+
+		int indLastSpace = cqlLc.indexOf(' ', indCreate + 1);
+
+		return indLastSpace;
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("completion", completion).toString();
+	}
 }

@@ -54,184 +54,165 @@ import org.slf4j.LoggerFactory;
 @NotThreadSafe
 @EnableValidation
 public class FileStorage {
-    private final static Logger LOG = LoggerFactory.getLogger(FileStorage.class);
+	private final static Logger LOG = LoggerFactory.getLogger(FileStorage.class);
 
-    private ThreadLocal<CharsetEncoder> encoder;
+	private ThreadLocal<CharsetEncoder> encoder;
 
-    private ThreadLocal<CharsetDecoder> decoder;
+	private ThreadLocal<CharsetDecoder> decoder;
 
-    @Inject
-    private AppConfig config;
+	@Inject
+	private AppConfig config;
 
-    @Inject
-    private JsonMarshaller jsonMarshaller;
+	@Inject
+	private JsonMarshaller jsonMarshaller;
 
-    private boolean supported;
+	private boolean supported;
 
-    private final AtomicInteger lockRetryCount = new AtomicInteger(0);
+	private final AtomicInteger lockRetryCount = new AtomicInteger(0);
 
-    @PostConstruct
-    protected void init() {
-	supported = checkSupported();
+	@PostConstruct
+	protected void init() {
+		supported = checkSupported();
 
-	encoder = new ThreadLocal<CharsetEncoder>() {
-	    @Override
-	    protected CharsetEncoder initialValue() {
-		Charset charset = Charset.forName("UTF-8");
-		CharsetEncoder decoder = charset.newEncoder();
-		return decoder;
-	    }
-	};
+		encoder = new ThreadLocal<CharsetEncoder>() {
+			@Override
+			protected CharsetEncoder initialValue() {
+				Charset charset = Charset.forName("UTF-8");
+				CharsetEncoder decoder = charset.newEncoder();
+				return decoder;
+			}
+		};
 
-	decoder = new ThreadLocal<CharsetDecoder>() {
-	    @Override
-	    protected CharsetDecoder initialValue() {
-		Charset charset = Charset.forName("UTF-8");
-		CharsetDecoder decoder = charset.newDecoder();
-		return decoder;
-	    }
-	};
-    }
-
-    public boolean supported() {
-	return supported;
-    }
-
-    protected boolean checkSupported() {
-	if (!config.history.enabled) {
-	    LOG.info("Query history is disabled");
-	    return false;
+		decoder = new ThreadLocal<CharsetDecoder>() {
+			@Override
+			protected CharsetDecoder initialValue() {
+				Charset charset = Charset.forName("UTF-8");
+				CharsetDecoder decoder = charset.newDecoder();
+				return decoder;
+			}
+		};
 	}
 
-	File histFolder = new File(config.fileStore.folder);
-	if (!histFolder.exists()) {
-	    LOG.warn("Query history is enabled, but configured folder does not exists:{}", histFolder);
-	    return false;
+	public boolean supported() {
+		return supported;
 	}
 
-	if (!histFolder.canWrite()) {
-	    LOG.warn("Query history is enabled, but configured folder is read-only:{}", histFolder);
-	    return false;
-	}
-
-	return true;
-    }
-
-    public void store(@NotNull UserIdentifier userId, @NotNull Object entity) throws ServiceException {
-	LOG.debug("Storing file for {}", userId);
-	Path histPath = getPath(userId, entity.getClass());
-	try (FileChannel channel = openForWrite(histPath)) {
-	    String jsonText = jsonMarshaller.marshal(entity);
-	    ByteBuffer buf = encoder.get().encode(CharBuffer.wrap(jsonText));
-	    int written = channel.write(buf);
-	    channel.truncate(written);
-	}
-	catch (IOException | SecurityException | IllegalStateException e) {
-	    throw new ServiceException("Error storing query history in:"
-		    + histPath
-		    + " - "
-		    + e.getClass()
-		    + " - "
-		    + e.getMessage(), e);
-	}
-	LOG.trace("File has been sotred {}", entity);
-    }
-
-    public @Valid <T> Optional<T> read(@NotNull UserIdentifier userId, @NotNull Class<T> clazz)
-	    throws ServiceException {
-	Path filePath = getPath(userId, clazz);
-	LOG.debug("Reading file {} for {}", filePath, userId);
-	try (FileChannel channel = openForRead(filePath)) {
-	    if (channel == null) {
-		LOG.debug("File not found: {}", filePath);
-		return Optional.empty();
-	    }
-	    int fileSize = (int) channel.size();
-	    if (fileSize > config.fileStore.maxFileSize) {
-		LOG.info("File: {} too large: {} - skipping it", filePath, fileSize);
-		return Optional.empty();
-	    }
-	    ByteBuffer buf = ByteBuffer.allocate(fileSize);
-	    channel.read(buf);
-	    buf.flip();
-	    String decoded = decoder.get().decode(buf).toString();
-	    T content = jsonMarshaller.unmarshal(clazz, decoded);
-
-	    LOG.debug("File read");
-	    return Optional.ofNullable(content);
-	}
-	catch (IOException | SecurityException | IllegalStateException e) {
-	    throw new ServiceException("Error reading filr from:" + filePath + " - " + e.getMessage(), e);
-	}
-
-    }
-
-    private FileChannel openForWrite(Path histPath) throws IOException {
-	FileChannel byteChannel = FileChannel.open(
-		histPath,
-		StandardOpenOption.CREATE,
-		StandardOpenOption.TRUNCATE_EXISTING,
-		StandardOpenOption.WRITE);
-	byteChannel.force(true);
-	FileChannel lockChannel = lock(histPath, byteChannel);
-	return lockChannel;
-    }
-
-    private FileChannel openForRead(Path histPath) throws IOException {
-	File file = histPath.toFile();
-	if (!file.exists() || !file.canRead()) {
-	    LOG.debug("History file not found: " + histPath);
-	    return null;
-	}
-	FileChannel byteChannel = FileChannel.open(
-		histPath,
-		StandardOpenOption.READ,
-		StandardOpenOption.WRITE);
-	FileChannel lockChannel = lock(histPath, byteChannel);
-	return lockChannel;
-    }
-
-    private FileChannel lock(Path histPath, FileChannel channel) throws IOException {
-	LOG.debug("Trying to log file: {}", histPath);
-	long start = System.currentTimeMillis();
-	String lastExMessage = null;
-	FileChannel lockChannel = null;
-	while (lockChannel == null
-		&& System.currentTimeMillis() - start < config.fileStore.lockWaitTimeoutMillis) {
-	    try {
-		FileLock lock = channel.lock();
-		lockChannel = lock.channel();
-	    }
-	    catch (FileLockInterruptionException | OverlappingFileLockException e) {
-		lockRetryCount.incrementAndGet();
-		lastExMessage = e.getMessage();
-		LOG.debug(
-			"File lock on '{}' cannot be obtained (retrying operation): {}",
-			histPath,
-			lastExMessage);
-		try {
-		    Thread.sleep(100);
+	protected boolean checkSupported() {
+		if (!config.history.enabled) {
+			LOG.info("Query history is disabled");
+			return false;
 		}
-		catch (InterruptedException e1) {
-		    Thread.interrupted();
+
+		File histFolder = new File(config.fileStore.folder);
+		if (!histFolder.exists()) {
+			LOG.warn("Query history is enabled, but configured folder does not exists:{}", histFolder);
+			return false;
 		}
-	    }
+
+		if (!histFolder.canWrite()) {
+			LOG.warn("Query history is enabled, but configured folder is read-only:{}", histFolder);
+			return false;
+		}
+
+		return true;
 	}
-	if (lockChannel == null) {
-	    throw new ServiceException("File lock on '" + histPath + "' cannot be obtained: " + lastExMessage);
+
+	public void store(@NotNull UserIdentifier userId, @NotNull Object entity) throws ServiceException {
+		LOG.debug("Storing file for {}", userId);
+		Path histPath = getPath(userId, entity.getClass());
+		try (FileChannel channel = openForWrite(histPath)) {
+			String jsonText = jsonMarshaller.marshal(entity);
+			ByteBuffer buf = encoder.get().encode(CharBuffer.wrap(jsonText));
+			int written = channel.write(buf);
+			channel.truncate(written);
+		} catch (IOException | SecurityException | IllegalStateException e) {
+			throw new ServiceException("Error storing query history in:" + histPath + " - " + e.getClass() + " - "
+					+ e.getMessage(), e);
+		}
+		LOG.trace("File has been sotred {}", entity);
 	}
 
-	return lockChannel;
-    }
+	public @Valid <T> Optional<T> read(@NotNull UserIdentifier userId, @NotNull Class<T> clazz) throws ServiceException {
+		Path filePath = getPath(userId, clazz);
+		LOG.debug("Reading file {} for {}", filePath, userId);
+		try (FileChannel channel = openForRead(filePath)) {
+			if (channel == null) {
+				LOG.debug("File not found: {}", filePath);
+				return Optional.empty();
+			}
+			int fileSize = (int) channel.size();
+			if (fileSize > config.fileStore.maxFileSize) {
+				LOG.info("File: {} too large: {} - skipping it", filePath, fileSize);
+				return Optional.empty();
+			}
+			ByteBuffer buf = ByteBuffer.allocate(fileSize);
+			channel.read(buf);
+			buf.flip();
+			String decoded = decoder.get().decode(buf).toString();
+			T content = jsonMarshaller.unmarshal(clazz, decoded);
 
-    private Path getPath(UserIdentifier userId, Class<?> entity) {
-	String fileName = entity.getSimpleName() + "-" + userId.id + ".json";
-	Path histPath = Paths.get(config.fileStore.folder, fileName);
-	return histPath;
-    }
+			LOG.debug("File read");
+			return Optional.ofNullable(content);
+		} catch (IOException | SecurityException | IllegalStateException e) {
+			throw new ServiceException("Error reading filr from:" + filePath + " - " + e.getMessage(), e);
+		}
 
-    public int getLockRetryCount() {
-	return lockRetryCount.get();
-    }
+	}
+
+	private FileChannel openForWrite(Path histPath) throws IOException {
+		FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.CREATE,
+				StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+		byteChannel.force(true);
+		FileChannel lockChannel = lock(histPath, byteChannel);
+		return lockChannel;
+	}
+
+	private FileChannel openForRead(Path histPath) throws IOException {
+		File file = histPath.toFile();
+		if (!file.exists() || !file.canRead()) {
+			LOG.debug("History file not found: " + histPath);
+			return null;
+		}
+		FileChannel byteChannel = FileChannel.open(histPath, StandardOpenOption.READ, StandardOpenOption.WRITE);
+		FileChannel lockChannel = lock(histPath, byteChannel);
+		return lockChannel;
+	}
+
+	private FileChannel lock(Path histPath, FileChannel channel) throws IOException {
+		LOG.debug("Trying to log file: {}", histPath);
+		long start = System.currentTimeMillis();
+		String lastExMessage = null;
+		FileChannel lockChannel = null;
+		while (lockChannel == null && System.currentTimeMillis() - start < config.fileStore.lockWaitTimeoutMillis) {
+			try {
+				FileLock lock = channel.lock();
+				lockChannel = lock.channel();
+			} catch (FileLockInterruptionException | OverlappingFileLockException e) {
+				lockRetryCount.incrementAndGet();
+				lastExMessage = e.getMessage();
+				LOG.debug("File lock on '{}' cannot be obtained (retrying operation): {}", histPath, lastExMessage);
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					Thread.interrupted();
+				}
+			}
+		}
+		if (lockChannel == null) {
+			throw new ServiceException("File lock on '" + histPath + "' cannot be obtained: " + lastExMessage);
+		}
+
+		return lockChannel;
+	}
+
+	private Path getPath(UserIdentifier userId, Class<?> entity) {
+		String fileName = entity.getSimpleName() + "-" + userId.id + ".json";
+		Path histPath = Paths.get(config.fileStore.folder, fileName);
+		return histPath;
+	}
+
+	public int getLockRetryCount() {
+		return lockRetryCount.get();
+	}
 
 }

@@ -30,31 +30,31 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class BatchDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlNotSupported("batch");
+	private final CqlKeyword supports = new CqlNotSupported("batch");
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    BatchCompletion batchCompletion;
+	@Inject
+	BatchCompletion batchCompletion;
 
-    @PostConstruct
-    public void init() {
-	decisionList = new CqlPartCompletion[][] { { batchCompletion } };
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][] { { batchCompletion } };
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-	return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword beginnsWith() {
-	return supports;
-    }
+	@Override
+	public CqlKeyword beginnsWith() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryType queryName() {
-	return CqlQueryType.BATCH;
-    }
+	@Override
+	public CqlQueryType queryName() {
+		return CqlQueryType.BATCH;
+	}
 
 }

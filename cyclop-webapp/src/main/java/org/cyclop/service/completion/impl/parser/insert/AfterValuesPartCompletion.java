@@ -31,26 +31,26 @@ import com.google.common.base.Objects;
 @Named("insert.AfterValuesPartCompletion")
 class AfterValuesPartCompletion extends MarkerBasedCompletion {
 
-    private CqlCompletion completion = null;
+	private CqlCompletion completion = null;
 
-    public AfterValuesPartCompletion() {
-	super(new CqlPart(")"));
-    }
+	public AfterValuesPartCompletion() {
+		super(new CqlPart(")"));
+	}
 
-    @PostConstruct
-    public void init() {
-	completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value)
-		.all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.AND.value).build();
-    }
+	@PostConstruct
+	public void init() {
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value)
+				.all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.AND.value).build();
+	}
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-	return completion;
-    }
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		return completion;
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

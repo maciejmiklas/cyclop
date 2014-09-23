@@ -36,135 +36,133 @@ import com.google.common.collect.ImmutableSet;
 
 /** @author Maciej Miklas */
 public final class BeanValidator {
-    private final static String NULL_MARKER = "NULL-" + UUID.randomUUID();
+	private final static String NULL_MARKER = "NULL-" + UUID.randomUUID();
 
-    private final static Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
+	private final static Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private Map<String, Object> objMap = new HashMap<>();
+	private Map<String, Object> objMap = new HashMap<>();
 
-    public static BeanValidator create() {
-	return new BeanValidator();
-    }
-
-    public static BeanValidator create(Object obj) {
-	return new BeanValidator().add(obj);
-    }
-
-    public BeanValidator add(Object obj) {
-	if (obj == null) {
-	    throw new IllegalArgumentException("null validation object");
-	}
-	return add(obj.getClass().getSimpleName(), obj);
-    }
-
-    public BeanValidator add(String name, Object obj) {
-	if (name == null) {
-	    throw new IllegalArgumentException("null name for validation object");
+	public static BeanValidator create() {
+		return new BeanValidator();
 	}
 
-	String key = objMap.containsKey(name) ? name + " - " + UUID.randomUUID() : name;
-	objMap.put(key, obj == null ? NULL_MARKER : obj);
-	return this;
-    }
-
-    public void validate() {
-	Map<String, Set<ConstraintViolation<Object>>> violations = new HashMap<>();
-
-	for (Map.Entry<String, Object> obj : objMap.entrySet()) {
-	    Object value = obj.getValue();
-	    if (value.toString().equals(NULL_MARKER)) {
-		violations.put(obj.getKey(), createViolationForNullRoot());
-		continue;
-	    }
-	    Set<ConstraintViolation<Object>> violation = validateObject(value);
-	    if (!violation.isEmpty()) {
-		violations.put(obj.getKey(), violation);
-	    }
+	public static BeanValidator create(Object obj) {
+		return new BeanValidator().add(obj);
 	}
 
-	if (!violations.isEmpty()) {
-	    throw new BeanValidationException(violations);
-	}
-    }
-
-    private Set<ConstraintViolation<Object>> validateObject(Object obj) {
-	if (obj instanceof Optional) {
-	    Optional<?> opt = (Optional<?>) obj;
-	    if (opt.isPresent()) {
-		obj = opt.get();
-	    }
+	public BeanValidator add(Object obj) {
+		if (obj == null) {
+			throw new IllegalArgumentException("null validation object");
+		}
+		return add(obj.getClass().getSimpleName(), obj);
 	}
 
-	Set<ConstraintViolation<Object>> violation = null;
-	if (obj instanceof Synchronizable) {
-	    Lock lock = ((Synchronizable) obj).getLock();
-	    lock.lock();
-	    try {
-		violation = VALIDATOR.validate(obj);
-	    }
-	    finally {
-		lock.unlock();
-	    }
-	}
-	else {
-	    violation = VALIDATOR.validate(obj);
-	}
-	return violation;
-    }
+	public BeanValidator add(String name, Object obj) {
+		if (name == null) {
+			throw new IllegalArgumentException("null name for validation object");
+		}
 
-    private Set<ConstraintViolation<Object>> createViolationForNullRoot() {
-	ConstraintViolation<Object> viol = new NullRootViolation();
-	Set<ConstraintViolation<Object>> violSet = ImmutableSet.of(viol);
-	return violSet;
-    }
-
-    public final class NullRootViolation implements ConstraintViolation<Object> {
-	private String message = "NULL_ROOT_OBJECT";
-
-	@Override
-	public ConstraintDescriptor<?> getConstraintDescriptor() {
-	    return null;
+		String key = objMap.containsKey(name) ? name + " - " + UUID.randomUUID() : name;
+		objMap.put(key, obj == null ? NULL_MARKER : obj);
+		return this;
 	}
 
-	@Override
-	public Object getInvalidValue() {
-	    return null;
+	public void validate() {
+		Map<String, Set<ConstraintViolation<Object>>> violations = new HashMap<>();
+
+		for (Map.Entry<String, Object> obj : objMap.entrySet()) {
+			Object value = obj.getValue();
+			if (value.toString().equals(NULL_MARKER)) {
+				violations.put(obj.getKey(), createViolationForNullRoot());
+				continue;
+			}
+			Set<ConstraintViolation<Object>> violation = validateObject(value);
+			if (!violation.isEmpty()) {
+				violations.put(obj.getKey(), violation);
+			}
+		}
+
+		if (!violations.isEmpty()) {
+			throw new BeanValidationException(violations);
+		}
 	}
 
-	@Override
-	public Object getLeafBean() {
-	    return null;
+	private Set<ConstraintViolation<Object>> validateObject(Object obj) {
+		if (obj instanceof Optional) {
+			Optional<?> opt = (Optional<?>) obj;
+			if (opt.isPresent()) {
+				obj = opt.get();
+			}
+		}
+
+		Set<ConstraintViolation<Object>> violation = null;
+		if (obj instanceof Synchronizable) {
+			Lock lock = ((Synchronizable) obj).getLock();
+			lock.lock();
+			try {
+				violation = VALIDATOR.validate(obj);
+			} finally {
+				lock.unlock();
+			}
+		} else {
+			violation = VALIDATOR.validate(obj);
+		}
+		return violation;
 	}
 
-	@Override
-	public String getMessage() {
-	    return message;
+	private Set<ConstraintViolation<Object>> createViolationForNullRoot() {
+		ConstraintViolation<Object> viol = new NullRootViolation();
+		Set<ConstraintViolation<Object>> violSet = ImmutableSet.of(viol);
+		return violSet;
 	}
 
-	@Override
-	public String getMessageTemplate() {
-	    return message;
-	}
+	public final class NullRootViolation implements ConstraintViolation<Object> {
+		private String message = "NULL_ROOT_OBJECT";
 
-	@Override
-	public Path getPropertyPath() {
-	    return null;
-	}
+		@Override
+		public ConstraintDescriptor<?> getConstraintDescriptor() {
+			return null;
+		}
 
-	@Override
-	public Object getRootBean() {
-	    return null;
-	}
+		@Override
+		public Object getInvalidValue() {
+			return null;
+		}
 
-	@Override
-	public Class<Object> getRootBeanClass() {
-	    return null;
-	}
+		@Override
+		public Object getLeafBean() {
+			return null;
+		}
 
-	@Override
-	public String toString() {
-	    return message;
-	}
+		@Override
+		public String getMessage() {
+			return message;
+		}
 
-    }
+		@Override
+		public String getMessageTemplate() {
+			return message;
+		}
+
+		@Override
+		public Path getPropertyPath() {
+			return null;
+		}
+
+		@Override
+		public Object getRootBean() {
+			return null;
+		}
+
+		@Override
+		public Class<Object> getRootBeanClass() {
+			return null;
+		}
+
+		@Override
+		public String toString() {
+			return message;
+		}
+
+	}
 }

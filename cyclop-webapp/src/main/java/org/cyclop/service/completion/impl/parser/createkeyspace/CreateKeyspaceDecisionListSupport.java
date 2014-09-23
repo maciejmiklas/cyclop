@@ -29,34 +29,34 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class CreateKeyspaceDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = CqlKeyword.Def.CREATE_KEYSPACE.value;
+	private final CqlKeyword supports = CqlKeyword.Def.CREATE_KEYSPACE.value;
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    private AfterKeyspaceNameCompletion afterKeyspaceNameCompletion;
+	@Inject
+	private AfterKeyspaceNameCompletion afterKeyspaceNameCompletion;
 
-    @Inject
-    private WithCompletion withCompletion;
+	@Inject
+	private WithCompletion withCompletion;
 
-    @PostConstruct
-    public void init() {
-	decisionList = new CqlPartCompletion[][] { { afterKeyspaceNameCompletion }, { withCompletion } };
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][] { { afterKeyspaceNameCompletion }, { withCompletion } };
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-	return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword beginnsWith() {
-	return supports;
-    }
+	@Override
+	public CqlKeyword beginnsWith() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryType queryName() {
-	return CqlQueryType.CREATE_KEYSPACE;
-    }
+	@Override
+	public CqlQueryType queryName() {
+		return CqlQueryType.CREATE_KEYSPACE;
+	}
 
 }

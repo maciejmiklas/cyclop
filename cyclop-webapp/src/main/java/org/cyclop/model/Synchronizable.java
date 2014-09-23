@@ -27,6 +27,6 @@ import java.util.concurrent.locks.Lock;
  */
 public interface Synchronizable {
 
-    Lock getLock();
+	Lock getLock();
 
 }

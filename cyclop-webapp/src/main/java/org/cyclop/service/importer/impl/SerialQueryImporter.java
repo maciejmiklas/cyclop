@@ -36,37 +36,36 @@ import org.slf4j.LoggerFactory;
 @Named(QueryImporter.IMPL_SERIAL)
 public class SerialQueryImporter extends AbstractImporter {
 
-    private final static Logger LOG = LoggerFactory.getLogger(SerialQueryImporter.class);
+	private final static Logger LOG = LoggerFactory.getLogger(SerialQueryImporter.class);
 
-    @Inject
-    protected QueryService queryService;
+	@Inject
+	protected QueryService queryService;
 
-    @Override
-    void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig config) {
-	while (scanner.hasNext()) {
-	    String nextStr = StringUtils.trimToNull(scanner.next());
-	    if (nextStr == null) {
-		continue;
-	    }
-	    CqlQuery query = new CqlQuery(CqlQueryType.UNKNOWN, nextStr);
-	    long startTime = System.currentTimeMillis();
-	    try {
-		LOG.debug("Executing: {}", query);
-		queryService.executeSimple(query, config.isUpdateHistory());
-		resultWriter.success(query, System.currentTimeMillis() - startTime);
-		status.success.getAndIncrement();
-	    }
-	    catch (QueryException e) {
-		status.error.getAndIncrement();
-		LOG.debug(e.getMessage());
-		LOG.trace(e.getMessage(), e);
-		resultWriter.error(query, e, System.currentTimeMillis() - startTime);
+	@Override
+	void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig config) {
+		while (scanner.hasNext()) {
+			String nextStr = StringUtils.trimToNull(scanner.next());
+			if (nextStr == null) {
+				continue;
+			}
+			CqlQuery query = new CqlQuery(CqlQueryType.UNKNOWN, nextStr);
+			long startTime = System.currentTimeMillis();
+			try {
+				LOG.debug("Executing: {}", query);
+				queryService.executeSimple(query, config.isUpdateHistory());
+				resultWriter.success(query, System.currentTimeMillis() - startTime);
+				status.success.getAndIncrement();
+			} catch (QueryException e) {
+				status.error.getAndIncrement();
+				LOG.debug(e.getMessage());
+				LOG.trace(e.getMessage(), e);
+				resultWriter.error(query, e, System.currentTimeMillis() - startTime);
 
-		if (!config.isContinueWithErrors()) {
-		    LOG.debug("Breaking import due to an error");
-		    break;
+				if (!config.isContinueWithErrors()) {
+					LOG.debug("Breaking import due to an error");
+					break;
+				}
+			}
 		}
-	    }
 	}
-    }
 }

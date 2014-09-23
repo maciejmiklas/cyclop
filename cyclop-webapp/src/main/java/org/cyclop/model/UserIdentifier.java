@@ -33,55 +33,55 @@ import com.google.common.base.Objects;
 @XmlJavaTypeAdapter(value = UserIdentifier.Adapter.class)
 public final class UserIdentifier implements Serializable {
 
-    @NotNull
-    public final UUID id;
+	@NotNull
+	public final UUID id;
 
-    public UserIdentifier() {
-	id = UUID.randomUUID();
-    }
-
-    public UserIdentifier(UUID id) {
-	this.id = id;
-    }
-
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("id", id).toString();
-    }
-
-    @Override
-    public int hashCode() {
-	return java.util.Objects.hash(id);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-	if (obj == null || getClass() != obj.getClass()) {
-	    return false;
+	public UserIdentifier() {
+		id = UUID.randomUUID();
 	}
 
-	final UserIdentifier other = (UserIdentifier) obj;
-	return java.util.Objects.equals(id, other.id);
-    }
-
-    @XmlTransient
-    public static class Adapter extends XmlAdapter<String, UserIdentifier> {
-
-	@Override
-	public UserIdentifier unmarshal(String str) {
-	    if (str == null) {
-		return null;
-	    }
-	    UUID uuid = UUID.fromString(str);
-	    return new UserIdentifier(uuid);
+	public UserIdentifier(UUID id) {
+		this.id = id;
 	}
 
 	@Override
-	public String marshal(UserIdentifier id) {
-	    if (id == null) {
-		return null;
-	    }
-	    return id.id.toString();
+	public String toString() {
+		return Objects.toStringHelper(this).add("id", id).toString();
 	}
-    }
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+
+		final UserIdentifier other = (UserIdentifier) obj;
+		return java.util.Objects.equals(id, other.id);
+	}
+
+	@XmlTransient
+	public static class Adapter extends XmlAdapter<String, UserIdentifier> {
+
+		@Override
+		public UserIdentifier unmarshal(String str) {
+			if (str == null) {
+				return null;
+			}
+			UUID uuid = UUID.fromString(str);
+			return new UserIdentifier(uuid);
+		}
+
+		@Override
+		public String marshal(UserIdentifier id) {
+			if (id == null) {
+				return null;
+			}
+			return id.id.toString();
+		}
+	}
 }

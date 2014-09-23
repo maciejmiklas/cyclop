@@ -32,12 +32,12 @@ import com.google.common.base.Objects;
 @ThreadSafe
 class AfterColumnsCompletion extends StaticMarkerBasedCompletion {
 
-    public AfterColumnsCompletion() {
-	super(new CqlPart(")"), CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).build());
-    }
+	public AfterColumnsCompletion() {
+		super(new CqlPart(")"), CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.VALUES.value).build());
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 }

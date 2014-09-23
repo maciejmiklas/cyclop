@@ -45,76 +45,72 @@ import com.google.common.collect.ImmutableSortedSet;
 @CassandraVersionQualifier(CassandraVersion.VER_1_x)
 class QueryServiceFallbackImpl extends QueryServiceImpl {
 
-    private final static Logger LOG = LoggerFactory.getLogger(QueryServiceFallbackImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceFallbackImpl.class);
 
-    private ImmutableSet<String> findPartitionKeyNamesLc(CqlTable table) {
+	private ImmutableSet<String> findPartitionKeyNamesLc(CqlTable table) {
 
-	Optional<ResultSet> result = executeSilent("select key_aliases FROM system.schema_columnfamilies where "
-		+ "columnfamily_name='"
-		+ table.part
-		+ "' allow filtering");
-	if (!result.isPresent()) {
-	    LOG.warn("Cannot find partition key info");
-	    return ImmutableSet.of();
+		Optional<ResultSet> result = executeSilent("select key_aliases FROM system.schema_columnfamilies where "
+				+ "columnfamily_name='" + table.part + "' allow filtering");
+		if (!result.isPresent()) {
+			LOG.warn("Cannot find partition key info");
+			return ImmutableSet.of();
+		}
+
+		ImmutableSet.Builder<String> keys = ImmutableSet.builder();
+		for (Row row : result.get()) {
+			String aliases = StringUtils.trimToNull(row.getString("key_aliases"));
+			if (aliases == null || aliases.length() < 5) {// ["id"]
+				continue;
+			}
+
+			String aliasesPure = aliases.substring(2, aliases.length() - 2);
+			for (String alias : aliasesPure.split(",")) {
+				keys.add(alias.trim().toLowerCase());
+			}
+		}
+
+		ImmutableSet<String> res = keys.build();
+		LOG.debug("Found key name(s):{} for table: {}", res, table);
+		return res;
 	}
 
-	ImmutableSet.Builder<String> keys = ImmutableSet.builder();
-	for (Row row : result.get()) {
-	    String aliases = StringUtils.trimToNull(row.getString("key_aliases"));
-	    if (aliases == null || aliases.length() < 5) {// ["id"]
-		continue;
-	    }
-
-	    String aliasesPure = aliases.substring(2, aliases.length() - 2);
-	    for (String alias : aliasesPure.split(",")) {
-		keys.add(alias.trim().toLowerCase());
-	    }
+	@Override
+	protected void loadPartitionKeyNames(Optional<CqlTable> table,
+			ImmutableSortedSet.Builder<CqlColumnName> cqlColumnNames) {
+		if (!table.isPresent()) {
+			return;
+		}
+		ImmutableSet<String> partitionKeys = findPartitionKeyNamesLc(table.get());
+		for (String partitionKey : partitionKeys) {
+			cqlColumnNames.add(new CqlColumnName(CqlDataType.create(DataType.text()), partitionKey));
+		}
 	}
 
-	ImmutableSet<String> res = keys.build();
-	LOG.debug("Found key name(s):{} for table: {}", res, table);
-	return res;
-    }
+	protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
 
-    @Override
-    protected void loadPartitionKeyNames(
-	    Optional<CqlTable> table,
-	    ImmutableSortedSet.Builder<CqlColumnName> cqlColumnNames) {
-	if (!table.isPresent()) {
-	    return;
+		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.FROM.value, query);
+		if (!table.isPresent()) {
+			LOG.warn("Could not extract table name from: {}. Column type information is not available.");
+			return ImmutableMap.of();
+		}
+
+		ImmutableMap.Builder<String, CqlColumnType> types = ImmutableMap.builder();
+		Set<String> partitionKeys = findPartitionKeyNamesLc(table.get());
+		for (String pk : partitionKeys) {
+			types.put(pk, CqlColumnType.PARTITION_KEY);
+		}
+
+		ResultSet result = execute("select column_name from system.schema_columns where columnfamily_name='"
+				+ table.get().part + "' allow filtering");
+
+		for (Row row : result) {
+			String name = StringUtils.trimToNull(row.getString("column_name"));
+			if (name == null) {
+				continue;
+			}
+			String nameLc = name.toLowerCase();
+			types.put(nameLc, CqlColumnType.REGULAR);
+		}
+		return types.build();
 	}
-	ImmutableSet<String> partitionKeys = findPartitionKeyNamesLc(table.get());
-	for (String partitionKey : partitionKeys) {
-	    cqlColumnNames.add(new CqlColumnName(CqlDataType.create(DataType.text()), partitionKey));
-	}
-    }
-
-    protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
-
-	Optional<CqlTable> table = extractTableName(CqlKeyword.Def.FROM.value, query);
-	if (!table.isPresent()) {
-	    LOG.warn("Could not extract table name from: {}. Column type information is not available.");
-	    return ImmutableMap.of();
-	}
-
-	ImmutableMap.Builder<String, CqlColumnType> types = ImmutableMap.builder();
-	Set<String> partitionKeys = findPartitionKeyNamesLc(table.get());
-	for (String pk : partitionKeys) {
-	    types.put(pk, CqlColumnType.PARTITION_KEY);
-	}
-
-	ResultSet result = execute("select column_name from system.schema_columns where columnfamily_name='"
-		+ table.get().part
-		+ "' allow filtering");
-
-	for (Row row : result) {
-	    String name = StringUtils.trimToNull(row.getString("column_name"));
-	    if (name == null) {
-		continue;
-	    }
-	    String nameLc = name.toLowerCase();
-	    types.put(nameLc, CqlColumnType.REGULAR);
-	}
-	return types.build();
-    }
 }

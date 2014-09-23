@@ -30,53 +30,52 @@ import com.google.common.base.Objects;
 @SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
 public class CqlPart implements Comparable<CqlPart>, Serializable, DisplaySupport {
 
-    @NotEmpty
-    public final String partLc;
+	@NotEmpty
+	public final String partLc;
 
-    @NotEmpty
-    public final String part;
+	@NotEmpty
+	public final String part;
 
-    public CqlPart(String part) {
-	if (part != null) {
-	    this.part = part.replaceAll("\\p{Cc}", "");
-	    this.partLc = this.part.trim().toLowerCase();
+	public CqlPart(String part) {
+		if (part != null) {
+			this.part = part.replaceAll("\\p{Cc}", "");
+			this.partLc = this.part.trim().toLowerCase();
+		} else {
+			this.part = null;
+			this.partLc = null;
+		}
 	}
-	else {
-	    this.part = null;
-	    this.partLc = null;
+
+	@Override
+	public int compareTo(CqlPart o) {
+		return o.partLc.compareTo(partLc);
 	}
-    }
 
-    @Override
-    public int compareTo(CqlPart o) {
-	return o.partLc.compareTo(partLc);
-    }
-
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == null || getClass() != obj.getClass()) {
-	    return false;
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings("EQ_CHECK_FOR_OPERAND_NOT_COMPATIBLE_WITH_THIS")
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		CqlPart cqlObj = (CqlPart) obj;
+		return java.util.Objects.equals(partLc, cqlObj.partLc);
 	}
-	CqlPart cqlObj = (CqlPart) obj;
-	return java.util.Objects.equals(partLc, cqlObj.partLc);
-    }
 
-    @Override
-    public int hashCode() {
-	return partLc.hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return partLc.hashCode();
+	}
 
-    public String toDisplayString() {
-	return StringEscapeUtils.escapeHtml(part);
-    }
+	public String toDisplayString() {
+		return StringEscapeUtils.escapeHtml(part);
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("partLc", partLc).add("part", part).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("partLc", partLc).add("part", part).toString();
+	}
 
-    public CqlType type() {
-	return CqlType.PART;
-    }
+	public CqlType type() {
+		return CqlType.PART;
+	}
 }

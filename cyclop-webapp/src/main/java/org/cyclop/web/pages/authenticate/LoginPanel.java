@@ -21,18 +21,17 @@ import org.cyclop.web.webapp.CqlWebSession;
 
 /** @author Maciej Miklas */
 public class LoginPanel extends SignInPanel {
-    public LoginPanel(String id) {
-	super(id);
-    }
+	public LoginPanel(String id) {
+		super(id);
+	}
 
-    @Override
-    protected void onSignInFailed() {
-	CqlWebSession session = (CqlWebSession) getWebSession();
-	if (session.getLastLoginError() != null) {
-	    error(session.getLastLoginError());
+	@Override
+	protected void onSignInFailed() {
+		CqlWebSession session = (CqlWebSession) getWebSession();
+		if (session.getLastLoginError() != null) {
+			error(session.getLastLoginError());
+		} else {
+			super.onSignInFailed();
+		}
 	}
-	else {
-	    super.onSignInFailed();
-	}
-    }
 }

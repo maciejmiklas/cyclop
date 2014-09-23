@@ -29,5 +29,5 @@ import javax.inject.Qualifier;
 @Qualifier
 public @interface CassandraVersionQualifier {
 
-    CassandraVersion value();
+	CassandraVersion value();
 }

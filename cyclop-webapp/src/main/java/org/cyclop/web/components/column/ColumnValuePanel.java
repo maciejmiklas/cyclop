@@ -35,82 +35,73 @@ import org.cyclop.web.components.infodialog.InfoDialog;
 /** @author Maciej Miklas */
 class ColumnValuePanel extends Panel {
 
-    private final InfoDialog infoDialog;
+	private final InfoDialog infoDialog;
 
-    @Inject
-    private DataConverter converter;
+	@Inject
+	private DataConverter converter;
 
-    ColumnValuePanel(
-	    String componentId,
-	    final CqlPartitionKeyValue cqlPartitionKeyValue,
-	    final CqlColumnValue cqlColumnValue,
-	    boolean embeddedColumn) {
-	super(componentId);
+	ColumnValuePanel(String componentId, final CqlPartitionKeyValue cqlPartitionKeyValue,
+			final CqlColumnValue cqlColumnValue, boolean embeddedColumn) {
+		super(componentId);
 
-	String convertedValue = converter.convert(cqlColumnValue.value);
-	final String convertedValueNotNull = convertedValue == null ? "" : convertedValue;
-	final String trimmedEntry = converter.trimColumnContent(convertedValueNotNull, embeddedColumn);
-	boolean trimmed = convertedValueNotNull.length() - trimmedEntry.length() > 10;
+		String convertedValue = converter.convert(cqlColumnValue.value);
+		final String convertedValueNotNull = convertedValue == null ? "" : convertedValue;
+		final String trimmedEntry = converter.trimColumnContent(convertedValueNotNull, embeddedColumn);
+		boolean trimmed = convertedValueNotNull.length() - trimmedEntry.length() > 10;
 
-	infoDialog = new InfoDialog("columnContentDialog");
-	infoDialog.setVisible(trimmed);
-	add(infoDialog);
+		infoDialog = new InfoDialog("columnContentDialog");
+		infoDialog.setVisible(trimmed);
+		add(infoDialog);
 
-	Component fullContentLink;
-	Label columnContent;
-	if (trimmed) {
-	    fullContentLink = new AjaxFallbackLink<Object>("columnContentLink") {
-		@Override
-		public void onClick(AjaxRequestTarget target) {
+		Component fullContentLink;
+		Label columnContent;
+		if (trimmed) {
+			fullContentLink = new AjaxFallbackLink<Object>("columnContentLink") {
+				@Override
+				public void onClick(AjaxRequestTarget target) {
 
-		    String title = crateInfoDialogTitle(cqlPartitionKeyValue, cqlColumnValue.columnName);
-		    infoDialog.open(target, this.getMarkupId(), title, convertedValueNotNull);
+					String title = crateInfoDialogTitle(cqlPartitionKeyValue, cqlColumnValue.columnName);
+					infoDialog.open(target, this.getMarkupId(), title, convertedValueNotNull);
+				}
+			};
+
+			columnContent = new Label("columnContent", trimmedEntry);
+			fullContentLink.add(new AttributeModifier("title", new IModel<String>() {
+
+				@Override
+				public void detach() {
+				}
+
+				@Override
+				public String getObject() {
+					String conv = converter.trimColumnTooltipContent(convertedValueNotNull);
+					return conv;
+				}
+
+				@Override
+				public void setObject(String object) {
+				}
+			}));
+
+		} else {
+			fullContentLink = new Label("columnContentLink", "") {
+				@Override
+				protected void onComponentTag(ComponentTag tag) {
+					if ("a".equalsIgnoreCase(tag.getName())) {
+						tag.setName("div");
+					}
+					super.onComponentTag(tag);
+				}
+			};
+			columnContent = new Label("columnContent", convertedValueNotNull);
+			fullContentLink.setRenderBodyOnly(true);
 		}
-	    };
-
-	    columnContent = new Label("columnContent", trimmedEntry);
-	    fullContentLink.add(new AttributeModifier("title", new IModel<String>() {
-
-		@Override
-		public void detach() {
-		}
-
-		@Override
-		public String getObject() {
-		    String conv = converter.trimColumnTooltipContent(convertedValueNotNull);
-		    return conv;
-		}
-
-		@Override
-		public void setObject(String object) {
-		}
-	    }));
-
+		add(fullContentLink);
+		add(columnContent);
 	}
-	else {
-	    fullContentLink = new Label("columnContentLink", "") {
-		@Override
-		protected void onComponentTag(ComponentTag tag) {
-		    if ("a".equalsIgnoreCase(tag.getName())) {
-			tag.setName("div");
-		    }
-		    super.onComponentTag(tag);
-		}
-	    };
-	    columnContent = new Label("columnContent", convertedValueNotNull);
-	    fullContentLink.setRenderBodyOnly(true);
-	}
-	add(fullContentLink);
-	add(columnContent);
-    }
 
-    private String crateInfoDialogTitle(
-	    CqlPartitionKeyValue cqlPartitionKeyValue,
-	    CqlExtendedColumnName columnName) {
-	String partitionKeyValue = cqlPartitionKeyValue == null ? null : converter
-		.convert(cqlPartitionKeyValue.value);
-	return (partitionKeyValue == null ? "Key" : partitionKeyValue)
-		+ " -> "
-		+ columnName.toDisplayString();
-    }
+	private String crateInfoDialogTitle(CqlPartitionKeyValue cqlPartitionKeyValue, CqlExtendedColumnName columnName) {
+		String partitionKeyValue = cqlPartitionKeyValue == null ? null : converter.convert(cqlPartitionKeyValue.value);
+		return (partitionKeyValue == null ? "Key" : partitionKeyValue) + " -> " + columnName.toDisplayString();
+	}
 }

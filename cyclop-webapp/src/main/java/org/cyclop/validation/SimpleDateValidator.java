@@ -24,22 +24,21 @@ import javax.validation.ConstraintValidatorContext;
 /** @author Maciej Miklas */
 public class SimpleDateValidator implements ConstraintValidator<SimpleDate, String> {
 
-    public void initialize(SimpleDate annotation) {
-    }
-
-    @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
-	if (value == null) {
-	    return false;
+	public void initialize(SimpleDate annotation) {
 	}
 
-	try {
-	    new SimpleDateFormat(value);
-	}
-	catch (IllegalArgumentException e) {
-	    return false;
-	}
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext context) {
+		if (value == null) {
+			return false;
+		}
 
-	return true;
-    }
+		try {
+			new SimpleDateFormat(value);
+		} catch (IllegalArgumentException e) {
+			return false;
+		}
+
+		return true;
+	}
 }

@@ -27,60 +27,60 @@ import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 public abstract class IconButton extends AjaxFallbackLink<Void> {
-    private final static Logger LOG = LoggerFactory.getLogger(IconButton.class);
-    private final String[] cssStates;
-    private int stateIdx;
+	private final static Logger LOG = LoggerFactory.getLogger(IconButton.class);
+	private final String[] cssStates;
+	private int stateIdx;
 
-    public IconButton(final String id, int initialState, String... cssStates) {
-	super(id);
+	public IconButton(final String id, int initialState, String... cssStates) {
+		super(id);
 
-	Validate.notNull(cssStates, "cssStates");
-	Validate.isTrue(cssStates.length > 0, "cssStates empty");
-	this.cssStates = cssStates;
+		Validate.notNull(cssStates, "cssStates");
+		Validate.isTrue(cssStates.length > 0, "cssStates empty");
+		this.cssStates = cssStates;
 
-	if (initialState >= cssStates.length) {
-	    LOG.info("Reseting initial state: {} >= {}", initialState, cssStates.length);
-	    initialState = 0;
+		if (initialState >= cssStates.length) {
+			LOG.info("Reseting initial state: {} >= {}", initialState, cssStates.length);
+			initialState = 0;
+		}
+		this.stateIdx = initialState;
+
+		initIcon();
 	}
-	this.stateIdx = initialState;
 
-	initIcon();
-    }
+	private void initIcon() {
+		WebMarkupContainer icon = new WebMarkupContainer("icon");
+		add(icon);
+		icon.add(new AttributeModifier("class", new IModel<String>() {
+			@Override
+			public String getObject() {
+				String css = cssStates[stateIdx];
+				return css;
+			}
 
-    private void initIcon() {
-	WebMarkupContainer icon = new WebMarkupContainer("icon");
-	add(icon);
-	icon.add(new AttributeModifier("class", new IModel<String>() {
-	    @Override
-	    public String getObject() {
-		String css = cssStates[stateIdx];
-		return css;
-	    }
+			@Override
+			public void setObject(String object) {
 
-	    @Override
-	    public void setObject(String object) {
+			}
 
-	    }
-
-	    @Override
-	    public void detach() {
-	    }
-	}));
-    }
-
-    @Override
-    public final void onClick(AjaxRequestTarget target) {
-	target.add(this);
-	onClick(target, next());
-    }
-
-    private int next() {
-	stateIdx++;
-	if (stateIdx == cssStates.length) {
-	    stateIdx = 0;
+			@Override
+			public void detach() {
+			}
+		}));
 	}
-	return stateIdx;
-    }
 
-    protected abstract void onClick(AjaxRequestTarget target, int stateIdx);
+	@Override
+	public final void onClick(AjaxRequestTarget target) {
+		target.add(this);
+		onClick(target, next());
+	}
+
+	private int next() {
+		stateIdx++;
+		if (stateIdx == cssStates.length) {
+			stateIdx = 0;
+		}
+		return stateIdx;
+	}
+
+	protected abstract void onClick(AjaxRequestTarget target, int stateIdx);
 }

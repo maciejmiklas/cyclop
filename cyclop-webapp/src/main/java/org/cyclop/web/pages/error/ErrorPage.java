@@ -24,12 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ErrorPage extends ParentPage {
-    private final static Logger LOG = LoggerFactory.getLogger(ErrorPage.class);
+	private final static Logger LOG = LoggerFactory.getLogger(ErrorPage.class);
 
-    public ErrorPage(Exception e) {
-	String errorRef = UUID.randomUUID().toString();
-	add(new Label("errorRef", errorRef));
+	public ErrorPage(Exception e) {
+		String errorRef = UUID.randomUUID().toString();
+		add(new Label("errorRef", errorRef));
 
-	LOG.error("Got unhandled exception, Error ID: " + errorRef, e);
-    }
+		LOG.error("Got unhandled exception, Error ID: " + errorRef, e);
+	}
 }

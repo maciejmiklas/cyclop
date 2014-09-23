@@ -32,35 +32,31 @@ import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 abstract class AbstractImporter implements QueryImporter {
-    private final static Logger LOG = LoggerFactory.getLogger(AbstractImporter.class);
+	private final static Logger LOG = LoggerFactory.getLogger(AbstractImporter.class);
 
-    @Inject
-    protected AppConfig conf;
+	@Inject
+	protected AppConfig conf;
 
-    @Override
-    public final ImportStats importScript(InputStream input, ResultWriter resultWriter, ImportConfig config) {
-	LOG.debug("Starting query import");
-	StopWatch timer = new StopWatch();
-	timer.start();
+	@Override
+	public final ImportStats importScript(InputStream input, ResultWriter resultWriter, ImportConfig config) {
+		LOG.debug("Starting query import");
+		StopWatch timer = new StopWatch();
+		timer.start();
 
-	StatsCollector status = new StatsCollector();
-	Scanner scanner = new Scanner(input, conf.queryImport.encoding);
-	scanner.useDelimiter(conf.queryImport.listSeparatorRegEx);
+		StatsCollector status = new StatsCollector();
+		Scanner scanner = new Scanner(input, conf.queryImport.encoding);
+		scanner.useDelimiter(conf.queryImport.listSeparatorRegEx);
 
-	LOG.debug("Executing import");
-	execImport(scanner, resultWriter, status, config);
+		LOG.debug("Executing import");
+		execImport(scanner, resultWriter, status, config);
 
-	timer.stop();
-	ImportStats stats = new ImportStats(timer, status.success.get(), status.error.get());
+		timer.stop();
+		ImportStats stats = new ImportStats(timer, status.success.get(), status.error.get());
 
-	LOG.debug("Import done: {}", stats);
-	return stats;
-    }
+		LOG.debug("Import done: {}", stats);
+		return stats;
+	}
 
-    abstract void execImport(
-	    Scanner scanner,
-	    ResultWriter resultWriter,
-	    StatsCollector status,
-	    ImportConfig config);
+	abstract void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig config);
 
 }

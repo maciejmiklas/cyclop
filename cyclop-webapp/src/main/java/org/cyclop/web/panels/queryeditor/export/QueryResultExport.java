@@ -36,50 +36,50 @@ import org.slf4j.LoggerFactory;
 /** @author Maciej Miklas */
 public class QueryResultExport implements Serializable {
 
-    private final static Logger LOG = LoggerFactory.getLogger(QueryResultExport.class);
+	private final static Logger LOG = LoggerFactory.getLogger(QueryResultExport.class);
 
-    private final static AppConfig.QueryExport conf = AppConfig.get().queryExport;
+	private final static AppConfig.QueryExport conf = AppConfig.get().queryExport;
 
-    private final Downloader downloader;
+	private final Downloader downloader;
 
-    private final CsvQueryResultExporter exporter;
+	private final CsvQueryResultExporter exporter;
 
-    private CqlQuery query;
+	private CqlQuery query;
 
-    public QueryResultExport(MarkupContainer parent, CsvQueryResultExporter exporter) {
-	this.exporter = exporter;
-	this.downloader = new Downloader();
-	parent.add(downloader);
-    }
-
-    public void initiateDownload(AjaxRequestTarget target, CqlQuery query) {
-	downloader.initiateDownload(target);
-	this.query = query;
-    }
-
-    private final class Downloader extends DownloadBehavior {
-
-	@Override
-	protected String getFileName() {
-	    SimpleDateFormat formatter = new SimpleDateFormat(conf.fileNameDate);
-	    String fileName = conf.fileName.replace("DATE", formatter.format(new Date()));
-	    LOG.debug("CSV export file name: {}", fileName);
-	    return fileName;
+	public QueryResultExport(MarkupContainer parent, CsvQueryResultExporter exporter) {
+		this.exporter = exporter;
+		this.downloader = new Downloader();
+		parent.add(downloader);
 	}
 
-	@Override
-	protected IResourceStream getResourceStream() {
-	    if (query == null) {
-		return new StringResourceStream("No Data");
-	    }
+	public void initiateDownload(AjaxRequestTarget target, CqlQuery query) {
+		downloader.initiateDownload(target);
+		this.query = query;
+	}
 
-	    return new AbstractResourceStreamWriter() {
+	private final class Downloader extends DownloadBehavior {
 
 		@Override
-		public void write(OutputStream output) throws IOException {
-		    exporter.exportAsCsv(query, output);
+		protected String getFileName() {
+			SimpleDateFormat formatter = new SimpleDateFormat(conf.fileNameDate);
+			String fileName = conf.fileName.replace("DATE", formatter.format(new Date()));
+			LOG.debug("CSV export file name: {}", fileName);
+			return fileName;
 		}
-	    };
+
+		@Override
+		protected IResourceStream getResourceStream() {
+			if (query == null) {
+				return new StringResourceStream("No Data");
+			}
+
+			return new AbstractResourceStreamWriter() {
+
+				@Override
+				public void write(OutputStream output) throws IOException {
+					exporter.exportAsCsv(query, output);
+				}
+			};
+		}
 	}
-    }
 }

@@ -29,31 +29,31 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class TruncateDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = CqlKeyword.Def.TRUNCATE.value;
+	private final CqlKeyword supports = CqlKeyword.Def.TRUNCATE.value;
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    TruncateCompletion truncateCompletion;
+	@Inject
+	TruncateCompletion truncateCompletion;
 
-    @PostConstruct
-    public void init() {
-	decisionList = new CqlPartCompletion[][] { { truncateCompletion } };
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][] { { truncateCompletion } };
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-	return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword beginnsWith() {
-	return supports;
-    }
+	@Override
+	public CqlKeyword beginnsWith() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryType queryName() {
-	return CqlQueryType.TRUNCATE;
-    }
+	@Override
+	public CqlQueryType queryName() {
+		return CqlQueryType.TRUNCATE;
+	}
 
 }

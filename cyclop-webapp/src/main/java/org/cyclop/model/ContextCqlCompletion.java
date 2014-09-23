@@ -28,40 +28,38 @@ import net.jcip.annotations.Immutable;
 @Immutable
 public final class ContextCqlCompletion implements Serializable {
 
-    public final static ContextCqlCompletion EMPTY = new ContextCqlCompletion(
-	    CqlQueryType.UNKNOWN,
-	    CqlCompletion.Builder.naturalOrder().build());
-    @NotNull
-    @Valid
-    public final CqlQueryType queryName;
+	public final static ContextCqlCompletion EMPTY = new ContextCqlCompletion(CqlQueryType.UNKNOWN,
+			CqlCompletion.Builder.naturalOrder().build());
+	@NotNull
+	@Valid
+	public final CqlQueryType queryName;
 
-    @NotNull
-    @Valid
-    public final CqlCompletion cqlCompletion;
+	@NotNull
+	@Valid
+	public final CqlCompletion cqlCompletion;
 
-    public ContextCqlCompletion(CqlQueryType queryName, CqlCompletion cqlCompletion) {
-	this.queryName = queryName;
-	this.cqlCompletion = cqlCompletion;
-    }
-
-    @Override
-    public int hashCode() {
-	return Objects.hash(queryName, cqlCompletion);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == null || getClass() != obj.getClass()) {
-	    return false;
+	public ContextCqlCompletion(CqlQueryType queryName, CqlCompletion cqlCompletion) {
+		this.queryName = queryName;
+		this.cqlCompletion = cqlCompletion;
 	}
-	final ContextCqlCompletion other = (ContextCqlCompletion) obj;
-	return Objects.equals(queryName, other.queryName)
-		&& Objects.equals(cqlCompletion, other.cqlCompletion);
-    }
 
-    @Override
-    public String toString() {
-	return com.google.common.base.Objects.toStringHelper(this).add("queryName", queryName)
-		.add("cqlCompletion", cqlCompletion).toString();
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(queryName, cqlCompletion);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final ContextCqlCompletion other = (ContextCqlCompletion) obj;
+		return Objects.equals(queryName, other.queryName) && Objects.equals(cqlCompletion, other.cqlCompletion);
+	}
+
+	@Override
+	public String toString() {
+		return com.google.common.base.Objects.toStringHelper(this).add("queryName", queryName)
+				.add("cqlCompletion", cqlCompletion).toString();
+	}
 }

@@ -33,26 +33,25 @@ import org.springframework.context.annotation.ScopedProxyMode;
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @EnableValidation
-public class HistoryServiceImpl extends AbstractQueryProtocolingService<QueryHistory> implements
-	HistoryService {
+public class HistoryServiceImpl extends AbstractQueryProtocolingService<QueryHistory> implements HistoryService {
 
-    protected HistoryServiceImpl() {
-    }
+	protected HistoryServiceImpl() {
+	}
 
-    @Override
-    protected Class<QueryHistory> getClazz() {
-	return QueryHistory.class;
-    }
+	@Override
+	protected Class<QueryHistory> getClazz() {
+		return QueryHistory.class;
+	}
 
-    @Override
-    protected QueryHistory createEmpty() {
-	return new QueryHistory();
-    }
+	@Override
+	protected QueryHistory createEmpty() {
+		return new QueryHistory();
+	}
 
-    @Override
-    public void addAndStore(@NotNull QueryEntry entry) {
-	QueryHistory hist = read();
-	hist.add(entry);
-	store(hist);
-    }
+	@Override
+	public void addAndStore(@NotNull QueryEntry entry) {
+		QueryHistory hist = read();
+		hist.add(entry);
+		store(hist);
+	}
 }

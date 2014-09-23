@@ -38,131 +38,128 @@ import org.slf4j.LoggerFactory;
  */
 @Named
 public class CqlParser {
-    private final static Logger LOG = LoggerFactory.getLogger(CqlParser.class);
+	private final static Logger LOG = LoggerFactory.getLogger(CqlParser.class);
 
-    @Inject
-    private List<DecisionListSupport> decisionListSupportDef;
+	@Inject
+	private List<DecisionListSupport> decisionListSupportDef;
 
-    private CqlCompletion initialCqlCompletion = null;
+	private CqlCompletion initialCqlCompletion = null;
 
-    @PostConstruct
-    public void init() {
+	@PostConstruct
+	public void init() {
 
-	CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
-	for (DecisionListSupport cf : decisionListSupportDef) {
-	    cb.all(cf.beginnsWith());
-	}
-	initialCqlCompletion = cb.build();
-
-	LOG.debug("Initial completion {}", initialCqlCompletion);
-    }
-
-    private Optional<DecisionListSupport> findCompletionDecision(CqlQuery query) {
-	DecisionListSupport found = null;
-	for (DecisionListSupport dl : decisionListSupportDef) {
-	    if (dl.supports(query)) {
-		found = dl;
-		break;
-	    }
-	}
-	LOG.debug("Found Decision List for query {} -> {}", query, found);
-
-	return Optional.ofNullable(found);
-    }
-
-    public CqlCompletion findInitialCompletion() {
-	return initialCqlCompletion;
-    }
-
-    public Optional<ContextCqlCompletion> findCompletion(CqlQuery cqlQuery, int cursorPosition) {
-	LOG.debug("Find completion for {} on {}", cqlQuery, cursorPosition);
-	if (cursorPosition == -1) {
-	    cursorPosition = cqlQuery.part.length() - 1;
-	}
-
-	cursorPosition++;
-
-	Optional<DecisionListSupport> dlsOp = findCompletionDecision(cqlQuery);
-	if (!dlsOp.isPresent()) {
-	    // user started typing, has first world and there is no decision
-	    // list for it
-	    ContextCqlCompletion initial = null;
-	    if (!cqlQuery.partLc.isEmpty() && !cqlQuery.partLc.contains(" ")) {
-		initial = new ContextCqlCompletion(CqlQueryType.UNKNOWN, initialCqlCompletion);
-	    }
-	    return Optional.ofNullable(initial);
-	}
-
-	if (cursorPosition < 0) {
-	    cursorPosition = 0;
-	}
-
-	DecisionListSupport dls = dlsOp.get();
-	CqlPartCompletion[][] decisionList = dls.getDecisionList();
-	if (decisionList.length == 0) {
-	    return Optional.empty();
-	}
-
-	int cqLength = cqlQuery.partLc.length();
-	if (cursorPosition > cqLength) {
-	    cursorPosition = cqLength;
-	}
-
-	String cqlLc = cqlQuery.partLc.substring(0, cursorPosition);
-	int offset = 0;
-	CqlPartCompletion lastMatchingCompletion = null;
-
-	// go over all parsing decisions, until you find one that cannot be
-	// applied - this means that previous one
-	// is the right chose for completion
-	for (CqlPartCompletion[] partCompletionList : decisionList) {
-	    LOG.debug("Next completion");
-	    boolean found = false;
-	    for (CqlPartCompletion partCompletion : partCompletionList) {
-		LOG.debug("Checking: {}", partCompletion);
-		int completionStartMarker = -1;
-		if (partCompletion instanceof MarkerBasedCompletion) {
-		    MarkerBasedCompletion partStatic = (MarkerBasedCompletion) partCompletion;
-		    String startMarker = partStatic.startMarker().partLc;
-		    completionStartMarker = cqlLc.indexOf(startMarker, offset);
-
+		CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
+		for (DecisionListSupport cf : decisionListSupportDef) {
+			cb.all(cf.beginnsWith());
 		}
-		else if (partCompletion instanceof OffsetBasedCompletion) {
-		    OffsetBasedCompletion partDynamic = (OffsetBasedCompletion) partCompletion;
-		    completionStartMarker = partDynamic.canApply(cqlQuery, offset);
+		initialCqlCompletion = cb.build();
 
+		LOG.debug("Initial completion {}", initialCqlCompletion);
+	}
+
+	private Optional<DecisionListSupport> findCompletionDecision(CqlQuery query) {
+		DecisionListSupport found = null;
+		for (DecisionListSupport dl : decisionListSupportDef) {
+			if (dl.supports(query)) {
+				found = dl;
+				break;
+			}
 		}
-		else {
-		    throw new ServiceException("Unsupported CqlPartCompletion: " + partCompletion.getClass());
+		LOG.debug("Found Decision List for query {} -> {}", query, found);
+
+		return Optional.ofNullable(found);
+	}
+
+	public CqlCompletion findInitialCompletion() {
+		return initialCqlCompletion;
+	}
+
+	public Optional<ContextCqlCompletion> findCompletion(CqlQuery cqlQuery, int cursorPosition) {
+		LOG.debug("Find completion for {} on {}", cqlQuery, cursorPosition);
+		if (cursorPosition == -1) {
+			cursorPosition = cqlQuery.part.length() - 1;
 		}
 
-		LOG.debug("completionStartMarker: {}", completionStartMarker);
+		cursorPosition++;
 
-		if (completionStartMarker == -1) {
-		    // this decision cannot be applied - try next one
-		    continue;
+		Optional<DecisionListSupport> dlsOp = findCompletionDecision(cqlQuery);
+		if (!dlsOp.isPresent()) {
+			// user started typing, has first world and there is no decision
+			// list for it
+			ContextCqlCompletion initial = null;
+			if (!cqlQuery.partLc.isEmpty() && !cqlQuery.partLc.contains(" ")) {
+				initial = new ContextCqlCompletion(CqlQueryType.UNKNOWN, initialCqlCompletion);
+			}
+			return Optional.ofNullable(initial);
 		}
-		found = true;
-		// current decision can be applied - try next one
-		offset = completionStartMarker + 1;
-		lastMatchingCompletion = partCompletion;
-	    }
 
-	    if (!found) {
-		break;
-	    }
-	}
-	ContextCqlCompletion cqc = null;
-	if (lastMatchingCompletion != null) {
-	    CqlCompletion cqlCompletion = lastMatchingCompletion.getCompletion(cqlQuery);
-	    cqc = new ContextCqlCompletion(dls.queryName(), cqlCompletion);
-	    LOG.debug("Completion found: {}", cqc);
-	}
-	else {
-	    LOG.debug("Completion not found");
-	}
+		if (cursorPosition < 0) {
+			cursorPosition = 0;
+		}
 
-	return Optional.ofNullable(cqc);
-    }
+		DecisionListSupport dls = dlsOp.get();
+		CqlPartCompletion[][] decisionList = dls.getDecisionList();
+		if (decisionList.length == 0) {
+			return Optional.empty();
+		}
+
+		int cqLength = cqlQuery.partLc.length();
+		if (cursorPosition > cqLength) {
+			cursorPosition = cqLength;
+		}
+
+		String cqlLc = cqlQuery.partLc.substring(0, cursorPosition);
+		int offset = 0;
+		CqlPartCompletion lastMatchingCompletion = null;
+
+		// go over all parsing decisions, until you find one that cannot be
+		// applied - this means that previous one
+		// is the right chose for completion
+		for (CqlPartCompletion[] partCompletionList : decisionList) {
+			LOG.debug("Next completion");
+			boolean found = false;
+			for (CqlPartCompletion partCompletion : partCompletionList) {
+				LOG.debug("Checking: {}", partCompletion);
+				int completionStartMarker = -1;
+				if (partCompletion instanceof MarkerBasedCompletion) {
+					MarkerBasedCompletion partStatic = (MarkerBasedCompletion) partCompletion;
+					String startMarker = partStatic.startMarker().partLc;
+					completionStartMarker = cqlLc.indexOf(startMarker, offset);
+
+				} else if (partCompletion instanceof OffsetBasedCompletion) {
+					OffsetBasedCompletion partDynamic = (OffsetBasedCompletion) partCompletion;
+					completionStartMarker = partDynamic.canApply(cqlQuery, offset);
+
+				} else {
+					throw new ServiceException("Unsupported CqlPartCompletion: " + partCompletion.getClass());
+				}
+
+				LOG.debug("completionStartMarker: {}", completionStartMarker);
+
+				if (completionStartMarker == -1) {
+					// this decision cannot be applied - try next one
+					continue;
+				}
+				found = true;
+				// current decision can be applied - try next one
+				offset = completionStartMarker + 1;
+				lastMatchingCompletion = partCompletion;
+			}
+
+			if (!found) {
+				break;
+			}
+		}
+		ContextCqlCompletion cqc = null;
+		if (lastMatchingCompletion != null) {
+			CqlCompletion cqlCompletion = lastMatchingCompletion.getCompletion(cqlQuery);
+			cqc = new ContextCqlCompletion(dls.queryName(), cqlCompletion);
+			LOG.debug("Completion found: {}", cqc);
+		} else {
+			LOG.debug("Completion not found");
+		}
+
+		return Optional.ofNullable(cqc);
+	}
 
 }

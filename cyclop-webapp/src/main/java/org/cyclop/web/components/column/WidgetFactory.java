@@ -38,103 +38,84 @@ import com.google.common.collect.ImmutableMap;
 @Named
 public class WidgetFactory {
 
-    @Inject
-    private DataExtractor extractor;
+	@Inject
+	private DataExtractor extractor;
 
-    protected WidgetFactory() {
-    }
-
-    private Component createForCollection(
-	    Row row,
-	    CqlPartitionKeyValue cqlPartitionKeyValue,
-	    CqlExtendedColumnName column,
-	    String componentId) {
-	ImmutableList<CqlColumnValue> content = extractor.extractCollection(row, column);
-	Component comp;
-	if (content.isEmpty()) {
-	    comp = createForEmptyColumn(componentId);
-	}
-	else {
-	    comp = new CollectionViewPanel(componentId, cqlPartitionKeyValue, content);
+	protected WidgetFactory() {
 	}
 
-	return comp;
-    }
+	private Component createForCollection(Row row, CqlPartitionKeyValue cqlPartitionKeyValue,
+			CqlExtendedColumnName column, String componentId) {
+		ImmutableList<CqlColumnValue> content = extractor.extractCollection(row, column);
+		Component comp;
+		if (content.isEmpty()) {
+			comp = createForEmptyColumn(componentId);
+		} else {
+			comp = new CollectionViewPanel(componentId, cqlPartitionKeyValue, content);
+		}
 
-    public Component createForColumn(
-	    Row row,
-	    CqlPartitionKey partitionKey,
-	    CqlExtendedColumnName column,
-	    String componentId) {
-
-	Component component = createForDataType(row, partitionKey, column, componentId);
-	if (component == null) {
-	    component = createForEmptyColumn(componentId);
+		return comp;
 	}
 
-	return component;
-    }
+	public Component createForColumn(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
+			String componentId) {
 
-    private Component createForDataType(
-	    Row row,
-	    CqlPartitionKey partitionKey,
-	    CqlExtendedColumnName column,
-	    String componentId) {
-	String partLc = column.partLc;
-	if (row == null || row.isNull(partLc)) {
-	    return null;
+		Component component = createForDataType(row, partitionKey, column, componentId);
+		if (component == null) {
+			component = createForEmptyColumn(componentId);
+		}
+
+		return component;
 	}
 
-	CqlPartitionKeyValue cqlPartitionKeyValue = null;
-	if (partitionKey != null) {
-	    cqlPartitionKeyValue = extractor.extractPartitionKey(row, partitionKey);
+	private Component createForDataType(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
+			String componentId) {
+		String partLc = column.partLc;
+		if (row == null || row.isNull(partLc)) {
+			return null;
+		}
+
+		CqlPartitionKeyValue cqlPartitionKeyValue = null;
+		if (partitionKey != null) {
+			cqlPartitionKeyValue = extractor.extractPartitionKey(row, partitionKey);
+		}
+
+		Component component;
+		CqlDataType dataType = column.dataType;
+		if (dataType.name == DataType.Name.SET || dataType.name == DataType.Name.LIST) {
+			component = createForCollection(row, cqlPartitionKeyValue, column, componentId);
+
+		} else if (dataType.name == DataType.Name.MAP) {
+			component = createForMap(row, cqlPartitionKeyValue, column, componentId);
+
+		} else {
+			component = createForSingleValue(row, cqlPartitionKeyValue, column, componentId);
+		}
+		return component;
 	}
 
-	Component component;
-	CqlDataType dataType = column.dataType;
-	if (dataType.name == DataType.Name.SET || dataType.name == DataType.Name.LIST) {
-	    component = createForCollection(row, cqlPartitionKeyValue, column, componentId);
-
-	}
-	else if (dataType.name == DataType.Name.MAP) {
-	    component = createForMap(row, cqlPartitionKeyValue, column, componentId);
-
-	}
-	else {
-	    component = createForSingleValue(row, cqlPartitionKeyValue, column, componentId);
-	}
-	return component;
-    }
-
-    private Label createForEmptyColumn(String componentId) {
-	return new Label(componentId, DataConverter.EMPTY_COL_VALUE);
-    }
-
-    private Component createForMap(
-	    Row row,
-	    CqlPartitionKeyValue cqlPartitionKeyValue,
-	    CqlExtendedColumnName column,
-	    String componentId) {
-	ImmutableMap<CqlColumnValue, CqlColumnValue> displayMap = extractor.extractMap(row, column);
-	Component comp;
-	if (displayMap.isEmpty()) {
-	    comp = createForEmptyColumn(componentId);
-	}
-	else {
-	    comp = new MapViewPanel(componentId, cqlPartitionKeyValue, displayMap);
+	private Label createForEmptyColumn(String componentId) {
+		return new Label(componentId, DataConverter.EMPTY_COL_VALUE);
 	}
 
-	return comp;
-    }
+	private Component createForMap(Row row, CqlPartitionKeyValue cqlPartitionKeyValue, CqlExtendedColumnName column,
+			String componentId) {
+		ImmutableMap<CqlColumnValue, CqlColumnValue> displayMap = extractor.extractMap(row, column);
+		Component comp;
+		if (displayMap.isEmpty()) {
+			comp = createForEmptyColumn(componentId);
+		} else {
+			comp = new MapViewPanel(componentId, cqlPartitionKeyValue, displayMap);
+		}
 
-    private Component createForSingleValue(
-	    Row row,
-	    CqlPartitionKeyValue cqlPartitionKeyValue,
-	    CqlExtendedColumnName column,
-	    String componentId) {
-	CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row, column);
-	Component component = new ColumnValuePanel(componentId, cqlPartitionKeyValue, cqlColumnValue, false);
-	return component;
-    }
+		return comp;
+	}
+
+	private Component createForSingleValue(Row row, CqlPartitionKeyValue cqlPartitionKeyValue,
+			CqlExtendedColumnName column, String componentId) {
+		CqlColumnValue cqlColumnValue = extractor.extractSingleValue(row, column);
+		Component component = new ColumnValuePanel(componentId, cqlPartitionKeyValue, cqlColumnValue, false);
+		return component;
+	}
 
 }

@@ -30,31 +30,31 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class AlterKeyspaceDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = new CqlNotSupported("alter keyspace");
+	private final CqlKeyword supports = new CqlNotSupported("alter keyspace");
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @Inject
-    AlterCompletion alterCompletion;
+	@Inject
+	AlterCompletion alterCompletion;
 
-    @PostConstruct
-    public void init() {
-	decisionList = new CqlPartCompletion[][] { { alterCompletion } };
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][] { { alterCompletion } };
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-	return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword beginnsWith() {
-	return supports;
-    }
+	@Override
+	public CqlKeyword beginnsWith() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryType queryName() {
-	return CqlQueryType.ALTER_KEYSPACE;
-    }
+	@Override
+	public CqlQueryType queryName() {
+		return CqlQueryType.ALTER_KEYSPACE;
+	}
 
 }

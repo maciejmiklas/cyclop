@@ -29,43 +29,41 @@ import org.cyclop.service.completion.impl.parser.DecisionListSupport;
 @Named
 public class UpdateDecisionListSupport implements DecisionListSupport {
 
-    private final CqlKeyword supports = CqlKeyword.Def.UPDATE.value;
+	private final CqlKeyword supports = CqlKeyword.Def.UPDATE.value;
 
-    @Inject
-    private TableNameCompletion tableNameCompletion;
+	@Inject
+	private TableNameCompletion tableNameCompletion;
 
-    @Inject
-    private ColumnsCompletion columnsCompletion;
+	@Inject
+	private ColumnsCompletion columnsCompletion;
 
-    @Inject
-    private AfterUpdateCompletion afterUpdateCompletion;
+	@Inject
+	private AfterUpdateCompletion afterUpdateCompletion;
 
-    @Inject
-    private WhereCompletion whereCompletion;
+	@Inject
+	private WhereCompletion whereCompletion;
 
-    private CqlPartCompletion[][] decisionList;
+	private CqlPartCompletion[][] decisionList;
 
-    @PostConstruct
-    public void init() {
-	decisionList = new CqlPartCompletion[][] { { tableNameCompletion },
-		{ afterUpdateCompletion },
-		{ columnsCompletion },
-		{ whereCompletion } };
-    }
+	@PostConstruct
+	public void init() {
+		decisionList = new CqlPartCompletion[][] { { tableNameCompletion }, { afterUpdateCompletion },
+				{ columnsCompletion }, { whereCompletion } };
+	}
 
-    @Override
-    public CqlPartCompletion[][] getDecisionList() {
-	return decisionList;
-    }
+	@Override
+	public CqlPartCompletion[][] getDecisionList() {
+		return decisionList;
+	}
 
-    @Override
-    public CqlKeyword beginnsWith() {
-	return supports;
-    }
+	@Override
+	public CqlKeyword beginnsWith() {
+		return supports;
+	}
 
-    @Override
-    public CqlQueryType queryName() {
-	return CqlQueryType.UPDATE;
-    }
+	@Override
+	public CqlQueryType queryName() {
+		return CqlQueryType.UPDATE;
+	}
 
 }

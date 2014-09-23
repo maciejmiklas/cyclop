@@ -22,7 +22,8 @@ import javax.servlet.annotation.WebInitParam;
 import org.apache.wicket.protocol.http.WicketFilter;
 
 /** @author Maciej Miklas */
-@WebFilter(value = "/main/*", initParams = { @WebInitParam(name = "applicationClassName", value = "org.cyclop.web.webapp.WicketWebApplication"),
-	@WebInitParam(name = org.apache.wicket.protocol.http.WicketFilter.FILTER_MAPPING_PARAM, value = "/main/*") })
+@WebFilter(value = "/main/*", initParams = {
+		@WebInitParam(name = "applicationClassName", value = "org.cyclop.web.webapp.WicketWebApplication"),
+		@WebInitParam(name = org.apache.wicket.protocol.http.WicketFilter.FILTER_MAPPING_PARAM, value = "/main/*") })
 public class WebAppWicketFilter extends WicketFilter {
 }

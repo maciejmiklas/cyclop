@@ -29,9 +29,9 @@ import org.cyclop.model.exception.QueryException;
 @ThreadSafe
 public interface ResultWriter {
 
-    void success(CqlQuery query, long runtime);
+	void success(CqlQuery query, long runtime);
 
-    void error(CqlQuery query, QueryException error, long runtime);
+	void error(CqlQuery query, QueryException error, long runtime);
 
-    void unknownError(CqlQuery query, Exception error, long runtime);
+	void unknownError(CqlQuery query, Exception error, long runtime);
 }

@@ -30,19 +30,19 @@ import org.apache.wicket.markup.html.WebPage;
 /** @author Maciej Miklas */
 public abstract class ParentPage extends WebPage {
 
-    public ParentPage() {
-	setVersioned(false);
-    }
+	public ParentPage() {
+		setVersioned(false);
+	}
 
-    @Override
-    public void renderHead(IHeaderResponse response) {
-	super.renderHead(response);
-	response.render(JavaScriptHeaderItem.forReference(JQUERY_UI));
-	response.render(JavaScriptHeaderItem.forReference(JQUERY_TOOLS));
-	response.render(JavaScriptHeaderItem.forReference(JQUERY_BROWSER));
-	response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
-	response.render(JavaScriptHeaderItem.forReference(COMMON));
-	response.render(JavaScriptHeaderItem.forReference(COL_RESIZABLE));
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
+		response.render(JavaScriptHeaderItem.forReference(JQUERY_UI));
+		response.render(JavaScriptHeaderItem.forReference(JQUERY_TOOLS));
+		response.render(JavaScriptHeaderItem.forReference(JQUERY_BROWSER));
+		response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
+		response.render(JavaScriptHeaderItem.forReference(COMMON));
+		response.render(JavaScriptHeaderItem.forReference(COL_RESIZABLE));
 
-    }
+	}
 }

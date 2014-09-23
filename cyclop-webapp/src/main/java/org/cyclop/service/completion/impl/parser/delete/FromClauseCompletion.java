@@ -31,24 +31,23 @@ import com.google.common.base.Objects;
 @Named("delete.FromClauseCompletion")
 class FromClauseCompletion extends MarkerBasedCompletion {
 
-    @Inject
-    protected CompletionHelper completionHelper;
+	@Inject
+	protected CompletionHelper completionHelper;
 
-    public FromClauseCompletion() {
-	super(CqlKeyword.Def.FROM.value);
-    }
+	public FromClauseCompletion() {
+		super(CqlKeyword.Def.FROM.value);
+	}
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-	CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(
-		query,
-		CqlKeyword.Def.FROM.value);
-	return completion.build();
-    }
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		CqlCompletion.Builder completion = completionHelper
+				.computeTableNameCompletion(query, CqlKeyword.Def.FROM.value);
+		return completion.build();
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

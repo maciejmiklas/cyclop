@@ -30,25 +30,25 @@ import com.google.common.base.Objects;
 @Named("update.AfterUpdateCompletion")
 class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
 
-    private CqlCompletion completion;
+	private CqlCompletion completion;
 
-    public AfterUpdateCompletion() {
-	super(CqlKeyword.Def.UPDATE.value);
-    }
+	public AfterUpdateCompletion() {
+		super(CqlKeyword.Def.UPDATE.value);
+	}
 
-    @PostConstruct
-    public void init() {
-	completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value)
-		.all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.SET.value).build();
-    }
+	@PostConstruct
+	public void init() {
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value)
+				.all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.SET.value).build();
+	}
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-	return completion;
-    }
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		return completion;
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("completion", completion).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("completion", completion).toString();
+	}
 }

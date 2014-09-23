@@ -51,77 +51,76 @@ import com.datastax.driver.core.Session;
 @EnableWebMvc
 public abstract class AbstractTestCase {
 
-    private static final EmbeddedCassandra CASSANDRA = new EmbeddedCassandra();
+	private static final EmbeddedCassandra CASSANDRA = new EmbeddedCassandra();
 
-    private static boolean INIT_EXECUTED = false;
+	private static boolean INIT_EXECUTED = false;
 
-    protected final boolean unixOs = !System.getProperty("os.name", "linux").toLowerCase()
-	    .contains("windows");
+	protected final boolean unixOs = !System.getProperty("os.name", "linux").toLowerCase().contains("windows");
 
-    @Inject
-    protected CassandraSession cassandraSession;
+	@Inject
+	protected CassandraSession cassandraSession;
 
-    private static void rmdir(Path dir) throws IOException {
-	File dirFile = dir.toFile();
-	if (dirFile.exists()) {
-	    FileUtils.deleteRecursive(dirFile);
+	private static void rmdir(Path dir) throws IOException {
+		File dirFile = dir.toFile();
+		if (dirFile.exists()) {
+			FileUtils.deleteRecursive(dirFile);
+		}
 	}
-    }
 
-    private static void setupCassandra() throws Exception {
-	CASSANDRA.start();
-    }
-
-    private static void setupHistory() throws Exception {
-	Path tempPath = FileSystems.getDefault().getPath("target", "cyclop-history-test");
-	rmdir(tempPath);
-	Files.createDirectory(tempPath);
-	System.getProperties().setProperty("fileStore.folder", tempPath.toString());
-    }
-
-    @BeforeClass
-    public static void staticInit() throws Exception {
-	if (INIT_EXECUTED) {
-	    return;
+	private static void setupCassandra() throws Exception {
+		CASSANDRA.start();
 	}
-	INIT_EXECUTED = true;
-	setupHistory();
-	setupCassandra();
-    }
 
-    public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {
-	ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(serialized));
+	private static void setupHistory() throws Exception {
+		Path tempPath = FileSystems.getDefault().getPath("target", "cyclop-history-test");
+		rmdir(tempPath);
+		Files.createDirectory(tempPath);
+		System.getProperties().setProperty("fileStore.folder", tempPath.toString());
+	}
 
-	@SuppressWarnings("unchecked")
-	T des = (T) in.readObject();
-	in.close();
-	assertNotNull(des);
-	return des;
-    }
+	@BeforeClass
+	public static void staticInit() throws Exception {
+		if (INIT_EXECUTED) {
+			return;
+		}
+		INIT_EXECUTED = true;
+		setupHistory();
+		setupCassandra();
+	}
 
-    public Session getCassandraSession() {
-	assertNotNull("Cassandra session is null", CASSANDRA.getSession());
-	return CASSANDRA.getSession();
-    }
+	public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {
+		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(serialized));
 
-    public byte[] serialize(Object obj) throws IOException {
-	ByteArrayOutputStream bout = new ByteArrayOutputStream();
-	ObjectOutputStream out = new ObjectOutputStream(bout);
-	out.writeObject(obj);
-	out.close();
-	byte[] serialized = bout.toByteArray();
-	assertNotNull(serialized);
-	return serialized;
-    }
+		@SuppressWarnings("unchecked")
+		T des = (T) in.readObject();
+		in.close();
+		assertNotNull(des);
+		return des;
+	}
 
-    @Before
-    public void setup() throws Exception {
-	cassandraSession.authenticate("test", "test1234");
-    }
+	public Session getCassandraSession() {
+		assertNotNull("Cassandra session is null", CASSANDRA.getSession());
+		return CASSANDRA.getSession();
+	}
 
-    @After
-    public void cleanUp() {
-	cassandraSession.close();
-	assertFalse(cassandraSession.isOpen());
-    }
+	public byte[] serialize(Object obj) throws IOException {
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		ObjectOutputStream out = new ObjectOutputStream(bout);
+		out.writeObject(obj);
+		out.close();
+		byte[] serialized = bout.toByteArray();
+		assertNotNull(serialized);
+		return serialized;
+	}
+
+	@Before
+	public void setup() throws Exception {
+		cassandraSession.authenticate("test", "test1234");
+	}
+
+	@After
+	public void cleanUp() {
+		cassandraSession.close();
+		assertFalse(cassandraSession.isOpen());
+	}
 }

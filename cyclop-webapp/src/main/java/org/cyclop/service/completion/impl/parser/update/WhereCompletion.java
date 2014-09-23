@@ -38,29 +38,29 @@ import com.google.common.base.Objects;
 @Named("update.WhereCompletion")
 class WhereCompletion extends MarkerBasedCompletion {
 
-    @Inject
-    private QueryService queryService;
+	@Inject
+	private QueryService queryService;
 
-    public WhereCompletion() {
-	super(CqlKeyword.Def.WHERE.value);
-    }
+	public WhereCompletion() {
+		super(CqlKeyword.Def.WHERE.value);
+	}
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-	CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
-	cb.all(CqlKeyword.Def.AND.value);
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
+		cb.all(CqlKeyword.Def.AND.value);
 
-	Optional<CqlTable> table = extractTableName(CqlKeyword.Def.UPDATE.value, query);
-	SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
+		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.UPDATE.value, query);
+		SortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 
-	cb.all(columnNames);
-	CqlCompletion cmp = cb.build();
-	return cmp;
-    }
+		cb.all(columnNames);
+		CqlCompletion cmp = cb.build();
+		return cmp;
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

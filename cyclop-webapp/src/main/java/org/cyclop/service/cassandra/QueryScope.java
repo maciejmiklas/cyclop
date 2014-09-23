@@ -27,5 +27,5 @@ import org.cyclop.model.CqlKeySpace;
  */
 public interface QueryScope {
 
-    Optional<CqlKeySpace> getActiveKeySpace();
+	Optional<CqlKeySpace> getActiveKeySpace();
 }

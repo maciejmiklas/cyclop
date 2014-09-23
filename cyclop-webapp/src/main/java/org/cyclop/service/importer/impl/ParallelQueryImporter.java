@@ -45,118 +45,102 @@ import com.google.common.collect.ImmutableList;
 @Named(QueryImporter.IMPL_PARALLEL)
 public class ParallelQueryImporter extends AbstractImporter {
 
-    private final static Logger LOG = LoggerFactory.getLogger(ParallelQueryImporter.class);
+	private final static Logger LOG = LoggerFactory.getLogger(ParallelQueryImporter.class);
 
-    @Inject
-    protected HistoryService historyService;
+	@Inject
+	protected HistoryService historyService;
 
-    @Inject
-    private CassandraSession session;
+	@Inject
+	private CassandraSession session;
 
-    @Inject
-    @Named("importExecutor")
-    private ExecutorService executor;
+	@Inject
+	@Named("importExecutor")
+	private ExecutorService executor;
 
-    @Override
-    void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig iconfig) {
-	ImmutableList<CqlQuery> queries = parse(scanner);
-	if (queries.isEmpty()) {
-	    LOG.debug("No data to import");
-	    return;
+	@Override
+	void execImport(Scanner scanner, ResultWriter resultWriter, StatsCollector status, ImportConfig iconfig) {
+		ImmutableList<CqlQuery> queries = parse(scanner);
+		if (queries.isEmpty()) {
+			LOG.debug("No data to import");
+			return;
+		}
+
+		QueryHistory history = historyService.read();
+
+		List<Future<Void>> futures = startWorkers(queries, resultWriter, status, iconfig, history);
+		waitForImport(futures);
+
+		if (iconfig.isUpdateHistory()) {
+			historyService.store(history);
+		}
 	}
 
-	QueryHistory history = historyService.read();
+	private List<Future<Void>> startWorkers(ImmutableList<CqlQuery> queries, ResultWriter resultWriter,
+			StatsCollector status, ImportConfig iconfig, QueryHistory history) {
 
-	List<Future<Void>> futures = startWorkers(queries, resultWriter, status, iconfig, history);
-	waitForImport(futures);
+		final int queriesSize = queries.size();
+		final int proThread = Math.max(1, queriesSize / conf.queryImport.maxThreadsProImport);
 
-	if (iconfig.isUpdateHistory()) {
-	    historyService.store(history);
-	}
-    }
+		LOG.debug("Starting parallel import for {} queries, {} pro thread", queriesSize, proThread);
+		Session cassSession = session.getSession();
 
-    private List<Future<Void>> startWorkers(
-	    ImmutableList<CqlQuery> queries,
-	    ResultWriter resultWriter,
-	    StatsCollector status,
-	    ImportConfig iconfig,
-	    QueryHistory history) {
+		List<Future<Void>> futures = new ArrayList<>();
+		int startIndex = 0;
+		int remaining = queriesSize;
+		while (remaining > 0) {
+			remaining -= proThread;
+			int amount = remaining > 0 ? proThread : remaining + proThread;
 
-	final int queriesSize = queries.size();
-	final int proThread = Math.max(1, queriesSize / conf.queryImport.maxThreadsProImport);
+			LOG.debug("Starting thread with start index: {} and amount: {}, remaining: {}", startIndex, amount,
+					remaining);
 
-	LOG.debug("Starting parallel import for {} queries, {} pro thread", queriesSize, proThread);
-	Session cassSession = session.getSession();
+			ImportWorker task = new ImportWorker(startIndex, amount, queries, status, iconfig, resultWriter,
+					cassSession, history);
 
-	List<Future<Void>> futures = new ArrayList<>();
-	int startIndex = 0;
-	int remaining = queriesSize;
-	while (remaining > 0) {
-	    remaining -= proThread;
-	    int amount = remaining > 0 ? proThread : remaining + proThread;
-
-	    LOG.debug(
-		    "Starting thread with start index: {} and amount: {}, remaining: {}",
-		    startIndex,
-		    amount,
-		    remaining);
-
-	    ImportWorker task = new ImportWorker(
-		    startIndex,
-		    amount,
-		    queries,
-		    status,
-		    iconfig,
-		    resultWriter,
-		    cassSession,
-		    history);
-
-	    Future<Void> future = executor.submit(task);
-	    futures.add(future);
-	    startIndex += amount;
-	}
-	return futures;
-    }
-
-    private void waitForImport(List<Future<Void>> futures) {
-	LOG.debug("Tasks submitted - waiting for results");
-	for (Future<Void> future : futures) {
-	    try {
-		future.get();
-	    }
-	    catch (InterruptedException e) {
-		Thread.interrupted();
-		LOG.warn("Import executor interrupted", e);
-	    }
-	    catch (Exception e) {
-		LOG.error("Import executor error", e);
-	    }
-	}
-    }
-
-    private ImmutableList<CqlQuery> parse(Scanner scanner) {
-	StopWatch timer = null;
-	if (LOG.isDebugEnabled()) {
-	    timer = new StopWatch();
-	    timer.start();
+			Future<Void> future = executor.submit(task);
+			futures.add(future);
+			startIndex += amount;
+		}
+		return futures;
 	}
 
-	ImmutableList.Builder<CqlQuery> build = ImmutableList.builder();
-	while (scanner.hasNext()) {
-	    String nextStr = StringUtils.trimToNull(scanner.next());
-	    if (nextStr == null) {
-		continue;
-	    }
-	    CqlQuery query = new CqlQuery(CqlQueryType.UNKNOWN, nextStr);
-	    build.add(query);
+	private void waitForImport(List<Future<Void>> futures) {
+		LOG.debug("Tasks submitted - waiting for results");
+		for (Future<Void> future : futures) {
+			try {
+				future.get();
+			} catch (InterruptedException e) {
+				Thread.interrupted();
+				LOG.warn("Import executor interrupted", e);
+			} catch (Exception e) {
+				LOG.error("Import executor error", e);
+			}
+		}
 	}
-	ImmutableList<CqlQuery> res = build.build();
 
-	if (LOG.isDebugEnabled()) {
-	    timer.stop();
-	    LOG.debug("Parsed {} queries in {}", res.size(), timer.toString());
+	private ImmutableList<CqlQuery> parse(Scanner scanner) {
+		StopWatch timer = null;
+		if (LOG.isDebugEnabled()) {
+			timer = new StopWatch();
+			timer.start();
+		}
+
+		ImmutableList.Builder<CqlQuery> build = ImmutableList.builder();
+		while (scanner.hasNext()) {
+			String nextStr = StringUtils.trimToNull(scanner.next());
+			if (nextStr == null) {
+				continue;
+			}
+			CqlQuery query = new CqlQuery(CqlQueryType.UNKNOWN, nextStr);
+			build.add(query);
+		}
+		ImmutableList<CqlQuery> res = build.build();
+
+		if (LOG.isDebugEnabled()) {
+			timer.stop();
+			LOG.debug("Parsed {} queries in {}", res.size(), timer.toString());
+		}
+		return res;
 	}
-	return res;
-    }
 
 }

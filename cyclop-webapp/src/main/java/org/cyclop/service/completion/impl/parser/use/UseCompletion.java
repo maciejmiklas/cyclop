@@ -33,22 +33,22 @@ import com.google.common.collect.ImmutableSortedSet;
 @Named("use.UsePartCompletion")
 class UseCompletion extends MarkerBasedCompletion {
 
-    @Inject
-    private QueryService queryService;
+	@Inject
+	private QueryService queryService;
 
-    public UseCompletion() {
-	super(CqlKeyword.Def.USE.value);
-    }
+	public UseCompletion() {
+		super(CqlKeyword.Def.USE.value);
+	}
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
-	ImmutableSortedSet<CqlKeySpace> keySpaces = queryService.findAllKeySpaces();
-	return CqlCompletion.Builder.naturalOrder().all(keySpaces).build();
-    }
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
+		ImmutableSortedSet<CqlKeySpace> keySpaces = queryService.findAllKeySpaces();
+		return CqlCompletion.Builder.naturalOrder().all(keySpaces).build();
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

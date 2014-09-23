@@ -28,17 +28,17 @@ import com.google.common.base.Objects;
 @Named("select.SelectCompletionTemplate")
 class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
 
-    private final static CqlCompletion.Builder STATC_PART = CqlCompletion.Builder.naturalOrder()
-	    .all(CqlKeyword.Def.COUNT_AST.value).all(CqlKeyword.Def.COUNT_ONE.value)
-	    .all(CqlKeyword.Def.WRITETIME.value).all(CqlKeyword.Def.TTL.value).all(CqlKeyword.Def.FROM.value);
+	private final static CqlCompletion.Builder STATC_PART = CqlCompletion.Builder.naturalOrder()
+			.all(CqlKeyword.Def.COUNT_AST.value).all(CqlKeyword.Def.COUNT_ONE.value)
+			.all(CqlKeyword.Def.WRITETIME.value).all(CqlKeyword.Def.TTL.value).all(CqlKeyword.Def.FROM.value);
 
-    public SelectCompletionTemplate() {
-	super(STATC_PART, CqlKeyword.Def.FROM.value, CqlKeyword.Def.SELECT.value);
-    }
+	public SelectCompletionTemplate() {
+		super(STATC_PART, CqlKeyword.Def.FROM.value, CqlKeyword.Def.SELECT.value);
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

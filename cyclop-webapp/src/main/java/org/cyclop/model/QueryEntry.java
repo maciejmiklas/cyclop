@@ -43,101 +43,100 @@ import com.google.common.base.Objects;
 @XmlJavaTypeAdapter(QueryEntry.Adapter.class)
 public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
-    @NotNull
-    @Valid
-    public final CqlQuery query;
+	@NotNull
+	@Valid
+	public final CqlQuery query;
 
-    @NotNull
-    @Valid
-    public final DateTime executedOnUtc;
+	@NotNull
+	@Valid
+	public final DateTime executedOnUtc;
 
-    public final long runTime;
+	public final long runTime;
 
-    public QueryEntry(CqlQuery query, long runTime) {
-	this(query, new DateTime().toDateTime(DateTimeZone.UTC), runTime);
-    }
-
-    public QueryEntry(CqlQuery query, DateTime executedOnUtc, long runTime) {
-	this.query = query;
-	this.executedOnUtc = executedOnUtc;
-	this.runTime = runTime;
-    }
-
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("query", query).add("executedOnUtc", executedOnUtc)
-		.toString();
-    }
-
-    @Override
-    public int hashCode() {
-	return java.util.Objects.hash(query);
-    }
-
-    /** equals and hashCode are only on query to recognize the same queries */
-    @Override
-    public boolean equals(final Object obj) {
-	if (obj == null || getClass() != obj.getClass()) {
-	    return false;
+	public QueryEntry(CqlQuery query, long runTime) {
+		this(query, new DateTime().toDateTime(DateTimeZone.UTC), runTime);
 	}
 
-	final QueryEntry other = (QueryEntry) obj;
-	return java.util.Objects.equals(query, other.query);
-    }
-
-    @Override
-    public int compareTo(QueryEntry o) {
-	int compRes = o.executedOnUtc.compareTo(executedOnUtc);
-
-	// make sure that entries with the same date are not removed if query is
-	// different
-	if (compRes == 0) {
-	    compRes = query.compareTo(o.query);
+	public QueryEntry(CqlQuery query, DateTime executedOnUtc, long runTime) {
+		this.query = query;
+		this.executedOnUtc = executedOnUtc;
+		this.runTime = runTime;
 	}
-	return compRes;
-    }
-
-    @XmlRootElement
-    @XmlAccessorType(XmlAccessType.FIELD)
-    public final static class QueryHistoryEntryJaxb {
-	public long runTime;
-
-	public int resultsSize;
-
-	private CqlQuery query;
-
-	private DateTime executedOn;
 
 	@Override
 	public String toString() {
-	    return Objects.toStringHelper(this).add("query", query).add("executedOn", executedOn)
-		    .add("runTime", runTime).add("resultsSize", resultsSize).toString();
-	}
-    }
-
-    @XmlTransient
-    public final static class Adapter extends XmlAdapter<QueryHistoryEntryJaxb, QueryEntry> {
-
-	@Override
-	public QueryEntry unmarshal(QueryHistoryEntryJaxb jaxb) throws Exception {
-	    if (jaxb == null) {
-		return null;
-	    }
-
-	    QueryEntry entry = new QueryEntry(jaxb.query, jaxb.executedOn, jaxb.runTime);
-	    return entry;
+		return Objects.toStringHelper(this).add("query", query).add("executedOnUtc", executedOnUtc).toString();
 	}
 
 	@Override
-	public QueryHistoryEntryJaxb marshal(QueryEntry histObj) throws Exception {
-	    if (histObj == null) {
-		return null;
-	    }
-	    QueryHistoryEntryJaxb jaxb = new QueryHistoryEntryJaxb();
-	    jaxb.executedOn = histObj.executedOnUtc;
-	    jaxb.query = histObj.query;
-	    jaxb.runTime = histObj.runTime;
-	    return jaxb;
+	public int hashCode() {
+		return java.util.Objects.hash(query);
 	}
-    }
+
+	/** equals and hashCode are only on query to recognize the same queries */
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+
+		final QueryEntry other = (QueryEntry) obj;
+		return java.util.Objects.equals(query, other.query);
+	}
+
+	@Override
+	public int compareTo(QueryEntry o) {
+		int compRes = o.executedOnUtc.compareTo(executedOnUtc);
+
+		// make sure that entries with the same date are not removed if query is
+		// different
+		if (compRes == 0) {
+			compRes = query.compareTo(o.query);
+		}
+		return compRes;
+	}
+
+	@XmlRootElement
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public final static class QueryHistoryEntryJaxb {
+		public long runTime;
+
+		public int resultsSize;
+
+		private CqlQuery query;
+
+		private DateTime executedOn;
+
+		@Override
+		public String toString() {
+			return Objects.toStringHelper(this).add("query", query).add("executedOn", executedOn)
+					.add("runTime", runTime).add("resultsSize", resultsSize).toString();
+		}
+	}
+
+	@XmlTransient
+	public final static class Adapter extends XmlAdapter<QueryHistoryEntryJaxb, QueryEntry> {
+
+		@Override
+		public QueryEntry unmarshal(QueryHistoryEntryJaxb jaxb) throws Exception {
+			if (jaxb == null) {
+				return null;
+			}
+
+			QueryEntry entry = new QueryEntry(jaxb.query, jaxb.executedOn, jaxb.runTime);
+			return entry;
+		}
+
+		@Override
+		public QueryHistoryEntryJaxb marshal(QueryEntry histObj) throws Exception {
+			if (histObj == null) {
+				return null;
+			}
+			QueryHistoryEntryJaxb jaxb = new QueryHistoryEntryJaxb();
+			jaxb.executedOn = histObj.executedOnUtc;
+			jaxb.query = histObj.query;
+			jaxb.runTime = histObj.runTime;
+			return jaxb;
+		}
+	}
 }

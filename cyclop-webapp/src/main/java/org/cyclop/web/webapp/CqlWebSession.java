@@ -35,69 +35,68 @@ import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 public class CqlWebSession extends AuthenticatedWebSession {
-    private final static Logger LOG = LoggerFactory.getLogger(CqlWebSession.class);
+	private final static Logger LOG = LoggerFactory.getLogger(CqlWebSession.class);
 
-    @Inject
-    private transient CassandraSession cassandraSession;
+	@Inject
+	private transient CassandraSession cassandraSession;
 
-    private final AppConfig conf = AppConfig.get();
+	private final AppConfig conf = AppConfig.get();
 
-    private boolean authenticated = false;
+	private boolean authenticated = false;
 
-    private String lastLoginError = null;
+	private String lastLoginError = null;
 
-    public CqlWebSession(Request request) {
-	super(request);
-	Injector.get().inject(this);
-    }
-
-    private void readObject(java.io.ObjectInputStream in) throws ClassNotFoundException, IOException {
-	in.defaultReadObject();
-	Injector.get().inject(this);
-    }
-
-    @Override
-    public boolean authenticate(String username, String password) {
-	try {
-	    cassandraSession.authenticate(username, password);
-	    bindExpirationListener();
-
-	    authenticated = true;
-	    lastLoginError = null;
-	}
-	catch (Exception e) {
-	    lastLoginError = e.getMessage();
-	    authenticated = false;
-
-	    LOG.info("Log-in failed:" + e.getMessage());
-	    LOG.debug(e.getMessage(), e);
+	public CqlWebSession(Request request) {
+		super(request);
+		Injector.get().inject(this);
 	}
 
-	LOG.info("Log-in succesfull: " + username);
-	return authenticated;
-    }
+	private void readObject(java.io.ObjectInputStream in) throws ClassNotFoundException, IOException {
+		in.defaultReadObject();
+		Injector.get().inject(this);
+	}
 
-    private void bindExpirationListener() {
-	ServletWebRequest webRequest = (ServletWebRequest) RequestCycle.get().getRequest();
-	HttpServletRequest servRequest = webRequest.getContainerRequest();
-	HttpSession session = servRequest.getSession();
-	session.setMaxInactiveInterval(conf.httpSession.expirySeconds);
+	@Override
+	public boolean authenticate(String username, String password) {
+		try {
+			cassandraSession.authenticate(username, password);
+			bindExpirationListener();
 
-    }
+			authenticated = true;
+			lastLoginError = null;
+		} catch (Exception e) {
+			lastLoginError = e.getMessage();
+			authenticated = false;
 
-    public String getLastLoginError() {
-	return lastLoginError;
-    }
+			LOG.info("Log-in failed:" + e.getMessage());
+			LOG.debug(e.getMessage(), e);
+		}
 
-    @Override
-    public Roles getRoles() {
-	return new Roles(authenticated ? Roles.ADMIN : "NO_AUTH");
-    }
+		LOG.info("Log-in succesfull: " + username);
+		return authenticated;
+	}
 
-    @Override
-    public void invalidate() {
-	cassandraSession.close();
-	super.invalidate();
-    }
+	private void bindExpirationListener() {
+		ServletWebRequest webRequest = (ServletWebRequest) RequestCycle.get().getRequest();
+		HttpServletRequest servRequest = webRequest.getContainerRequest();
+		HttpSession session = servRequest.getSession();
+		session.setMaxInactiveInterval(conf.httpSession.expirySeconds);
+
+	}
+
+	public String getLastLoginError() {
+		return lastLoginError;
+	}
+
+	@Override
+	public Roles getRoles() {
+		return new Roles(authenticated ? Roles.ADMIN : "NO_AUTH");
+	}
+
+	@Override
+	public void invalidate() {
+		cassandraSession.close();
+		super.invalidate();
+	}
 
 }

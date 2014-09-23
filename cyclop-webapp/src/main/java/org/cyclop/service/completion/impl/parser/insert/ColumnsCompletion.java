@@ -39,26 +39,26 @@ import com.google.common.collect.ImmutableSortedSet;
 @Named("insert.ColumnsCompletion")
 class ColumnsCompletion extends MarkerBasedCompletion {
 
-    @Inject
-    private QueryService queryService;
+	@Inject
+	private QueryService queryService;
 
-    public ColumnsCompletion() {
-	super(new CqlPart("("));
-    }
+	public ColumnsCompletion() {
+		super(new CqlPart("("));
+	}
 
-    @Override
-    public CqlCompletion getCompletion(CqlQuery query) {
+	@Override
+	public CqlCompletion getCompletion(CqlQuery query) {
 
-	Optional<CqlTable> table = extractTableName(CqlKeyword.Def.INSERT_INTO.value, query);
-	ImmutableSortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
+		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.INSERT_INTO.value, query);
+		ImmutableSortedSet<CqlColumnName> columnNames = queryService.findColumnNames(table);
 
-	CqlCompletion cmp = CqlCompletion.Builder.naturalOrder().all(columnNames).build();
-	return cmp;
-    }
+		CqlCompletion cmp = CqlCompletion.Builder.naturalOrder().all(columnNames).build();
+		return cmp;
+	}
 
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).toString();
-    }
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).toString();
+	}
 
 }

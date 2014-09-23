@@ -27,35 +27,35 @@ import com.google.common.base.Objects;
 @Immutable
 public final class CqlPartitionKeyValue extends CqlColumnValue {
 
-    @NotNull
-    @Valid
-    public final CqlPartitionKey cqlPartitionKey;
+	@NotNull
+	@Valid
+	public final CqlPartitionKey cqlPartitionKey;
 
-    public CqlPartitionKeyValue(Class<?> valueClass, Object value, CqlPartitionKey cqlPartitionKey) {
-	super(valueClass, value, cqlPartitionKey);
-	this.cqlPartitionKey = cqlPartitionKey;
-    }
-
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value)
-		.add("cqlPartitionKey", cqlPartitionKey).toString();
-    }
-
-    @Override
-    public int hashCode() {
-	return java.util.Objects.hash(cqlPartitionKey, valueClass, value, columnName);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == null || getClass() != obj.getClass()) {
-	    return false;
+	public CqlPartitionKeyValue(Class<?> valueClass, Object value, CqlPartitionKey cqlPartitionKey) {
+		super(valueClass, value, cqlPartitionKey);
+		this.cqlPartitionKey = cqlPartitionKey;
 	}
-	final CqlPartitionKeyValue other = (CqlPartitionKeyValue) obj;
-	return java.util.Objects.equals(cqlPartitionKey, other.cqlPartitionKey)
-		&& java.util.Objects.equals(valueClass, other.valueClass)
-		&& java.util.Objects.equals(value, other.value)
-		&& java.util.Objects.equals(columnName, other.columnName);
-    }
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value)
+				.add("cqlPartitionKey", cqlPartitionKey).toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(cqlPartitionKey, valueClass, value, columnName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		final CqlPartitionKeyValue other = (CqlPartitionKeyValue) obj;
+		return java.util.Objects.equals(cqlPartitionKey, other.cqlPartitionKey)
+				&& java.util.Objects.equals(valueClass, other.valueClass)
+				&& java.util.Objects.equals(value, other.value)
+				&& java.util.Objects.equals(columnName, other.columnName);
+	}
 }

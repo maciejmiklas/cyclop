@@ -30,47 +30,46 @@ import com.google.common.collect.ImmutableList;
 @Immutable
 public final class CqlRowMetadata implements Serializable {
 
-    public final static CqlRowMetadata EMPTY = new CqlRowMetadata();
+	public final static CqlRowMetadata EMPTY = new CqlRowMetadata();
 
-    /** all columns returned by db query in exact the same order */
-    @NotNull
-    @Valid
-    public final ImmutableList<CqlExtendedColumnName> columns;
+	/** all columns returned by db query in exact the same order */
+	@NotNull
+	@Valid
+	public final ImmutableList<CqlExtendedColumnName> columns;
 
-    /**
-     * could be null, it not found in result, or in case of error while reading
-     * meta data info
-     */
-    public final transient CqlPartitionKey partitionKey;
+	/**
+	 * could be null, it not found in result, or in case of error while reading
+	 * meta data info
+	 */
+	public final transient CqlPartitionKey partitionKey;
 
-    public CqlRowMetadata(ImmutableList<CqlExtendedColumnName> columns, CqlPartitionKey partitionKey) {
-	this.columns = columns;
-	this.partitionKey = partitionKey;
-    }
-
-    private CqlRowMetadata() {
-	this.columns = ImmutableList.of();
-	this.partitionKey = null;
-    }
-
-    @Override
-    public String toString() {
-	return Objects.toStringHelper(this).add("columns", columns).add("partitionKey", partitionKey)
-		.toString();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-	if (obj == null || getClass() != obj.getClass()) {
-	    return false;
+	public CqlRowMetadata(ImmutableList<CqlExtendedColumnName> columns, CqlPartitionKey partitionKey) {
+		this.columns = columns;
+		this.partitionKey = partitionKey;
 	}
-	CqlRowMetadata cqlObj = (CqlRowMetadata) obj;
-	return java.util.Objects.equals(columns, cqlObj.columns)
-		&& java.util.Objects.equals(partitionKey, cqlObj.partitionKey);
-    }
 
-    @Override
-    public int hashCode() {
-	return java.util.Objects.hash(columns, partitionKey);
-    }
+	private CqlRowMetadata() {
+		this.columns = ImmutableList.of();
+		this.partitionKey = null;
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("columns", columns).add("partitionKey", partitionKey).toString();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		CqlRowMetadata cqlObj = (CqlRowMetadata) obj;
+		return java.util.Objects.equals(columns, cqlObj.columns)
+				&& java.util.Objects.equals(partitionKey, cqlObj.partitionKey);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(columns, partitionKey);
+	}
 }
