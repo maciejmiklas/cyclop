@@ -16,12 +16,16 @@
  */
 package org.cyclop.service.cassandra.impl;
 
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
 import static org.cyclop.common.QueryHelper.extractSpace;
 import static org.cyclop.common.QueryHelper.extractTableName;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -104,17 +108,10 @@ class QueryServiceImpl implements QueryService {
 			return ImmutableSortedSet.of();
 		}
 
-		ImmutableSortedSet.Builder<CqlIndex> indexes = ImmutableSortedSet.naturalOrder();
-		for (Row row : result.get()) {
-			String indexName = row.getString("index_name");
-			indexName = StringUtils.trimToNull(indexName);
-			if (indexName == null) {
-				continue;
-			}
-			CqlIndex table = new CqlIndex(indexName);
-			indexes.add(table);
-		}
-		return indexes.build();
+		ImmutableSortedSet<CqlIndex> indexesResp = StreamSupport.stream(result.get().spliterator(), false)
+				.map(r -> r.getString("index_name")).map(StringUtils::trimToNull).filter(Objects::nonNull)
+				.map(CqlIndex::new).collect(collectingAndThen(toList(), ImmutableSortedSet::copyOf));
+		return indexesResp;
 	}
 
 	@Override
