@@ -16,7 +16,7 @@
  */
 package org.cyclop.service.cassandra.impl;
 
-import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.*;
 import static java.util.stream.Collectors.toList;
 import static org.cyclop.common.QueryHelper.extractSpace;
 import static org.cyclop.common.QueryHelper.extractTableName;
@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.StreamSupport;
 
 import javax.inject.Inject;
@@ -108,10 +109,8 @@ class QueryServiceImpl implements QueryService {
 			return ImmutableSortedSet.of();
 		}
 
-		ImmutableSortedSet<CqlIndex> indexesResp = StreamSupport.stream(result.get().spliterator(), false)
-				.map(r -> r.getString("index_name")).map(StringUtils::trimToNull).filter(Objects::nonNull)
-				.map(CqlIndex::new).collect(collectingAndThen(toList(), ImmutableSortedSet::copyOf));
-		return indexesResp;
+		ImmutableSortedSet<CqlIndex> res = map(result, "index_name", CqlIndex::new);
+		return res;
 	}
 
 	@Override
@@ -123,11 +122,8 @@ class QueryServiceImpl implements QueryService {
 			return ImmutableSortedSet.of();
 		}
 
-		ImmutableSortedSet.Builder<CqlKeySpace> keyspaces = ImmutableSortedSet.naturalOrder();
-		for (Row row : result.get()) {
-			keyspaces.add(new CqlKeySpace(row.getString("keyspace_name")));
-		}
-		return keyspaces.build();
+		ImmutableSortedSet<CqlKeySpace> res = map(result, "keyspace_name", CqlKeySpace::new);
+		return res;
 	}
 
 	@Override
@@ -143,17 +139,8 @@ class QueryServiceImpl implements QueryService {
 			return ImmutableSortedSet.of();
 		}
 
-		ImmutableSortedSet.Builder<CqlTable> tables = ImmutableSortedSet.naturalOrder();
-		for (Row row : result.get()) {
-			String columnFamily = row.getString("columnfamily_name");
-			columnFamily = StringUtils.trimToNull(columnFamily);
-			if (columnFamily == null) {
-				continue;
-			}
-			CqlTable table = new CqlTable(columnFamily);
-			tables.add(table);
-		}
-		return tables.build();
+		ImmutableSortedSet<CqlTable> res = map(result, "columnfamily_name", CqlTable::new);
+		return res;
 	}
 
 	private void setActiveKeySpace(CqlQuery query) {
@@ -245,6 +232,13 @@ class QueryServiceImpl implements QueryService {
 		return metadata;
 	}
 
+	private <T, R> ImmutableSortedSet<T> map(Optional<ResultSet> result, String columnName, Function<String, T> mapper) {
+		ImmutableSortedSet<T> res = StreamSupport.stream(result.get().spliterator(), false)
+				.map(r -> r.getString(columnName)).map(StringUtils::trimToNull).filter(Objects::nonNull).map(mapper)
+				.collect(collectingAndThen(toList(), ImmutableSortedSet::copyOf));
+		return res;
+	}
+
 	protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
 
 		Optional<CqlTable> table = extractTableName(CqlKeyword.Def.FROM.value, query);
@@ -259,19 +253,30 @@ class QueryServiceImpl implements QueryService {
 			LOG.warn("Could not readIdentifier types for columns of table: " + table);
 			return ImmutableMap.of();
 		}
+		Map<String, CqlColumnType> typesMap = StreamSupport.stream(result.get().spliterator(), false)
+				.map(r -> new TypeTransfer(r.getString("type"), r.getString("column_name")))
+				.filter(TypeTransfer::isCorrect).collect(toMap(t -> t.name.toLowerCase(), t -> extractType(t.type)));
+		return ImmutableMap.copyOf(typesMap);
+	}
 
-		ImmutableMap.Builder<String, CqlColumnType> typesBuild = ImmutableMap.builder();
-		for (Row row : result.get()) {
-			String typeText = StringUtils.trimToNull(row.getString("type"));
-			String name = StringUtils.trimToNull(row.getString("column_name"));
-			if (typeText == null || name == null) {
-				continue;
-			}
-			CqlColumnType type = extractType(typeText);
-			typesBuild.put(name.toLowerCase(), type);
+	private final class TypeTransfer {
+		public final String type;
+		public final String name;
+
+		public TypeTransfer(String type, String name) {
+			this.type = StringUtils.trimToNull(type);
+			this.name = StringUtils.trimToNull(name);
 		}
-		ImmutableMap<String, CqlColumnType> typesMap = typesBuild.build();
-		return typesMap;
+
+		public boolean isCorrect() {
+			return type != null && name != null;
+		}
+
+		@Override
+		public String toString() {
+			return "TypeTransfer [type=" + type + ", name=" + name + "]";
+		}
+
 	}
 
 	@Override
