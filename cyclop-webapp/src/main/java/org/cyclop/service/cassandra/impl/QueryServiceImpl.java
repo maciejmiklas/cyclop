@@ -16,21 +16,13 @@
  */
 package org.cyclop.service.cassandra.impl;
 
-import static java.util.stream.Collectors.*;
-import static java.util.stream.Collectors.toList;
-import static org.cyclop.common.QueryHelper.extractSpace;
-import static org.cyclop.common.QueryHelper.extractTableName;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.StreamSupport;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
+import com.datastax.driver.core.ColumnDefinitions;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.cyclop.common.AppConfig;
@@ -55,13 +47,20 @@ import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.datastax.driver.core.ColumnDefinitions;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedSet;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toMap;
+import static org.cyclop.common.Gullectors.toImmutableMap;
+import static org.cyclop.common.Gullectors.toNaturalImmutableSortedSet;
+import static org.cyclop.common.QueryHelper.extractSpace;
+import static org.cyclop.common.QueryHelper.extractTableName;
 
 /** @author Maciej Miklas */
 @EnableValidation
@@ -232,10 +231,11 @@ class QueryServiceImpl implements QueryService {
 		return metadata;
 	}
 
-	private <T, R> ImmutableSortedSet<T> map(Optional<ResultSet> result, String columnName, Function<String, T> mapper) {
+	private <T extends Comparable<?>> ImmutableSortedSet<T> map(Optional<ResultSet> result, String columnName,
+																Function<String, T> mapper) {
 		ImmutableSortedSet<T> res = StreamSupport.stream(result.get().spliterator(), false)
 				.map(r -> r.getString(columnName)).map(StringUtils::trimToNull).filter(Objects::nonNull).map(mapper)
-				.collect(collectingAndThen(toList(), ImmutableSortedSet::copyOf));
+				.collect(toNaturalImmutableSortedSet());
 		return res;
 	}
 
@@ -253,10 +253,11 @@ class QueryServiceImpl implements QueryService {
 			LOG.warn("Could not readIdentifier types for columns of table: " + table);
 			return ImmutableMap.of();
 		}
-		Map<String, CqlColumnType> typesMap = StreamSupport.stream(result.get().spliterator(), false)
+		ImmutableMap<String, CqlColumnType> typesMap = StreamSupport.stream(result.get().spliterator(), false)
 				.map(r -> new TypeTransfer(r.getString("type"), r.getString("column_name")))
-				.filter(TypeTransfer::isCorrect).collect(toMap(t -> t.name.toLowerCase(), t -> extractType(t.type)));
-		return ImmutableMap.copyOf(typesMap);
+				.filter(TypeTransfer::isCorrect).collect(toImmutableMap(t -> t.name.toLowerCase(),
+						t -> extractType(t.type)));
+		return typesMap;
 	}
 
 	private final class TypeTransfer {

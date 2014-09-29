@@ -18,6 +18,7 @@ package org.cyclop.common;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -42,7 +43,7 @@ public class TestGullectors {
 	@Test
 	public void testToNaturalImmutableSortedSet_Empty() {
 		List<String> vals = Arrays.asList();
-		ImmutableSet<String> res = vals.stream().collect(toNaturalImmutableSortedSet());
+		ImmutableSortedSet<String> res = vals.stream().collect(toNaturalImmutableSortedSet());
 		assertTrue(res.isEmpty());
 	}
 
@@ -67,5 +68,20 @@ public class TestGullectors {
 		List<Integer> vals = Arrays.asList(1, 3, 4, 5, 8, 9, 3, 989);
 		ImmutableList<Integer> res = vals.stream().collect(toImmutableList());
 		assertEquals("[1, 3, 4, 5, 8, 9, 3, 989]", res.toString());
+	}
+
+
+	public void testToImmutableMap_Sort(){
+
+	}
+
+	static class Data{
+		Integer ii;
+		String ss;
+
+		Data(Integer ii, String ss) {
+			this.ii = ii;
+			this.ss = ss;
+		}
 	}
 }
