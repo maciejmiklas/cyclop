@@ -16,13 +16,21 @@
  */
 package org.cyclop.service.cassandra.impl;
 
-import com.datastax.driver.core.ColumnDefinitions;
-import com.datastax.driver.core.DataType;
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSortedSet;
+import static org.cyclop.common.Gullectors.toImmutableMap;
+import static org.cyclop.common.Gullectors.toNaturalImmutableSortedSet;
+import static org.cyclop.common.QueryHelper.extractSpace;
+import static org.cyclop.common.QueryHelper.extractTableName;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.StreamSupport;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.cyclop.common.AppConfig;
@@ -47,20 +55,13 @@ import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toMap;
-import static org.cyclop.common.Gullectors.toImmutableMap;
-import static org.cyclop.common.Gullectors.toNaturalImmutableSortedSet;
-import static org.cyclop.common.QueryHelper.extractSpace;
-import static org.cyclop.common.QueryHelper.extractTableName;
+import com.datastax.driver.core.ColumnDefinitions;
+import com.datastax.driver.core.DataType;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @EnableValidation

@@ -26,7 +26,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
@@ -44,11 +43,6 @@ class UseCompletion extends MarkerBasedCompletion {
 	public CqlCompletion getCompletion(CqlQuery query) {
 		ImmutableSortedSet<CqlKeySpace> keySpaces = queryService.findAllKeySpaces();
 		return CqlCompletion.Builder.naturalOrder().all(keySpaces).build();
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
 	}
 
 }

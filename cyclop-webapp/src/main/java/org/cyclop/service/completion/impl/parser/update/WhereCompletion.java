@@ -32,8 +32,6 @@ import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("update.WhereCompletion")
 class WhereCompletion extends MarkerBasedCompletion {
@@ -57,10 +55,4 @@ class WhereCompletion extends MarkerBasedCompletion {
 		CqlCompletion cmp = cb.build();
 		return cmp;
 	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
-
 }

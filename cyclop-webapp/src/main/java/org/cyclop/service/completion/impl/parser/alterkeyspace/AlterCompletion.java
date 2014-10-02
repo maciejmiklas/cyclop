@@ -21,8 +21,6 @@ import javax.inject.Named;
 import org.cyclop.model.CqlNotSupported;
 import org.cyclop.service.completion.impl.parser.NotSupportedCompletion;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("alterkeyspace.AlterCompletion")
 class AlterCompletion extends NotSupportedCompletion {
@@ -36,8 +34,4 @@ class AlterCompletion extends NotSupportedCompletion {
 		return "alter keyspace";
 	}
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
 }

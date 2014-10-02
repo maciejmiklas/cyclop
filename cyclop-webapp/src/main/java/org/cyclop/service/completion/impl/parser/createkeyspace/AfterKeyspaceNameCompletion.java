@@ -24,8 +24,6 @@ import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("createkeyspace.AfterKeyspaceNameCompletion")
 class AfterKeyspaceNameCompletion implements OffsetBasedCompletion {
@@ -58,8 +56,4 @@ class AfterKeyspaceNameCompletion implements OffsetBasedCompletion {
 		return indLastSpace;
 	}
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).add("completion", completion).toString();
-	}
 }

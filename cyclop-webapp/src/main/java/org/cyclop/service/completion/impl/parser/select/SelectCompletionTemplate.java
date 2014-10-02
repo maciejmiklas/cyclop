@@ -22,8 +22,6 @@ import org.cyclop.model.CqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.service.completion.impl.parser.template.ColumnNameCompletionTemplate;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("select.SelectCompletionTemplate")
 class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
@@ -34,11 +32,6 @@ class SelectCompletionTemplate extends ColumnNameCompletionTemplate {
 
 	public SelectCompletionTemplate() {
 		super(STATC_PART, CqlKeyword.Def.FROM.value, CqlKeyword.Def.SELECT.value);
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
 	}
 
 }

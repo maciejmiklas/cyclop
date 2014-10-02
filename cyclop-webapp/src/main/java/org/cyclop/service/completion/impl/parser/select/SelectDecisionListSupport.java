@@ -68,5 +68,5 @@ public class SelectDecisionListSupport implements DecisionListSupport {
 	public CqlQueryType queryName() {
 		return CqlQueryType.SELECT;
 	}
-
+	
 }

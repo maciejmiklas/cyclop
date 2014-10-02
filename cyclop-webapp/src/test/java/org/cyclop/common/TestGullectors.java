@@ -16,21 +16,22 @@
  */
 package org.cyclop.common;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSortedSet;
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.cyclop.common.Gullectors.toImmutableList;
 import static org.cyclop.common.Gullectors.toImmutableMap;
 import static org.cyclop.common.Gullectors.toImmutableSet;
 import static org.cyclop.common.Gullectors.toNaturalImmutableSortedSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 public class TestGullectors {
@@ -64,7 +65,6 @@ public class TestGullectors {
 		assertTrue(res.isEmpty());
 	}
 
-
 	@Test
 	public void testToImmutableList_Sort() {
 		List<Integer> vals = Arrays.asList(1, 3, 4, 5, 8, 9, 3, 989);
@@ -72,14 +72,22 @@ public class TestGullectors {
 		assertEquals("[1, 3, 4, 5, 8, 9, 3, 989]", res.toString());
 	}
 
+	@Test
+	public void testToImmutableMap_Sort() {
+		List<Data> vals = Arrays.asList(new Data(22, "a"), new Data(11, "bb"), new Data(231, "cc"),
+				new Data(1231, "cc"));
+		ImmutableMap<Integer, String> res = vals.stream().collect(toImmutableMap(d -> d.ii, d -> d.ss));
+		assertEquals("{22=a, 11=bb, 231=cc, 1231=cc}", res.toString());
+	}
 
-//	public void testToImmutableMap_Sort(){
-//		List<Data> vals = Arrays.asList(new Data(22,"a"),new Data(11,"bb"),new Data(231,"cc"),new Data(1231,"cc"));
-//		ImmutableMap<Integer,String> res = vals.stream().collect(toImmutableMap(Data::ii,Data::ss));
-//		assertEquals("[1, 3, 4, 5, 8, 9, 3, 989]", res.toString());
-//	}
+	@Test
+	public void testToImmutableMap_Empty() {
+		List<Data> vals = Arrays.asList();
+		ImmutableMap<Integer, String> res = vals.stream().collect(toImmutableMap(d -> d.ii, d -> d.ss));
+		assertTrue(res.isEmpty());
+	}
 
-	static class Data{
+	static class Data {
 		Integer ii;
 		String ss;
 

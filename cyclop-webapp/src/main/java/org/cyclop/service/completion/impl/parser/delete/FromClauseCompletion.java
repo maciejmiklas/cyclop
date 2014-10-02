@@ -25,8 +25,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.service.completion.impl.parser.CompletionHelper;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("delete.FromClauseCompletion")
 class FromClauseCompletion extends MarkerBasedCompletion {
@@ -43,11 +41,6 @@ class FromClauseCompletion extends MarkerBasedCompletion {
 		CqlCompletion.Builder completion = completionHelper
 				.computeTableNameCompletion(query, CqlKeyword.Def.FROM.value);
 		return completion.build();
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
 	}
 
 }

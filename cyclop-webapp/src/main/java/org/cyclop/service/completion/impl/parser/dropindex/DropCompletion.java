@@ -31,7 +31,6 @@ import org.cyclop.service.cassandra.QueryScope;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.OffsetBasedCompletion;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
@@ -73,8 +72,4 @@ class DropCompletion implements OffsetBasedCompletion {
 		return indLastSpace;
 	}
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).add("completion", completion).toString();
-	}
 }

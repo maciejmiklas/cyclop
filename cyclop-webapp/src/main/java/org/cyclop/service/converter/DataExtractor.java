@@ -16,6 +16,9 @@
  */
 package org.cyclop.service.converter;
 
+import static org.cyclop.common.Gullectors.toImmutableList;
+import static org.cyclop.common.Gullectors.toImmutableMap;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -57,13 +60,8 @@ public class DataExtractor {
 		Collection<?> objCont = dataType.name == DataType.Name.SET ? row.getSet(partLc, dataType.keyClass) : row
 				.getList(partLc, dataType.keyClass);
 
-		ImmutableList.Builder<CqlColumnValue> builder = ImmutableList.builder();
-		for (Object o : objCont) {
-			CqlColumnValue dob = new CqlColumnValue(dataType.keyClass, o, column);
-			builder.add(dob);
-
-		}
-		ImmutableList<CqlColumnValue> collection = builder.build();
+		ImmutableList<CqlColumnValue> collection = objCont.stream()
+				.map(o -> new CqlColumnValue(dataType.keyClass, o, column)).collect(toImmutableList());
 
 		LOG.trace("Extracted collection: {}", collection);
 		return collection;
@@ -83,14 +81,14 @@ public class DataExtractor {
 
 		Map<?, ?> unconverted = row.getMap(partLc, dataType.keyClass, dataType.valueClass);
 
-		ImmutableMap.Builder<CqlColumnValue, CqlColumnValue> builder = ImmutableMap.builder();
-		for (Map.Entry<?, ?> entry : unconverted.entrySet()) {
-			CqlColumnValue dk = new CqlColumnValue(dataType.keyClass, entry.getKey(), column);
-			CqlColumnValue dv = new CqlColumnValue(dataType.valueClass, entry.getValue(), column);
-			builder.put(dk, dv);
-		}
+		
+		ImmutableMap<CqlColumnValue, CqlColumnValue> map = unconverted
+				.entrySet()
+				.stream()
+				.collect(
+						toImmutableMap(e -> new CqlColumnValue(dataType.keyClass, e.getKey(), column),
+								e -> new CqlColumnValue(dataType.valueClass, e.getValue(), column)));
 
-		ImmutableMap<CqlColumnValue, CqlColumnValue> map = builder.build();
 		LOG.trace("Extracted map: {}", map);
 		return map;
 	}

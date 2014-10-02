@@ -24,8 +24,6 @@ import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.service.completion.impl.parser.template.AfterTableNameCompletionTemplate;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("update.AfterUpdateCompletion")
 class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
@@ -47,8 +45,4 @@ class AfterUpdateCompletion extends AfterTableNameCompletionTemplate {
 		return completion;
 	}
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).add("completion", completion).toString();
-	}
 }

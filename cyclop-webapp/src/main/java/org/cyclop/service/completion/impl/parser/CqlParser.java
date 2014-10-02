@@ -58,16 +58,11 @@ public class CqlParser {
 	}
 
 	private Optional<DecisionListSupport> findCompletionDecision(CqlQuery query) {
-		DecisionListSupport found = null;
-		for (DecisionListSupport dl : decisionListSupportDef) {
-			if (dl.supports(query)) {
-				found = dl;
-				break;
-			}
-		}
-		LOG.debug("Found Decision List for query {} -> {}", query, found);
 
-		return Optional.ofNullable(found);
+		Optional<DecisionListSupport> found = decisionListSupportDef.stream().filter(d -> d.supports(query))
+				.findFirst();
+		LOG.debug("Found Decision List for query {} -> {}", query, found);
+		return found;
 	}
 
 	public CqlCompletion findInitialCompletion() {

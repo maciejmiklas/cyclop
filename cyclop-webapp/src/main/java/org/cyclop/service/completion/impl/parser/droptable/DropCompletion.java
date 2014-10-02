@@ -25,8 +25,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.service.completion.impl.parser.CompletionHelper;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("droptable.DropCompletion")
 class DropCompletion extends MarkerBasedCompletion {
@@ -44,11 +42,6 @@ class DropCompletion extends MarkerBasedCompletion {
 				CqlKeyword.Def.DROP_TABLE.value, CqlKeyword.Def.IF_EXISTS.value);
 		completion.all(CqlKeyword.Def.IF_EXISTS.value);
 		return completion.build();
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
 	}
 
 }

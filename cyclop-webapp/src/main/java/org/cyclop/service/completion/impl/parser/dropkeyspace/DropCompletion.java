@@ -27,7 +27,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
@@ -54,8 +53,4 @@ class DropCompletion extends MarkerBasedCompletion {
 		return completion.naturalOrder().all(keySpaces).build();
 	}
 
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
-	}
 }

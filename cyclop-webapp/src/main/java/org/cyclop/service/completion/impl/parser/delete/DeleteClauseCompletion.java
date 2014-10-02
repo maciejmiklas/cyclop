@@ -32,8 +32,6 @@ import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("delete.DeleteClauseCompletion")
 class DeleteClauseCompletion extends MarkerBasedCompletion {
@@ -62,11 +60,6 @@ class DeleteClauseCompletion extends MarkerBasedCompletion {
 		cb.all(columnNames);
 
 		return cb.build();
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
 	}
 
 }

@@ -23,8 +23,6 @@ import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlKeywordValue;
 import org.cyclop.service.completion.impl.parser.template.StaticMarkerBasedCompletion;
 
-import com.google.common.base.Objects;
-
 /** @author Maciej Miklas */
 @Named("createkeyspace.WithCompletion")
 class WithCompletion extends StaticMarkerBasedCompletion {
@@ -38,11 +36,6 @@ class WithCompletion extends StaticMarkerBasedCompletion {
 				.prefix(CqlKeywordValue.Def.DURABLE_WRITES.value).all(CqlKeywordValue.Def.TRUE.value)
 				.all(CqlKeywordValue.Def.FALSE.value).prefix(CqlKeywordValue.Def.OLD_NETWORK_TOPOLOGY_STRATEGY.value)
 				.build());
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
 	}
 
 }
