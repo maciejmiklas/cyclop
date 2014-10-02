@@ -20,7 +20,7 @@ import javax.validation.Valid;
 
 import net.jcip.annotations.Immutable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /**
  * Cql keyword
@@ -83,7 +83,7 @@ public final class CqlTable extends CqlPart implements DisplaySupport {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("table", part).add("keySpace", keySpace).toString();
+		return MoreObjects.toStringHelper(this).add("table", part).add("keySpace", keySpace).toString();
 	}
 
 	@Override

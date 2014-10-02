@@ -38,7 +38,7 @@ import net.jcip.annotations.ThreadSafe;
 
 import org.cyclop.common.AppConfig;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableSortedSet;
 
 /**
@@ -144,7 +144,7 @@ public final class QueryFavourites implements Serializable, Synchronizable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("favourites", favourites).toString();
+			return MoreObjects.toStringHelper(this).add("favourites", favourites).toString();
 		}
 	}
 
@@ -152,7 +152,7 @@ public final class QueryFavourites implements Serializable, Synchronizable {
 	public String toString() {
 		lock.lock();
 		try {
-			return Objects.toStringHelper(this).add("favourites", favourites).toString();
+			return MoreObjects.toStringHelper(this).add("favourites", favourites).toString();
 		} finally {
 			lock.unlock();
 		}

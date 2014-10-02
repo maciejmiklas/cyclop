@@ -21,7 +21,7 @@ import javax.validation.constraints.NotNull;
 
 import net.jcip.annotations.Immutable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -38,7 +38,7 @@ public final class CqlPartitionKeyValue extends CqlColumnValue {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value)
+		return MoreObjects.toStringHelper(this).add("valueClass", valueClass).add("prefix", value)
 				.add("cqlPartitionKey", cqlPartitionKey).toString();
 	}
 

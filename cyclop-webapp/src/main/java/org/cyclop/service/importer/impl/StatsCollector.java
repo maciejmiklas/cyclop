@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import net.jcip.annotations.ThreadSafe;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @ThreadSafe
@@ -32,6 +32,6 @@ final class StatsCollector {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("error", error).add("success", success).toString();
+		return MoreObjects.toStringHelper(this).add("error", error).add("success", success).toString();
 	}
 }

@@ -32,7 +32,7 @@ import net.jcip.annotations.Immutable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /**
  * Unique by query, sorted by date
@@ -65,7 +65,7 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("query", query).add("executedOnUtc", executedOnUtc).toString();
+		return MoreObjects.toStringHelper(this).add("query", query).add("executedOnUtc", executedOnUtc).toString();
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("query", query).add("executedOn", executedOn)
+			return MoreObjects.toStringHelper(this).add("query", query).add("executedOn", executedOn)
 					.add("runTime", runTime).add("resultsSize", resultsSize).toString();
 		}
 	}

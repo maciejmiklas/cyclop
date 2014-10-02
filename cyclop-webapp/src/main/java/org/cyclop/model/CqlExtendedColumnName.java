@@ -21,6 +21,8 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.google.common.base.MoreObjects;
+
 import net.jcip.annotations.Immutable;
 
 /**
@@ -42,7 +44,7 @@ public class CqlExtendedColumnName extends CqlColumnName {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(this).add("columnType", columnType).add("part", part)
+		return MoreObjects.toStringHelper(this).add("columnType", columnType).add("part", part)
 				.add("dataType", dataType).toString();
 	}
 

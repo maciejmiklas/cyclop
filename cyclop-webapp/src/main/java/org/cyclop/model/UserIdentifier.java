@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import net.jcip.annotations.Immutable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -46,7 +46,7 @@ public final class UserIdentifier implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("id", id).toString();
+		return MoreObjects.toStringHelper(this).add("id", id).toString();
 	}
 
 	@Override

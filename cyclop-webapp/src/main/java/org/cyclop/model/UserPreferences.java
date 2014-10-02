@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.cyclop.model.adapter.BooleanDefaultTrueAdapter;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @XmlRootElement
@@ -102,7 +102,7 @@ public final class UserPreferences implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("showCqlCompletionHint", showCqlCompletionHint)
+		return MoreObjects.toStringHelper(this).add("showCqlCompletionHint", showCqlCompletionHint)
 				.add("showCqlHelp", showCqlHelp).add("importIncludeInHistory", importIncludeInHistory)
 				.add("importContinueWithErrors", importContinueWithErrors).add("pagerEditorItems", pagerEditorItems)
 				.add("pagerHistoryItems", pagerHistoryItems).add("pagerImportItems", pagerImportItems)

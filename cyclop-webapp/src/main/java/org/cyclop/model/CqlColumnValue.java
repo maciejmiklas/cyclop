@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import net.jcip.annotations.Immutable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -48,7 +48,7 @@ public class CqlColumnValue implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("valueClass", valueClass).add("value", value)
+		return MoreObjects.toStringHelper(this).add("valueClass", valueClass).add("value", value)
 				.add("columnName", columnName).toString();
 	}
 

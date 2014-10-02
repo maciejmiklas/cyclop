@@ -22,7 +22,7 @@ import net.jcip.annotations.Immutable;
 
 import org.apache.commons.lang3.time.StopWatch;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 @Immutable
 public class ImportStats implements Serializable {
@@ -41,7 +41,7 @@ public class ImportStats implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("runtime", runtime).add("successCount", successCount)
+		return MoreObjects.toStringHelper(this).add("runtime", runtime).add("successCount", successCount)
 				.add("errorCount", errorCount).toString();
 	}
 }

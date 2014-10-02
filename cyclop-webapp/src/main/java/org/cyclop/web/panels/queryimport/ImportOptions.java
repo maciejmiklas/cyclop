@@ -18,7 +18,7 @@ package org.cyclop.web.panels.queryimport;
 
 import java.io.Serializable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 public final class ImportOptions implements Serializable {
@@ -32,7 +32,7 @@ public final class ImportOptions implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("includeInHistory", includeInHistory)
+		return MoreObjects.toStringHelper(this).add("includeInHistory", includeInHistory)
 				.add("continueWithErrors", continueWithErrors).add("parallel", parallel).add("scriptFile", scriptFile)
 				.toString();
 	}

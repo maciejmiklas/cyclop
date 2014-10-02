@@ -28,7 +28,7 @@ import org.apache.commons.collections4.iterators.EmptyIterator;
 import org.cyclop.common.SerializationUtil;
 
 import com.datastax.driver.core.Row;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 public class CqlQueryResult implements Iterable<Row>, Serializable {
@@ -64,7 +64,7 @@ public class CqlQueryResult implements Iterable<Row>, Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("rowMetadata", rowMetadata).toString();
+		return MoreObjects.toStringHelper(this).add("rowMetadata", rowMetadata).toString();
 	}
 
 	public boolean isEmpty() {

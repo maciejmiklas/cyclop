@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import net.jcip.annotations.Immutable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
@@ -55,7 +55,7 @@ public final class CqlRowMetadata implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("columns", columns).add("partitionKey", partitionKey).toString();
+		return MoreObjects.toStringHelper(this).add("columns", columns).add("partitionKey", partitionKey).toString();
 	}
 
 	@Override

@@ -16,7 +16,7 @@
  */
 package org.cyclop.service.importer.model;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 public class ImportConfig {
@@ -45,7 +45,7 @@ public class ImportConfig {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("updateHistory", updateHistory)
+		return MoreObjects.toStringHelper(this).add("updateHistory", updateHistory)
 				.add("continueWithErrors", continueWithErrors).toString();
 	}
 }

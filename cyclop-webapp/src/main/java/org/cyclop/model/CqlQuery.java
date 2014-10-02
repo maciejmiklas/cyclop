@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import net.jcip.annotations.Immutable;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 /** @author Maciej Miklas */
@@ -43,7 +44,7 @@ public final class CqlQuery extends CqlPart {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("part", part).add("type", type).toString();
+		return MoreObjects.toStringHelper(this).add("part", part).add("type", type).toString();
 	}
 
 	@XmlRootElement

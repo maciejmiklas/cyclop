@@ -23,7 +23,7 @@ import net.jcip.annotations.Immutable;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -72,7 +72,7 @@ public class CqlPart implements Comparable<CqlPart>, Serializable, DisplaySuppor
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("partLc", partLc).add("part", part).toString();
+		return MoreObjects.toStringHelper(this).add("partLc", partLc).add("part", part).toString();
 	}
 
 	public CqlType type() {

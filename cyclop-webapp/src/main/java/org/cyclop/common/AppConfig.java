@@ -39,7 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @Named
@@ -126,7 +126,7 @@ public final class AppConfig implements Serializable {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this).add("cassandra", cassandra).add("queryEditor", queryEditor)
+		return MoreObjects.toStringHelper(this).add("cassandra", cassandra).add("queryEditor", queryEditor)
 				.add("common", common).add("history", history).add("fileStore", fileStore)
 				.add("favourites", favourites).add("queryExport", queryExport).add("httpSession", httpSession)
 				.add("cookie", cookie).add("queryImport", queryImport).toString();
@@ -186,7 +186,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects
+			return MoreObjects
 					.toStringHelper(this)
 					.add("port", port)
 					.add("timeoutMillis", timeoutMillis)
@@ -253,7 +253,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("maxColumnEmbeddedDisplayChars", maxColumnEmbeddedDisplayChars)
+			return MoreObjects.toStringHelper(this).add("maxColumnEmbeddedDisplayChars", maxColumnEmbeddedDisplayChars)
 					.add("maxColumnDisplayChars", maxColumnDisplayChars).add("rowsLimit", rowsLimit)
 					.add("maxColumnTooltipDisplayChars", maxColumnTooltipDisplayChars).toString();
 		}
@@ -331,7 +331,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator", rowSeparator)
+			return MoreObjects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator", rowSeparator)
 					.add("listSeparator", listSeparator).add("mapSeparator", mapSeparator)
 					.add("columnSeparator", columnSeparator).add("crCharCode", crCharCode)
 					.add("valueBracketStart", valueBracketStart).add("fileName", fileName)
@@ -373,7 +373,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("listSeparatorRegEx", listSeparatorRegEx).add("encoding", encoding)
+			return MoreObjects.toStringHelper(this).add("listSeparatorRegEx", listSeparatorRegEx).add("encoding", encoding)
 					.add("maxFileSizeMb", maxFileSizeMb).add("maxThreadsProImport", maxThreadsProImport).toString();
 		}
 	}
@@ -394,7 +394,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
+			return MoreObjects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
 		}
 	}
 
@@ -419,7 +419,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("maxFileSize", maxFileSize)
+			return MoreObjects.toStringHelper(this).add("maxFileSize", maxFileSize)
 					.add("lockWaitTimeoutMillis", lockWaitTimeoutMillis).add("folder", folder).toString();
 		}
 	}
@@ -439,7 +439,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
+			return MoreObjects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
 		}
 	}
 
@@ -455,7 +455,7 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("expirySeconds", expirySeconds).toString();
+			return MoreObjects.toStringHelper(this).add("expirySeconds", expirySeconds).toString();
 		}
 	}
 

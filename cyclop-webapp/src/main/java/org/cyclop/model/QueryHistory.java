@@ -39,7 +39,7 @@ import net.jcip.annotations.ThreadSafe;
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.cyclop.common.AppConfig;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -126,7 +126,7 @@ public final class QueryHistory implements Serializable, Synchronizable {
 
 		@Override
 		public String toString() {
-			return Objects.toStringHelper(this).add("history", history).toString();
+			return MoreObjects.toStringHelper(this).add("history", history).toString();
 		}
 	}
 
@@ -134,7 +134,7 @@ public final class QueryHistory implements Serializable, Synchronizable {
 	public String toString() {
 		lock.lock();
 		try {
-			return Objects.toStringHelper(this).add("history", history).toString();
+			return MoreObjects.toStringHelper(this).add("history", history).toString();
 		} finally {
 			lock.unlock();
 		}

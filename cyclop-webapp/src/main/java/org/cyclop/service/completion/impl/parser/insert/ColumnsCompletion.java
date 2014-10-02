@@ -32,7 +32,6 @@ import org.cyclop.model.CqlTable;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.impl.parser.MarkerBasedCompletion;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
@@ -54,11 +53,6 @@ class ColumnsCompletion extends MarkerBasedCompletion {
 
 		CqlCompletion cmp = CqlCompletion.Builder.naturalOrder().all(columnNames).build();
 		return cmp;
-	}
-
-	@Override
-	public String toString() {
-		return Objects.toStringHelper(this).toString();
 	}
 
 }

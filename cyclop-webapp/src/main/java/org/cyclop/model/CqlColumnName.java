@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import net.jcip.annotations.Immutable;
 
 import com.datastax.driver.core.DataType;
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -58,8 +59,7 @@ public class CqlColumnName extends CqlPart {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(this).add("part", part).add("dataType", dataType)
-				.toString();
+		return MoreObjects.toStringHelper(this).add("part", part).add("dataType", dataType).toString();
 	}
 
 	@Override

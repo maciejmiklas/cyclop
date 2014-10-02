@@ -22,6 +22,8 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import com.google.common.base.MoreObjects;
+
 import net.jcip.annotations.Immutable;
 
 /** @author Maciej Miklas */
@@ -59,7 +61,7 @@ public final class ContextCqlCompletion implements Serializable {
 
 	@Override
 	public String toString() {
-		return com.google.common.base.Objects.toStringHelper(this).add("queryName", queryName)
-				.add("cqlCompletion", cqlCompletion).toString();
+		return MoreObjects.toStringHelper(this).add("queryName", queryName).add("cqlCompletion", cqlCompletion)
+				.toString();
 	}
 }
