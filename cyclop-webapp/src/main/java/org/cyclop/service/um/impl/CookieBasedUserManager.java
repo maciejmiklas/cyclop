@@ -56,7 +56,6 @@ public class CookieBasedUserManager implements UserManager {
 		Optional<UserPreferences> preferencesOpt = cookieStorage.readCookieAsJson(
 				CookieStorage.CookieName.cyclop_prefs, UserPreferences.class);
 		UserPreferences preferences = preferencesOpt.orElseGet(UserPreferences::new);
-		// TODO move log statement to optional above
 		if (!preferencesOpt.isPresent()) {
 			LOG.debug("User preferences not found as cookie - using default");
 		}

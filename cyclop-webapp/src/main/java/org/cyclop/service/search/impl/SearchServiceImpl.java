@@ -93,15 +93,23 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 	}
 
 	private int calculateWeight(String valueLc, Set<String> keywordsLc) {
-		int weight = 0;
-		for (String kw : keywordsLc) {
-			if (valueLc.contains(kw)) {
-				weight++;
-			}
-		}
+		int weight = (int)keywordsLc.stream().filter(k->valueLc.contains(k)).count();
 		return weight;
 	}
 
+	public final static class WeightSortingComparator implements Comparator<WeightSortingKey> {
+		@Override
+		public int compare(WeightSortingKey o1, WeightSortingKey o2) {
+			int compRes = 0;
+			if (o1.weight == o2.weight) {
+				compRes = o1.keyLc.compareTo(o2.keyLc);
+			} else {
+				compRes = o2.weight - o1.weight;
+			}
+			return compRes;
+		}
+	}
+	
 	private final static class WeightSortingKey {
 		public final int weight;
 
@@ -117,19 +125,6 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 			return "WeightSortingKey [weight=" + weight + ", keyLc=" + keyLc + "]";
 		}
 
-	}
-
-	public final static class WeightSortingComparator implements Comparator<WeightSortingKey> {
-		@Override
-		public int compare(WeightSortingKey o1, WeightSortingKey o2) {
-			int compRes = 0;
-			if (o1.weight == o2.weight) {
-				compRes = o1.keyLc.compareTo(o2.keyLc);
-			} else {
-				compRes = o2.weight - o1.weight;
-			}
-			return compRes;
-		}
 	}
 
 }

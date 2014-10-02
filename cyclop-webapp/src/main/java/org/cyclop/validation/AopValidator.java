@@ -18,6 +18,8 @@ package org.cyclop.validation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Optional;
 
 import javax.inject.Named;
 import javax.validation.Valid;
@@ -116,11 +118,8 @@ public class AopValidator {
 	}
 
 	private boolean contains(Annotation[] annotations, Class<?> annotation) {
-		for (Annotation ann : annotations) {
-			if (ann.annotationType().isAssignableFrom(annotation)) {
-				return true;
-			}
-		}
-		return false;
+		Optional<Annotation> res = Arrays.asList(annotations).stream()
+				.filter(a -> a.annotationType().isAssignableFrom(annotation)).findFirst();
+		return res.isPresent();
 	}
 }

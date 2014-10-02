@@ -69,7 +69,6 @@ public final class BeanValidator {
 
 	public void validate() {
 		Map<String, Set<ConstraintViolation<Object>>> violations = new HashMap<>();
-
 		for (Map.Entry<String, Object> obj : objMap.entrySet()) {
 			Object value = obj.getValue();
 			if (value.toString().equals(NULL_MARKER)) {
