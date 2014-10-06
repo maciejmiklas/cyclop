@@ -42,6 +42,13 @@ public class TestGullectors {
 		ImmutableSet<String> res = vals.stream().collect(toNaturalImmutableSortedSet());
 		assertEquals("[alpha, bravo, charlie, delta, echo, india]", res.toString());
 	}
+	
+	@Test
+	public void testToNaturalImmutableSortedSet_Parallel() {
+		List<String> vals = Arrays.asList("charlie", "bravo", "delta", "india", "echo", "alpha");
+		ImmutableSet<String> res = vals.parallelStream().collect(toNaturalImmutableSortedSet());
+		assertEquals("[alpha, bravo, charlie, delta, echo, india]", res.toString());
+	}
 
 	@Test
 	public void testToNaturalImmutableSortedSet_Empty() {
@@ -55,7 +62,13 @@ public class TestGullectors {
 		List<Integer> vals = Arrays.asList(5, 1, 22, 4, 8, 9, 3, 3, 989);
 		ImmutableSet<Integer> res = vals.stream().collect(toImmutableSet());
 		assertEquals("[5, 1, 22, 4, 8, 9, 3, 989]", res.toString());
-
+	}
+	
+	@Test
+	public void testToImmutableSet_Parallel() {
+		List<Integer> vals = Arrays.asList(5, 1, 22, 4, 8, 9, 3, 3, 989);
+		ImmutableSet<Integer> res = vals.parallelStream().collect(toImmutableSet());
+		assertEquals("[5, 1, 22, 4, 8, 9, 3, 989]", res.toString());
 	}
 
 	@Test
@@ -69,6 +82,13 @@ public class TestGullectors {
 	public void testToImmutableList_Sort() {
 		List<Integer> vals = Arrays.asList(1, 3, 4, 5, 8, 9, 3, 989);
 		ImmutableList<Integer> res = vals.stream().collect(toImmutableList());
+		assertEquals("[1, 3, 4, 5, 8, 9, 3, 989]", res.toString());
+	}
+	
+	@Test
+	public void testToImmutableList_Parallel() {
+		List<Integer> vals = Arrays.asList(1, 3, 4, 5, 8, 9, 3, 989);
+		ImmutableList<Integer> res = vals.parallelStream().collect(toImmutableList());
 		assertEquals("[1, 3, 4, 5, 8, 9, 3, 989]", res.toString());
 	}
 
