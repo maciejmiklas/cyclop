@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-@XmlJavaTypeAdapters({ @XmlJavaTypeAdapter(value = DateAdapter.class, type = DateTime.class) })
+@XmlJavaTypeAdapters({ @XmlJavaTypeAdapter(value = LocalDateTimeAdapter.class, type = LocalDateTime.class) })
 package org.cyclop.model;
+
+import java.time.LocalDateTime;
 
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapters;
 
-import org.cyclop.model.adapter.DateAdapter;
-import org.joda.time.DateTime;
+import org.cyclop.model.adapter.LocalDateTimeAdapter;
 

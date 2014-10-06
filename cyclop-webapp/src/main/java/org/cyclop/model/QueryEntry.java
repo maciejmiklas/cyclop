@@ -17,6 +17,8 @@
 package org.cyclop.model;
 
 import java.io.Serializable;
+import java.time.Clock;
+import java.time.LocalDateTime;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -28,9 +30,6 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import net.jcip.annotations.Immutable;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import com.google.common.base.MoreObjects;
 
@@ -49,15 +48,15 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
 	@NotNull
 	@Valid
-	public final DateTime executedOnUtc;
+	public final LocalDateTime executedOnUtc;
 
 	public final long runTime;
 
 	public QueryEntry(CqlQuery query, long runTime) {
-		this(query, new DateTime().toDateTime(DateTimeZone.UTC), runTime);
+		this(query, LocalDateTime.now(Clock.systemUTC()), runTime);
 	}
 
-	public QueryEntry(CqlQuery query, DateTime executedOnUtc, long runTime) {
+	public QueryEntry(CqlQuery query, LocalDateTime executedOnUtc, long runTime) {
 		this.query = query;
 		this.executedOnUtc = executedOnUtc;
 		this.runTime = runTime;
@@ -105,7 +104,7 @@ public final class QueryEntry implements Comparable<QueryEntry>, Serializable {
 
 		private CqlQuery query;
 
-		private DateTime executedOn;
+		private LocalDateTime executedOn;
 
 		@Override
 		public String toString() {

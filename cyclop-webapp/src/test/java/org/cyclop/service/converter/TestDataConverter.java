@@ -22,12 +22,12 @@ import static org.junit.Assert.assertNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.inject.Inject;
 
 import org.cyclop.test.AbstractTestCase;
-import org.joda.time.DateTime;
 import org.junit.Test;
 
 /** @author Maciej Miklas */
@@ -59,7 +59,7 @@ public class TestDataConverter extends AbstractTestCase {
 
 	@Test
 	public void testConvert_Date() {
-		final String actual = converter.convert(DateTime.parse("2014-03-03T08:33:46.821"));
+		final String actual = converter.convert(LocalDateTime.parse("2014-03-03T08:33:46.821"));
 		assertEquals("2014-03-03 08:33:46.821", actual);
 	}
 

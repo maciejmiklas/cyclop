@@ -16,25 +16,26 @@
  */
 package org.cyclop.model.adapter;
 
+import java.time.LocalDateTime;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 
 /** @author Maciej Miklas */
-public class DateAdapter extends XmlAdapter<String, DateTime> {
+public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
 
 	@Override
-	public DateTime unmarshal(String val) throws Exception {
+	public LocalDateTime unmarshal(String val) throws Exception {
 		val = StringUtils.trimToNull(val);
 		if (val == null) {
 			return null;
 		}
-		return DateTime.parse(val);
+		return LocalDateTime.parse(val);
 	}
 
 	@Override
-	public String marshal(DateTime val) throws Exception {
+	public String marshal(LocalDateTime val) throws Exception {
 		if (val == null) {
 			return null;
 		}

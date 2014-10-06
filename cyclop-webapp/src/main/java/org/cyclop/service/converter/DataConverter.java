@@ -20,6 +20,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,9 +29,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.cyclop.common.AppConfig;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +57,7 @@ public class DataConverter {
 			}
 		};
 
-		timeFormatter = DateTimeFormat.forPattern(DATE_PATTERN);
+		timeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 	}
 
 	public String trimColumnContent(String content, boolean embeddedColumn) {
@@ -104,8 +103,8 @@ public class DataConverter {
 		} else if (val instanceof Date) {
 			converted = dateFomrat.get().format(val);
 
-		} else if (val instanceof DateTime) {
-			converted = timeFormatter.print((DateTime) val);
+		} else if (val instanceof LocalDateTime) {
+			converted = timeFormatter.format((LocalDateTime) val);
 
 		} else if (val instanceof BigInteger) {
 			converted = val.toString();

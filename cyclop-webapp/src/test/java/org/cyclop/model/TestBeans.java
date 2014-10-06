@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +31,6 @@ import javax.inject.Inject;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.completion.CompletionService;
 import org.cyclop.test.AbstractTestCase;
-import org.joda.time.DateTime;
 import org.junit.Test;
 
 import com.datastax.driver.core.DataType;
@@ -104,11 +104,11 @@ public class TestBeans extends AbstractTestCase {
 	public void testSerialize_QueryFavourites() throws Exception {
 		QueryFavourites obj = new QueryFavourites();
 		obj.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."),
-				DateTime.now(), 2312));
+				LocalDateTime.now(), 2312));
 		obj.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE,
-				"alter sapce cqldemo.mybooks ...."), DateTime.now(), 234));
+				"alter sapce cqldemo.mybooks ...."), LocalDateTime.now(), 234));
 		obj.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"),
-				DateTime.now(), 345));
+				LocalDateTime.now(), 345));
 
 		byte[] serialized = serialize(obj);
 
@@ -117,16 +117,17 @@ public class TestBeans extends AbstractTestCase {
 
 		// check whether lock has been deserialized
 		des.addWithSizeCheck(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"),
-				DateTime.now(), 542));
+				LocalDateTime.now(), 542));
 	}
 
 	@Test
 	public void testSerialize_QueryHistory() throws Exception {
 		QueryHistory obj = new QueryHistory();
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."), DateTime.now(), 23));
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."), DateTime
-				.now(), 7654));
-		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), DateTime.now(),
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."), LocalDateTime
+				.now(), 23));
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "alter sapce cqldemo.mybooks ...."),
+				LocalDateTime.now(), 7654));
+		obj.add(new QueryEntry(new CqlQuery(CqlQueryType.SELECT, "select * from cqldemo.mybooks"), LocalDateTime.now(),
 				987656));
 
 		byte[] serialized = serialize(obj);
@@ -139,7 +140,7 @@ public class TestBeans extends AbstractTestCase {
 	@Test
 	public void testSerialize_QueryEntry() throws Exception {
 		QueryEntry obj = new QueryEntry(new CqlQuery(CqlQueryType.ALTER_TABLE, "alter cqldemo.mybooks ...."),
-				DateTime.now(), 1231);
+				LocalDateTime.now(), 1231);
 		execSerializeEquals(obj, QueryEntry.class);
 	}
 
@@ -284,7 +285,8 @@ public class TestBeans extends AbstractTestCase {
 		et.addEqualityGroup(new CqlTable("mybooks"));
 
 		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo.mybooks"), 34523),
-				new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo.mybooks"), new DateTime(), 2465245));
+				new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo.mybooks"), LocalDateTime.now(),
+						2465245));
 		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryType.CREATE_INDEX, "cqldemo.mybooks"), 345));
 		et.addEqualityGroup(new QueryEntry(new CqlQuery(CqlQueryType.ALTER_KEYSPACE, "cqldemo"), 3452));
 
