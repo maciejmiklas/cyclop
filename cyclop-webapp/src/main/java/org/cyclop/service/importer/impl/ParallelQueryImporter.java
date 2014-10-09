@@ -35,6 +35,7 @@ import org.cyclop.service.importer.QueryImporter;
 import org.cyclop.service.importer.ResultWriter;
 import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.queryprotocoling.HistoryService;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +44,7 @@ import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 @Named(QueryImporter.IMPL_PARALLEL)
+@EnableValidation
 public class ParallelQueryImporter extends AbstractImporter {
 
 	private final static Logger LOG = LoggerFactory.getLogger(ParallelQueryImporter.class);

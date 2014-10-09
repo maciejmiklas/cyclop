@@ -18,12 +18,15 @@ package org.cyclop.service.exporter;
 
 import java.io.OutputStream;
 
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.CqlQuery;
 
 /** @author Maciej Miklas */
 public interface CsvQueryResultExporter {
 
-	void exportAsCsv(CqlQuery query, OutputStream output);
+	void exportAsCsv(@NotNull CqlQuery query, @NotNull OutputStream output);
 
-	String exportAsCsv(CqlQuery query);
+	@NotNull
+	String exportAsCsv(@NotNull CqlQuery query);
 }

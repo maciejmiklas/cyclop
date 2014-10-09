@@ -38,6 +38,7 @@ import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.converter.DataExtractor;
 import org.cyclop.service.exporter.CsvQueryResultExporter;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,7 @@ import com.google.common.collect.ImmutableSet;
 
 /** @author Maciej Miklas */
 @Named
+@EnableValidation
 public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 
 	private final static Logger LOG = LoggerFactory.getLogger(CsvQueryResultExporterImpl.class);
@@ -90,12 +92,12 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		// column names
 		ImmutableList<CqlExtendedColumnName> columns = result.rowMetadata.columns;
 		appendColumns(out, columns);
-		out.append(conf.rowSeparator);
+		out.append(conf.separatorRow);
 
 		// content
 		for (Row row : result) {
 			appendRow(out, row, columns);
-			out.append(conf.rowSeparator);
+			out.append(conf.separatorRow);
 		}
 
 		out.flush();
@@ -119,7 +121,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 			}
 
 			if (it.hasNext()) {
-				out.append(conf.columnSeparator);
+				out.append(conf.separatorColumn);
 			}
 		}
 	}
@@ -139,14 +141,14 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 			String keyText = esc(converter.convert(key.value));
 			mapBuf.append(keyText);
 
-			mapBuf.append(conf.mapSeparator);
+			mapBuf.append(conf.separatorMap);
 
 			CqlColumnValue val = entry.getValue();
 			String valText = esc(converter.convert(val.value));
 			mapBuf.append(valText);
 
 			if (it.hasNext()) {
-				mapBuf.append(conf.listSeparator);
+				mapBuf.append(conf.separatorList);
 			}
 		}
 
@@ -165,7 +167,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 			String valText = esc(converter.convert(cqlColumnValue.value));
 			listBuild.append(valText);
 			if (contentIt.hasNext()) {
-				listBuild.append(conf.listSeparator);
+				listBuild.append(conf.separatorList);
 			}
 		}
 		String colVal = esc(listBuild.toString());
@@ -184,7 +186,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		String headerVal = prep(query.part);
 		LOG.trace("Append header: {}", headerVal);
 		out.append(headerVal);
-		out.append(conf.querySeparator);
+		out.append(conf.separatorQuery);
 	}
 
 	private void appendColumns(PrintWriter out, List<CqlExtendedColumnName> columns) {
@@ -200,7 +202,7 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 			out.append(prep(esc(next.toDisplayString())));
 
 			if (commonColsIt.hasNext()) {
-				out.append(conf.columnSeparator);
+				out.append(conf.separatorColumn);
 			}
 		}
 	}

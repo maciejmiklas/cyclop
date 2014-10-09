@@ -18,10 +18,14 @@ package org.cyclop.common;
 
 import static java.util.Comparator.comparingInt;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,17 +71,32 @@ public class StringHelper {
 		return buf.toString();
 	}
 
+	private static Set<String> sortBySize(String... strArray) {
+		Set<String> sorted = new TreeSet<>(comparingInt(String::length).reversed().thenComparing(String::compareTo));
+		sorted.addAll(Arrays.asList(strArray));
+		return sorted;
+	}
+
+	public static Optional<InetAddress> toInetAddress(String ip) {
+		ip = StringUtils.trimToNull(ip);
+		if (ip == null) {
+			return Optional.empty();
+		}
+		InetAddress addr = null;
+		try {
+			addr = InetAddress.getByName(ip);
+		} catch (UnknownHostException | SecurityException e) {
+			LOG.warn("Cannot convert: " + ip + " to valid IP: " + e.getMessage());
+			LOG.debug(e.getMessage(), e);
+		}
+		return Optional.ofNullable(addr);
+	}
+
 	public static interface StringDecorator {
 		String decorate(String in);
 
 		String prefix();
 
 		String postfix();
-	}
-
-	private static Set<String> sortBySize(String... strArray) {
-		Set<String> sorted = new TreeSet<>(comparingInt(String::length).reversed().thenComparing(String::compareTo));
-		sorted.addAll(Arrays.asList(strArray));
-		return sorted;
 	}
 }

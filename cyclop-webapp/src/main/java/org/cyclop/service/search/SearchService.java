@@ -16,11 +16,15 @@
  */
 package org.cyclop.service.search;
 
+import javax.validation.constraints.NotNull;
+
 import org.cyclop.model.FilterResult;
 
 import com.google.common.collect.ImmutableCollection;
 
 public interface SearchService<T> {
 
-	FilterResult<T> filter(ImmutableCollection<T> input, FieldAccessor<T> accessor, String... keywords);
+	@NotNull
+	FilterResult<T> filter(@NotNull ImmutableCollection<T> input, @NotNull FieldAccessor<T> accessor,
+			String... keywords);
 }

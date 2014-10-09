@@ -27,10 +27,12 @@ import org.cyclop.service.importer.QueryImporter;
 import org.cyclop.service.importer.ResultWriter;
 import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
+@EnableValidation
 abstract class AbstractImporter implements QueryImporter {
 	private final static Logger LOG = LoggerFactory.getLogger(AbstractImporter.class);
 

@@ -32,6 +32,7 @@ import com.google.common.collect.ImmutableSortedSet;
 /** @author Maciej Miklas */
 public interface QueryService {
 
+	@NotNull
 	ImmutableSortedSet<CqlColumnName> findColumnNames(@NotNull Optional<CqlTable> table);
 
 	boolean checkTableExists(CqlTable table);

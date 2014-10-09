@@ -16,6 +16,8 @@
  */
 package org.cyclop.service.search;
 
+import javax.validation.constraints.NotNull;
+
 public interface FieldAccessor<T> {
-	String getText(T obj);
+	@NotNull String getText(@NotNull T obj);
 }

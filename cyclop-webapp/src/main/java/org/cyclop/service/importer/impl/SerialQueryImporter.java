@@ -29,11 +29,13 @@ import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.importer.QueryImporter;
 import org.cyclop.service.importer.ResultWriter;
 import org.cyclop.service.importer.model.ImportConfig;
+import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 @Named(QueryImporter.IMPL_SERIAL)
+@EnableValidation
 public class SerialQueryImporter extends AbstractImporter {
 
 	private final static Logger LOG = LoggerFactory.getLogger(SerialQueryImporter.class);

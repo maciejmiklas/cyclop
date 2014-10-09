@@ -73,7 +73,7 @@ public class TestHistoryService extends AbstractTestCase {
 	private ThreadTestScope threadTestScope;
 
 	@After
-	public void cleanUp() {
+	public void cleanUp() throws Exception {
 		super.cleanUp();
 		threadTestScope.setSingleThread(false);
 	}

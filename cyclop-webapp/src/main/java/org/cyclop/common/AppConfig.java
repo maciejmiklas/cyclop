@@ -56,6 +56,10 @@ public final class AppConfig implements Serializable {
 
 	@NotNull
 	@Valid
+	public final Security security;
+
+	@NotNull
+	@Valid
 	public final QueryEditor queryEditor;
 
 	@NotNull
@@ -93,7 +97,7 @@ public final class AppConfig implements Serializable {
 	@Inject
 	public AppConfig(Cassandra cassandra, QueryEditor queryEditor, Common common, QueryExport queryExport,
 			Cookies cookie, History history, Favourites favourites, FileStore fileStore, HttpSession httpSession,
-			QueryImport queryImport) {
+			QueryImport queryImport, Security security) {
 		this.cassandra = cassandra;
 		this.queryEditor = queryEditor;
 		this.common = common;
@@ -104,6 +108,7 @@ public final class AppConfig implements Serializable {
 		this.fileStore = fileStore;
 		this.httpSession = httpSession;
 		this.queryImport = queryImport;
+		this.security = security;
 	}
 
 	private static String crs(String cr, String str) throws UnsupportedEncodingException {
@@ -129,7 +134,7 @@ public final class AppConfig implements Serializable {
 		return MoreObjects.toStringHelper(this).add("cassandra", cassandra).add("queryEditor", queryEditor)
 				.add("common", common).add("history", history).add("fileStore", fileStore)
 				.add("favourites", favourites).add("queryExport", queryExport).add("httpSession", httpSession)
-				.add("cookie", cookie).add("queryImport", queryImport).toString();
+				.add("cookie", cookie).add("queryImport", queryImport).add("security", security).toString();
 	}
 
 	@Named
@@ -171,8 +176,8 @@ public final class AppConfig implements Serializable {
 				@Value("${cassandra.columnsLimit}") int columnsLimit,
 				@Value("${cassandra.maxConnectionsPerHost}") int maxConnectionsPerHost,
 				@Value("${cassandra.coreConnectionsPerHost}") int coreConnectionsPerHost,
-				@Value("${cassandra.maxSimultaneousRequestsPerConnectionThreshold}") int maxSimultaneousRequestsPerConnectionThreshold,
-				@Value("${cassandra.minSimultaneousRequestsPerConnectionThreshold}") int minSimultaneousRequestsPerConnectionThreshold) {
+				@Value("${cassandra.simultaneousRequestsPerConnectionThreshold.max}") int maxSimultaneousRequestsPerConnectionThreshold,
+				@Value("${cassandra.simultaneousRequestsPerConnectionThreshold.min}") int minSimultaneousRequestsPerConnectionThreshold) {
 			this.hosts = hosts;
 			this.useSsl = useSsl;
 			this.port = port;
@@ -202,7 +207,36 @@ public final class AppConfig implements Serializable {
 
 	@Named
 	@Immutable
+	public static class Security implements Serializable {
+
+		public final int incorrectLoginDelayMs;
+		
+		@Min(1)
+		public final double incorrectLoginDelayMultiplikator;
+		
+		@Min(1)
+		public final int incorrectLoginDelayResetMs;
+
+		@Inject
+		public Security(@Value("${security.incorrectLogin.delayMs}") int incorrectLoginDelayMs,
+				@Value("${security.incorrectLogin.delayMultiplikator}") double incorrectLoginDelayMultiplikator,
+				@Value("${security.incorrectLogin.delayResetMs}") int incorrectLoginDelayResetMs) {
+			this.incorrectLoginDelayMs = incorrectLoginDelayMs;
+			this.incorrectLoginDelayMultiplikator = incorrectLoginDelayMultiplikator;
+			this.incorrectLoginDelayResetMs = incorrectLoginDelayResetMs;
+		}
+
+		@Override
+		public String toString() {
+			return MoreObjects.toStringHelper(this).add("incorrectLoginDelayMs", incorrectLoginDelayMs)
+					.add("incorrectLoginDelayResetMs", incorrectLoginDelayResetMs).toString();
+		}
+	}
+
+	@Named
+	@Immutable
 	public static class Common implements Serializable {
+
 	}
 
 	@Named
@@ -264,19 +298,19 @@ public final class AppConfig implements Serializable {
 	public static final class QueryExport implements Serializable {
 
 		@NotEmpty
-		public final String querySeparator;
+		public final String separatorQuery;
 
 		@NotEmpty
-		public final String rowSeparator;
+		public final String separatorRow;
 
 		@NotEmpty
-		public final String listSeparator;
+		public final String separatorList;
 
 		@NotEmpty
-		public final String mapSeparator;
+		public final String separatorMap;
 
 		@NotEmpty
-		public final String columnSeparator;
+		public final String separatorColumn;
 
 		public final int crCharCode;
 
@@ -302,24 +336,25 @@ public final class AppConfig implements Serializable {
 		@Inject
 		public QueryExport(@Value("${queryExport.fileName}") String fileName,
 				@Value("${queryExport.fileName.date}") String fileNameDate,
-				@Value("${queryExport.querySeparator}") String querySeparator,
-				@Value("${queryExport.rowSeparator}") String rowSeparator,
-				@Value("${queryExport.columnSeparator}") String columnSeparator,
-				@Value("${queryExport.listSeparator}") String listSeparator,
-				@Value("${queryExport.mapSeparator}") String mapSeparator,
-				@Value("${queryExport.valueBracketStart}") String valueBracketStart,
-				@Value("${queryExport.valueBracketEnd}") String valueBracketEnd,
+				@Value("${queryExport.separator.query}") String separatorQuery,
+				@Value("${queryExport.separator.row}") String separatorRow,
+				@Value("${queryExport.separator.column}") String separatorColumn,
+				@Value("${queryExport.separator.list}") String separatorList,
+				@Value("${queryExport.separator.map}") String separatorMap,
+				@Value("${queryExport.valueBracket.start}") String valueBracketStart,
+				@Value("${queryExport.valueBracket.end}") String valueBracketEnd,
 				@Value("${queryExport.crCharCode}") int crCharCode,
 				@Value("${queryExport.removeCrChars}") boolean removeCrChars,
 				@Value("${queryExport.trim}") boolean trim, @Value("${queryExport.encoding}") String encoding)
 				throws UnsupportedEncodingException {
+
 			this.crCharCode = crCharCode;
 			String crChar = String.valueOf((char) crCharCode);
-			this.querySeparator = crs(crChar, querySeparator);
-			this.columnSeparator = crs(crChar, columnSeparator);
-			this.rowSeparator = crs(crChar, rowSeparator);
-			this.listSeparator = crs(crChar, listSeparator);
-			this.mapSeparator = crs(crChar, mapSeparator);
+			this.separatorQuery = crs(crChar, separatorQuery);
+			this.separatorColumn = crs(crChar, separatorColumn);
+			this.separatorRow = crs(crChar, separatorRow);
+			this.separatorList = crs(crChar, separatorList);
+			this.separatorMap = crs(crChar, separatorMap);
 			this.removeCrChars = removeCrChars;
 			this.fileName = fileName;
 			this.fileNameDate = fileNameDate;
@@ -331,12 +366,13 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("querySeparator", querySeparator).add("rowSeparator", rowSeparator)
-					.add("listSeparator", listSeparator).add("mapSeparator", mapSeparator)
-					.add("columnSeparator", columnSeparator).add("crCharCode", crCharCode)
-					.add("valueBracketStart", valueBracketStart).add("fileName", fileName)
-					.add("fileNameDate", fileNameDate).add("valueBracketEnd", valueBracketEnd).add("trim", trim)
-					.add("removeCrChars", removeCrChars).toString();
+			return MoreObjects.toStringHelper(this).add("querySeparator", separatorQuery)
+					.add("rowSeparator", separatorRow).add("listSeparator", separatorList)
+					.add("mapSeparator", separatorMap).add("columnSeparator", separatorColumn)
+					.add("crCharCode", crCharCode).add("valueBracketStart", valueBracketStart)
+					.add("fileName", fileName).add("fileNameDate", fileNameDate)
+					.add("valueBracketEnd", valueBracketEnd).add("trim", trim).add("removeCrChars", removeCrChars)
+					.toString();
 		}
 	}
 
@@ -373,8 +409,9 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("listSeparatorRegEx", listSeparatorRegEx).add("encoding", encoding)
-					.add("maxFileSizeMb", maxFileSizeMb).add("maxThreadsProImport", maxThreadsProImport).toString();
+			return MoreObjects.toStringHelper(this).add("listSeparatorRegEx", listSeparatorRegEx)
+					.add("encoding", encoding).add("maxFileSizeMb", maxFileSizeMb)
+					.add("maxThreadsProImport", maxThreadsProImport).toString();
 		}
 	}
 
@@ -394,7 +431,8 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
+			return MoreObjects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled)
+					.toString();
 		}
 	}
 
@@ -439,7 +477,8 @@ public final class AppConfig implements Serializable {
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled).toString();
+			return MoreObjects.toStringHelper(this).add("entriesLimit", entriesLimit).add("enabled", enabled)
+					.toString();
 		}
 	}
 

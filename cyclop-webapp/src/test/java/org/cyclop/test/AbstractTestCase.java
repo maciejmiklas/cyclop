@@ -119,7 +119,7 @@ public abstract class AbstractTestCase {
 	}
 
 	@After
-	public void cleanUp() {
+	public void cleanUp() throws Exception {
 		cassandraSession.close();
 		assertFalse(cassandraSession.isOpen());
 	}

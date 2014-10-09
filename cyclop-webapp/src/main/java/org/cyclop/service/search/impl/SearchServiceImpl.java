@@ -93,7 +93,7 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 	}
 
 	private int calculateWeight(String valueLc, Set<String> keywordsLc) {
-		int weight = (int)keywordsLc.stream().filter(k->valueLc.contains(k)).count();
+		int weight = (int) keywordsLc.stream().filter(k -> valueLc.contains(k)).count();
 		return weight;
 	}
 
@@ -109,7 +109,7 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 			return compRes;
 		}
 	}
-	
+
 	private final static class WeightSortingKey {
 		public final int weight;
 

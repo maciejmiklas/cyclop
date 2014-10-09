@@ -12,7 +12,7 @@
 	<logger name="org.apache.cassandra" level="OFF"/>
 
 	<root>
-		<level value="ERROR"/>
+		<level value="OFF"/>
 		<appender-ref ref="CONSOLE"/>
 	</root>
 

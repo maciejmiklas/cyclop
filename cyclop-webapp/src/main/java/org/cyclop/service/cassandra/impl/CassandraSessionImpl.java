@@ -59,35 +59,42 @@ public class CassandraSessionImpl implements CassandraSession {
 	private Cluster cluster;
 
 	public synchronized void authenticate(@NotNull String userName, @NotNull String password) {
-		if (cluster != null) {
+		if (session != null) {
 			return;
 		}
-		Cluster.Builder builder = Cluster.builder();
-		for (String host : appConfig.cassandra.hosts.split("[,]")) {
-			builder.addContactPoint(host);
+		try {
+			Cluster.Builder builder = Cluster.builder();
+			for (String host : appConfig.cassandra.hosts.split("[,]")) {
+				builder.addContactPoint(host);
+			}
+			builder.withCredentials(userName, password);
+
+			if (appConfig.cassandra.useSsl) {
+				builder.withSSL();
+			}
+
+			SocketOptions socketOptions = new SocketOptions();
+			socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMillis);
+
+			PoolingOptions pooling = new PoolingOptions();
+			pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.coreConnectionsPerHost);
+			pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.maxConnectionsPerHost);
+			pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
+					appConfig.cassandra.minSimultaneousRequestsPerConnectionThreshold);
+			pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
+					appConfig.cassandra.maxSimultaneousRequestsPerConnectionThreshold);
+
+			cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions)
+					.withPoolingOptions(pooling).build();
+			session = cluster.connect();
+
+			cassandraVersion = determineVersion(session);
+		} finally {
+			if (session == null) {
+				LOG.debug("Cannot open cassandra session - clean up resources");
+				close();
+			}
 		}
-		builder.withCredentials(userName, password);
-
-		if (appConfig.cassandra.useSsl) {
-			builder.withSSL();
-		}
-
-		SocketOptions socketOptions = new SocketOptions();
-		socketOptions.setConnectTimeoutMillis(appConfig.cassandra.timeoutMillis);
-
-		PoolingOptions pooling = new PoolingOptions();
-		pooling.setCoreConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.coreConnectionsPerHost);
-		pooling.setMaxConnectionsPerHost(HostDistance.LOCAL, appConfig.cassandra.maxConnectionsPerHost);
-		pooling.setMinSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
-				appConfig.cassandra.minSimultaneousRequestsPerConnectionThreshold);
-		pooling.setMaxSimultaneousRequestsPerConnectionThreshold(HostDistance.LOCAL,
-				appConfig.cassandra.maxSimultaneousRequestsPerConnectionThreshold);
-
-		cluster = builder.withPort(appConfig.cassandra.port).withSocketOptions(socketOptions)
-				.withPoolingOptions(pooling).build();
-		session = cluster.connect();
-
-		cassandraVersion = determineVersion(session);
 	}
 
 	private CassandraVersion determineVersion(Session session) {

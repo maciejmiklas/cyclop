@@ -33,6 +33,8 @@ import org.cyclop.service.cassandra.CassandraSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.datastax.driver.core.exceptions.AuthenticationException;
+
 /** @author Maciej Miklas */
 public class CqlWebSession extends AuthenticatedWebSession {
 	private final static Logger LOG = LoggerFactory.getLogger(CqlWebSession.class);
@@ -64,15 +66,13 @@ public class CqlWebSession extends AuthenticatedWebSession {
 
 			authenticated = true;
 			lastLoginError = null;
-		} catch (Exception e) {
+			LOG.info("Log-in succesfull: " + username);
+		} catch (AuthenticationException e) {
 			lastLoginError = e.getMessage();
 			authenticated = false;
-
-			LOG.info("Log-in failed:" + e.getMessage());
 			LOG.debug(e.getMessage(), e);
 		}
-
-		LOG.info("Log-in succesfull: " + username);
+		
 		return authenticated;
 	}
 

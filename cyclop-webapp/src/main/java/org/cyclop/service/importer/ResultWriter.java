@@ -16,6 +16,8 @@
  */
 package org.cyclop.service.importer;
 
+import javax.validation.constraints.NotNull;
+
 import net.jcip.annotations.ThreadSafe;
 
 import org.cyclop.model.CqlQuery;
@@ -29,9 +31,9 @@ import org.cyclop.model.exception.QueryException;
 @ThreadSafe
 public interface ResultWriter {
 
-	void success(CqlQuery query, long runtime);
+	void success(@NotNull CqlQuery query, long runtime);
 
-	void error(CqlQuery query, QueryException error, long runtime);
+	void error(@NotNull CqlQuery query, @NotNull QueryException error, long runtime);
 
-	void unknownError(CqlQuery query, Exception error, long runtime);
+	void unknownError(@NotNull CqlQuery query, @NotNull Exception error, long runtime);
 }

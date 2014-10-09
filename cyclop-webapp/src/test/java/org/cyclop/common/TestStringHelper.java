@@ -16,7 +16,10 @@
  */
 package org.cyclop.common;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.net.InetAddress;
+import java.util.Optional;
 
 import org.cyclop.common.StringHelper.StringDecorator;
 import org.junit.Test;
@@ -24,6 +27,37 @@ import org.junit.Test;
 public class TestStringHelper {
 
 	private final static TestDecorator TD = new TestDecorator();
+
+	@Test
+	public void testToInetAddress_OK() throws Exception {
+		assertEquals(InetAddress.getByName("192.168.0.1"), StringHelper.toInetAddress("192.168.0.1").get());
+		assertEquals(InetAddress.getByName("0.0.0.0"), StringHelper.toInetAddress("0.0.0.0").get());
+	}
+
+	@Test
+	public void testToInetAddress_Incorrect() throws Exception {
+
+		{
+			Optional<InetAddress> addr = StringHelper.toInetAddress("192.1328.01");
+			assertFalse(addr.toString(), addr.isPresent());
+		}
+
+		{
+			Optional<InetAddress> addr = StringHelper.toInetAddress(null);
+			assertFalse(addr.toString(), addr.isPresent());
+		}
+
+		{
+			Optional<InetAddress> addr = StringHelper.toInetAddress("");
+			assertFalse(addr.toString(), addr.isPresent());
+		}
+		
+
+		{
+			Optional<InetAddress> addr = StringHelper.toInetAddress("asdasd");
+			assertFalse(addr.toString(), addr.isPresent());
+		}
+	}
 
 	@Test
 	public void testDecorate_ContainsDecoratedText() {
