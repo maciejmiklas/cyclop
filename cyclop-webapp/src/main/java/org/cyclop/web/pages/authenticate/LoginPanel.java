@@ -26,10 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.panel.SignInPanel;
-import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.RequiredTextField;
-import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.cyclop.service.security.BruteForceService;

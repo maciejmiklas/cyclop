@@ -27,14 +27,14 @@ class BruteForceServiceImpl implements BruteForceService {
 	public boolean checkActive(Optional<InetAddress> clientIp, Optional<InetAddress> proxyIp) {
 		return blockTime.get() > 0;
 	}
-
+ 
 	@Override
 	public synchronized void resetLoginFailed(Optional<InetAddress> clientIp, Optional<InetAddress> proxyIp) {
 		LOG.debug("Reseting login delay");
 		startBlocking = 0;
 		blockTime.set(0);
-	}
-
+	} 
+ 
 	@Override
 	public synchronized void loginFailed(String errorMessage, Optional<InetAddress> clientIp,
 			Optional<InetAddress> proxyIp) {

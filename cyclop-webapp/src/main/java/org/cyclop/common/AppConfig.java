@@ -209,27 +209,37 @@ public final class AppConfig implements Serializable {
 	@Immutable
 	public static class Security implements Serializable {
 
+		@Min(2)
+		public final int captchaCharacters;
+
+		public final boolean captchaEnabled;
+
 		public final int incorrectLoginDelayMs;
-		
+
 		@Min(1)
 		public final double incorrectLoginDelayMultiplikator;
-		
+
 		@Min(1)
 		public final int incorrectLoginDelayResetMs;
 
 		@Inject
 		public Security(@Value("${security.incorrectLogin.delayMs}") int incorrectLoginDelayMs,
 				@Value("${security.incorrectLogin.delayMultiplikator}") double incorrectLoginDelayMultiplikator,
-				@Value("${security.incorrectLogin.delayResetMs}") int incorrectLoginDelayResetMs) {
+				@Value("${security.incorrectLogin.delayResetMs}") int incorrectLoginDelayResetMs,
+				@Value("${security.captcha.characters}") int captchaCharacters,
+				@Value("${security.captcha.enabled}") boolean captchaEnabled) {
 			this.incorrectLoginDelayMs = incorrectLoginDelayMs;
 			this.incorrectLoginDelayMultiplikator = incorrectLoginDelayMultiplikator;
 			this.incorrectLoginDelayResetMs = incorrectLoginDelayResetMs;
+			this.captchaCharacters = captchaCharacters;
+			this.captchaEnabled = captchaEnabled;
 		}
 
 		@Override
 		public String toString() {
 			return MoreObjects.toStringHelper(this).add("incorrectLoginDelayMs", incorrectLoginDelayMs)
-					.add("incorrectLoginDelayResetMs", incorrectLoginDelayResetMs).toString();
+					.add("incorrectLoginDelayResetMs", incorrectLoginDelayResetMs)
+					.add("captchaCharacters", captchaCharacters).add("captchaEnabled", captchaEnabled).toString();
 		}
 	}
 
