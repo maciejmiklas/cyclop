@@ -97,6 +97,8 @@ public class TestBruteForceService extends AbstractTestCase {
 		service.loginFailed("error message 123...", Optional.of(InetAddress.getLocalHost()),
 				Optional.of(InetAddress.getLocalHost()));
 		sw.stop();
+		assertTrue(service
+				.checkActive(Optional.of(InetAddress.getLocalHost()), Optional.of(InetAddress.getLocalHost())));
 		assertTrue("Wait time: " + sw.getTotalTimeMillis(), sw.getTotalTimeMillis() >= waitTime - 50);
 		assertTrue("Wait time: " + sw.getTotalTimeMillis(), sw.getTotalTimeMillis() <= waitTime + 50);
 	}

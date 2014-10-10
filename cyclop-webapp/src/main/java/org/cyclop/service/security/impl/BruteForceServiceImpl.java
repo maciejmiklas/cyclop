@@ -2,6 +2,7 @@ package org.cyclop.service.security.impl;
 
 import java.net.InetAddress;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,14 +20,19 @@ class BruteForceServiceImpl implements BruteForceService {
 
 	@Inject
 	private AppConfig config;
-	private long blockTime = 0;
+	private AtomicLong blockTime = new AtomicLong();
 	private long startBlocking = 0;
+
+	@Override
+	public boolean checkActive(Optional<InetAddress> clientIp, Optional<InetAddress> proxyIp) {
+		return blockTime.get() > 0;
+	}
 
 	@Override
 	public synchronized void resetLoginFailed(Optional<InetAddress> clientIp, Optional<InetAddress> proxyIp) {
 		LOG.debug("Reseting login delay");
 		startBlocking = 0;
-		blockTime = 0;
+		blockTime.set(0);
 	}
 
 	@Override
@@ -54,13 +60,13 @@ class BruteForceServiceImpl implements BruteForceService {
 		if (startBlocking == 0
 				|| ((System.currentTimeMillis() - startBlocking) >= config.security.incorrectLoginDelayResetMs)) {
 			startBlocking = System.currentTimeMillis();
-			blockTime = config.security.incorrectLoginDelayMs;
+			blockTime.set(config.security.incorrectLoginDelayMs);
 
 		} else {
-			blockTime *= config.security.incorrectLoginDelayMultiplikator;
+			blockTime.set((int) (blockTime.get() * config.security.incorrectLoginDelayMultiplikator));
 			startBlocking = System.currentTimeMillis();
 		}
 
-		return blockTime;
+		return blockTime.get();
 	}
 }

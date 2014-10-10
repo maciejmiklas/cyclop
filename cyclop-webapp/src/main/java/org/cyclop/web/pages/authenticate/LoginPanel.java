@@ -24,7 +24,12 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.wicket.authentication.IAuthenticationStrategy;
 import org.apache.wicket.authroles.authentication.panel.SignInPanel;
+import org.apache.wicket.extensions.markup.html.captcha.CaptchaImageResource;
+import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.RequiredTextField;
+import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
 import org.cyclop.service.security.BruteForceService;
@@ -32,6 +37,8 @@ import org.cyclop.web.webapp.CqlWebSession;
 
 /** @author Maciej Miklas */
 public class LoginPanel extends SignInPanel {
+
+	private CaptchaPanel captcha;
 
 	@Inject
 	private BruteForceService bruteForce;
@@ -45,9 +52,7 @@ public class LoginPanel extends SignInPanel {
 		CqlWebSession session = (CqlWebSession) getWebSession();
 		String lastLoginError = session.getLastLoginError();
 
-		WebRequest req = (WebRequest) RequestCycle.get().getRequest();
-		HttpServletRequest httpReq = (HttpServletRequest) req.getContainerRequest();
-
+		HttpServletRequest httpReq = getHttpServletRequest();
 		Optional<InetAddress> clientIp = getClientIp(httpReq);
 		Optional<InetAddress> proxyIp = getProxyIp(httpReq);
 		bruteForce.loginFailed(lastLoginError, clientIp, proxyIp);
@@ -57,6 +62,12 @@ public class LoginPanel extends SignInPanel {
 		} else {
 			super.onSignInFailed();
 		}
+	}
+
+	private HttpServletRequest getHttpServletRequest() {
+		WebRequest req = (WebRequest) RequestCycle.get().getRequest();
+		HttpServletRequest httpReq = (HttpServletRequest) req.getContainerRequest();
+		return httpReq;
 	}
 
 	private Optional<InetAddress> getProxyIp(HttpServletRequest httpReq) {
@@ -69,6 +80,35 @@ public class LoginPanel extends SignInPanel {
 		String clientIpStr = httpReq.getHeader("X-Forwarded-For");
 		Optional<InetAddress> addr = toInetAddress(clientIpStr);
 		return addr;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
+		// HttpServletRequest httpReq = getHttpServletRequest();
+		// Optional<InetAddress> clientIp = getClientIp(httpReq);
+		// Optional<InetAddress> proxyIp = getProxyIp(httpReq);
+		//
+		// if (!bruteForce.checkActive(clientIp, proxyIp)) {
+		// setVisible(false);
+		// return;
+		// }
+		WebMarkupContainer captchaArea = new WebMarkupContainer("captchaArea");
+		captcha = new CaptchaPanel("captcha");
+		captchaArea.add(captcha);
+		getForm().add(captchaArea);
+	}
+
+	@Override
+	protected void onSignInSucceeded() {
+		if (captcha != null && !captcha.verifyCaptcha()) {
+			IAuthenticationStrategy strategy = getApplication().getSecuritySettings().getAuthenticationStrategy();
+			strategy.remove();
+			error(getLocalizer().getString("signInFailed", this, "Sign in failed"));
+		} else {
+			super.onSignInSucceeded();
+		}
 	}
 
 }

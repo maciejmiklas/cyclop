@@ -18,33 +18,9 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
 	<wicket:panel>
-		<form wicket:id="signInForm">
-			<table>
-				<tr>
-					<td align="right">Username &nbsp;&nbsp;&nbsp;</td>
-					<td><input wicket:id="username" type="text" /></td>
-				</tr>
-				<tr>
-					<td align="right">Password&nbsp;&nbsp;&nbsp;</td>
-					<td><input wicket:id="password" type="password" /></td>
-				</tr>
-				<tr wicket:id="rememberMeRow">
-					<td></td>
-					<td><input wicket:id="rememberMe" type="checkbox" /> Remember Me</td>
-				</tr>
-				<tr wicket:id="captchaArea">
-					<td></td>
-					<td><br /> <br />
-						<div wicket:id="captcha" /> <br /> <br /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><input type="submit" name="submit" value="Sign In" /></td>
-				</tr>
-			</table>
-		</form>
-		<br>
-		<span wicket:id="feedback" />
+		<img wicket:id="captchaImage" />
+		<br />
+		<input wicket:id="captchaEntry" type="text" size="10" />
 	</wicket:panel>
 </body>
 </html>

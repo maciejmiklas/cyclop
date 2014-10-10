@@ -11,4 +11,6 @@ public interface BruteForceService {
 			@NotNull Optional<InetAddress> proxyIp);
 
 	void resetLoginFailed(@NotNull Optional<InetAddress> clientIp, @NotNull Optional<InetAddress> proxyIp);
+
+	boolean checkActive(@NotNull Optional<InetAddress> clientIp, @NotNull Optional<InetAddress> proxyIp);
 }
