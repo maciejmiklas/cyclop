@@ -17,12 +17,12 @@
 package org.cyclop.service.search.impl;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.inject.Named;
-import javax.validation.constraints.NotNull;
 
 import org.cyclop.model.FilterResult;
 import org.cyclop.service.search.FieldAccessor;
@@ -42,12 +42,11 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 	private final static int MIN_KW_LENGHT = 3;
 
 	@Override
-	public @NotNull FilterResult<T> filter(@NotNull ImmutableCollection<T> input, @NotNull FieldAccessor<T> accessor,
-			@NotNull String... keywords) {
+	public Optional<FilterResult<T>> filter(ImmutableCollection<T> input, FieldAccessor<T> accessor, String... keywords) {
 
 		ImmutableSet<String> normKeywords = normalize(keywords);
 		if (normKeywords.isEmpty()) {
-			return null;
+			return Optional.empty();
 		}
 
 		SortedMap<WeightSortingKey, T> sorted = new TreeMap<>(COMP);
@@ -65,7 +64,7 @@ public class SearchServiceImpl<T> implements SearchService<T> {
 		}
 
 		ImmutableList<T> result = mapResult(sorted);
-		return new FilterResult<T>(result, normKeywords);
+		return Optional.of(new FilterResult<T>(result, normKeywords));
 	}
 
 	private ImmutableList<T> mapResult(SortedMap<WeightSortingKey, T> sorted) {

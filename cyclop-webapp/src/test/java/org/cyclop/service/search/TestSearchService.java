@@ -19,7 +19,6 @@ package org.cyclop.service.search;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import javax.inject.Inject;
 
@@ -52,90 +51,90 @@ public class TestSearchService extends AbstractTestCase {
 
 	@Test
 	public void testFilter_KeywordsToShort() {
-		assertNull(service.filter(QUERY_LIST, FAC, "in", "i", "in  ", "  "));
+		assertFalse(service.filter(QUERY_LIST, FAC, "in", "i", "in  ", "  ").isPresent());
 	}
 
 	@Test
 	public void testFilter_MinLength_1() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "fro");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "fro").get();
 		validateFiltered(filtered, 5, 0, 1, 2, 3, 7);
 	}
 
 	@Test
 	public void testFilter_ingleAttr_1() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "from ");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "from ").get();
 		validateFiltered(filtered, 5, 0, 1, 2, 3, 7);
 	}
 
 	@Test
 	public void testFilter_SingleAttr_2() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "cqldemo");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "cqldemo").get();
 		validateFiltered(filtered, 3, 0, 1, 2);
 	}
 
 	@Test
 	public void testFilter_SingleAttr_3() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "attr");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "attr").get();
 		validateFiltered(filtered, 6, 2, 3, 4, 5, 6, 7);
 	}
 
 	@Test
 	public void testFilter_SingleAttr_4() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "3322");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "3322").get();
 		validateFiltered(filtered, 5, 1, 2, 3, 4, 7);
 	}
 
 	@Test
 	public void testFilter_SingleAttr_5() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "mybooks");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "mybooks").get();
 		validateFiltered(filtered, 6, 0, 1, 2, 3, 4, 5);
 	}
 
 	@Test
 	public void testFilter_SingleAttr_6() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332").get();
 		validateFiltered(filtered, 6, 1, 2, 3, 4, 5, 7);
 	}
 
 	@Test
 	public void testFilter_TwoAttrs_1() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from").get();
 		validateFiltered(filtered, 7, 1, 2, 3, 7, 0, 4, 5);
 	}
 
 	@Test
 	public void testFilter_TwoAttrs_2() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "insert");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "insert").get();
 		validateFiltered(filtered, 7, 4, 5, 1, 2, 3, 6, 7);
 	}
 
 	@Test
 	public void testFilter_ThreeAttrs() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from", "insert");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from", "insert").get();
 		validateFiltered(filtered, 8, 1, 2, 3, 4, 5, 7, 0, 6);
 	}
 
 	@Test
 	public void testFilter_ThreeAttrsCaseSensitive() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "fRom", "INSERT");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "fRom", "INSERT").get();
 		validateFiltered(filtered, 8, 1, 2, 3, 4, 5, 7, 0, 6);
 	}
 
 	@Test
 	public void testFilter_FourAttrs_1() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from", "insert", "select");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from", "insert", "select").get();
 		validateFiltered(filtered, 8, 1, 2, 3, 7, 0, 4, 5, 6);
 	}
 
 	@Test
 	public void testFilter_FourAttrs_2() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from", "insert", "into");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "332", "from", "insert", "into").get();
 		validateFiltered(filtered, 8, 4, 5, 1, 2, 3, 6, 7, 0);
 	}
 
 	@Test
 	public void testFilter_FourAttrs_3() {
-		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "3322", "from", "insert", "into");
+		FilterResult<CqlQuery> filtered = service.filter(QUERY_LIST, FAC, "3322", "from", "insert", "into").get();
 		validateFiltered(filtered, 8, 4, 1, 2, 3, 5, 6, 7, 0);
 	}
 

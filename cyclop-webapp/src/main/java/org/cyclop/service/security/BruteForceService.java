@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 public interface BruteForceService {
 
-	void loginFailed(@NotNull String errorMessage, @NotNull Optional<InetAddress> clientIp,
+	void loginFailed(@NotNull Optional<String> errorMessage, @NotNull Optional<InetAddress> clientIp,
 			@NotNull Optional<InetAddress> proxyIp);
 
 	void resetLoginFailed(@NotNull Optional<InetAddress> clientIp, @NotNull Optional<InetAddress> proxyIp);

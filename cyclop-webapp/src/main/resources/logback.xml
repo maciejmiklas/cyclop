@@ -16,8 +16,10 @@
 		</encoder>
 	</appender>
 
+	<logger name="org.cyclop" level="INFO"/>
+
 	<root>
-		<level value="INFO"/>
+		<level value="ERROR"/>
 		<appender-ref ref="CONSOLE"/>
 	</root>
 

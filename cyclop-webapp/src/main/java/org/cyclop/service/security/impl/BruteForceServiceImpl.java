@@ -27,18 +27,18 @@ class BruteForceServiceImpl implements BruteForceService {
 	public boolean checkActive(Optional<InetAddress> clientIp, Optional<InetAddress> proxyIp) {
 		return blockTime.get() > 0;
 	}
- 
+
 	@Override
 	public synchronized void resetLoginFailed(Optional<InetAddress> clientIp, Optional<InetAddress> proxyIp) {
 		LOG.debug("Reseting login delay");
 		startBlocking = 0;
 		blockTime.set(0);
-	} 
- 
+	}
+
 	@Override
-	public synchronized void loginFailed(String errorMessage, Optional<InetAddress> clientIp,
+	public synchronized void loginFailed(Optional<String> errorMessage, Optional<InetAddress> clientIp,
 			Optional<InetAddress> proxyIp) {
-		if (config.security.incorrectLoginDelayMs <= 0) {
+		if (config.login.blockDelayMs <= 0) {
 			LOG.debug("Brute force protection is disabled");
 			return;
 		}
@@ -47,8 +47,10 @@ class BruteForceServiceImpl implements BruteForceService {
 		if (blockMs == 0) {
 			return;
 		}
-		LOG.info("Incorrect login from client: {} with proxy {}, message: {} - blocking for {} ms", clientIp, proxyIp,
-				errorMessage, blockMs);
+		if (blockMs > 5000) {
+			LOG.info("Incorrect login from client: {} with proxy {}, message: {} - blocking for {} ms",
+					clientIp.orElse(null), proxyIp.orElse(null), errorMessage.orElse("-"), blockMs);
+		}
 		try {
 			Thread.sleep(blockMs);
 		} catch (InterruptedException e) {
@@ -57,13 +59,13 @@ class BruteForceServiceImpl implements BruteForceService {
 	}
 
 	private long calculateBlockTime() {
-		if (startBlocking == 0
-				|| ((System.currentTimeMillis() - startBlocking) >= config.security.incorrectLoginDelayResetMs)) {
+		if (startBlocking == 0 || ((System.currentTimeMillis() - startBlocking) >= config.login.blockDelayResetMs)) {
 			startBlocking = System.currentTimeMillis();
-			blockTime.set(config.security.incorrectLoginDelayMs);
+			blockTime.set(config.login.blockDelayMs);
 
 		} else {
-			blockTime.set((int) (blockTime.get() * config.security.incorrectLoginDelayMultiplikator));
+			blockTime.set(Math.min((int) (blockTime.get() * config.login.blockDelayMultiplikator),
+					config.login.maxBlockMs));
 			startBlocking = System.currentTimeMillis();
 		}
 

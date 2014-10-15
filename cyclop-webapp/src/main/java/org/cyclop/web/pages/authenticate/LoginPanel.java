@@ -24,41 +24,39 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.wicket.authentication.IAuthenticationStrategy;
-import org.apache.wicket.authroles.authentication.panel.SignInPanel;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.http.WebRequest;
+import org.cyclop.common.AppConfig;
 import org.cyclop.service.security.BruteForceService;
-import org.cyclop.web.webapp.CqlWebSession;
+import org.cyclop.web.pages.authenticate.wicket.SignInPanel;
+import org.cyclop.web.webapp.CyclopWebSession;
 
 /** @author Maciej Miklas */
 public class LoginPanel extends SignInPanel {
 
 	private CaptchaPanel captcha;
 
+	private WebMarkupContainer captchaArea;
+
 	@Inject
 	private BruteForceService bruteForce;
 
 	public LoginPanel(String id) {
-		super(id);
+		super(id, AppConfig.get().login.remembermeEnabled);
 	}
 
 	@Override
 	protected void onSignInFailed() {
-		CqlWebSession session = (CqlWebSession) getWebSession();
-		String lastLoginError = session.getLastLoginError();
+		super.onSignInFailed();
+
+		CyclopWebSession session = (CyclopWebSession) getWebSession();
+		Optional<String> lastLoginError = Optional.ofNullable(session.getLastLoginError());
 
 		HttpServletRequest httpReq = getHttpServletRequest();
 		Optional<InetAddress> clientIp = getClientIp(httpReq);
 		Optional<InetAddress> proxyIp = getProxyIp(httpReq);
 		bruteForce.loginFailed(lastLoginError, clientIp, proxyIp);
-
-		if (lastLoginError != null) {
-			error(lastLoginError);
-		} else {
-			super.onSignInFailed();
-		}
 	}
 
 	private HttpServletRequest getHttpServletRequest() {
@@ -82,30 +80,38 @@ public class LoginPanel extends SignInPanel {
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
-
-		// HttpServletRequest httpReq = getHttpServletRequest();
-		// Optional<InetAddress> clientIp = getClientIp(httpReq);
-		// Optional<InetAddress> proxyIp = getProxyIp(httpReq);
-		//
-		// if (!bruteForce.checkActive(clientIp, proxyIp)) {
-		// setVisible(false);
-		// return;
-		// }
-		WebMarkupContainer captchaArea = new WebMarkupContainer("captchaArea");
-		captcha = new CaptchaPanel("captcha");
-		captchaArea.add(captcha);
+		captchaArea = new WebMarkupContainer("captchaArea");
+		captchaArea.setVisible(false);
 		getForm().add(captchaArea);
 	}
 
 	@Override
-	protected void onSignInSucceeded() {
-		if (captcha != null && !captcha.verifyCaptcha()) {
-			IAuthenticationStrategy strategy = getApplication().getSecuritySettings().getAuthenticationStrategy();
-			strategy.remove();
-			error(getLocalizer().getString("signInFailed", this, "Sign in failed"));
-		} else {
-			super.onSignInSucceeded();
+	protected void onConfigure() {
+		super.onConfigure();
+
+		HttpServletRequest httpReq = getHttpServletRequest();
+		Optional<InetAddress> clientIp = getClientIp(httpReq);
+		Optional<InetAddress> proxyIp = getProxyIp(httpReq);
+
+		if (bruteForce.checkActive(clientIp, proxyIp) && captcha == null) {
+			captchaArea.setVisible(true);
+			captcha = new CaptchaPanel("captcha");
+			captchaArea.add(captcha);
 		}
+	}
+
+	@Override
+	protected boolean signIn(String username, String password) {
+		if (captcha != null && !captcha.verifyCaptcha()) {
+			HttpServletRequest httpReq = getHttpServletRequest();
+			Optional<InetAddress> clientIp = getClientIp(httpReq);
+			Optional<InetAddress> proxyIp = getProxyIp(httpReq);
+			bruteForce.loginFailed(Optional.of("Captcha incorrect"), clientIp, proxyIp);
+			return false;
+		} else {
+			return super.signIn(username, password);
+		}
+
 	}
 
 }

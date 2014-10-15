@@ -56,7 +56,7 @@ public final class AppConfig implements Serializable {
 
 	@NotNull
 	@Valid
-	public final Security security;
+	public final Login login;
 
 	@NotNull
 	@Valid
@@ -97,7 +97,7 @@ public final class AppConfig implements Serializable {
 	@Inject
 	public AppConfig(Cassandra cassandra, QueryEditor queryEditor, Common common, QueryExport queryExport,
 			Cookies cookie, History history, Favourites favourites, FileStore fileStore, HttpSession httpSession,
-			QueryImport queryImport, Security security) {
+			QueryImport queryImport, Login security) {
 		this.cassandra = cassandra;
 		this.queryEditor = queryEditor;
 		this.common = common;
@@ -108,7 +108,7 @@ public final class AppConfig implements Serializable {
 		this.fileStore = fileStore;
 		this.httpSession = httpSession;
 		this.queryImport = queryImport;
-		this.security = security;
+		this.login = security;
 	}
 
 	private static String crs(String cr, String str) throws UnsupportedEncodingException {
@@ -134,7 +134,7 @@ public final class AppConfig implements Serializable {
 		return MoreObjects.toStringHelper(this).add("cassandra", cassandra).add("queryEditor", queryEditor)
 				.add("common", common).add("history", history).add("fileStore", fileStore)
 				.add("favourites", favourites).add("queryExport", queryExport).add("httpSession", httpSession)
-				.add("cookie", cookie).add("queryImport", queryImport).add("security", security).toString();
+				.add("cookie", cookie).add("queryImport", queryImport).add("security", login).toString();
 	}
 
 	@Named
@@ -207,39 +207,50 @@ public final class AppConfig implements Serializable {
 
 	@Named
 	@Immutable
-	public static class Security implements Serializable {
+	public static class Login implements Serializable {
 
 		@Min(2)
 		public final int captchaCharacters;
 
 		public final boolean captchaEnabled;
 
-		public final int incorrectLoginDelayMs;
+		public final int blockDelayMs;
+		
+		@Min(1000)
+		public final int maxBlockMs;
 
 		@Min(1)
-		public final double incorrectLoginDelayMultiplikator;
+		public final double blockDelayMultiplikator;
 
 		@Min(1)
-		public final int incorrectLoginDelayResetMs;
+		public final int blockDelayResetMs;
+
+		public final boolean remembermeEnabled;
 
 		@Inject
-		public Security(@Value("${security.incorrectLogin.delayMs}") int incorrectLoginDelayMs,
-				@Value("${security.incorrectLogin.delayMultiplikator}") double incorrectLoginDelayMultiplikator,
-				@Value("${security.incorrectLogin.delayResetMs}") int incorrectLoginDelayResetMs,
-				@Value("${security.captcha.characters}") int captchaCharacters,
-				@Value("${security.captcha.enabled}") boolean captchaEnabled) {
-			this.incorrectLoginDelayMs = incorrectLoginDelayMs;
-			this.incorrectLoginDelayMultiplikator = incorrectLoginDelayMultiplikator;
-			this.incorrectLoginDelayResetMs = incorrectLoginDelayResetMs;
+		public Login(@Value("${login.block.delayMs}") int blockDelayMs,
+				@Value("${login.block.maxBlockMs}") int maxBlockMs,
+				@Value("${login.block.delayMultiplikator}") double blockDelayMultiplikator,
+				@Value("${login.block.delayResetMs}") int blockDelayResetMs,
+				@Value("${login.captcha.characters}") int captchaCharacters,
+				@Value("${login.captcha.enabled}") boolean captchaEnabled,
+				@Value("${login.rememberme.enabled}") boolean remembermeEnabled) {
+			this.blockDelayMs = blockDelayMs;
+			this.maxBlockMs = maxBlockMs;
+			this.blockDelayMultiplikator = blockDelayMultiplikator;
+			this.blockDelayResetMs = blockDelayResetMs;
 			this.captchaCharacters = captchaCharacters;
 			this.captchaEnabled = captchaEnabled;
+			this.remembermeEnabled = remembermeEnabled;
 		}
 
 		@Override
 		public String toString() {
-			return MoreObjects.toStringHelper(this).add("incorrectLoginDelayMs", incorrectLoginDelayMs)
-					.add("incorrectLoginDelayResetMs", incorrectLoginDelayResetMs)
-					.add("captchaCharacters", captchaCharacters).add("captchaEnabled", captchaEnabled).toString();
+			return MoreObjects.toStringHelper(this).add("blockDelayMs", blockDelayMs)
+					.add("blockDelayResetMs", blockDelayResetMs).add("maxBlockMs", maxBlockMs)
+					.add("blockDelayMultiplikator", blockDelayMultiplikator)
+					.add("captchaCharacters", captchaCharacters).add("captchaEnabled", captchaEnabled)
+					.add("remembermeEnabled", remembermeEnabled).toString();
 		}
 	}
 

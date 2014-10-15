@@ -35,9 +35,9 @@ public class TestBruteForceService extends AbstractTestCase {
 	}
 
 	private void setConf(String method, Object val) {
-		Field field = ReflectionUtils.findField(AppConfig.Security.class, method);
+		Field field = ReflectionUtils.findField(AppConfig.Login.class, method);
 		ReflectionUtils.makeAccessible(field);
-		ReflectionUtils.setField(field, config.security, val);
+		ReflectionUtils.setField(field, config.login, val);
 	}
 
 	@Test(expected = BeanValidationException.class)
@@ -52,12 +52,12 @@ public class TestBruteForceService extends AbstractTestCase {
 
 	@Test(expected = BeanValidationException.class)
 	public void testLoginFailed_Null_ClientIp() throws Exception {
-		service.loginFailed("message ....", null, Optional.of(InetAddress.getLocalHost()));
+		service.loginFailed(Optional.of("message ...."), null, Optional.of(InetAddress.getLocalHost()));
 	}
 
 	@Test(expected = BeanValidationException.class)
 	public void testLoginFailed_Null_ProxyIp() throws Exception {
-		service.loginFailed("message ....", Optional.of(InetAddress.getLocalHost()), null);
+		service.loginFailed(Optional.of("message ...."), Optional.of(InetAddress.getLocalHost()), null);
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class TestBruteForceService extends AbstractTestCase {
 	private void execLoginFailed(int waitTime) throws Exception {
 		StopWatch sw = new StopWatch();
 		sw.start();
-		service.loginFailed("error message 123...", Optional.of(InetAddress.getLocalHost()),
+		service.loginFailed(Optional.of("error message 123..."), Optional.of(InetAddress.getLocalHost()),
 				Optional.of(InetAddress.getLocalHost()));
 		sw.stop();
 		assertTrue(service

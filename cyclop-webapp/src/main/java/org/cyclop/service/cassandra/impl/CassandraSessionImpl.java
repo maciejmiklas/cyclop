@@ -41,7 +41,7 @@ import com.datastax.driver.core.exceptions.InvalidQueryException;
 
 /** @author Maciej Miklas */
 
-// TODO is there any better way that synchronized keyword for session bean?
+// TODO  java.io.NotSerializableException: org.cyclop.service.cassandra.impl.CassandraSessionImpl
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)

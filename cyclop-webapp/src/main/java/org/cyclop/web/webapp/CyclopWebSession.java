@@ -36,8 +36,8 @@ import org.slf4j.LoggerFactory;
 import com.datastax.driver.core.exceptions.AuthenticationException;
 
 /** @author Maciej Miklas */
-public class CqlWebSession extends AuthenticatedWebSession {
-	private final static Logger LOG = LoggerFactory.getLogger(CqlWebSession.class);
+public class CyclopWebSession extends AuthenticatedWebSession {
+	private final static Logger LOG = LoggerFactory.getLogger(CyclopWebSession.class);
 
 	@Inject
 	private transient CassandraSession cassandraSession;
@@ -48,7 +48,7 @@ public class CqlWebSession extends AuthenticatedWebSession {
 
 	private String lastLoginError = null;
 
-	public CqlWebSession(Request request) {
+	public CyclopWebSession(Request request) {
 		super(request);
 		Injector.get().inject(this);
 	}
@@ -68,11 +68,12 @@ public class CqlWebSession extends AuthenticatedWebSession {
 			lastLoginError = null;
 			LOG.info("Log-in succesfull: " + username);
 		} catch (AuthenticationException e) {
+			LOG.info("Login failed: " + e.getMessage());
 			lastLoginError = e.getMessage();
 			authenticated = false;
 			LOG.debug(e.getMessage(), e);
 		}
-		
+
 		return authenticated;
 	}
 
@@ -81,7 +82,6 @@ public class CqlWebSession extends AuthenticatedWebSession {
 		HttpServletRequest servRequest = webRequest.getContainerRequest();
 		HttpSession session = servRequest.getSession();
 		session.setMaxInactiveInterval(conf.httpSession.expirySeconds);
-
 	}
 
 	public String getLastLoginError() {

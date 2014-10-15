@@ -16,6 +16,8 @@
  */
 package org.cyclop.service.search;
 
+import java.util.Optional;
+
 import javax.validation.constraints.NotNull;
 
 import org.cyclop.model.FilterResult;
@@ -25,6 +27,6 @@ import com.google.common.collect.ImmutableCollection;
 public interface SearchService<T> {
 
 	@NotNull
-	FilterResult<T> filter(@NotNull ImmutableCollection<T> input, @NotNull FieldAccessor<T> accessor,
+	Optional<FilterResult<T>> filter(@NotNull ImmutableCollection<T> input, @NotNull FieldAccessor<T> accessor,
 			String... keywords);
 }

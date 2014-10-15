@@ -91,7 +91,7 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 
 	@Override
 	protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
-		return CqlWebSession.class;
+		return CyclopWebSession.class;
 	}
 
 	@Override

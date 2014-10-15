@@ -16,6 +16,8 @@
  */
 package org.cyclop.web.panels.history;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang.StringUtils;
@@ -251,11 +253,12 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 			filterValue = StringUtils.trimToNull(filterValue);
 			if (filterValue != null) {
 				String[] kwordsArr = filterValue.split(" ");
-				FilterResult<QueryEntry> filterResult = searchService.filter(historyToUpdate, FILTER_ACCESSOR,
-						kwordsArr);
-				if (filterResult != null) {
-					historyToUpdate = filterResult.result;
-					kwds = filterResult.normalizedKeywords;
+				Optional<FilterResult<QueryEntry>> filterResult = searchService.filter(historyToUpdate,
+						FILTER_ACCESSOR, kwordsArr);
+				if (filterResult.isPresent()) {
+					FilterResult<QueryEntry> res = filterResult.get();
+					historyToUpdate = res.result;
+					kwds = res.normalizedKeywords;
 				}
 			}
 

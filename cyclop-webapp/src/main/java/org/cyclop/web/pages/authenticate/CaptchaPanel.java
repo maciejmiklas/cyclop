@@ -17,7 +17,6 @@
 package org.cyclop.web.pages.authenticate;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -25,6 +24,7 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -41,9 +41,10 @@ import com.google.code.kaptcha.util.Config;
 
 /** @author Maciej Miklas */
 public class CaptchaPanel extends Panel {
+	private final static Logger LOG = LoggerFactory.getLogger(LoginPanel.class);
 
-	private final static Logger LOG = LoggerFactory.getLogger(CaptchaPanel.class);
 	private String captchaEntry;
+
 	private CaptchaModel captchaModel;
 
 	public CaptchaPanel(String id) {
@@ -68,8 +69,12 @@ public class CaptchaPanel extends Panel {
 	}
 
 	public boolean verifyCaptcha() {
-		System.out.println("captchaImageResource: " + captchaModel.getObject());
-		return captchaModel.getObject().equals(captchaEntry);
+		String modelVal = captchaModel.getObject();
+		boolean result = modelVal.equals(captchaEntry);
+		if (!result) {
+			LOG.info("Captcha verification failed. {} != {}", modelVal, captchaEntry);
+		}
+		return result;
 	}
 
 	private static class CaptchaModel extends AbstractReadOnlyModel<String> {
@@ -81,7 +86,7 @@ public class CaptchaPanel extends Panel {
 		}
 
 		public void reset() {
-			challenge = RandomStringUtils.randomAlphabetic(config.security.captchaCharacters);
+			challenge = RandomStringUtils.randomAlphabetic(config.login.captchaCharacters);
 			LOG.debug("Generated captcha: {}", challenge);
 		}
 
@@ -94,12 +99,20 @@ public class CaptchaPanel extends Panel {
 
 	private static class KaptchaImageResource extends DynamicImageResource {
 
-		private final DefaultKaptcha producer;
+		private transient DefaultKaptcha producer;
 		private final CaptchaModel model;
 
 		public KaptchaImageResource(CaptchaModel model) {
 			this.model = model;
+			initKaptcha();
+		}
 
+		private void readObject(java.io.ObjectInputStream in) throws ClassNotFoundException, IOException {
+			in.defaultReadObject();
+			initKaptcha();
+		}
+
+		private void initKaptcha() {
 			producer = new DefaultKaptcha();
 			Config config = new Config(new Properties());
 			producer.setConfig(config);
