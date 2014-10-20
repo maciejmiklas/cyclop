@@ -24,7 +24,6 @@ import java.util.Properties;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.wicket.injection.Injector;
 import org.apache.wicket.markup.html.form.RequiredTextField;
 import org.apache.wicket.markup.html.image.NonCachingImage;
 import org.apache.wicket.markup.html.panel.Panel;

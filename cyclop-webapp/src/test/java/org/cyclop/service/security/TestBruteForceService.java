@@ -1,6 +1,6 @@
 package org.cyclop.service.security;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 import java.net.InetAddress;
@@ -28,14 +28,16 @@ public class TestBruteForceService extends AbstractTestCase {
 	@After
 	public void cleanUp() throws Exception {
 		super.cleanUp();
-		setConf("incorrectLoginDelayMs", 1000);
-		setConf("incorrectLoginDelayMultiplikator", 1.5);
-		setConf("incorrectLoginDelayResetMs", 600000);
+		setConf("blockDelayMs", 1000);
+		setConf("blockDelayMultiplikator", 1.5);
+		setConf("blockDelayResetMs", 600000);
+		setConf("maxBlockMs", 10000);
 		service.resetLoginFailed(Optional.of(InetAddress.getLocalHost()), Optional.of(InetAddress.getLocalHost()));
 	}
 
 	private void setConf(String method, Object val) {
 		Field field = ReflectionUtils.findField(AppConfig.Login.class, method);
+		assertNotNull(method, field);
 		ReflectionUtils.makeAccessible(field);
 		ReflectionUtils.setField(field, config.login, val);
 	}
@@ -62,13 +64,13 @@ public class TestBruteForceService extends AbstractTestCase {
 
 	@Test
 	public void testLoginFailed_SingleWait() throws Exception {
-		setConf("incorrectLoginDelayMs", 100);
+		setConf("blockDelayMs", 100);
 		execLoginFailed(100);
 	}
 
 	@Test
 	public void testLoginFailed_ThreeWaitsNoDelay() throws Exception {
-		setConf("incorrectLoginDelayMs", 100);
+		setConf("blockDelayMs", 100);
 		execLoginFailed(100);
 		execLoginFailed(150);
 		execLoginFailed(225);
@@ -76,8 +78,8 @@ public class TestBruteForceService extends AbstractTestCase {
 
 	@Test
 	public void testLoginFailed_ThreeWaitsWithDelayAndReset() throws Exception {
-		setConf("incorrectLoginDelayMs", 100);
-		setConf("incorrectLoginDelayResetMs", 300);
+		setConf("blockDelayMs", 100);
+		setConf("blockDelayResetMs", 300);
 
 		execLoginFailed(100);
 		Thread.sleep(100);
@@ -89,6 +91,18 @@ public class TestBruteForceService extends AbstractTestCase {
 		Thread.sleep(400);
 
 		execLoginFailed(100);
+	}
+
+	@Test
+	public void testLoginFailed_MaxBlockTime() throws Exception {
+		setConf("blockDelayMs", 100);
+		setConf("maxBlockMs", 200);
+
+		execLoginFailed(100);
+		execLoginFailed(150);
+		execLoginFailed(200);
+		execLoginFailed(200);
+		execLoginFailed(200);
 	}
 
 	private void execLoginFailed(int waitTime) throws Exception {
