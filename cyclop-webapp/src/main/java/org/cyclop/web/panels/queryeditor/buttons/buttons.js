@@ -17,9 +17,9 @@
 $(function () {
 
 	// clqHelpExpandSupportBody
-	$(".cq-clqHelpExpandSupportBody").hide();
+	$(".cq-clqHelp-expandSupportBody").hide();
 	$(".cq-CqlHelpButton").click(function () {
-		var $bodyToHide = $(".cq-clqHelpExpandSupportBody");
+		var $bodyToHide = $(".cq-clqHelp-expandSupportBody");
 		var $button = $(".cq-CqlHelpButton");
 
 		if ($bodyToHide.is(":hidden")) {
@@ -35,13 +35,13 @@ $(function () {
 	$(".cq-ExecuteQueryButton").click(function () {
 		$(".cq-queryProgressBar").show();
 		$(".cq-queryResult").hide();
-		$(".cq-cqlInfoHint").hide();
+		$(".cq-cqlInfo-hint").hide();
 		$(".cq-ExecuteQueryButton").addClass("disabled");
 	});
 
 	// cq-BookmarkButton
 	$(".cq-BookmarkButton").click(function () {
-			var $area = $(".cq-textareaCql");
+			var $area = $(".cq-cqledit-props");
 			var text = $area.val();
 			if (text.isEmpty()) {
 				notify("CQL Editor is empty - there is nothing to bookmark ;)");

@@ -1,173 +1,93 @@
-.cq-hintCqlKeyword {
+/* ### CQL Info Hint and CQL Help ### */
+.cq-hint-cqlKeyword {
 	color: #9933cc;
 }
 
-.cq-hintCqlType {
+.cq-hint-cqlType {
 	color: #ba38cb;
 }
 
-.cq-hintCqlColumn {
+.cq-hint-cqlColumn {
 	color: #3278b3;
 }
 
-.cq-hintCqlKeyspace {
+.cq-hint-cqlKeyspace {
 	color: #1b5aff;
 }
 
-.cq-hintCqlIndex {
+.cq-hint-cqlIndex {
 	color: #000fff;
 }
 
-.cq-hintCqlNotSupported {
+.cq-hint-cqlNotSupported {
 	color: #444444;
 }
 
-.cq-hintCqlKeywordValue {
+.cq-hint-cqlKeywordValue {
 	color: #444444;
 }
 
-.cq-hintCqlTable {
+.cq-hint-cqlTable {
 	color: #0a39b3;
 }
 
-.cq-hintBodyA {
+.cq-hint-bodyA {
 	color: #ffffff;
 	background-color: #77b300;
 	border-color: #809a00;
 }
 
-.cq-hintBodyA hr {
+.cq-hint-bodyA hr {
 	border-top-color: #6a8000;
 }
 
-.cq-hintBodyB {
+.cq-hint-bodyB {
 	color: #ffffff;
 	background-color: #6cb34b;
 	border-color: #809a00;
 }
 
-.cq-hintBodyB hr {
+.cq-hint-bodyB hr {
 	border-top-color: #6a8000;
 }
 
-pre.cq-helpCqlSample {
+/* ### CQL Info Hint ### */
+.cq-cqlInfo-hint {
+	position: absolute;
+	z-index: 2;
+	margin: 0 1em 0 0;
+}
+
+/* ### CQL Help ### */
+pre.cq-cqlHelp-sample {
 	font-size: 90%;
 	padding: 1ex 1ex 1ex 4ex;
 	border: 1px solid #ada;
 	background-color: #fafffa;
 }
 
-pre.cq-helpCqlSyntax {
+pre.cq-cqlHelp-syntax {
 	font-size: 90%;
 	padding: 1ex 1ex 1ex 4ex;
 	border: 1px solid #aaf;
 	background-color: #fafaff;
 }
 
-.cq-clqHelpExpandSupportBody>div {
+.cq-clqHelp-expandSupportBody>div {
 	font-size: 90%;
 	padding: 1em;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
 }
 
-.cq-clqHelpExpandSupportBodyDiv {
+.cq-clqHelp-expandSupportBodyDiv {
 	font-size: 90%;
 	padding: 1em;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
 }
 
-.cq-mainContainer {
-	padding: 0.5em 1.5em 0.5em 0.5em;
-}
-
-.cq-divButtons {
-	float: left;
-}
-
-.cq-divQuery {
-	overflow: hidden;
-}
-
-.cq-textareaCql {
-	resize: vertical;
-}
-
-.cq-cqlInfoHint {
-	position: absolute;
-	z-index: 2;
-	margin: 0 1em 0 0;
-}
-
-ul.cq-cqlCollectionList {
-	padding-top: 0;
-	padding-bottom: 0;
-}
-
-.cq-cqlCollectionList {
-	padding: 1.2em;
-	max-height: 10em;
-	overflow: auto;
-}
-
-::-webkit-scrollbar {
-	width: 10px; /* for vertical scrollbar */
-	height: 10px; /* for horizontal scrollbar */
-}
-
-::-webkit-scrollbar-track {
-	background: #444444;
-}
-
-::-webkit-scrollbar-thumb {
-	background: #555555;
-}
-
-.cq-columnValue {
-	word-break: break-all;
-	max-width: 40em;
-}
-
-.cq-right-up {
-	position: absolute;
-	top: 7px;
-	right: 20px;
-}
-
-.cq-page-center {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-top: -50px; /* this is half the height of your div*/
-	margin-left: -100px; /*this is half of width of your div*/
-}
-
-.cq-notify {
-	left: 120%;
-	overflow: hidden;
-	position: fixed;
-	width: 50%;
-	opacity: 0.9;
-	z-index: 10000;
-	transition: left 0.3s ease-out 0s;
-	bottom: 10px;
-}
-
-.cq-notify.in {
-	left: 50%;
-}
-
-.feedbackPanelERROR {
-	color: red;
-}
-
-.cq-disableLink {
-	color: #444444;
-	pointer-events: none;
-	cursor: default;
-}
-
+/* ### Query Editor Button Bar ### */
 .cq-nav {
 	margin-bottom: 10px !important;
 	border-bottom: 1px solid #424221 !important;
@@ -184,75 +104,59 @@ ul.cq-cqlCollectionList {
 	padding: 5px 10px !important;
 }
 
-.cq-table-sepLine {
-	padding: 0;
-	margin: 0.5em 0 0.5em 0;
-	border-bottom: 1px solid #333333;
+.cq-nav-position {
+	float: left;
 }
 
-.cq-sepLine {
-	padding: 0;
-	margin: 0.5em 0 0.5em 0;
-	border-bottom: 1px solid #424221;
-}
-
-.table th {
-	background-color: #1A0000 !important;
-	text-align:center; 
-    vertical-align:middle;
-}
-
-/* ???? */
-.cq-thHorizontal>tr>th {
-	width: 10px;
-}
-
-.cq-historyFilterCont {
-	float: right;
-}
-
-.cq-pagination {
-	margin: 0 !important;
-}
-
-.cq-pagination>li>a:hover, .cq-pagination>li>span:hover, .cq-pagination>li>a:focus, .cq-pagination>li>span:focus {
-	background-color: #2a9fd6 !important;
-	border-color: #2a9fd6 !important;
-}
-
-.cq-filterKeyword {
-	color: red;
-}
-
-.cq-btn-file {
-	position: relative;
-	overflow: hidden;
-}
-
-.cq-single-line {
-	white-space: nowrap;
-}
-
-.cq-btn-file input[type=file] {
+.cq-nav-logout {
 	position: absolute;
-	top: 0;
-	right: 0;
-	min-width: 100%;
-	min-height: 100%;
-	font-size: 999px;
-	text-align: right;
-	filter: alpha(opacity=0);
-	opacity: 0;
-	outline: none;
-	background: white;
-	cursor: inherit;
-	display: block;
+	top: 7px;
+	right: 20px;
 }
 
-.cq-pull-right {
-	float: right !important;
+/* ### Notification Popup ### */
+.cq-notify {
+	left: 120%;
+	overflow: hidden;
+	position: fixed;
+	width: 50%;
+	opacity: 0.9;
+	z-index: 10000;
+	transition: left 0.3s ease-out 0s;
+	bottom: 10px;
 }
 
+.cq-notify.in {
+	left: 50%;
+}
+
+/* ### CQL Text Editor ### */
+.cq-cqledit-props {
+	resize: vertical;
+}
+
+/* ### Query Results Table - General ### */
+.cq-resTable-columnValue {
+	word-break: break-all;
+	max-width: 40em;
+}
+
+ul.cq-resTable-collectionList {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.cq-resTable-collectionList {
+	padding: 1.2em;
+	max-height: 10em;
+	overflow: auto;
+}
+
+/* ### Query Results Table - Vertical Orientation ### */
+
+/* ### Query Results Table - Horizontal Orientation ### */
+
+/* ### Pager for List View ### */
 .cq-paging-dropdown select {
 	border: 1 !important;
 	border-color: white;
@@ -268,4 +172,110 @@ ul.cq-cqlCollectionList {
 
 .cq-paging-dropdown select:hover {
 	cursor: pointer;
+}
+
+.cq-paging-general {
+	margin: 0 !important;
+}
+
+.cq-paging-general>li>a:hover, .cq-paging-general>li>span:hover, .cq-paging-general>li>a:focus, .cq-paging-general>li>span:focus {
+	background-color: #2a9fd6 !important;
+	border-color: #2a9fd6 !important;
+}
+
+/* ### History Page ### */
+.cq-history-filterCont {
+	float: right;
+}
+
+/* ### Import Page ### */
+.cq-import-btnImport {
+	float: right !important;
+}
+
+.cq-import-filterKeyword {
+	color: red;
+}
+
+.cq-import-fileBtn {
+	position: relative;
+	overflow: hidden;
+}
+
+.cq-import-fileBtn input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	font-size: 999px;
+	text-align: right;
+	filter: alpha(opacity=0);
+	opacity: 0;
+	outline: none;
+	background: white;
+	cursor: inherit;
+	display: block;
+}
+
+/* ### General ### */
+.cq-page-center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px; /* this is half the height of your div*/
+	margin-left: -100px; /*this is half of width of your div*/
+}
+
+.table th {
+	background-color: #1A0000 !important;
+	text-align:center;
+	vertical-align:middle;
+}
+
+.cq-sepLine {
+	padding: 0;
+	margin: 0.5em 0 0.5em 0;
+	border-bottom: 1px solid #424221;
+}
+
+.cq-mainContainer {
+	padding: 0.5em 1.5em 0.5em 0.5em;
+}
+
+::-webkit-scrollbar {
+	width: 10px; /* for vertical scrollbar */
+	height: 10px; /* for horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+	background: #444444;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #555555;
+}
+
+.feedbackPanelERROR {
+	color: red;
+}
+
+.cq-disableLink {
+	color: #444444;
+	pointer-events: none;
+	cursor: default;
+}
+
+.cq-table-sepLine {
+	padding: 0;
+	margin: 0.5em 0 0.5em 0;
+	border-bottom: 1px solid #333333;
+}
+
+.cq-thHorizontal>tr>th {
+	width: 10px;
+}
+
+.cq-single-line {
+	white-space: nowrap;
 }

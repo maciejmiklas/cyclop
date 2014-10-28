@@ -15,41 +15,41 @@
    limitations under the License.
 -->
 <i>Syntax:</i>
-<pre class="cq-helpCqlSyntax">
-&lt;update-stmt&gt; ::= <span class="cq-hintCqlKeyword">UPDATE</span> &lt;<span class="cq-hintCqlTable">tablename</span>&gt;
-                  ( <span class="cq-hintCqlKeyword">USING</span> &lt;option&gt; ( <span
-		class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
-                  <span class="cq-hintCqlKeyword">SET</span> &lt;assignment&gt; ( ',' &lt;assignment&gt; )*
-                  <span class="cq-hintCqlKeyword">WHERE</span> &lt;where-clause&gt;
-                  ( <span class="cq-hintCqlKeyword">IF</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt; ( <span
-		class="cq-hintCqlKeyword">AND</span> &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt; )* )?
+<pre class="cq-cqlHelp-syntax">
+&lt;update-stmt&gt; ::= <span class="cq-hint-cqlKeyword">UPDATE</span> &lt;<span class="cq-hint-cqlTable">tablename</span>&gt;
+                  ( <span class="cq-hint-cqlKeyword">USING</span> &lt;option&gt; ( <span
+		class="cq-hint-cqlKeyword">AND</span> &lt;option&gt; )* )?
+                  <span class="cq-hint-cqlKeyword">SET</span> &lt;assignment&gt; ( ',' &lt;assignment&gt; )*
+                  <span class="cq-hint-cqlKeyword">WHERE</span> &lt;where-clause&gt;
+                  ( <span class="cq-hint-cqlKeyword">IF</span> &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '=' &lt;term&gt; ( <span
+		class="cq-hint-cqlKeyword">AND</span> &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '=' &lt;term&gt; )* )?
 
-&lt;assignment&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt;
-               | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; ('+' | '-') (&lt;int-term&gt; | &lt;set-literal&gt; | &lt;list-literal&gt;)
-               | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '+' &lt;map-literal&gt;
-               | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '[' &lt;term&gt; ']' '=' &lt;term&gt;
+&lt;assignment&gt; ::= &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '=' &lt;term&gt;
+               | &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '=' &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; ('+' | '-') (&lt;int-term&gt; | &lt;set-literal&gt; | &lt;list-literal&gt;)
+               | &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '=' &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '+' &lt;map-literal&gt;
+               | &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '[' &lt;term&gt; ']' '=' &lt;term&gt;
 
-&lt;where-clause&gt; ::= &lt;relation&gt; ( <span class="cq-hintCqlKeyword">AND</span> &lt;relation&gt; )*
+&lt;where-clause&gt; ::= &lt;relation&gt; ( <span class="cq-hint-cqlKeyword">AND</span> &lt;relation&gt; )*
 
-&lt;relation&gt; ::= &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; '=' &lt;term&gt;
-             | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">IN</span> '(' ( &lt;term&gt; ( ',' &lt;term&gt; )* )? ')'
-             | &lt;<span class="cq-hintCqlColumn">identifier</span>&gt; <span class="cq-hintCqlKeyword">IN</span> '?'
+&lt;relation&gt; ::= &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '=' &lt;term&gt;
+             | &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; <span class="cq-hint-cqlKeyword">IN</span> '(' ( &lt;term&gt; ( ',' &lt;term&gt; )* )? ')'
+             | &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; <span class="cq-hint-cqlKeyword">IN</span> '?'
 
-&lt;option&gt; ::= <span class="cq-hintCqlKeyword">TIMESTAMP</span> &lt;integer&gt;
-           | <span class="cq-hintCqlKeyword">TTL</span> &lt;integer&gt;
+&lt;option&gt; ::= <span class="cq-hint-cqlKeyword">TIMESTAMP</span> &lt;integer&gt;
+           | <span class="cq-hint-cqlKeyword">TTL</span> &lt;integer&gt;
 </pre>
 <i>Sample:</i>
-<pre class="cq-helpCqlSample">
-<span class="cq-hintCqlKeyword">UPDATE</span> <span class="cq-hintCqlTable">NerdMovies</span> <span
-		class="cq-hintCqlKeyword">USING TTL</span> 400
-<span class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">director</span> = 'Joss Whedon',
-    <span class="cq-hintCqlColumn">main_actor</span> = 'Nathan Fillion',
-    <span class="cq-hintCqlColumn">year</span> = 2005
-<span class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">movie</span> = 'Serenity';
+<pre class="cq-cqlHelp-sample">
+<span class="cq-hint-cqlKeyword">UPDATE</span> <span class="cq-hint-cqlTable">NerdMovies</span> <span
+		class="cq-hint-cqlKeyword">USING TTL</span> 400
+<span class="cq-hint-cqlKeyword">SET</span> <span class="cq-hint-cqlColumn">director</span> = 'Joss Whedon',
+    <span class="cq-hint-cqlColumn">main_actor</span> = 'Nathan Fillion',
+    <span class="cq-hint-cqlColumn">year</span> = 2005
+<span class="cq-hint-cqlKeyword">WHERE</span> <span class="cq-hint-cqlColumn">movie</span> = 'Serenity';
 
-<span class="cq-hintCqlKeyword">UPDATE</span> <span class="cq-hintCqlTable">UserActions</span> <span
-		class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">total</span> = <span
-		class="cq-hintCqlColumn">total</span> + 2 <span class="cq-hintCqlKeyword">WHERE</span> <span
-		class="cq-hintCqlColumn">user</span> = B70DE1D0-9908-4AE3-BE34-5573E5B09F14 <span
-		class="cq-hintCqlKeyword">AND</span> <span class="cq-hintCqlColumn">action</span> = 'click';
+<span class="cq-hint-cqlKeyword">UPDATE</span> <span class="cq-hint-cqlTable">UserActions</span> <span
+		class="cq-hint-cqlKeyword">SET</span> <span class="cq-hint-cqlColumn">total</span> = <span
+		class="cq-hint-cqlColumn">total</span> + 2 <span class="cq-hint-cqlKeyword">WHERE</span> <span
+		class="cq-hint-cqlColumn">user</span> = B70DE1D0-9908-4AE3-BE34-5573E5B09F14 <span
+		class="cq-hint-cqlKeyword">AND</span> <span class="cq-hint-cqlColumn">action</span> = 'click';
 </pre>

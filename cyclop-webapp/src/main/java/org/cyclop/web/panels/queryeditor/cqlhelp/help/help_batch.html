@@ -15,32 +15,32 @@
    limitations under the License.
 -->
 <i>Syntax:</i>
-<pre class="cq-helpCqlSyntax">
-&lt;batch-stmt&gt; ::= <span class="cq-hintCqlKeyword">BEGIN BATCH</span>
-                 ( <span class="cq-hintCqlKeyword">USING</span> &lt;option&gt; ( <span
-		class="cq-hintCqlKeyword">AND</span> &lt;option&gt; )* )?
+<pre class="cq-cqlHelp-syntax">
+&lt;batch-stmt&gt; ::= <span class="cq-hint-cqlKeyword">BEGIN BATCH</span>
+                 ( <span class="cq-hint-cqlKeyword">USING</span> &lt;option&gt; ( <span
+		class="cq-hint-cqlKeyword">AND</span> &lt;option&gt; )* )?
                     &lt;modification-stmt&gt; ( ';' &lt;modification-stmt&gt; )*
-                 <span class="cq-hintCqlKeyword">APPLY BATCH</span>
+                 <span class="cq-hint-cqlKeyword">APPLY BATCH</span>
 
 &lt;modification-stmt&gt; ::= &lt;insert-stmt&gt;
                       | &lt;update-stmt&gt;
                       | &lt;delete-stmt&gt;
 
-&lt;option&gt; ::= <span class="cq-hintCqlKeyword">TIMESTAMP</span> &lt;integer&gt;
+&lt;option&gt; ::= <span class="cq-hint-cqlKeyword">TIMESTAMP</span> &lt;integer&gt;
 </pre>
 <i>Sample:</i>
-<pre class="cq-helpCqlSample">
-<span class="cq-hintCqlKeyword">BEGIN BATCH</span>
-  <span class="cq-hintCqlKeyword">INSERT INTO</span> <span class="cq-hintCqlTable">users</span> (<span
-		class="cq-hintCqlColumn">userid</span>, <span class="cq-hintCqlColumn">password</span>, <span
-		class="cq-hintCqlColumn">name</span>) <span class="cq-hintCqlKeyword">VALUES</span> ('user2', 'ch@ngem3b', 'second user');
-  <span class="cq-hintCqlKeyword">UPDATE</span> <span class="cq-hintCqlTable">users</span> <span
-		class="cq-hintCqlKeyword">SET</span> <span class="cq-hintCqlColumn">password</span> = 'ps22dhds' <span
-		class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">userid</span> = 'user3';
-  <span class="cq-hintCqlKeyword">INSERT INTO</span> <span class="cq-hintCqlTable">users</span> (userid, password) <span
-		class="cq-hintCqlKeyword">VALUES</span> ('user4', 'ch@ngem3c');
-  <span class="cq-hintCqlKeyword">DELETE</span> <span class="cq-hintCqlColumn">name</span> <span
-		class="cq-hintCqlKeyword">FROM</span> <span class="cq-hintCqlTable">users</span> <span
-		class="cq-hintCqlKeyword">WHERE</span> <span class="cq-hintCqlColumn">userid</span> = 'user1';
-<span class="cq-hintCqlKeyword">APPLY BATCH</span>;
+<pre class="cq-cqlHelp-sample">
+<span class="cq-hint-cqlKeyword">BEGIN BATCH</span>
+  <span class="cq-hint-cqlKeyword">INSERT INTO</span> <span class="cq-hint-cqlTable">users</span> (<span
+		class="cq-hint-cqlColumn">userid</span>, <span class="cq-hint-cqlColumn">password</span>, <span
+		class="cq-hint-cqlColumn">name</span>) <span class="cq-hint-cqlKeyword">VALUES</span> ('user2', 'ch@ngem3b', 'second user');
+  <span class="cq-hint-cqlKeyword">UPDATE</span> <span class="cq-hint-cqlTable">users</span> <span
+		class="cq-hint-cqlKeyword">SET</span> <span class="cq-hint-cqlColumn">password</span> = 'ps22dhds' <span
+		class="cq-hint-cqlKeyword">WHERE</span> <span class="cq-hint-cqlColumn">userid</span> = 'user3';
+  <span class="cq-hint-cqlKeyword">INSERT INTO</span> <span class="cq-hint-cqlTable">users</span> (userid, password) <span
+		class="cq-hint-cqlKeyword">VALUES</span> ('user4', 'ch@ngem3c');
+  <span class="cq-hint-cqlKeyword">DELETE</span> <span class="cq-hint-cqlColumn">name</span> <span
+		class="cq-hint-cqlKeyword">FROM</span> <span class="cq-hint-cqlTable">users</span> <span
+		class="cq-hint-cqlKeyword">WHERE</span> <span class="cq-hint-cqlColumn">userid</span> = 'user1';
+<span class="cq-hint-cqlKeyword">APPLY BATCH</span>;
 </pre>

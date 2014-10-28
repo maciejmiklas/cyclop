@@ -281,7 +281,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 		@Override
 		public String prefix() {
-			return "<span class='cq-filterKeyword'>";
+			return "<span class='cq-import-filterKeyword'>";
 		}
 	}
 
