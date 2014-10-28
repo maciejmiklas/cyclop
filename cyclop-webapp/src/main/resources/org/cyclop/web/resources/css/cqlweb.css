@@ -196,9 +196,15 @@ ul.cq-resTable-collectionList {
 }
 
 /* ### Import Page ### */
-.cq-import-options > span {
+.cq-import-options label {
 	white-space: nowrap;
+	display: inline-block;
 }
+
+.cq-import-options input {
+	margin-left: 0.5em !important;
+}
+
 .cq-import-btnImport {
 	float: right !important;
 }
