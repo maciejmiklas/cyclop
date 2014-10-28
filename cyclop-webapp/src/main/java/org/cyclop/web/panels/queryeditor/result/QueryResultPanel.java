@@ -284,7 +284,8 @@ public abstract class QueryResultPanel extends Panel {
 	}
 
 	public static void appendTableResizeJs(AjaxRequestTarget target) {
-		target.appendJavaScript("resizeQueryResultTable();");
+		// TODO ??
+		// target.appendJavaScript("resizeQueryResultTable();");
 	}
 
 	public static void initTableResizeJs(IHeaderResponse response) {

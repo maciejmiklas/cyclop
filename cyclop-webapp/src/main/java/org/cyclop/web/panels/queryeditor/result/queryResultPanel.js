@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 function resizeQueryResultTable() {
-	$(".cq-queryResultTable").colResizable({
+	$(".cq-resTable-table").colResizable({
 		liveDrag : true,
 		gripInnerHtml : "<div class='grip'></div>",
 		draggingClass : "dragging"

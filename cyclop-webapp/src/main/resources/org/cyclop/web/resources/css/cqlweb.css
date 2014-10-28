@@ -54,7 +54,7 @@
 /* ### CQL Info Hint ### */
 .cq-cqlInfo-hint {
 	position: absolute;
-	z-index: 2;
+	z-index: 2000;
 	margin: 0 1em 0 0;
 }
 
@@ -136,10 +136,6 @@ pre.cq-cqlHelp-syntax {
 }
 
 /* ### Query Results Table - General ### */
-.cq-resTable-columnValue {
-	word-break: break-all;
-	max-width: 40em;
-}
 
 ul.cq-resTable-collectionList {
 	padding-top: 0;
@@ -152,12 +148,28 @@ ul.cq-resTable-collectionList {
 	overflow: auto;
 }
 
+.cq-resTable-table > table{
+	width: auto !important;
+}
+.cq-resTable-table th,
+.cq-resTable-table td {
+	word-break: break-all;
+	max-width: 50em;
+	min-width: 10em;
+	width: auto;
+}
+
 /* ### Query Results Table - Vertical Orientation ### */
 
 /* ### Query Results Table - Horizontal Orientation ### */
 
 /* ### Pager for List View ### */
-.cq-paging-dropdown select {
+.cq-paging-dropdown {
+	padding-top: 4px !important;
+	padding-bottom: 4px !important;
+}
+
+.cq-paging-dropdown > select  {
 	border: 1 !important;
 	border-color: white;
 	border-radius: 4px 4px 4px 4px;
@@ -165,12 +177,7 @@ ul.cq-resTable-collectionList {
 	color: white;
 }
 
-.cq-paging-dropdown {
-	padding-top: 4px !important;
-	padding-bottom: 4px !important;
-}
-
-.cq-paging-dropdown select:hover {
+.cq-paging-dropdown > select:hover {
 	cursor: pointer;
 }
 
@@ -189,6 +196,9 @@ ul.cq-resTable-collectionList {
 }
 
 /* ### Import Page ### */
+.cq-import-options > span {
+	white-space: nowrap;
+}
 .cq-import-btnImport {
 	float: right !important;
 }
@@ -270,12 +280,4 @@ ul.cq-resTable-collectionList {
 	padding: 0;
 	margin: 0.5em 0 0.5em 0;
 	border-bottom: 1px solid #333333;
-}
-
-.cq-thHorizontal>tr>th {
-	width: 10px;
-}
-
-.cq-single-line {
-	white-space: nowrap;
 }

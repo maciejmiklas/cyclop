@@ -54,7 +54,7 @@ public class ButtonsPanel extends Panel {
 	private void initResultOrientation(final ButtonListener buttonListener, UserPreferences preferences) {
 		int initialState = preferences.getResultOrientation();
 		AjaxFallbackLink<Void> completion = new IconButton("resultOrientation", initialState,
-				"glyphicon glyphicon-arrow-right", "glyphicon glyphicon-arrow-down") {
+				 "glyphicon glyphicon-arrow-down", "glyphicon glyphicon-arrow-right") {
 			@Override
 			protected void onClick(AjaxRequestTarget target, int state) {
 				UserPreferences preferences = userManager.readPreferences();

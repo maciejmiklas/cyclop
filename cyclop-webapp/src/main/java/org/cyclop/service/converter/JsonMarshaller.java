@@ -30,6 +30,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
 import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 import org.cyclop.model.exception.ServiceException;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +62,7 @@ public class JsonMarshaller {
 		};
 	}
 
-	public @NotNull <T> T unmarshal(@NotNull Class<T> clazz, @NotNull String input) {
+	public @NotNull <T> T unmarshal(@NotNull Class<T> clazz, @NotNull @NotEmpty String input) {
 
 		T unmarshalObj;
 		try {

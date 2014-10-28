@@ -17,7 +17,7 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
-	<table class="cq-queryResultTable table table-striped table-bordered table-hover">
+	<table class="cq-resTable-table table table-striped table-bordered table-hover">
 		<wicket:extend>
 			<wicket:container wicket:id="rowsPager"></wicket:container>
 			<thead>
@@ -32,7 +32,7 @@
 				<tr wicket:id="rowsList">
 					<wicket:container wicket:id="cols">
 						<th wicket:id="rowKey"></th>
-						<td class="cq-columnValue" wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container>
+						<td  wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container>
 						</td>
 					</wicket:container>
 				</tr>

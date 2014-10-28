@@ -41,6 +41,7 @@ import javax.validation.constraints.NotNull;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import org.apache.commons.lang3.StringUtils;
 import org.cyclop.common.AppConfig;
 import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.exception.ServiceException;
@@ -149,6 +150,10 @@ public class FileStorage {
 			channel.read(buf);
 			buf.flip();
 			String decoded = decoder.get().decode(buf).toString();
+			decoded = StringUtils.trimToNull(decoded);
+			if(decoded == null) {
+				return Optional.empty();
+			}
 			T content = jsonMarshaller.unmarshal(clazz, decoded);
 
 			LOG.debug("File read");
