@@ -19,57 +19,66 @@
 <body>
 <wicket:panel>
 	<form wicket:id="form">
-		<div class="row">
-			<div class="col-lg-3">
-				<br>
-					<span class="btn btn-success cq-import-fileBtn"><span class="glyphicon glyphicon-plus"/>&nbsp;&nbsp;<span
-							class="cq-selected-file-name">Select script file....</span><input wicket:id="scriptFile"
-																							  type="file"></span>
-			</div>
-			<div class="col-lg-6">
-				<div class="panel panel-warning">
-					<div class="panel-heading">
-						<h3 class="panel-title">Import Options</h3>
-					</div>
-					<div class="panel-body">
-							<span class="cq-single-line"><label title="Errors during script execution will be ignored">Continue
-								with errors:</label> <input type="checkbox" wicket:id="continueWithErrors"/></span>
-						&nbsp;&nbsp;&nbsp; <span
-							class="cq-single-line"><label title="Query History will contain queries from script">Include
-						in History:</label> <input type="checkbox" wicket:id="includeInHistory"/></span>
-						&nbsp;&nbsp;&nbsp; <span
-							class="cq-single-line"><label title="Execute import in parallel">Parallel:</label> <input
-							type="checkbox" wicket:id="parallel"/></span>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-3">
+					<br><br>
+						<span class="btn btn-success cq-import-fileBtn"><span class="glyphicon glyphicon-plus"/>&nbsp;&nbsp;<span
+								class="cq-selected-file-name">Select script file....</span><input wicket:id="scriptFile"
+																								  type="file"></span>
+					<br><br><br>
+				</div>
+				<div class="col-md-6">
+					<div class="panel panel-warning">
+						<div class="panel-heading">
+							<h3 class="panel-title">Import Options</h3>
+						</div>
+						<div class="panel-body container cq-import-options">
+							<div class="row">
+								<div class="col-sm-5">
+									<label title="Errors during script execution will be ignored">Continue
+										with errors:<input type="checkbox" wicket:id="continueWithErrors"/></label>
+								</div>
+								<div class="col-sm-4"><label
+										title="Query History will contain queries from script">Include
+									in History:<input type="checkbox" wicket:id="includeInHistory"/></label>
+								</div>
+								<div class="col-sm-3"><label title="Execute import in parallel">Parallel:<input
+										type="checkbox" wicket:id="parallel"/></label></div>
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-lg-3">
-				<br>
-				<button class="cq-import-btnImport btn btn-success" wicket:id="ajaxSubmit"
-						type="button">
-					<span class="glyphicon glyphicon-play"/>&nbsp;&nbsp;<span>Execute Script</span>
-				</button>
+				<div class="col-md-3">
+					<br><br>
+					<button class="cq-import-btnImport btn btn-success" wicket:id="ajaxSubmit"
+							type="button">
+						<span class="glyphicon glyphicon-play"/>&nbsp;&nbsp;<span>Execute Script</span>
+					</button>
+				</div>
 			</div>
 		</div>
 	</form>
 
 	<div class="cq-sepLine"></div>
 
-	<div class="row cq-queryImportProgressBar" style='display: none'>
-		<div class="col-lg-3"></div>
-		<div class="col-lg-5">
-			<br>
-			<br>
-			<br>
-			<br>
+	<div class="container-fluid">
+		<div class="row cq-queryImportProgressBar" style='display: none'>
+			<div class="col-lg-3"></div>
+			<div class="col-lg-5">
+				<br>
+				<br>
+				<br>
+				<br>
 
-			<div class="progress progress-striped active">
-				<div class="progress-bar" style="width: 100%"></div>
+				<div class="progress progress-striped active">
+					<div class="progress-bar" style="width: 100%"></div>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<div wicket:id="importResultContainer">
+	<div wicket:id="importResultContainer" class="table-responsive">
 		<wicket:container wicket:id="importResultPager"></wicket:container>
 		<table class="table table-striped table-bordered table-hover">
 			<thead>
