@@ -43,7 +43,11 @@ public abstract class IconButton extends AjaxFallbackLink<Void> {
 			initialState = 0;
 		}
 		this.stateIdx = initialState;
+	}
 
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 		initIcon();
 	}
 
