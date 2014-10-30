@@ -28,10 +28,18 @@ import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 class CollectionViewPanel extends Panel {
+	private final ImmutableList<CqlColumnValue> content;
+	private final CqlPartitionKeyValue cqlPartitionKeyValue;
 
-	CollectionViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue,
-			final ImmutableList<CqlColumnValue> content) {
+	CollectionViewPanel(String id, CqlPartitionKeyValue cqlPartitionKeyValue, ImmutableList<CqlColumnValue> content) {
 		super(id);
+		this.content = content;
+		this.cqlPartitionKeyValue = cqlPartitionKeyValue;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 
 		ListView<CqlColumnValue> cqlCollectionListEntry = new ListView<CqlColumnValue>("listEntry", content) {
 			@Override

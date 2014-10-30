@@ -33,8 +33,17 @@ public class CompletionHintPanel extends Panel {
 
 	private boolean lastCssSwitch;
 
+	private final String headerText;
+
 	public CompletionHintPanel(String id, String headerText) {
 		super(id);
+		this.headerText = headerText;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		setOutputMarkupPlaceholderTag(true);
 
 		WebMarkupContainer cqlInfoHint = new WebMarkupContainer("infoHint");

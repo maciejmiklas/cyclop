@@ -36,6 +36,12 @@ public class CqlHelpPanel extends Panel {
 
 	public CqlHelpPanel(String id) {
 		super(id);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		setOutputMarkupId(true);
 		cqlHelpContent = new Label("helpContent", new CqlHelpContentModel());
 		cqlHelpContent.setEscapeModelStrings(false);

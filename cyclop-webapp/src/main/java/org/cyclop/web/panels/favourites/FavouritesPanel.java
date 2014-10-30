@@ -35,6 +35,12 @@ public class FavouritesPanel extends Panel implements AjaxReloadSupport {
 
 	public FavouritesPanel(String id) {
 		super(id);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		WebMarkupContainer favouritesContainer = initFavouritesContainer();
 		initFavouritesTable(favouritesContainer);
 		browserCallback = initBrowserCallback(favouritesContainer);

@@ -37,12 +37,20 @@ import org.cyclop.web.panels.queryimport.QueryImportPanel;
 @AuthorizeInstantiation(Roles.ADMIN)
 public class MainPage extends ParentPage {
 
-	private final TabHelper tabSupport;
+	private TabHelper tabSupport;
+	private final PageParameters params;
 
 	private static final JavaScriptResourceReference JS_MAIN = new JavaScriptResourceReference(MainPage.class,
 			"main.js");
 
 	public MainPage(PageParameters params) {
+		this.params = params;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		tabSupport = new TabHelper();
 		initQueryEditorTab(params, tabSupport);
 		initHistoryTab(tabSupport);

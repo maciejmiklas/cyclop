@@ -65,7 +65,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 	private static final JavaScriptResourceReference JS_HISTORY = new JavaScriptResourceReference(HistoryPanel.class,
 			"history.js");
 
-	private final AbstractDefaultAjaxBehavior browserCallback;
+	private AbstractDefaultAjaxBehavior browserCallback;
 
 	private BootstrapPagingNavigator pager;
 
@@ -86,10 +86,16 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private final static KeywordDecorator KEYWORD_DECORATOR = new KeywordDecorator();
 
-	private final ImmutableListModel<QueryEntry> historyModel;
+	private ImmutableListModel<QueryEntry> historyModel;
 
 	public HistoryPanel(String id) {
 		super(id);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		WebMarkupContainer historyContainer = initHistoryContainer();
 		historyModel = initHistoryTable(historyContainer);
 		browserCallback = initBrowserCallback(historyContainer);

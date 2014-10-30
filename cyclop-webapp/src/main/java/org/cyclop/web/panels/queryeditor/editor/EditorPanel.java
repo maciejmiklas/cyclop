@@ -48,10 +48,11 @@ public class EditorPanel extends Panel {
 	private static final JavaScriptResourceReference SUGGEST = new JavaScriptResourceReference(EditorPanel.class,
 			"asuggest.js");
 
-	private final String editorMarkupIdJq;
+	private String editorMarkupIdJq;
 
-	private final String editorMarkupIdJs;
+	private String editorMarkupIdJs;
 
+	private final String editorContent;
 	@Inject
 	private CompletionService completionService;
 
@@ -59,10 +60,16 @@ public class EditorPanel extends Panel {
 
 	private final List<CompletionChangeListener> completionChangeListeners = new ArrayList<>();
 
-	private final TextArea<String> editor;
+	private TextArea<String> editor;
 
 	public EditorPanel(String id, String editorContent) {
 		super(id);
+		this.editorContent = editorContent;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 
 		editor = initEditor(StringUtils.trimToNull(editorContent));
 		editorMarkupIdJq = "#" + editor.getMarkupId();

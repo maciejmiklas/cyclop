@@ -33,9 +33,19 @@ import com.google.common.collect.ImmutableMap;
 /** @author Maciej Miklas */
 class MapViewPanel extends Panel {
 
-	MapViewPanel(String id, final CqlPartitionKeyValue cqlPartitionKeyValue,
-			final ImmutableMap<CqlColumnValue, CqlColumnValue> content) {
+	private final ImmutableMap<CqlColumnValue, CqlColumnValue> content;
+	private final CqlPartitionKeyValue cqlPartitionKeyValue;
+
+	MapViewPanel(String id, CqlPartitionKeyValue cqlPartitionKeyValue,
+			ImmutableMap<CqlColumnValue, CqlColumnValue> content) {
 		super(id);
+		this.content = content;
+		this.cqlPartitionKeyValue = cqlPartitionKeyValue;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 
 		List<Map.Entry<CqlColumnValue, CqlColumnValue>> keysList = new ArrayList<>(content.size());
 		keysList.addAll(content.entrySet());

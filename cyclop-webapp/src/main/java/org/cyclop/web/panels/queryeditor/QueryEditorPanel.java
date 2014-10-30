@@ -81,6 +81,12 @@ public class QueryEditorPanel extends Panel {
 
 	public QueryEditorPanel(String id, PageParameters params) {
 		super(id);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		setRenderBodyOnly(true);
 		queryResultModel = Model.of(CqlQueryResult.EMPTY);
 

@@ -30,6 +30,12 @@ public class AboutPanel extends Panel implements AjaxReloadSupport {
 
 	public AboutPanel(String id) {
 		super(id);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		WebMarkupContainer aboutContainer = initAboutContainer();
 		initContent(aboutContainer);
 		browserCallback = initBrowserCallback(aboutContainer);

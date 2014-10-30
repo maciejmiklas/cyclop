@@ -26,10 +26,16 @@ import org.slf4j.LoggerFactory;
 public class ErrorPage extends ParentPage {
 	private final static Logger LOG = LoggerFactory.getLogger(ErrorPage.class);
 
-	public ErrorPage(Exception e) {
-		String errorRef = UUID.randomUUID().toString();
-		add(new Label("errorRef", errorRef));
+	private final String errorRef;
 
-		LOG.error("Got unhandled exception, Error ID: " + errorRef, e);
+	public ErrorPage(Exception ex) {
+		errorRef = UUID.randomUUID().toString();
+		LOG.error("Got unhandled exception, Error ID: " + errorRef, ex);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+		add(new Label("errorRef", errorRef));
 	}
 }

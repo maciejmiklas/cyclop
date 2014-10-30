@@ -34,7 +34,7 @@ public class InfoDialog extends Panel {
 	private final static JsTextTemplate INFO_JS = new JsTextTemplate(new PackageTextTemplate(InfoDialog.class,
 			"infoDialog.js"));
 
-	private final WebMarkupContainer infoDialog;
+	private WebMarkupContainer infoDialog;
 
 	private final StringModel titleModel;
 
@@ -42,15 +42,21 @@ public class InfoDialog extends Panel {
 
 	public InfoDialog(String id) {
 		super(id);
+		titleModel = new StringModel();
+		messageModel = new StringModel();
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		infoDialog = new WebMarkupContainer("infoDialog");
 		infoDialog.setVisible(false);
 		infoDialog.setOutputMarkupPlaceholderTag(true);
-		titleModel = new StringModel();
 		infoDialog.add(new AttributeModifier("title", titleModel));
 
 		add(infoDialog);
 
-		messageModel = new StringModel();
 		Label message = new Label("message", messageModel);
 		infoDialog.add(message);
 	}

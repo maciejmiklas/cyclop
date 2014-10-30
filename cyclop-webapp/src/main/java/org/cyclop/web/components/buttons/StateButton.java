@@ -25,10 +25,19 @@ import org.apache.wicket.model.IModel;
 public abstract class StateButton extends AjaxFallbackLink<Void> {
 
 	private boolean pressed;
+	private final String cssReleased;
+	private final String cssPressed;
 
 	public StateButton(final String id, final boolean initialPressed, final String cssReleased, final String cssPressed) {
 		super(id);
 		this.pressed = initialPressed;
+		this.cssReleased = cssReleased;
+		this.cssPressed = cssPressed;
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 
 		add(new AttributeModifier("class", new IModel<String>() {
 			@Override

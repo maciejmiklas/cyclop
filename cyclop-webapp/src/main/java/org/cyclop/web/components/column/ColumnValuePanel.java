@@ -35,14 +35,32 @@ import org.cyclop.web.components.infodialog.InfoDialog;
 /** @author Maciej Miklas */
 class ColumnValuePanel extends Panel {
 
-	private final InfoDialog infoDialog;
+	private InfoDialog infoDialog;
 
 	@Inject
 	private DataConverter converter;
 
-	ColumnValuePanel(String componentId, final CqlPartitionKeyValue cqlPartitionKeyValue,
-			final CqlColumnValue cqlColumnValue, boolean embeddedColumn) {
+	private final CqlColumnValue cqlColumnValue;
+
+	private final CqlPartitionKeyValue cqlPartitionKeyValue;
+	private final boolean embeddedColumn;
+
+	ColumnValuePanel(String componentId, CqlPartitionKeyValue cqlPartitionKeyValue, CqlColumnValue cqlColumnValue,
+			boolean embeddedColumn) {
 		super(componentId);
+		this.cqlColumnValue = cqlColumnValue;
+		this.cqlPartitionKeyValue = cqlPartitionKeyValue;
+		this.embeddedColumn = embeddedColumn;
+	}
+
+	private String crateInfoDialogTitle(CqlPartitionKeyValue cqlPartitionKeyValue, CqlExtendedColumnName columnName) {
+		String partitionKeyValue = cqlPartitionKeyValue == null ? null : converter.convert(cqlPartitionKeyValue.value);
+		return (partitionKeyValue == null ? "Key" : partitionKeyValue) + " -> " + columnName.toDisplayString();
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 
 		String convertedValue = converter.convert(cqlColumnValue.value);
 		final String convertedValueNotNull = convertedValue == null ? "" : convertedValue;
@@ -98,10 +116,5 @@ class ColumnValuePanel extends Panel {
 		}
 		add(fullContentLink);
 		add(columnContent);
-	}
-
-	private String crateInfoDialogTitle(CqlPartitionKeyValue cqlPartitionKeyValue, CqlExtendedColumnName columnName) {
-		String partitionKeyValue = cqlPartitionKeyValue == null ? null : converter.convert(cqlPartitionKeyValue.value);
-		return (partitionKeyValue == null ? "Key" : partitionKeyValue) + " -> " + columnName.toDisplayString();
 	}
 }
