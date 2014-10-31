@@ -36,7 +36,6 @@ import org.cyclop.model.UserPreferences;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.service.exporter.CsvQueryResultExporter;
 import org.cyclop.service.um.UserManager;
-import org.cyclop.web.panels.queryeditor.buttons.ButtonListener;
 import org.cyclop.web.panels.queryeditor.buttons.ButtonsPanel;
 import org.cyclop.web.panels.queryeditor.completionhint.CompletionHintPanel;
 import org.cyclop.web.panels.queryeditor.cqlhelp.CqlHelpPanel;
@@ -106,8 +105,7 @@ public class QueryEditorPanel extends Panel {
 		queryResultPanel.setOutputMarkupPlaceholderTag(true);
 
 		EditorPanel queryEditorPanel = initQueryEditorPanel(params);
-
-		initButtons(queryEditorPanel, preferences);
+		initButtons(queryEditorPanel);
 
 		queryResultExport = new QueryResultExport(this, exporter);
 
@@ -142,32 +140,16 @@ public class QueryEditorPanel extends Panel {
 		return queryEditorPanel;
 	}
 
-	private ButtonsPanel initButtons(final EditorPanel editorPanel, UserPreferences preferences) {
-		ButtonListener buttonListener = new ButtonListener() {
-
-			@Override
-			public void onClickQueryResultExport(AjaxRequestTarget target) {
-				queryResultExport.initiateDownload(target, lastQuery);
-			}
-
-			@Override
-			public void onClickExecCql(AjaxRequestTarget target) {
-				handleExecQuery(target, editorPanel);
-			}
-
-			@Override
-			public void onClickCompletion(AjaxRequestTarget target, boolean pressed) {
-				cqlCompletionHintPanel.setVisible(pressed);
-				target.add(cqlCompletionHintPanel);
-			}
-
-			@Override
-			public void onClickResultOrientation(AjaxRequestTarget target, int orientation) {
-				queryResultPanel.switchView(target, ViewType.fromOrientation(orientation));
-			}
-		};
-
-		ButtonsPanel buttonsPanel = new ButtonsPanel("buttons", buttonListener, preferences.isShowCqlCompletionHint());
+	private ButtonsPanel initButtons(final EditorPanel editorPanel) {
+		ButtonsPanel buttonsPanel = new ButtonsPanel("buttons");
+		buttonsPanel.withResultOrientation((t, o) -> queryResultPanel.switchView(t, ViewType.fromOrientation(o)));
+		buttonsPanel.withCompletion((t, p) -> {
+			cqlCompletionHintPanel.setVisible(p);
+			t.add(cqlCompletionHintPanel);
+		});
+		buttonsPanel.withExportQueryResult(t -> queryResultExport.initiateDownload(t, lastQuery));
+		buttonsPanel.withExecQuery(t -> handleExecQuery(t, editorPanel));
+		buttonsPanel.withAddToFavourites();
 		add(buttonsPanel);
 		return buttonsPanel;
 	}

@@ -38,20 +38,13 @@ public class ButtonsPanel extends Panel {
 	private static final JavaScriptResourceReference JS_BUTTONS = new JavaScriptResourceReference(ButtonsPanel.class,
 			"buttons.js");
 
-	public ButtonsPanel(String id, final ButtonListener buttonListener, boolean completionPressed) {
+	public ButtonsPanel(String id) {
 		super(id);
-
-		UserPreferences preferences = userManager.readPreferences();
-
 		setRenderBodyOnly(true);
-		initAddToFavourites();
-		initExecQuery(buttonListener);
-		initExportQueryResult(buttonListener);
-		initCompletion(buttonListener, preferences);
-		initResultOrientation(buttonListener, preferences);
 	}
 
-	private void initResultOrientation(final ButtonListener buttonListener, UserPreferences preferences) {
+	public ButtonsPanel withResultOrientation(final ButtonListener.ResultOrientationChange buttonListener) {
+		UserPreferences preferences = userManager.readPreferences();
 		int initialState = preferences.getResultOrientation();
 		AjaxFallbackLink<Void> completion = new IconButton("resultOrientation", initialState,
 				 "glyphicon glyphicon-arrow-down", "glyphicon glyphicon-arrow-right") {
@@ -60,13 +53,15 @@ public class ButtonsPanel extends Panel {
 				UserPreferences preferences = userManager.readPreferences();
 				preferences.setResultOrientation(state);
 				userManager.storePreferences(preferences);
-				buttonListener.onClickResultOrientation(target, state);
+				buttonListener.onClick(target, state);
 			}
 		};
 		add(completion);
+		return this;
 	}
 
-	private void initCompletion(final ButtonListener buttonListener, UserPreferences preferences) {
+	public ButtonsPanel withCompletion(final ButtonListener.CompletionChange buttonListener) {
+		UserPreferences preferences = userManager.readPreferences();
 		boolean completionEnabled = preferences.isShowCqlCompletionHint();
 		AjaxFallbackLink<Void> completion = new StateButton("completion", completionEnabled, "btn btn-sm btn-primary",
 				"btn btn-sm btn-primary active") {
@@ -76,42 +71,45 @@ public class ButtonsPanel extends Panel {
 				preferences.setShowCqlCompletionHint(pressed);
 				userManager.storePreferences(preferences);
 
-				buttonListener.onClickCompletion(target, pressed);
+				buttonListener.onClick(target, pressed);
 			}
 		};
 		add(completion);
+		return this;
 	}
 
-	private void initExportQueryResult(final ButtonListener buttonListener) {
+	public ButtonsPanel withExportQueryResult(final ButtonListener.ExportQueryResult buttonListener) {
 		AjaxFallbackLink<Void> exportQueryResult = new AjaxFallbackLink<Void>("exportQueryResult") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				buttonListener.onClickQueryResultExport(target);
+				buttonListener.onClick(target);
 			}
 		};
 		add(exportQueryResult);
+		return this;
 	}
 
-	private void initExecQuery(final ButtonListener buttonListener) {
+	public ButtonsPanel withExecQuery(final ButtonListener.ExecQuery buttonListener) {
 		AjaxFallbackLink<Void> execQuery = new AjaxFallbackLink<Void>("execQuery") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				buttonListener.onClickExecCql(target);
+				buttonListener.onClick(target);
 				target.appendJavaScript("queryExecutedResponse()");
 			}
 		};
 		add(execQuery);
+		return this;
 	}
 
-	private void initAddToFavourites() {
+	public ButtonsPanel withAddToFavourites() {
 		AjaxFallbackLink<Void> addToFavourites = new AjaxFallbackLink<Void>("addToFavourites") {
 			@Override
 			public void onClick(AjaxRequestTarget target) {
-				// buttonListener.onClickExecCql(target);
 			}
 		};
 		add(addToFavourites);
 		addToFavourites.setVisible(false);
+		return this;
 	}
 
 	@Override

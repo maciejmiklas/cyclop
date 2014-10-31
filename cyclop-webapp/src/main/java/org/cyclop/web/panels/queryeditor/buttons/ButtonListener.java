@@ -23,12 +23,25 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 /** @author Maciej Miklas */
 public interface ButtonListener extends Serializable {
 
-	void onClickExecCql(AjaxRequestTarget target);
 
-	void onClickQueryResultExport(AjaxRequestTarget target);
+	@FunctionalInterface
+	interface ExecQuery {
+		void onClick(AjaxRequestTarget target);
+	}
 
-	void onClickCompletion(AjaxRequestTarget target, boolean pressed);
+	@FunctionalInterface
+	interface ExportQueryResult {
+		void onClick(AjaxRequestTarget target);
+	}
 
-	void onClickResultOrientation(AjaxRequestTarget target, int orientation);
+	@FunctionalInterface
+	interface CompletionChange {
+		void onClick(AjaxRequestTarget target, boolean pressed);
+	}
+
+	@FunctionalInterface
+	interface ResultOrientationChange {
+		void onClick(AjaxRequestTarget target, int orientation);
+	}
 
 }
