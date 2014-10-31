@@ -30,8 +30,10 @@ import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -52,7 +54,6 @@ public class EditorPanel extends Panel {
 
 	private String editorMarkupIdJs;
 
-	private final String editorContent;
 	@Inject
 	private CompletionService completionService;
 
@@ -62,16 +63,19 @@ public class EditorPanel extends Panel {
 
 	private TextArea<String> editor;
 
+	private final IModel<String> editorModel = new Model<>();
+
 	public EditorPanel(String id, String editorContent) {
 		super(id);
-		this.editorContent = editorContent;
+		if (editorContent != null) {
+			editorModel.setObject(editorContent);
+		}
 	}
 
 	@Override
 	protected void onInitialize() {
 		super.onInitialize();
-
-		editor = initEditor(StringUtils.trimToNull(editorContent));
+		initEditor();
 		editorMarkupIdJq = "#" + editor.getMarkupId();
 		editorMarkupIdJs = editor.getMarkupId();
 	}
@@ -94,17 +98,10 @@ public class EditorPanel extends Panel {
 		return cq;
 	}
 
-	private TextArea<String> initEditor(String editorContent) {
-		final Model<String> editorModel = new Model<>();
-		if (editorContent != null) {
-			editorModel.setObject(editorContent);
-		}
-
-		TextArea<String> editor = new TextArea<>("queryEditor", editorModel);
+	private void initEditor() {
+		editor = new TextArea<>("queryEditor", editorModel);
 		editor.setEscapeModelStrings(false);
-
 		add(editor);
-
 		editor.add(new OnChangeAjaxBehavior() {
 
 			@Override
@@ -147,7 +144,6 @@ public class EditorPanel extends Panel {
 				super.updateAjaxAttributes(attributes);
 			}
 		});
-		return editor;
 	}
 
 	private void fireCompletionChanged(ContextCqlCompletion currentCompletion) {

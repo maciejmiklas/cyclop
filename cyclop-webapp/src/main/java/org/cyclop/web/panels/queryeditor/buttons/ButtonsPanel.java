@@ -20,8 +20,10 @@ import javax.inject.Inject;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.cyclop.model.UserPreferences;
@@ -47,7 +49,7 @@ public class ButtonsPanel extends Panel {
 		UserPreferences preferences = userManager.readPreferences();
 		int initialState = preferences.getResultOrientation();
 		AjaxFallbackLink<Void> completion = new IconButton("resultOrientation", initialState,
-				 "glyphicon glyphicon-arrow-down", "glyphicon glyphicon-arrow-right") {
+				"glyphicon glyphicon-arrow-down", "glyphicon glyphicon-arrow-right") {
 			@Override
 			protected void onClick(AjaxRequestTarget target, int state) {
 				UserPreferences preferences = userManager.readPreferences();
@@ -89,10 +91,10 @@ public class ButtonsPanel extends Panel {
 		return this;
 	}
 
-	public ButtonsPanel withExecQuery(final ButtonListener.ExecQuery buttonListener) {
-		AjaxFallbackLink<Void> execQuery = new AjaxFallbackLink<Void>("execQuery") {
+	public ButtonsPanel withExecQuery(final ButtonListener.ExecQuery buttonListener, Form<String> form) {
+		AjaxButton execQuery = new AjaxButton("execQuery", form) {
 			@Override
-			public void onClick(AjaxRequestTarget target) {
+			protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 				buttonListener.onClick(target);
 				target.appendJavaScript("queryExecutedResponse()");
 			}

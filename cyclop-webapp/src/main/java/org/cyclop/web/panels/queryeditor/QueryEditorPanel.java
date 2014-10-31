@@ -24,6 +24,7 @@ import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -80,6 +81,7 @@ public class QueryEditorPanel extends Panel {
 	private SwitchableQueryResultPanel queryResultPanel;
 
 	private PageParameters params;
+
 	public QueryEditorPanel(String id, PageParameters params) {
 		super(id);
 		queryResultModel = Model.of(CqlQueryResult.EMPTY);
@@ -105,11 +107,19 @@ public class QueryEditorPanel extends Panel {
 		queryResultPanel.setOutputMarkupPlaceholderTag(true);
 
 		EditorPanel queryEditorPanel = initQueryEditorPanel(params);
-		initButtons(queryEditorPanel);
+		Form<String> editorForm = initForm(queryEditorPanel);
+		initButtons(queryEditorPanel, editorForm);
 
 		queryResultExport = new QueryResultExport(this, exporter);
 
 		queryErrorLabel = initQueryErrorLabel();
+	}
+
+	private Form<String> initForm(EditorPanel queryEditorPanel) {
+		Form<String> form = new Form<>("editorForm");
+		form.add(queryEditorPanel);
+		add(form);
+		return form;
 	}
 
 	@Override
@@ -127,7 +137,6 @@ public class QueryEditorPanel extends Panel {
 	}
 
 	private EditorPanel initQueryEditorPanel(PageParameters params) {
-
 		StringValue editorContentVal = params.get("cql");
 		String editorContent = editorContentVal == null ? null : editorContentVal.toString();
 
@@ -140,7 +149,7 @@ public class QueryEditorPanel extends Panel {
 		return queryEditorPanel;
 	}
 
-	private ButtonsPanel initButtons(final EditorPanel editorPanel) {
+	private ButtonsPanel initButtons(final EditorPanel editorPanel, Form<String> editorForm) {
 		ButtonsPanel buttonsPanel = new ButtonsPanel("buttons");
 		buttonsPanel.withResultOrientation((t, o) -> queryResultPanel.switchView(t, ViewType.fromOrientation(o)));
 		buttonsPanel.withCompletion((t, p) -> {
@@ -148,14 +157,13 @@ public class QueryEditorPanel extends Panel {
 			t.add(cqlCompletionHintPanel);
 		});
 		buttonsPanel.withExportQueryResult(t -> queryResultExport.initiateDownload(t, lastQuery));
-		buttonsPanel.withExecQuery(t -> handleExecQuery(t, editorPanel));
+		buttonsPanel.withExecQuery(t -> handleExecQuery(t, editorPanel), editorForm);
 		buttonsPanel.withAddToFavourites();
 		add(buttonsPanel);
 		return buttonsPanel;
 	}
 
 	private void handleExecQuery(AjaxRequestTarget target, EditorPanel editorPanel) {
-
 		// this cannot happen, because java script disables execute
 		// button - it's DOS prevention
 		if (queryRunning) {
@@ -191,7 +199,6 @@ public class QueryEditorPanel extends Panel {
 	}
 
 	private final class CompletionChangeHelp implements CompletionChangeListener {
-
 		@Override
 		public void onCompletionChange(ContextCqlCompletion currentCompletion) {
 			cqlHelpPanel.changeCompletion(currentCompletion);
@@ -204,7 +211,6 @@ public class QueryEditorPanel extends Panel {
 	}
 
 	private final class CompletionChangeHint implements CompletionChangeListener {
-
 		@Override
 		public void onCompletionChange(ContextCqlCompletion currentCompletion) {
 			cqlCompletionHintPanel.changeCompletion(currentCompletion);
