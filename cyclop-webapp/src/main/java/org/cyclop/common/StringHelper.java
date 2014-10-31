@@ -34,7 +34,6 @@ public class StringHelper {
 	private final static Logger LOG = LoggerFactory.getLogger(StringHelper.class);
 
 	public static String decorate(String toDecorate, StringDecorator decorator, String... keywordsLc) {
-
 		String prefix = decorator.prefix();
 		String postfix = decorator.postfix();
 
