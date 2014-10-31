@@ -55,6 +55,7 @@ public class ImmutableListModel<T> extends GenericBaseModel<ImmutableList<? exte
 		}
 	}
 
+	@FunctionalInterface
 	public interface ModelChangeListener<T> {
 		void onModelChanged(ImmutableList<? extends T> object);
 	}

@@ -55,15 +55,15 @@ public class QueryEditorPanel extends Panel {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryEditorPanel.class);
 
-	private final CqlHelpPanel cqlHelpPanel;
+	private CqlHelpPanel cqlHelpPanel;
 
-	private final CompletionHintPanel cqlCompletionHintPanel;
+	private CompletionHintPanel cqlCompletionHintPanel;
 
 	private boolean queryRunning = false;
 
 	private CqlQuery lastQuery;
 
-	private final QueryResultExport queryResultExport;
+	private QueryResultExport queryResultExport;
 
 	@Inject
 	private CsvQueryResultExporter exporter;
@@ -76,11 +76,15 @@ public class QueryEditorPanel extends Panel {
 
 	private final IModel<CqlQueryResult> queryResultModel;
 
-	private final Label queryErrorLabel;
-	private final SwitchableQueryResultPanel queryResultPanel;
+	private Label queryErrorLabel;
 
+	private SwitchableQueryResultPanel queryResultPanel;
+
+	private PageParameters params;
 	public QueryEditorPanel(String id, PageParameters params) {
 		super(id);
+		queryResultModel = Model.of(CqlQueryResult.EMPTY);
+		this.params = params;
 	}
 
 	@Override
@@ -88,8 +92,6 @@ public class QueryEditorPanel extends Panel {
 		super.onInitialize();
 
 		setRenderBodyOnly(true);
-		queryResultModel = Model.of(CqlQueryResult.EMPTY);
-
 		cqlHelpPanel = new CqlHelpPanel("cqlHelp");
 		add(cqlHelpPanel);
 

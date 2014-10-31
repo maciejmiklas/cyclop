@@ -47,14 +47,11 @@ import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
 import org.cyclop.service.um.UserManager;
 import org.cyclop.web.common.ImmutableListModel;
-import org.cyclop.web.common.ImmutableListModel.ModelChangeListener;
 import org.cyclop.web.common.JsFunctionBuilder;
 import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.components.pagination.PagerConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableList;
 
 /** @author Maciej Miklas */
 public class QueryImportPanel extends Panel {
@@ -64,11 +61,11 @@ public class QueryImportPanel extends Panel {
 	private static final JavaScriptResourceReference JS_IMPORT = new JavaScriptResourceReference(
 			QueryImportPanel.class, "queryImport.js");
 
-	private final ImmutableListModel<ImportResult> resultModel;
+	private ImmutableListModel<ImportResult> resultModel;
 
-	private final AppConfig conf = AppConfig.get();
+	private AppConfig conf = AppConfig.get();
 
-	private final WebMarkupContainer importResultContainer;
+	private WebMarkupContainer importResultContainer;
 
 	@Inject
 	@Named(QueryImporter.IMPL_SERIAL)
@@ -86,13 +83,17 @@ public class QueryImportPanel extends Panel {
 			DecimalFormat nf = (DecimalFormat) NumberFormat.getNumberInstance(WebSession.get().getLocale());
 			nf.applyPattern("###.###");
 			return nf;
-		}
-
-		;
+		};
 	};
 
 	public QueryImportPanel(String id) {
 		super(id);
+	}
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+
 		ImportOptions importOptions = createImportOptions();
 		setDefaultModel(new CompoundPropertyModel<>(importOptions));
 
@@ -225,14 +226,7 @@ public class QueryImportPanel extends Panel {
 					}
 				});
 		container.add(importResultPager);
-
-		model.registerOnChangeListener(new ModelChangeListener<ImportResult>() {
-			@Override
-			public void onModelChanged(ImmutableList<? extends ImportResult> object) {
-				importResultPager.reset();
-			}
-		});
-
+		model.registerOnChangeListener(o -> importResultPager.reset());
 		return model;
 	}
 

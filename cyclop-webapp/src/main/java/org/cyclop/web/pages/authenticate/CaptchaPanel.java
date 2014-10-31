@@ -48,7 +48,7 @@ public class CaptchaPanel extends Panel {
 
 	public CaptchaPanel(String id) {
 		super(id);
-		setDefaultModel(new CompoundPropertyModel<CaptchaPanel>(CaptchaPanel.this));
+		setDefaultModel(new CompoundPropertyModel<>(CaptchaPanel.this));
 	}
 
 	@Override
