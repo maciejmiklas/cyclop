@@ -162,33 +162,6 @@ ul.cq-resTable-collectionList {
 
 /* ### Query Results Table - Horizontal Orientation ### */
 
-/* ### Pager for List View ### */
-.cq-paging-dropdown {
-	padding-top: 4px !important;
-	padding-bottom: 4px !important;
-}
-
-.cq-paging-dropdown > select  {
-	border: 1 !important;
-	border-color: white;
-	border-radius: 4px 4px 4px 4px;
-	background: #222222;
-	color: white;
-}
-
-.cq-paging-dropdown > select:hover {
-	cursor: pointer;
-}
-
-.cq-paging-general {
-	margin: 0 !important;
-}
-
-.cq-paging-general>li>a:hover, .cq-paging-general>li>span:hover, .cq-paging-general>li>a:focus, .cq-paging-general>li>span:focus {
-	background-color: #2a9fd6 !important;
-	border-color: #2a9fd6 !important;
-}
-
 /* ### History Page ### */
 .cq-history-filterCont {
 	float: right;
