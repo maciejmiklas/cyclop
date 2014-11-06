@@ -1842,7 +1842,7 @@ table th[class*="col-"] {
 
 	.table-responsive > .table {
 		margin-bottom: 0;
-		background-color: #fff;
+		/*background-color: #fff;*/
 	}
 
 	.table-responsive > .table > thead > tr > th,

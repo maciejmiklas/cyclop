@@ -50,7 +50,7 @@ public class AboutPanel extends Panel implements AjaxReloadSupport {
 
 			@Override
 			public String getObject() {
-				return "1.4.0";
+				return "2.0.0";
 			}
 
 			@Override
