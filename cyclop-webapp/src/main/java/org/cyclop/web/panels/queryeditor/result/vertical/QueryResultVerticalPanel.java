@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -32,8 +34,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
+import org.cyclop.model.CqlPartitionKeyValue;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
+import org.cyclop.service.converter.DataExtractor;
 import org.cyclop.web.components.iterablegrid.IterableGridView;
 import org.cyclop.web.panels.queryeditor.result.QueryResultPanel;
 
@@ -43,6 +47,9 @@ import com.datastax.driver.core.Row;
 public final class QueryResultVerticalPanel extends QueryResultPanel {
 
 	protected final IModel<List<? extends Row>> rowsModel;
+
+	@Inject
+	private DataExtractor extractor;
 
 	public QueryResultVerticalPanel(String id, IModel<CqlQueryResult> model, Optional<RowDataProvider> rowDataProvider) {
 		super(id, model, rowDataProvider);
@@ -129,6 +136,11 @@ public final class QueryResultVerticalPanel extends QueryResultPanel {
 								"columnValue");
 						item.add(component);
 						component.setRenderBodyOnly(true);
+
+						Optional<CqlPartitionKeyValue> cqlPartitionKeyValue = partitionKey.isPresent() ? Optional
+								.of(extractor.extractPartitionKey(row, partitionKey.get())) : Optional.empty();
+						widgetFactory.addColumnTitle(item, cqlPartitionKeyValue, columnName);
+
 					}
 				};
 				columnListRow.add(columnValueList);
