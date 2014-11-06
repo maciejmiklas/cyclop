@@ -16,10 +16,14 @@
  */
 package org.cyclop.web.components.column;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.validation.constraints.NotNull;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
 import org.cyclop.model.CqlColumnValue;
 import org.cyclop.model.CqlDataType;
@@ -28,6 +32,7 @@ import org.cyclop.model.CqlPartitionKey;
 import org.cyclop.model.CqlPartitionKeyValue;
 import org.cyclop.service.converter.DataConverter;
 import org.cyclop.service.converter.DataExtractor;
+import org.cyclop.validation.EnableValidation;
 
 import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.Row;
@@ -36,6 +41,7 @@ import com.google.common.collect.ImmutableMap;
 
 /** @author Maciej Miklas */
 @Named
+@EnableValidation
 public class WidgetFactory {
 
 	@Inject
@@ -57,27 +63,36 @@ public class WidgetFactory {
 		return comp;
 	}
 
-	public Component createForColumn(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
-			String componentId) {
-
-		Component component = createForDataType(row, partitionKey, column, componentId);
-		if (component == null) {
-			component = createForEmptyColumn(componentId);
+	public void addColumnTitle(Component colValue, Optional<CqlPartitionKeyValue> partitionKey,
+			CqlExtendedColumnName column) {
+		StringBuilder title = new StringBuilder();
+		if (partitionKey.isPresent()) {
+			title.append(partitionKey.get().value);
+			title.append(" -> ");
 		}
+		title.append(column.part);
 
-		return component;
+		colValue.add(new AttributeAppender("title", title.toString()));
 	}
 
-	private Component createForDataType(Row row, CqlPartitionKey partitionKey, CqlExtendedColumnName column,
-			String componentId) {
+	public @NotNull Component createColumnValue(@NotNull Row row, @NotNull Optional<CqlPartitionKey> partitionKey,
+			@NotNull CqlExtendedColumnName column, @NotNull String componentId) {
+
+		Component colValue = createForDataType(row, partitionKey, column, componentId).orElse(
+				createForEmptyColumn(componentId));
+		return colValue;
+	}
+
+	private Optional<Component> createForDataType(Row row, Optional<CqlPartitionKey> partitionKey,
+			CqlExtendedColumnName column,			String componentId) {
 		String partLc = column.partLc;
-		if (row == null || row.isNull(partLc)) {
-			return null;
+		if (row.isNull(partLc)) {
+			return Optional.empty();
 		}
 
 		CqlPartitionKeyValue cqlPartitionKeyValue = null;
-		if (partitionKey != null) {
-			cqlPartitionKeyValue = extractor.extractPartitionKey(row, partitionKey);
+		if (partitionKey.isPresent()) {
+			cqlPartitionKeyValue = extractor.extractPartitionKey(row, partitionKey.get());
 		}
 
 		Component component;
@@ -91,7 +106,7 @@ public class WidgetFactory {
 		} else {
 			component = createForSingleValue(row, cqlPartitionKeyValue, column, componentId);
 		}
-		return component;
+		return Optional.of(component);
 	}
 
 	private Label createForEmptyColumn(String componentId) {

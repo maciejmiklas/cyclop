@@ -116,7 +116,8 @@ public final class QueryResultVerticalPanel extends QueryResultPanel {
 
 				ColumnsModel model = (ColumnsModel) getModel();
 				CqlRowMetadata result = model.getResult();
-				final CqlPartitionKey partitionKey = result == null ? null : result.partitionKey;
+				final Optional<CqlPartitionKey> partitionKey = Optional.ofNullable(result == null ? null : result
+						.partitionKey);
 
 				ListView<Row> columnValueList = new ListView<Row>("columnValueList", rowsModel) {
 
@@ -124,7 +125,7 @@ public final class QueryResultVerticalPanel extends QueryResultPanel {
 					protected void populateItem(ListItem<Row> item) {
 						Row row = item.getModelObject();
 
-						Component component = widgetFactory.createForColumn(row, partitionKey, columnName,
+						Component component = widgetFactory.createColumnValue(row, partitionKey, columnName,
 								"columnValue");
 						item.add(component);
 						component.setRenderBodyOnly(true);

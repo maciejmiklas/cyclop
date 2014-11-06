@@ -18,6 +18,8 @@ package org.cyclop.web.panels.queryeditor.result.horizontal;
 
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -28,8 +30,10 @@ import org.apache.wicket.markup.repeater.Item;
 import org.apache.wicket.model.IModel;
 import org.cyclop.model.CqlExtendedColumnName;
 import org.cyclop.model.CqlPartitionKey;
+import org.cyclop.model.CqlPartitionKeyValue;
 import org.cyclop.model.CqlQueryResult;
 import org.cyclop.model.CqlRowMetadata;
+import org.cyclop.service.converter.DataExtractor;
 import org.cyclop.web.components.iterablegrid.IterableGridView;
 import org.cyclop.web.panels.queryeditor.result.QueryResultPanel;
 
@@ -37,6 +41,9 @@ import com.datastax.driver.core.Row;
 
 /** @author Maciej Miklas */
 public final class QueryResultHorizontalPanel extends QueryResultPanel {
+
+	@Inject
+	private DataExtractor extractor;
 
 	public QueryResultHorizontalPanel(String id, IModel<CqlQueryResult> model) {
 		super(id, model);
@@ -78,29 +85,43 @@ public final class QueryResultHorizontalPanel extends QueryResultPanel {
 
 			@Override
 			protected void populateItem(Item<Row> item) {
-				Row row = item.getModel().getObject();
-				Component rowKey = createRowKeyColumn("rowKey", row, metadataModel);
-				item.add(rowKey);
-
-				ListView<CqlExtendedColumnName> columnValueList = new ListView<CqlExtendedColumnName>(
-						"columnValueList", columnsModel) {
-
-					@Override
-					protected void populateItem(ListItem<CqlExtendedColumnName> item) {
-						CqlExtendedColumnName column = item.getModelObject();
-
-						CqlPartitionKey partitionKey = metadataModel.getObject().partitionKey;
-						Component component = widgetFactory.createForColumn(row, partitionKey, column, "columnValue");
-						item.add(component);
-						component.setRenderBodyOnly(true);
-					}
-				};
-				item.add(columnValueList);
+				populateRowKey(item, metadataModel);
+				populateColumnValues(item, metadataModel, columnsModel);
 			}
 		};
 		resultTable.add(rowsList);
 		rowsList.setColumns(1);
 		return rowsList;
+	}
+
+	private void populateRowKey(Item<Row> item, IModel<CqlRowMetadata> metadataModel) {
+		Row row = item.getModel().getObject();
+		Component rowKey = createRowKeyColumn("rowKey", row, metadataModel);
+		item.add(rowKey);
+	}
+
+	private void populateColumnValues(Item<Row> item, IModel<CqlRowMetadata> metadataModel, ColumnsModel columnsModel) {
+		CqlPartitionKey partitionKey = metadataModel.getObject().partitionKey;
+		Row row = item.getModel().getObject();
+
+		Optional<CqlPartitionKeyValue> cqlPartitionKeyValue = partitionKey == null ? Optional.empty() : Optional
+				.of(extractor.extractPartitionKey(row, partitionKey));
+		Optional<CqlPartitionKey> partitionKeyOpt = Optional.ofNullable(partitionKey);
+
+		ListView<CqlExtendedColumnName> columnValueList = new ListView<CqlExtendedColumnName>("columnValueList",
+				columnsModel) {
+
+			@Override
+			protected void populateItem(ListItem<CqlExtendedColumnName> item) {
+				CqlExtendedColumnName column = item.getModelObject();
+
+				Component component = widgetFactory.createColumnValue(row, partitionKeyOpt, column, "columnValue");
+				item.add(component);
+				component.setRenderBodyOnly(true);
+				widgetFactory.addColumnTitle(item, cqlPartitionKeyValue, column);
+			}
+		};
+		item.add(columnValueList);
 	}
 
 }
