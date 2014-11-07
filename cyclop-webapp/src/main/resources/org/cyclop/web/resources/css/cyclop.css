@@ -135,6 +135,12 @@ pre.cq-cqlHelp-syntax {
 	resize: vertical;
 }
 
+/* ## Data Tables ## */
+table.cq-data-table {
+	width: auto !important;
+	font-size: 13px;
+}
+
 /* ### Query Results Table - General ### */
 ul.cq-resTable-collectionList {
 	padding-top: 0;
@@ -147,9 +153,10 @@ ul.cq-resTable-collectionList {
 	overflow: auto;
 }
 
-.cq-resTable-table > table{
+table.cq-resTable-table {
 	width: auto !important;
 }
+
 .cq-resTable-table th,
 .cq-resTable-table td {
 	word-break: break-all;

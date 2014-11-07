@@ -22,6 +22,7 @@ import static org.cyclop.web.resources.ScriptsRef.COMMON;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_BROWSER;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_TOOLS;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_UI;
+import static org.cyclop.web.resources.ScriptsRef.RWD_TABLE;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -43,6 +44,6 @@ public abstract class ParentPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
 		response.render(JavaScriptHeaderItem.forReference(COMMON));
 		response.render(JavaScriptHeaderItem.forReference(COL_RESIZABLE));
-
+		response.render(JavaScriptHeaderItem.forReference(RWD_TABLE));
 	}
 }
