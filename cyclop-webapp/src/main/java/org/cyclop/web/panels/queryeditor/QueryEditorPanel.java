@@ -195,7 +195,7 @@ public class QueryEditorPanel extends Panel {
 
 		target.add(queryErrorLabel);
 		target.add(queryResultPanel);
-		QueryResultPanel.appendTableResizeJs(target);
+		QueryResultPanel.appendTableJs(target);
 	}
 
 	private final class CompletionChangeHelp implements CompletionChangeListener {

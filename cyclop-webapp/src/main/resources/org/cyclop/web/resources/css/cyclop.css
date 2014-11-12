@@ -89,18 +89,27 @@ pre.cq-cqlHelp-syntax {
 
 /* ### Query Editor Button Bar ### */
 .cq-nav {
-	margin-bottom: 10px !important;
 	border-bottom: 1px solid #424221 !important;
+	padding-top: 0.5em;
+	margin-right: 1em;
+	position: fixed;
+	z-index: 1030;
+	background-color: #060606;
+	width: 100%;
 }
 
-.cq-nav>li>a:hover {
+.cq-tab-content {
+	padding-top: 3.5em;
+}
+
+.cq-nav ul li a:hover {
 	color: #ffffff !important;
 	background-color: #2a9fd6 !important;
 	border: 1px solid #282828 !important;
 	border-bottom-color: transparent !important;
 }
 
-.cq-nav>li>a {
+.cq-nav ul li a {
 	padding: 5px 10px !important;
 }
 
@@ -109,9 +118,7 @@ pre.cq-cqlHelp-syntax {
 }
 
 .cq-nav-logout {
-	position: absolute;
-	top: 7px;
-	right: 20px;
+	float: right;
 }
 
 /* ### Notification Popup ### */
@@ -157,8 +164,7 @@ table.cq-resTable-table {
 	width: auto !important;
 }
 
-.cq-resTable-table th,
-.cq-resTable-table td {
+.cq-resTable-table th, .cq-resTable-table td {
 	word-break: break-all;
 	max-width: 50em;
 	min-width: 10em;
@@ -205,7 +211,7 @@ table.cq-resTable-table {
 	min-height: 100%;
 	font-size: 999px;
 	text-align: right;
-	filter: alpha(opacity=0);
+	filter: alpha(opacity = 0);
 	opacity: 0;
 	outline: none;
 	background: white;
@@ -224,8 +230,8 @@ table.cq-resTable-table {
 
 .table th {
 	background-color: #1A0000 !important;
-	text-align:center;
-	vertical-align:middle;
+	text-align: center;
+	vertical-align: middle;
 }
 
 .cq-sepLine {
@@ -235,7 +241,7 @@ table.cq-resTable-table {
 }
 
 .cq-mainContainer {
-	padding: 0.5em 1.5em 0.5em 0.5em;
+	padding: 0em 1.5em 0.5em 0.5em;
 }
 
 ::-webkit-scrollbar {

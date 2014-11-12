@@ -264,7 +264,7 @@ public abstract class QueryResultPanel extends Panel {
 			public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
 				UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
 				um.storePreferences(prefs);
-				appendTableResizeJs(target);
+				appendTableJs(target);
 			}
 
 			@Override
@@ -275,7 +275,7 @@ public abstract class QueryResultPanel extends Panel {
 			@Override
 			protected void onAjaxEvent(AjaxRequestTarget target) {
 				super.onAjaxEvent(target);
-				appendTableResizeJs(target);
+				appendTableJs(target);
 			}
 		};
 		resultTable.add(pager);
@@ -283,9 +283,8 @@ public abstract class QueryResultPanel extends Panel {
 		return pager;
 	}
 
-	public static void appendTableResizeJs(AjaxRequestTarget target) {
-		// TODO ??
-		// target.appendJavaScript("resizeQueryResultTable();");
+	public static void appendTableJs(AjaxRequestTarget target) {
+		target.appendJavaScript("initRwdTable();");
 	}
 
 	public static void initTableResizeJs(IHeaderResponse response) {

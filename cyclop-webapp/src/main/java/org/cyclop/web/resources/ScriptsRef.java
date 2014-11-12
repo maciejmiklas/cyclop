@@ -27,14 +27,11 @@ public final class ScriptsRef {
 	public static final JavaScriptResourceReference COMMON = new JavaScriptResourceReference(ScriptsRef.class,
 			"js/common.js");
 
-	public static final JavaScriptResourceReference COL_RESIZABLE = new JavaScriptResourceReference(ScriptsRef.class,
-			"js/colResizable.js");
-
 	public static final JavaScriptResourceReference JQUERY_BROWSER = new JavaScriptResourceReference(ScriptsRef.class,
 			"js/jquery.browser.js");
 
 	public static final JavaScriptResourceReference RWD_TABLE = new JavaScriptResourceReference(ScriptsRef.class,
-			"js/rwd-table.js");
+			"rwd-table/js/rwd-table.js");
 
 	public static final JavaScriptResourceReference BOOTSTRAP = new JavaScriptResourceReference(ScriptsRef.class,
 			"bootstrap/js/bootstrap.js");

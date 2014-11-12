@@ -247,7 +247,6 @@
 
     ResponsiveTable.prototype.createStickyTableHeader = function() {
         var that = this;
-
         //clone table head
         that.$tableClone = that.$table.clone();
 
@@ -271,8 +270,6 @@
             that.$table.before(that.$stickyTableHeader);
         }
 
-        // var bodyRowsClone = $(tableClone).find('tbody').find('tr');
-
         // bind scroll and resize with updateStickyTableHeader
         $(window).bind('scroll resize', function(){
             $.proxy(that.updateStickyTableHeader(), that);
@@ -291,17 +288,16 @@
           scrollTop         = $(window).scrollTop() -1, //-1 to accomodate for top border
           maxTop            = that.$table.height() - that.$stickyTableHeader.height(),
           rubberBandOffset  = (scrollTop + $(window).height()) - $(document).height(),
-        //          useFixedSolution  = that.$table.parent().prop('scrollWidth') === that.$table.parent().width();
           useFixedSolution  = !that.iOS,
           navbarHeight      = 0;
 
         //Is there a fixed navbar?
         if($(that.options.fixedNavbar).length) {
             var $navbar = $(that.options.fixedNavbar).first();
-            navbarHeight = $navbar.height();
+            navbarHeight = $navbar.outerHeight(true);
             scrollTop = scrollTop + navbarHeight;
         }
-
+        
         var shouldBeVisible   = (scrollTop > offsetTop) && (scrollTop < offsetTop + that.$table.height());
 
         if(useFixedSolution) {
@@ -357,6 +353,7 @@
             if (shouldBeVisible) {
                 //show sticky table header (animate repositioning)
                 that.$stickyTableHeader.css({ 'visibility': 'visible' });
+                
                 that.$stickyTableHeader.animate({ 'top': top + 'px' }, animationDuration);
 
                 // hide original table head

@@ -17,7 +17,6 @@
 package org.cyclop.web.pages.parent;
 
 import static org.cyclop.web.resources.ScriptsRef.BOOTSTRAP;
-import static org.cyclop.web.resources.ScriptsRef.COL_RESIZABLE;
 import static org.cyclop.web.resources.ScriptsRef.COMMON;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_BROWSER;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_TOOLS;
@@ -43,7 +42,6 @@ public abstract class ParentPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(JQUERY_BROWSER));
 		response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
 		response.render(JavaScriptHeaderItem.forReference(COMMON));
-		response.render(JavaScriptHeaderItem.forReference(COL_RESIZABLE));
 		response.render(JavaScriptHeaderItem.forReference(RWD_TABLE));
 	}
 }

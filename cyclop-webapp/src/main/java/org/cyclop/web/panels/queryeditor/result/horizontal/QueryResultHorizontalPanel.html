@@ -22,17 +22,17 @@
 			<wicket:container wicket:id="rowsPager"></wicket:container>
 			<thead>
 				<tr>
-					<th>Partition Key</th>
+					<th data-priority="1">Partition Key</th>
 					<wicket:container wicket:id="columnList">
-						<th wicket:id="columnName"></th>
+						<th wicket:id="columnName" data-priority="1"></th>
 					</wicket:container>
 				</tr>
 			</thead>
 			<tbody>
 				<tr wicket:id="rowsList">
 					<wicket:container wicket:id="cols">
-						<th wicket:id="rowKey"></th>
-						<td  wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container>
+						<th wicket:id="rowKey" data-priority="1"></th>
+						<td wicket:id="columnValueList" data-priority="1"><wicket:container wicket:id="columnValue"></wicket:container>
 						</td>
 					</wicket:container>
 				</tr>

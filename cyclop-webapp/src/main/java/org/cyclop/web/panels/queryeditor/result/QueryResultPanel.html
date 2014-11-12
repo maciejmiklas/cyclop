@@ -18,12 +18,14 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
 	<wicket:panel>
-		<div wicket:id="resultTable" class="table-responsive">
-			<table class="cq-resTable-table cq-data-table table table-striped table-bordered table-hover table-small-font">
-				<wicket:child />
-			</table>
-		</div>
-		<div wicket:id="cqlResultText"></div>
+		<section>
+			<div wicket:id="resultTable" class="table-responsive cq-queryResultTable">
+				<table class="cq-resTable-table cq-data-table table table-striped table-bordered table-hover">
+					<wicket:child />
+				</table>
+			</div>
+			<div wicket:id="cqlResultText"></div>
+		</section>
 	</wicket:panel>
 </body>
 

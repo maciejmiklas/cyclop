@@ -18,37 +18,38 @@
 <html xmlns:wicket="http://wicket.apache.org">
 
 <body>
-<wicket:extend>
-	<ul class="nav nav-tabs cq-nav">
-		<li class="active"><a href="#tabQueryEditor" data-toggle="tab" class="cq-tabQueryEditor">Editor</a></li>
-		<li><a href="#tabHistory" data-toggle="tab" class="cq-tabHistory">History</a></li>
-		<li><a href="#tabQueryImport" data-toggle="tab" class="cq-tabQueryImport">Import</a></li>
-		<!--<li><a href="#tabFavourites" data-toggle="tab" class="cq-tabFavourites">Favourites</a></li>-->
-		<li><a href="#tabAbout" data-toggle="tab" class="cq-tabAbout">About</a></li>
-	</ul>
-	<div class="cq-nav-logout">
-		<a href="#" wicket:id="logOut" class="btn btn-sm btn-success" title="Log out"><span
-				class="glyphicon glyphicon-off"></span></a>
-	</div>
-	<div class="tab-content">
-		<div class="tab-pane fade active in" id="tabQueryEditor">
-			<div wicket:id="queryEditorPanel"></div>
-		</div>
-		<div class="tab-pane fade" id="tabHistory">
-			<div wicket:id="historyPanel"></div>
-		</div>
-		<!--<div class="tab-pane fade" id="tabFavourites">-->
-		<!--<div wicket:id="favouritesPanel"></div>-->
-		<!--</div>-->
-		<div class="tab-pane fade" id="tabQueryImport">
-			<div wicket:id="queryImportPanel"></div>
-		</div>
-		<div class="tab-pane fade" id="tabAbout">
-			<div wicket:id="aboutPanel"></div>
-		</div>
-	</div>
+	<wicket:extend>
+		<section class="cq-nav">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#tabQueryEditor" data-toggle="tab" class="cq-tabQueryEditor">Editor</a></li>
+				<li><a href="#tabHistory" data-toggle="tab" class="cq-tabHistory">History</a></li>
+				<li><a href="#tabQueryImport" data-toggle="tab" class="cq-tabQueryImport">Import</a></li>
+				<!--<li><a href="#tabFavourites" data-toggle="tab" class="cq-tabFavourites">Favourites</a></li>-->
+				<li><a href="#tabAbout" data-toggle="tab" class="cq-tabAbout">About</a></li>
+			</ul>
+			<!-- 
+			<a href="#" wicket:id="logOut" class="btn btn-sm btn-success" title="Log out"><span
+				class="glyphicon glyphicon-off"></span></a> -->
+		</section>
 
-</wicket:extend>
+		<div class="tab-content cq-tab-content">
+			<div class="tab-pane fade active in" id="tabQueryEditor">
+				<div wicket:id="queryEditorPanel"></div>
+			</div>
+			<div class="tab-pane fade" id="tabHistory">
+				<div wicket:id="historyPanel"></div>
+			</div>
+			<!--<div class="tab-pane fade" id="tabFavourites">-->
+			<!--<div wicket:id="favouritesPanel"></div>-->
+			<!--</div>-->
+			<div class="tab-pane fade" id="tabQueryImport">
+				<div wicket:id="queryImportPanel"></div>
+			</div>
+			<div class="tab-pane fade" id="tabAbout">
+				<div wicket:id="aboutPanel"></div>
+			</div>
+		</div>
+	</wicket:extend>
 </body>
 
 </html>
