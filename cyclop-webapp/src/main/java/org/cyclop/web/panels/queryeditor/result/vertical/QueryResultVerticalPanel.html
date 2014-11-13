@@ -19,7 +19,9 @@
 <body>
 	<table>
 		<wicket:extend>
-			<wicket:container wicket:id="rowsPager"></wicket:container>
+			<div class="cq-resTable-nav">
+				<wicket:container wicket:id="rowsPager"></wicket:container>
+			</div>
 			<thead>
 				<tr>
 					<th></th>
@@ -31,10 +33,9 @@
 
 			<tbody class="cq-thHorizontal">
 				<wicket:container wicket:id="columnList">
-					<tr wicket:id="columnListRow" >
+					<tr wicket:id="columnListRow">
 						<th wicket:id="columnName"></th>
-						<td  wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container>
-						</td>
+						<td wicket:id="columnValueList"><wicket:container wicket:id="columnValue"></wicket:container></td>
 					</tr>
 				</wicket:container>
 			</tbody>

@@ -14,7 +14,6 @@
         var that = this;
 
         this.options = options;
-        this.$tableWrapper = null; //defined later in wrapTable
         this.$tableScrollWrapper = $(element); //defined later in wrapTable
         this.$table = $(element).find('table');
 
@@ -62,7 +61,7 @@
         // -------------------------
       
         //wrap table
-        this.wrapTable();
+        //this.wrapTable();
 
         //create toolbar with buttons
         this.createButtonToolbar();
@@ -107,13 +106,8 @@
         fixedNavbar: '.navbar-fixed-top',  // Is there a fixed navbar? The stickyTableHeader needs to know about it!
         addDisplayAllBtn: true, // should it have a display-all button?
         addFocusBtn: true,  // should it have a focus button?
-        focusBtnIcon: 'glyphicon glyphicon-screenshot'
-    };
-
-    // Wrap table
-    ResponsiveTable.prototype.wrapTable = function() {        
-        this.$tableScrollWrapper.wrap('<div class="table-wrapper"/>');
-        this.$tableWrapper = this.$tableScrollWrapper.parent();
+        focusBtnIcon: 'glyphicon glyphicon-screenshot',
+        navButtons: 'nav-buttons'	
     };
 
     // Create toolbar with buttons
@@ -179,7 +173,12 @@
         this.$btnToolbar.append(this.$dropdownGroup);
 
         // add toolbar above table
-        this.$tableScrollWrapper.before(this.$btnToolbar);
+        var $existingNavButtons = this.$tableScrollWrapper.find("." + this.options.navButtons);
+        if($existingNavButtons){
+        	$existingNavButtons.append(this.$btnToolbar);
+        } else {
+        	this.$tableScrollWrapper.before(this.$btnToolbar);
+        }
     };
 
     ResponsiveTable.prototype.clearAllFocus = function() {
@@ -265,7 +264,7 @@
 
         //insert sticky table header
         if($('html').hasClass('lt-ie10')){
-            that.$tableWrapper.prepend(that.$stickyTableHeader);
+            that.$tableScrollWrapper.prepend(that.$stickyTableHeader);
         } else {
             that.$table.before(that.$stickyTableHeader);
         }
@@ -424,7 +423,7 @@
                     var $checkbox = $(this),
                         val = $checkbox.val(),
                         //all cells under the column, including the header and its clone
-                        $cells = that.$tableWrapper.find('#' + val + ', #' + val + '-clone, [data-columns~='+ val +']');
+                        $cells = that.$tableScrollWrapper.find('#' + val + ', #' + val + '-clone, [data-columns~='+ val +']');
 
                     //if display-all is on - save state and carry on
                     if(that.$table.hasClass('display-all')){

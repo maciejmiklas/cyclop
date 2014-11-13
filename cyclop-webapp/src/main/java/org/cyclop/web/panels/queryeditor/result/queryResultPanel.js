@@ -17,7 +17,8 @@
 function initRwdTable() {
 	$('.cq-queryResultTable').responsiveTable({
 		fixedNavbar : '.cq-nav',
-		addFocusBtn : false
+		addFocusBtn : false,
+		navButtons: 'cq-resTable-nav'
 	});
 }
 

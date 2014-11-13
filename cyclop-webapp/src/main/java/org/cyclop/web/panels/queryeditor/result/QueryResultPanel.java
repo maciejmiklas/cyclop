@@ -90,6 +90,7 @@ public abstract class QueryResultPanel extends Panel {
 
 	public QueryResultPanel(String id, IModel<CqlQueryResult> model, Optional<RowDataProvider> rowDataProvider) {
 		super(id, model);
+		setRenderBodyOnly(true);
 		this.queryResultModel = model;
 		this.rowDataProvider = rowDataProvider.orElse(new RowDataProvider());
 		columnsModel = new ColumnsModel();

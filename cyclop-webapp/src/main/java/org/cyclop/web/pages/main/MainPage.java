@@ -57,7 +57,7 @@ public class MainPage extends ParentPage {
 		// initFavouritesTab();
 		initQueryImportTab(tabSupport);
 		initAboutTab(tabSupport);
-		initLogout();
+		// initLogout();
 	}
 
 	private void initLogout() {
