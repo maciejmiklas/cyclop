@@ -30,7 +30,9 @@ function initStaticTab(tabLinkCssRef, removeContentArray) {
 }
 
 function removeContent(removeContentArray) {
+	console.log("#removeContent");
 	removeContentArray.map(function (item) {
 		$(item).empty();
+		console.log("#item: "+item);
 	});
 }

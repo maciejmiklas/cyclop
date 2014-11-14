@@ -16,12 +16,13 @@
  */
 function initRwdTable() {
 	$('.cq-queryResultTable').responsiveTable({
-		fixedNavbar : '.cq-nav',
+		fixedNavbar : '.navbar-fixed-top',
 		addFocusBtn : false,
 		navButtons: 'cq-resTable-nav'
 	});
 }
 
 $(function() {
-	initRwdTable();
+	// TODO
+//	initRwdTable();
 });

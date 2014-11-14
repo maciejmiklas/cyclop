@@ -27,7 +27,6 @@ import javax.inject.Inject;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
@@ -284,12 +283,14 @@ public abstract class QueryResultPanel extends Panel {
 		return pager;
 	}
 
+	// TODO
 	public static void appendTableJs(AjaxRequestTarget target) {
-		target.appendJavaScript("initRwdTable();");
+		// target.appendJavaScript("initRwdTable();");
 	}
 
+	// TODO
 	public static void initTableResizeJs(IHeaderResponse response) {
-		response.render(JavaScriptHeaderItem.forReference(JS_REF));
+		// response.render(JavaScriptHeaderItem.forReference(JS_REF));
 	}
 
 	public final class RowDataProvider extends IterableDataProvider<Row> {

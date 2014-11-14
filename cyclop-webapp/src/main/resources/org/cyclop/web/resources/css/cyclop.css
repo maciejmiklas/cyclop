@@ -88,38 +88,6 @@ pre.cq-cqlHelp-syntax {
 }
 
 /* ### Nav Bar ### */
-.cq-nav {
-	border-bottom: 1px solid #424221 !important;
-	padding-top: 0.5em;
-	margin-right: 1em;
-	position: fixed;
-	z-index: 1030;
-	background-color: #060606;
-	width: 100%;
-}
-
-.cq-tab-content {
-	padding-top: 3.5em;
-}
-
-.cq-nav ul li a:hover {
-	color: #ffffff !important;
-	background-color: #2a9fd6 !important;
-	border: 1px solid #282828 !important;
-	border-bottom-color: transparent !important;
-}
-
-.cq-nav ul li a {
-	padding: 5px 10px !important;
-}
-
-.cq-nav-position {
-	float: left;
-}
-
-.cq-nav-logout {
-	float: right;
-}
 
 /* ### Notification Popup ### */
 .cq-notify {

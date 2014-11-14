@@ -28,7 +28,6 @@ import org.cyclop.common.AppConfig;
 import org.cyclop.web.pages.authenticate.AuthenticationPage;
 import org.cyclop.web.pages.parent.ParentPage;
 import org.cyclop.web.panels.about.AboutPanel;
-import org.cyclop.web.panels.favourites.FavouritesPanel;
 import org.cyclop.web.panels.history.HistoryPanel;
 import org.cyclop.web.panels.queryeditor.QueryEditorPanel;
 import org.cyclop.web.panels.queryimport.QueryImportPanel;
@@ -54,10 +53,9 @@ public class MainPage extends ParentPage {
 		tabSupport = new TabHelper();
 		initQueryEditorTab(params, tabSupport);
 		initHistoryTab(tabSupport);
-		// initFavouritesTab();
 		initQueryImportTab(tabSupport);
 		initAboutTab(tabSupport);
-		// initLogout();
+		initLogout();
 	}
 
 	private void initLogout() {
@@ -81,16 +79,6 @@ public class MainPage extends ParentPage {
 		QueryEditorPanel queryEditorPanel = new QueryEditorPanel("queryEditorPanel", params);
 		add(queryEditorPanel);
 		tabSupport.registerSaticTab(".cq-tabQueryEditor");
-	}
-
-	void initFavouritesTab() {
-		if (!AppConfig.get().favourites.enabled) {
-			add(new Label("favouritesPanel", "Favourites are disabled in application-configuration"));
-			return;
-		}
-		FavouritesPanel favourites = new FavouritesPanel("favouritesPanel");
-		add(favourites);
-		tabSupport.registerReloadableTab(favourites, ".cq-tabFavourites");
 	}
 
 	private void initAboutTab(TabHelper tabSupport) {
