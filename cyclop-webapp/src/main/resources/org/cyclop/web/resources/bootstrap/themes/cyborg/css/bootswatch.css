@@ -151,7 +151,7 @@ footer p {
 	margin-bottom: 2em
 }
 
-@media ( max-width :767px) {
+@media (max-width: 767px) {
 	.section-preview .image img {
 		width: 100%
 	}
@@ -165,16 +165,19 @@ footer p {
 	text-decoration: none
 }
 
-@media ( max-width :767px) {
+@media (max-width: 767px) {
 	.splash {
 		padding-top: 4em
 	}
+
 	.splash .logo {
 		width: 100px
 	}
+
 	.splash h1 {
 		font-size: 2em
 	}
+
 	#banner {
 		margin-bottom: 2em;
 		text-align: center
