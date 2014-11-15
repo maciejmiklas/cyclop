@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 function initRwdTable() {
-	$('.cq-queryResultTable').responsiveTable({
+	$('.cq-resTable-parent').responsiveTable({
 		fixedNavbar : '.navbar-fixed-top',
 		addFocusBtn : false,
 		navButtons: 'cq-resTable-nav'

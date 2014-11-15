@@ -58,7 +58,7 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 		if (lastPage > currentPage || !iterator.hasMoreData()) {
 			size = iterator.readSize();
 
-			// user is not on page 2 and click on next page - 3. Pager will show
+			// user is now on page 2 and clicks on next page - 3. Pager will show
 			// link for page 4, but not for
 			// page 5 - this will first happen when user clicks on page 4. In
 			// order to show link for only

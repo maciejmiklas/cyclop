@@ -42,7 +42,7 @@ public class SwitchableQueryResultPanel extends Panel {
 
 		queryResultPanel = type == ViewType.HORIZONTAL ? new QueryResultHorizontalPanel("queryResultPanel", model)
 				: new QueryResultVerticalPanel("queryResultPanel", model);
-
+		queryResultPanel.setRenderBodyOnly(true);
 		add(queryResultPanel);
 	}
 

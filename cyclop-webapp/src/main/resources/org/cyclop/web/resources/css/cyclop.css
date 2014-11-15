@@ -55,4 +55,31 @@
 	background-color: #529749;
 }
 
+/* ### Query Results Table - General ### */
+ul.cq-resTable-collectionList {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.cq-resTable-collectionList {
+	padding: 1.2em;
+	max-height: 10em;
+	overflow: auto;
+}
+
+table.cq-resTable-table {
+	width: auto !important;
+}
+
+.cq-resTable-table th, .cq-resTable-table td {
+	word-break: break-all;
+	max-width: 50em;
+	min-width: 10em;
+	width: auto;
+}
+
+/* ### Query Results Table - Vertical Orientation ### */
+
+/* ### Query Results Table - Horizontal Orientation ### */
+
 /* ### General ### */
