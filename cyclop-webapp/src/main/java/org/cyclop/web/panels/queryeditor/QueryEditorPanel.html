@@ -18,44 +18,42 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-	<div wicket:id="buttons" class="cq-nav-position"></div>
-	<div class="cq-sepLine"></div>
-	<div class="container-fluid">
-		<div class="row">
+	<div class="row cq-queryEditor-nav">
+		<div wicket:id="buttons"></div>
+	</div>
+	<div class="row">
+		<div class="col-lg-9">
 			<form wicket:id="editorForm">
-				<div wicket:id="queryEditorPanel" class="col-lg-9"></div>
+				<div wicket:id="queryEditorPanel"></div>
 			</form>
-			<div wicket:id="cqlInfoHint" class="col-lg-3"></div>
+		</div>
+		<div wicket:id="cqlInfoHint" class="col-lg-3"></div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div wicket:id="queryError"></div>
 		</div>
 	</div>
-	<div wicket:id="queryError"></div>
-	<div class="cq-sepLine"></div>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="cq-clqHelp-expandSupportBody col-lg-9">
-				<div wicket:id="cqlHelp">CQL Help goes here</div>
-			</div>
-			<div class="col-lg-3"></div>
+	<div class="row">
+		<div class="cq-clqHelp-expandSupportBody col-lg-9">
+			<div wicket:id="cqlHelp">CQL Help goes here</div>
 		</div>
+		<div class="col-lg-3"></div>
 	</div>
+	<div class="row cq-queryProgressBar" style="display:none">
+		<div class="col-lg-4"></div>
+		<div class="col-lg-4">
+			<br><br><br><br>
 
-	<div class="container-fluid">
-		<div class="row cq-queryProgressBar" style="display:none">
-			<div class="col-lg-3"></div>
-			<div class="col-lg-5">
-				<br><br><br><br>
-
-				<div class="progress progress-striped active">
-					<div class="progress-bar" style="width: 100%"></div>
-				</div>
+			<div class="progress progress-striped active">
+				<div class="progress-bar" style="width: 100%"></div>
 			</div>
 		</div>
+		<div class="col-lg-4"></div>
 	</div>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-lg-12">
-				<div wicket:id="queryResultPanel"></div>
-			</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<div wicket:id="queryResultPanel"></div>
 		</div>
 	</div>
 </wicket:panel>
