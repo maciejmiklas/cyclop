@@ -16,18 +16,18 @@
 -->
 <i>Syntax:</i>
 <pre class="cq-cqlHelp-syntax">
-&lt;create-index-stmt&gt; ::= <span class="cq-hint-cqlKeyword">CREATE</span> ( <span
-		class="cq-hint-cqlKeyword">CUSTOM</span> )? <span class="cq-hint-cqlKeyword">INDEX</span> ( <span
-		class="cq-hint-cqlKeyword">IF NOT EXISTS</span> )? &lt;<span
-		class="cq-hint-cqlColumn">identifier</span>&gt;? <span class="cq-hint-cqlKeyword">ON</span> &lt;<span
-		class="cq-hint-cqlTable">tablename</span>&gt; '(' &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; ')'
-                                        ( <span class="cq-hint-cqlKeyword">USING</span> &lt;string&gt; )?
+&lt;create-index-stmt&gt; ::= <span class="cq-queryEl-keyword">CREATE</span> ( <span
+		class="cq-queryEl-keyword">CUSTOM</span> )? <span class="cq-queryEl-keyword">INDEX</span> ( <span
+		class="cq-queryEl-keyword">IF NOT EXISTS</span> )? &lt;<span
+		class="cq-queryEl-column">identifier</span>&gt;? <span class="cq-queryEl-keyword">ON</span> &lt;<span
+		class="cq-queryEl-table">tablename</span>&gt; '(' &lt;<span class="cq-queryEl-column">identifier</span>&gt; ')'
+                                        ( <span class="cq-queryEl-keyword">USING</span> &lt;string&gt; )?
 </pre>
 <i>Sample:</i>
 <pre class="cq-cqlHelp-sample">
-<span class="cq-hint-cqlKeyword">CREATE INDEX</span> userIndex ON <span class="cq-hint-cqlTable">NerdMovies</span> (user);
-<span class="cq-hint-cqlKeyword">CREATE INDEX ON</span> <span class="cq-hint-cqlTable">Mutants</span> (<span
-		class="cq-hint-cqlColumn">abilityId</span>);
-<span class="cq-hint-cqlKeyword">CREATE CUSTOM INDEX ON</span> <span class="cq-hint-cqlTable">users</span> (<span
-		class="cq-hint-cqlColumn">email</span>) <span class="cq-hint-cqlKeyword">USING</span> 'path.to.the.IndexClass';
+<span class="cq-queryEl-keyword">CREATE INDEX</span> userIndex ON <span class="cq-queryEl-table">NerdMovies</span> (user);
+<span class="cq-queryEl-keyword">CREATE INDEX ON</span> <span class="cq-queryEl-table">Mutants</span> (<span
+		class="cq-queryEl-column">abilityId</span>);
+<span class="cq-queryEl-keyword">CREATE CUSTOM INDEX ON</span> <span class="cq-queryEl-table">users</span> (<span
+		class="cq-queryEl-column">email</span>) <span class="cq-queryEl-keyword">USING</span> 'path.to.the.IndexClass';
 </pre>

@@ -17,30 +17,30 @@
 <i>Syntax:</i>
 <pre class="cq-cqlHelp-syntax">
 
-&lt;alter-table-stmt&gt; ::= <span class="cq-hint-cqlKeyword">ALTER</span> (<span class="cq-hint-cqlKeyword">TABLE</span> | <span
-		class="cq-hint-cqlKeyword">COLUMNFAMILY</span>) &lt;<span class="cq-hint-cqlTable">tablename</span>&gt; &lt;instruction&gt;
+&lt;alter-table-stmt&gt; ::= <span class="cq-queryEl-keyword">ALTER</span> (<span class="cq-queryEl-keyword">TABLE</span> | <span
+		class="cq-queryEl-keyword">COLUMNFAMILY</span>) &lt;<span class="cq-queryEl-table">tablename</span>&gt; &lt;instruction&gt;
 
-&lt;instruction&gt; ::= <span class="cq-hint-cqlKeyword">ALTER</span> &lt;<span
-		class="cq-hint-cqlColumn">identifier</span>&gt; <span class="cq-hint-cqlKeyword">TYPE</span> &lt;<span
-		class="cq-hint-cqlType">type</span>&gt;
-                | <span class="cq-hint-cqlKeyword">ADD</span> &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; &lt;<span
-		class="cq-hint-cqlType">type</span>&gt;
-                | <span class="cq-hint-cqlKeyword">DROP</span> &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt;
-                | <span class="cq-hint-cqlKeyword">WITH</span> &lt;option&gt; ( <span
-		class="cq-hint-cqlKeyword">AND</span> &lt;option&gt; )*
+&lt;instruction&gt; ::= <span class="cq-queryEl-keyword">ALTER</span> &lt;<span
+		class="cq-queryEl-column">identifier</span>&gt; <span class="cq-queryEl-keyword">TYPE</span> &lt;<span
+		class="cq-queryEl-type">type</span>&gt;
+                | <span class="cq-queryEl-keyword">ADD</span> &lt;<span class="cq-queryEl-column">identifier</span>&gt; &lt;<span
+		class="cq-queryEl-type">type</span>&gt;
+                | <span class="cq-queryEl-keyword">DROP</span> &lt;<span class="cq-queryEl-column">identifier</span>&gt;
+                | <span class="cq-queryEl-keyword">WITH</span> &lt;option&gt; ( <span
+		class="cq-queryEl-keyword">AND</span> &lt;option&gt; )*
 
 </pre>
 <i>Sample:</i>
 <pre class="cq-cqlHelp-sample">
 
-<span class="cq-hint-cqlKeyword">ALTER TABLE</span> <span class="cq-hint-cqlTable">addamsFamily</span>
-<span class="cq-hint-cqlKeyword">ALTER</span> <span class="cq-hint-cqlTable">lastKnownLocation</span> <span
-		class="cq-hint-cqlKeyword">TYPE</span> <span class="cq-hint-cqlType">uuid</span>;
+<span class="cq-queryEl-keyword">ALTER TABLE</span> <span class="cq-queryEl-table">addamsFamily</span>
+<span class="cq-queryEl-keyword">ALTER</span> <span class="cq-queryEl-table">lastKnownLocation</span> <span
+		class="cq-queryEl-keyword">TYPE</span> <span class="cq-queryEl-type">uuid</span>;
 
-<span class="cq-hint-cqlKeyword">ALTER TABLE</span> <span class="cq-hint-cqlTable">addamsFamily</span>
-<span class="cq-hint-cqlKeyword">ADD</span> <span class="cq-hint-cqlColumn">gravesite</span> <span class="cq-hint-cqlType">varchar</span>;
+<span class="cq-queryEl-keyword">ALTER TABLE</span> <span class="cq-queryEl-table">addamsFamily</span>
+<span class="cq-queryEl-keyword">ADD</span> <span class="cq-queryEl-column">gravesite</span> <span class="cq-queryEl-type">varchar</span>;
 
-<span class="cq-hint-cqlKeyword">ALTER TABLE</span> <span class="cq-hint-cqlTable">addamsFamily</span>
-<span class="cq-hint-cqlKeyword">WITH</span> <span class="cq-hint-cqlColumn">comment</span> = 'A most excellent and useful column family'
-<span class="cq-hint-cqlKeyword">AND</span> <span class="cq-hint-cqlColumn">read_repair_chance</span> = 0.2;
+<span class="cq-queryEl-keyword">ALTER TABLE</span> <span class="cq-queryEl-table">addamsFamily</span>
+<span class="cq-queryEl-keyword">WITH</span> <span class="cq-queryEl-column">comment</span> = 'A most excellent and useful column family'
+<span class="cq-queryEl-keyword">AND</span> <span class="cq-queryEl-column">read_repair_chance</span> = 0.2;
 </pre>

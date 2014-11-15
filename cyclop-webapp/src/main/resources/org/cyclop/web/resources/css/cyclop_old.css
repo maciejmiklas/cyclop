@@ -1,43 +1,43 @@
 /* ### CQL Info Hint and CQL Help ### */
-.cq-hint-cqlKeyword {
+.cq-queryEl-keyword {
 	color: #9933cc;
 }
 
-.cq-hint-cqlType {
+.cq-queryEl-type {
 	color: #ba38cb;
 }
 
-.cq-hint-cqlColumn {
+.cq-queryEl-column {
 	color: #3278b3;
 }
 
-.cq-hint-cqlKeyspace {
+.cq-queryEl-kyespace {
 	color: #1b5aff;
 }
 
-.cq-hint-cqlIndex {
+.cq-queryEl-index {
 	color: #000fff;
 }
 
-.cq-hint-cqlNotSupported {
+.cq-queryEl-notSupported {
 	color: #444444;
 }
 
-.cq-hint-cqlKeywordValue {
+.cq-queryEl-value {
 	color: #444444;
 }
 
-.cq-hint-cqlTable {
+.cq-queryEl-table {
 	color: #0a39b3;
 }
 
-.cq-hint-bodyA {
+.cq-queryHint-bodyA {
 	color: #ffffff;
 	background-color: #77b300;
 	border-color: #809a00;
 }
 
-.cq-hint-bodyA hr {
+.cq-queryHint-bodyA hr {
 	border-top-color: #6a8000;
 }
 
@@ -52,7 +52,7 @@
 }
 
 /* ### CQL Info Hint ### */
-.cq-cqlInfo-hint {
+.cq-queryHint-dialog {
 	position: absolute;
 	z-index: 2000;
 	margin: 0 1em 0 0;

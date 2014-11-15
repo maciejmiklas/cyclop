@@ -35,7 +35,7 @@ $(function () {
 	$(".cq-ExecuteQueryButton").click(function () {
 		$(".cq-queryProgressBar").show();
 		$(".cq-queryResult").hide();
-		$(".cq-cqlInfo-hint").hide();
+		$(".cq-queryHint-dialog").hide();
 		$(".cq-ExecuteQueryButton").addClass("disabled");
 	});
 

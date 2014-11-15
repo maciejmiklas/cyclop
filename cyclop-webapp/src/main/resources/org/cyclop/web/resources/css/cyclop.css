@@ -1,12 +1,58 @@
+/* ### Query Keywords ### */
+.cq-queryEl-keyword {
+	color: #9933cc;
+}
+
+.cq-queryEl-type {
+	color: #ba38cb;
+}
+
+.cq-queryEl-column {
+	color: #3278b3;
+}
+
+.cq-queryEl-kyespace {
+	color: #1b5aff;
+}
+
+.cq-queryEl-index {
+	color: #000fff;
+}
+
+.cq-queryEl-notSupported {
+	color: #444444;
+}
+
+.cq-queryEl-value {
+	color: #444444;
+}
+
+.cq-queryEl-table {
+	color: #0a39b3;
+}
+
 /* Query editor */
 .cq-queryEditor-nav {
-	padding-bottom: 0.5em;
+	padding-bottom: 1em;
 }
+
 /* ### Navigation ### */
 .cq-nav-bar {
 	padding-top: 1em;
 }
 
+/* ### Query Hint ### */
+.cq-queryHint-dialog {
+	position: absolute;
+	z-index: 2000;
+}
+
+.cq-queryHint-bodyA {
+	background-color: #008619;
+}
+
+.cq-hint-bodyB {
+	background-color: #529749;
+}
+
 /* ### General ### */
-
-

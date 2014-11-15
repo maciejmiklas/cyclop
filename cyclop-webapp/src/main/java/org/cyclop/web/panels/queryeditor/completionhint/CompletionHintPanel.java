@@ -72,8 +72,8 @@ public class CompletionHintPanel extends Panel {
 		@Override
 		public String getObject() {
 
-			String css = lastCssSwitch ? "cq-cqlInfo-hint alert alert-dismissable cq-hint-bodyA"
-					: "cq-cqlInfo-hint alert alert-dismissable cq-hint-bodyB";
+			String css = lastCssSwitch ? "cq-queryHint-dialog alert alert-dismissable cq-queryHint-bodyA"
+					: "cq-queryHint-dialog alert alert-dismissable cq-hint-bodyB";
 			return css;
 		}
 
@@ -102,25 +102,25 @@ public class CompletionHintPanel extends Panel {
 				String css;
 				switch (part.type()) {
 				case KEYWORD:
-					css = "cq-hint-cqlKeyword";
+					css = "cq-queryEl-keyword";
 					break;
 				case TABLE:
-					css = "cq-hint-cqlTable";
+					css = "cq-queryEl-table";
 					break;
 				case COLUMN:
-					css = "cq-hint-cqlColumn";
+					css = "cq-queryEl-column";
 					break;
 				case KEYSPACE:
-					css = "cq-hint-cqlKeyspace";
+					css = "cq-queryEl-kyespace";
 					break;
 				case INDEX:
-					css = "cq-hint-cqlIndex";
+					css = "cq-queryEl-index";
 					break;
 				case NOT_SUPPORTED:
-					css = "cq-hint-cqlNotSupported";
+					css = "cq-queryEl-notSupported";
 					break;
 				case KEYWORD_VALUE:
-					css = "cq-hint-cqlKeywordValue";
+					css = "cq-queryEl-value";
 					break;
 
 				default:

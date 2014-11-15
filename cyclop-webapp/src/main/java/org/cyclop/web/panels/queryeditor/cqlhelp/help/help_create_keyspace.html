@@ -16,15 +16,15 @@
 -->
 <i>Syntax:</i>
 <pre class="cq-cqlHelp-syntax">
-&lt;create-keyspace-stmt&gt; ::= <span class="cq-hint-cqlKeyword">CREATE KEYSPACE</span> (<span
-		class="cq-hint-cqlKeyword">IF NOT EXISTS</span>)? &lt;<span class="cq-hint-cqlKeyspace">identifie</span>r&gt; WITH &lt;properties&gt;
+&lt;create-keyspace-stmt&gt; ::= <span class="cq-queryEl-keyword">CREATE KEYSPACE</span> (<span
+		class="cq-queryEl-keyword">IF NOT EXISTS</span>)? &lt;<span class="cq-queryEl-kyespace">identifie</span>r&gt; WITH &lt;properties&gt;
 </pre>
 <i>Sample:</i>
 <pre class="cq-cqlHelp-sample">
-<span class="cq-hint-cqlKeyword">CREATE KEYSPACE</span> <span class="cq-hint-cqlKeyspace">Excelsior</span>
-           <span class="cq-hint-cqlKeyword">WITH</span> <span class="cq-hint-cqlColumn">replication</span> = {'class': 'SimpleStrategy', 'replication_factor' : 3};
+<span class="cq-queryEl-keyword">CREATE KEYSPACE</span> <span class="cq-queryEl-kyespace">Excelsior</span>
+           <span class="cq-queryEl-keyword">WITH</span> <span class="cq-queryEl-column">replication</span> = {'class': 'SimpleStrategy', 'replication_factor' : 3};
 
-<span class="cq-hint-cqlKeyword">CREATE KEYSPACE</span> <span class="cq-hint-cqlKeyspace">Excalibur</span>
-           <span class="cq-hint-cqlKeyword">WITH</span> <span class="cq-hint-cqlColumn">replication</span> = {'class': 'NetworkTopologyStrategy', 'DC1' : 1, 'DC2' : 3}
-            <span class="cq-hint-cqlKeyword">AND</span> <span class="cq-hint-cqlColumn">durable_writes</span> = false;
+<span class="cq-queryEl-keyword">CREATE KEYSPACE</span> <span class="cq-queryEl-kyespace">Excalibur</span>
+           <span class="cq-queryEl-keyword">WITH</span> <span class="cq-queryEl-column">replication</span> = {'class': 'NetworkTopologyStrategy', 'DC1' : 1, 'DC2' : 3}
+            <span class="cq-queryEl-keyword">AND</span> <span class="cq-queryEl-column">durable_writes</span> = false;
 </pre>

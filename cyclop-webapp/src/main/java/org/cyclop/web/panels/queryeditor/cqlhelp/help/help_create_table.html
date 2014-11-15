@@ -16,50 +16,50 @@
 -->
 <i>Syntax:</i>
 <pre class="cq-cqlHelp-syntax">
-&lt;create-table-stmt&gt; ::= <span class="cq-hint-cqlKeyword">CREATE</span> ( <span
-		class="cq-hint-cqlKeyword">TABLE</span> | <span class="cq-hint-cqlKeyword">COLUMNFAMILY</span> ) ( <span
-		class="cq-hint-cqlKeyword">IF NOT EXISTS</span> )? &lt;<span class="cq-hint-cqlTable">tablename</span>&gt;
+&lt;create-table-stmt&gt; ::= <span class="cq-queryEl-keyword">CREATE</span> ( <span
+		class="cq-queryEl-keyword">TABLE</span> | <span class="cq-queryEl-keyword">COLUMNFAMILY</span> ) ( <span
+		class="cq-queryEl-keyword">IF NOT EXISTS</span> )? &lt;<span class="cq-queryEl-table">tablename</span>&gt;
                           '(' &lt;definition&gt; ( ',' &lt;definition&gt; )* ')'
-                          ( <span class="cq-hint-cqlKeyword">WITH</span> &lt;option&gt; ( <span
-		class="cq-hint-cqlKeyword">AND</span> &lt;option&gt;)* )?
+                          ( <span class="cq-queryEl-keyword">WITH</span> &lt;option&gt; ( <span
+		class="cq-queryEl-keyword">AND</span> &lt;option&gt;)* )?
 
-&lt;column-definition&gt; ::= &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; &lt;<span class="cq-hint-cqlType">type</span>&gt; ( <span
-		class="cq-hint-cqlKeyword">PRIMARY KEY</span> )?
-                      | <span class="cq-hint-cqlKeyword">PRIMARY KEY</span> '(' &lt;<span class="cq-hint-cqlColumn">partition-key</span>&gt; ( ',' &lt;<span
-		class="cq-hint-cqlColumn">identifier</span>&gt; )* ')'
+&lt;column-definition&gt; ::= &lt;<span class="cq-queryEl-column">identifier</span>&gt; &lt;<span class="cq-queryEl-type">type</span>&gt; ( <span
+		class="cq-queryEl-keyword">PRIMARY KEY</span> )?
+                      | <span class="cq-queryEl-keyword">PRIMARY KEY</span> '(' &lt;<span class="cq-queryEl-column">partition-key</span>&gt; ( ',' &lt;<span
+		class="cq-queryEl-column">identifier</span>&gt; )* ')'
 
-&lt;partition-key&gt; ::= &lt;<span class="cq-hint-cqlColumn">partition-key</span>&gt;
-                  | '(' &lt;<span class="cq-hint-cqlColumn">partition-key</span>&gt; ( ',' &lt;<span
-		class="cq-hint-cqlColumn">identifier</span>&gt; )* ')'
+&lt;partition-key&gt; ::= &lt;<span class="cq-queryEl-column">partition-key</span>&gt;
+                  | '(' &lt;<span class="cq-queryEl-column">partition-key</span>&gt; ( ',' &lt;<span
+		class="cq-queryEl-column">identifier</span>&gt; )* ')'
 
-&lt;partition-key&gt; ::= &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt;
-                  | '(' &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; (',' &lt;<span
-		class="cq-hint-cqlColumn">identifier</span>&gt; )* ')'
+&lt;partition-key&gt; ::= &lt;<span class="cq-queryEl-column">identifier</span>&gt;
+                  | '(' &lt;<span class="cq-queryEl-column">identifier</span>&gt; (',' &lt;<span
+		class="cq-queryEl-column">identifier</span>&gt; )* ')'
 
 &lt;option&gt; ::= &lt;property&gt;
-           | <span class="cq-hint-cqlKeyword">COMPACT STORAGE</span>
-           | <span class="cq-hint-cqlKeyword">CLUSTERING ORDER</span>
+           | <span class="cq-queryEl-keyword">COMPACT STORAGE</span>
+           | <span class="cq-queryEl-keyword">CLUSTERING ORDER</span>
 </pre>
 <i>Sample:</i>
 <pre class="cq-cqlHelp-sample">
-<span class="cq-hint-cqlKeyword">CREATE TABLE</span> <span class="cq-hint-cqlTable">monkeySpecies</span> (
-    <span class="cq-hint-cqlColumn">species</span> <span class="cq-hint-cqlType">text</span> <span
-		class="cq-hint-cqlKeyword">PRIMARY KEY</span>,
-    <span class="cq-hint-cqlColumn">common_name</span> <span class="cq-hint-cqlType">text</span>,
-    <span class="cq-hint-cqlColumn">population</span> <span class="cq-hint-cqlType">varint</span>,
-    <span class="cq-hint-cqlColumn">average_size</span> <span class="cq-hint-cqlType">int</span>
-) <span class="cq-hint-cqlKeyword">WITH</span> <span class="cq-hint-cqlColumn">comment</span>='Important biological records'
-   <span class="cq-hint-cqlKeyword">AND</span> <span class="cq-hint-cqlColumn">read_repair_chance</span> = 1.0;
+<span class="cq-queryEl-keyword">CREATE TABLE</span> <span class="cq-queryEl-table">monkeySpecies</span> (
+    <span class="cq-queryEl-column">species</span> <span class="cq-queryEl-type">text</span> <span
+		class="cq-queryEl-keyword">PRIMARY KEY</span>,
+    <span class="cq-queryEl-column">common_name</span> <span class="cq-queryEl-type">text</span>,
+    <span class="cq-queryEl-column">population</span> <span class="cq-queryEl-type">varint</span>,
+    <span class="cq-queryEl-column">average_size</span> <span class="cq-queryEl-type">int</span>
+) <span class="cq-queryEl-keyword">WITH</span> <span class="cq-queryEl-column">comment</span>='Important biological records'
+   <span class="cq-queryEl-keyword">AND</span> <span class="cq-queryEl-column">read_repair_chance</span> = 1.0;
 
-<span class="cq-hint-cqlKeyword">CREATE TABLE</span> <span class="cq-hint-cqlTable">timeline</span> (
-    <span class="cq-hint-cqlColumn">userid</span> <span class="cq-hint-cqlType">uuid</span>,
-    <span class="cq-hint-cqlColumn">posted_month</span> <span class="cq-hint-cqlType">int</span>,
-    <span class="cq-hint-cqlColumn">posted_time</span> <span class="cq-hint-cqlType">uuid</span>,
-    <span class="cq-hint-cqlColumn">body</span> <span class="cq-hint-cqlType">text</span>,
-    <span class="cq-hint-cqlColumn">posted_by</span> <span class="cq-hint-cqlType">text</span>,
-    <span class="cq-hint-cqlKeyword">PRIMARY KEY</span> (<span class="cq-hint-cqlColumn">userid</span>, <span
-		class="cq-hint-cqlColumn">posted_month</span>, <span class="cq-hint-cqlColumn">posted_time</span>)
-) <span class="cq-hint-cqlKeyword">WITH</span> <span class="cq-hint-cqlColumn">compaction</span> = { 'class' : 'LeveledCompactionStrategy' };
+<span class="cq-queryEl-keyword">CREATE TABLE</span> <span class="cq-queryEl-table">timeline</span> (
+    <span class="cq-queryEl-column">userid</span> <span class="cq-queryEl-type">uuid</span>,
+    <span class="cq-queryEl-column">posted_month</span> <span class="cq-queryEl-type">int</span>,
+    <span class="cq-queryEl-column">posted_time</span> <span class="cq-queryEl-type">uuid</span>,
+    <span class="cq-queryEl-column">body</span> <span class="cq-queryEl-type">text</span>,
+    <span class="cq-queryEl-column">posted_by</span> <span class="cq-queryEl-type">text</span>,
+    <span class="cq-queryEl-keyword">PRIMARY KEY</span> (<span class="cq-queryEl-column">userid</span>, <span
+		class="cq-queryEl-column">posted_month</span>, <span class="cq-queryEl-column">posted_time</span>)
+) <span class="cq-queryEl-keyword">WITH</span> <span class="cq-queryEl-column">compaction</span> = { 'class' : 'LeveledCompactionStrategy' };
 </pre>
 
 

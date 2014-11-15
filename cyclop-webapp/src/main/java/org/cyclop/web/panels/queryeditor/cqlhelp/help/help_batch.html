@@ -16,31 +16,31 @@
 -->
 <i>Syntax:</i>
 <pre class="cq-cqlHelp-syntax">
-&lt;batch-stmt&gt; ::= <span class="cq-hint-cqlKeyword">BEGIN BATCH</span>
-                 ( <span class="cq-hint-cqlKeyword">USING</span> &lt;option&gt; ( <span
-		class="cq-hint-cqlKeyword">AND</span> &lt;option&gt; )* )?
+&lt;batch-stmt&gt; ::= <span class="cq-queryEl-keyword">BEGIN BATCH</span>
+                 ( <span class="cq-queryEl-keyword">USING</span> &lt;option&gt; ( <span
+		class="cq-queryEl-keyword">AND</span> &lt;option&gt; )* )?
                     &lt;modification-stmt&gt; ( ';' &lt;modification-stmt&gt; )*
-                 <span class="cq-hint-cqlKeyword">APPLY BATCH</span>
+                 <span class="cq-queryEl-keyword">APPLY BATCH</span>
 
 &lt;modification-stmt&gt; ::= &lt;insert-stmt&gt;
                       | &lt;update-stmt&gt;
                       | &lt;delete-stmt&gt;
 
-&lt;option&gt; ::= <span class="cq-hint-cqlKeyword">TIMESTAMP</span> &lt;integer&gt;
+&lt;option&gt; ::= <span class="cq-queryEl-keyword">TIMESTAMP</span> &lt;integer&gt;
 </pre>
 <i>Sample:</i>
 <pre class="cq-cqlHelp-sample">
-<span class="cq-hint-cqlKeyword">BEGIN BATCH</span>
-  <span class="cq-hint-cqlKeyword">INSERT INTO</span> <span class="cq-hint-cqlTable">users</span> (<span
-		class="cq-hint-cqlColumn">userid</span>, <span class="cq-hint-cqlColumn">password</span>, <span
-		class="cq-hint-cqlColumn">name</span>) <span class="cq-hint-cqlKeyword">VALUES</span> ('user2', 'ch@ngem3b', 'second user');
-  <span class="cq-hint-cqlKeyword">UPDATE</span> <span class="cq-hint-cqlTable">users</span> <span
-		class="cq-hint-cqlKeyword">SET</span> <span class="cq-hint-cqlColumn">password</span> = 'ps22dhds' <span
-		class="cq-hint-cqlKeyword">WHERE</span> <span class="cq-hint-cqlColumn">userid</span> = 'user3';
-  <span class="cq-hint-cqlKeyword">INSERT INTO</span> <span class="cq-hint-cqlTable">users</span> (userid, password) <span
-		class="cq-hint-cqlKeyword">VALUES</span> ('user4', 'ch@ngem3c');
-  <span class="cq-hint-cqlKeyword">DELETE</span> <span class="cq-hint-cqlColumn">name</span> <span
-		class="cq-hint-cqlKeyword">FROM</span> <span class="cq-hint-cqlTable">users</span> <span
-		class="cq-hint-cqlKeyword">WHERE</span> <span class="cq-hint-cqlColumn">userid</span> = 'user1';
-<span class="cq-hint-cqlKeyword">APPLY BATCH</span>;
+<span class="cq-queryEl-keyword">BEGIN BATCH</span>
+  <span class="cq-queryEl-keyword">INSERT INTO</span> <span class="cq-queryEl-table">users</span> (<span
+		class="cq-queryEl-column">userid</span>, <span class="cq-queryEl-column">password</span>, <span
+		class="cq-queryEl-column">name</span>) <span class="cq-queryEl-keyword">VALUES</span> ('user2', 'ch@ngem3b', 'second user');
+  <span class="cq-queryEl-keyword">UPDATE</span> <span class="cq-queryEl-table">users</span> <span
+		class="cq-queryEl-keyword">SET</span> <span class="cq-queryEl-column">password</span> = 'ps22dhds' <span
+		class="cq-queryEl-keyword">WHERE</span> <span class="cq-queryEl-column">userid</span> = 'user3';
+  <span class="cq-queryEl-keyword">INSERT INTO</span> <span class="cq-queryEl-table">users</span> (userid, password) <span
+		class="cq-queryEl-keyword">VALUES</span> ('user4', 'ch@ngem3c');
+  <span class="cq-queryEl-keyword">DELETE</span> <span class="cq-queryEl-column">name</span> <span
+		class="cq-queryEl-keyword">FROM</span> <span class="cq-queryEl-table">users</span> <span
+		class="cq-queryEl-keyword">WHERE</span> <span class="cq-queryEl-column">userid</span> = 'user1';
+<span class="cq-queryEl-keyword">APPLY BATCH</span>;
 </pre>

@@ -16,26 +16,26 @@
 -->
 <i>Syntax:</i>
 <pre class="cq-cqlHelp-syntax">
-&lt;delete-stmt&gt; ::= <span class="cq-hint-cqlKeyword">DELETE</span> ( &lt;selection&gt; ( ',' &lt;selection&gt; )* )?
-                  <span class="cq-hint-cqlKeyword">FROM</span> &lt;<span class="cq-hint-cqlTable">tablename&gt</span>;
-                  ( <span class="cq-hint-cqlKeyword">USING TIMESTAMP</span> &lt;integer&gt;)?
-                  <span class="cq-hint-cqlKeyword">WHERE</span> &lt;where-clause&gt;
+&lt;delete-stmt&gt; ::= <span class="cq-queryEl-keyword">DELETE</span> ( &lt;selection&gt; ( ',' &lt;selection&gt; )* )?
+                  <span class="cq-queryEl-keyword">FROM</span> &lt;<span class="cq-queryEl-table">tablename&gt</span>;
+                  ( <span class="cq-queryEl-keyword">USING TIMESTAMP</span> &lt;integer&gt;)?
+                  <span class="cq-queryEl-keyword">WHERE</span> &lt;where-clause&gt;
 
-&lt;selection&gt; ::= &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; ( '[' &lt;term&gt; ']' )?
+&lt;selection&gt; ::= &lt;<span class="cq-queryEl-column">identifier</span>&gt; ( '[' &lt;term&gt; ']' )?
 
-&lt;where-clause&gt; ::= &lt;relation&gt; ( <span class="cq-hint-cqlKeyword">AND</span> &lt;relation&gt; )*
+&lt;where-clause&gt; ::= &lt;relation&gt; ( <span class="cq-queryEl-keyword">AND</span> &lt;relation&gt; )*
 
-&lt;relation&gt; ::= &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; '=' &lt;term&gt;
-             | &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; <span class="cq-hint-cqlKeyword">IN</span> '(' ( &lt;term&gt; ( ',' &lt;term&gt; )* )? ')'
-             | &lt;<span class="cq-hint-cqlColumn">identifier</span>&gt; <span class="cq-hint-cqlKeyword">IN</span> '?'
+&lt;relation&gt; ::= &lt;<span class="cq-queryEl-column">identifier</span>&gt; '=' &lt;term&gt;
+             | &lt;<span class="cq-queryEl-column">identifier</span>&gt; <span class="cq-queryEl-keyword">IN</span> '(' ( &lt;term&gt; ( ',' &lt;term&gt; )* )? ')'
+             | &lt;<span class="cq-queryEl-column">identifier</span>&gt; <span class="cq-queryEl-keyword">IN</span> '?'
 </pre>
 <i>Sample:</i>
 <pre class="cq-cqlHelp-sample">
-<span class="cq-hint-cqlKeyword">DELETE FROM</span> <span class="cq-hint-cqlTable">NerdMovies</span> <span
-		class="cq-hint-cqlKeyword">USING TIMESTAMP</span> 1240003134 <span class="cq-hint-cqlKeyword">WHERE</span> movie = 'Serenity';
+<span class="cq-queryEl-keyword">DELETE FROM</span> <span class="cq-queryEl-table">NerdMovies</span> <span
+		class="cq-queryEl-keyword">USING TIMESTAMP</span> 1240003134 <span class="cq-queryEl-keyword">WHERE</span> movie = 'Serenity';
 
-<span class="cq-hint-cqlKeyword">DELETE</span> <span class="cq-hint-cqlColumn">phone</span> <span
-		class="cq-hint-cqlKeyword">FROM</span> <span class="cq-hint-cqlTable">Users</span> <span
-		class="cq-hint-cqlKeyword">WHERE</span> <span class="cq-hint-cqlColumn">userid</span> <span
-		class="cq-hint-cqlKeyword">IN</span> (C73DE1D3-AF08-40F3-B124-3FF3E5109F22, B70DE1D0-9908-4AE3-BE34-5573E5B09F14);
+<span class="cq-queryEl-keyword">DELETE</span> <span class="cq-queryEl-column">phone</span> <span
+		class="cq-queryEl-keyword">FROM</span> <span class="cq-queryEl-table">Users</span> <span
+		class="cq-queryEl-keyword">WHERE</span> <span class="cq-queryEl-column">userid</span> <span
+		class="cq-queryEl-keyword">IN</span> (C73DE1D3-AF08-40F3-B124-3FF3E5109F22, B70DE1D0-9908-4AE3-BE34-5573E5B09F14);
 </pre>
