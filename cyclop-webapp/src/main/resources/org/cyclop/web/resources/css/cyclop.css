@@ -41,6 +41,11 @@
 	padding-top: 1em;
 }
 
+/* Fix for position of log-out button, so that it keeps distance from right side of the screen. */
+.cq-navbar-right{
+	margin-right: 0 !important;
+}
+
 /* ### Query Hint ### */
 .cq-queryHint-dialog {
 	position: absolute;
@@ -67,10 +72,6 @@ ul.cq-resTable-collectionList {
 	overflow: auto;
 }
 
-table.cq-resTable-table {
-	width: auto !important;
-}
-
 .cq-resTable-table th, .cq-resTable-table td {
 	word-break: break-all;
 	max-width: 50em;
@@ -82,4 +83,20 @@ table.cq-resTable-table {
 
 /* ### Query Results Table - Horizontal Orientation ### */
 
+/* Remove highlighting on Partition Key */
+table.cq-resTable-table>tbody>tr:hover>:first-child {
+	background: #2E3338 !important;
+}
+
+/* Partition Key column should have the same color a table header */
+table.cq-resTable-table>tbody>tr>th {
+	background: #2E3338 !important;
+}
+
 /* ### General ### */
+.cq-sepLine {
+	padding: 0;
+	margin: 0.5em 0 0.5em 0;
+	border-bottom: 1px solid #424221;
+}
+
