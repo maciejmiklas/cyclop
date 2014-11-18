@@ -27,6 +27,7 @@ import javax.inject.Inject;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.navigation.paging.IPageableItems;
@@ -64,7 +65,7 @@ public abstract class QueryResultPanel extends Panel {
 
 	private final ColumnsModel columnsModel;
 
-	private Label cqlResultText;
+	private WebMarkupContainer cqlResultTextPanel;
 
 	private final CqlResultTextModel cqlResultTextModel;
 
@@ -116,7 +117,7 @@ public abstract class QueryResultPanel extends Panel {
 	protected final void onInitialize() {
 		super.onInitialize();
 		rowDataProvider.setElementsLimit(config.queryEditor.rowsLimit);
-		cqlResultText = initClqReslutText();
+		cqlResultTextPanel = initClqReslutText();
 		resultTable = initResultsTable();
 
 		IModel<CqlRowMetadata> metadataModel = PropertyModel.of(queryResultModel, "rowMetadata");
@@ -144,7 +145,7 @@ public abstract class QueryResultPanel extends Panel {
 	protected final void onModelChanged() {
 		super.onModelChanged();
 		if (queryResultModel.getObject().isEmpty()) {
-			showCqlResultText("Query executed successfully, result is empty");
+			showCqlResultText("Result is empty");
 		} else {
 			showResultsTable();
 		}
@@ -160,7 +161,7 @@ public abstract class QueryResultPanel extends Panel {
 
 	private void showCqlResultText(String text) {
 		hideResultsTable();
-		cqlResultText.setVisible(true);
+		cqlResultTextPanel.setVisible(true);
 		cqlResultTextModel.setObject(text);
 	}
 
@@ -177,7 +178,7 @@ public abstract class QueryResultPanel extends Panel {
 	}
 
 	private void hideCqlResultText() {
-		cqlResultText.setVisible(false);
+		cqlResultTextPanel.setVisible(false);
 		cqlResultTextModel.clean();
 	}
 
@@ -189,12 +190,21 @@ public abstract class QueryResultPanel extends Panel {
 		return resultTable;
 	}
 
-	private Label initClqReslutText() {
+	private WebMarkupContainer initClqReslutText() {
+		WebMarkupContainer cqlResultDialogRow = new WebMarkupContainer("cqlResultDialogRow");
+		cqlResultDialogRow.setVisible(false);
+		cqlResultDialogRow.setOutputMarkupPlaceholderTag(true);
+		add(cqlResultDialogRow);
+
+		WebMarkupContainer cqlResultDialogCol = new WebMarkupContainer("cqlResultDialogCol");
+		cqlResultDialogRow.add(cqlResultDialogCol);
+
+		WebMarkupContainer cqlResultTextPanel = new WebMarkupContainer("cqlResultTextPanel");
+		cqlResultDialogCol.add(cqlResultTextPanel);
+
 		Label cqlResultText = new Label("cqlResultText", cqlResultTextModel);
-		cqlResultText.setVisible(false);
-		cqlResultText.setOutputMarkupPlaceholderTag(true);
-		add(cqlResultText);
-		return cqlResultText;
+		cqlResultTextPanel.add(cqlResultText);
+		return cqlResultDialogRow;
 	}
 
 	protected final static class CqlResultTextModel implements IModel<String> {
@@ -264,7 +274,7 @@ public abstract class QueryResultPanel extends Panel {
 			public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
 				UserPreferences prefs = um.readPreferences().setPagerEditorItems(newItemsPerPage);
 				um.storePreferences(prefs);
-				appendTableJs(target);
+				appendQeuryResultJs(target);
 			}
 
 			@Override
@@ -275,7 +285,7 @@ public abstract class QueryResultPanel extends Panel {
 			@Override
 			protected void onAjaxEvent(AjaxRequestTarget target) {
 				super.onAjaxEvent(target);
-				appendTableJs(target);
+				appendQeuryResultJs(target);
 			}
 		};
 		resultTable.add(pager);
@@ -283,14 +293,15 @@ public abstract class QueryResultPanel extends Panel {
 		return pager;
 	}
 
-	// TODO
-	public static void appendTableJs(AjaxRequestTarget target) {
-		// target.appendJavaScript("initRwdTable();");
+	public static void appendQeuryResultJs(AjaxRequestTarget target) {
+		target.appendJavaScript("initQueryResult();");
 	}
 
-	// TODO
-	public static void initTableResizeJs(IHeaderResponse response) {
-		// response.render(JavaScriptHeaderItem.forReference(JS_REF));
+	/**
+	 * We cannot append java script in #renderHead() on this panel, because it will be replaced by ajax.
+	 */
+	public static void initQeuryResultJs(IHeaderResponse response) {
+		response.render(JavaScriptHeaderItem.forReference(JS_REF));
 	}
 
 	public final class RowDataProvider extends IterableDataProvider<Row> {

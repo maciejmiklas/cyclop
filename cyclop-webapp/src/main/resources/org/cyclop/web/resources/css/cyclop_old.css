@@ -138,7 +138,7 @@ pre.cq-cqlHelp-syntax {
 }
 
 /* ### CQL Text Editor ### */
-.cq-cqledit-props {
+.cq-cqledit {
 	resize: vertical;
 }
 

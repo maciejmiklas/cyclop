@@ -1,4 +1,6 @@
+/* #################################################################### */
 /* ### Query Keywords ### */
+/* #################################################################### */
 .cq-queryEl-keyword {
 	color: #9933cc;
 }
@@ -31,12 +33,20 @@
 	color: #0a39b3;
 }
 
-/* Query editor */
+/* #################################################################### */
+/* ### Query editor ### */
+/* #################################################################### */
 .cq-queryEditor-nav {
 	padding-bottom: 1em;
 }
 
+.cq-cqledit {
+	resize: vertical;
+}
+
+/* #################################################################### */
 /* ### Navigation ### */
+/* #################################################################### */
 .cq-nav-bar {
 	padding-top: 1em;
 }
@@ -46,7 +56,9 @@
 	margin-right: 0 !important;
 }
 
+/* #################################################################### */
 /* ### Query Hint ### */
+/* #################################################################### */
 .cq-queryHint-dialog {
 	position: absolute;
 	z-index: 2000;
@@ -60,7 +72,9 @@
 	background-color: #529749;
 }
 
+/* #################################################################### */
 /* ### Query Results Table - General ### */
+/* #################################################################### */
 ul.cq-resTable-collectionList {
 	padding-top: 0;
 	padding-bottom: 0;
@@ -79,11 +93,15 @@ ul.cq-resTable-collectionList {
 	width: auto;
 }
 
+/* #################################################################### */
 /* ### Query Results Table - Vertical Orientation ### */
+/* #################################################################### */
 
+/* #################################################################### */
 /* ### Query Results Table - Horizontal Orientation ### */
+/* #################################################################### */
 
-/* Remove highlighting on Partition Key */
+/* Remove column highlighting on Partition Key */
 table.cq-resTable-table>tbody>tr:hover>:first-child {
 	background: #2E3338 !important;
 }
@@ -93,10 +111,29 @@ table.cq-resTable-table>tbody>tr>th {
 	background: #2E3338 !important;
 }
 
+/* #################################################################### */
+/* ### Notification Popup ### */
+/* #################################################################### */
+.cq-notify {
+	left: 120%;
+	overflow: hidden;
+	position: fixed;
+	width: 50%;
+	opacity: 0.9;
+	z-index: 10000;
+	transition: left 0.3s ease-out 0s;
+	bottom: 10px;
+}
+
+.cq-notify.in {
+	left: 50%;
+}
+
+/* #################################################################### */
 /* ### General ### */
+/* #################################################################### */
 .cq-sepLine {
 	padding: 0;
 	margin: 0.5em 0 0.5em 0;
 	border-bottom: 1px solid #424221;
 }
-

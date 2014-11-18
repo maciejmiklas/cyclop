@@ -23,6 +23,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.authroles.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -76,7 +77,9 @@ public class QueryEditorPanel extends Panel {
 
 	private final IModel<CqlQueryResult> queryResultModel;
 
-	private Label queryErrorLabel;
+	private WebMarkupContainer queryErrorDialog;
+	
+	private IModel<String> queryErrorModel = Model.of("");
 
 	private SwitchableQueryResultPanel queryResultPanel;
 
@@ -112,7 +115,7 @@ public class QueryEditorPanel extends Panel {
 
 		queryResultExport = new QueryResultExport(this, exporter);
 
-		queryErrorLabel = initQueryErrorLabel();
+		queryErrorDialog = initQueryErrorDialog();
 	}
 
 	private Form<String> initForm(EditorPanel queryEditorPanel) {
@@ -125,15 +128,24 @@ public class QueryEditorPanel extends Panel {
 	@Override
 	public void renderHead(IHeaderResponse response) {
 		super.renderHead(response);
-		QueryResultPanel.initTableResizeJs(response);
+		QueryResultPanel.initQeuryResultJs(response);
 	}
 
-	private Label initQueryErrorLabel() {
-		Label queryErrorLabel = new Label("queryError", Model.of(""));
-		add(queryErrorLabel);
-		queryErrorLabel.setVisible(false);
-		queryErrorLabel.setOutputMarkupPlaceholderTag(true);
-		return queryErrorLabel;
+	private WebMarkupContainer initQueryErrorDialog() {
+		WebMarkupContainer queryErrorDialogRow = new WebMarkupContainer("queryErrorDialogRow");
+		queryErrorDialogRow.setVisible(false);
+		queryErrorDialogRow.setOutputMarkupPlaceholderTag(true);
+		add(queryErrorDialogRow);
+
+		WebMarkupContainer queryErrorDialogCol = new WebMarkupContainer("queryErrorDialogCol");
+		queryErrorDialogRow.add(queryErrorDialogCol);
+
+		WebMarkupContainer queryErrorTextPanel = new WebMarkupContainer("queryErrorTextPanel");
+		queryErrorDialogCol.add(queryErrorTextPanel);
+
+		Label queryErrorText = new Label("queryErrorText", queryErrorModel);
+		queryErrorTextPanel.add(queryErrorText);
+		return queryErrorDialogRow;
 	}
 
 	private EditorPanel initQueryEditorPanel(PageParameters params) {
@@ -183,19 +195,19 @@ public class QueryEditorPanel extends Panel {
 			queryResultModel.setObject(queryResult);
 			queryResultPanel.modelChanged();
 			queryResultPanel.setVisible(true);
-			queryErrorLabel.setVisible(false);
+			queryErrorDialog.setVisible(false);
 		} catch (Exception e) {
-			queryErrorLabel.setVisible(true);
+			queryErrorDialog.setVisible(true);
 			queryResultPanel.setVisible(false);
-			queryErrorLabel.setDefaultModelObject(e.getMessage());
+			queryErrorModel.setObject(e.getMessage());
 		} finally {
 			queryRunning = false;
 		}
 		editorPanel.resetCompletion();
 
-		target.add(queryErrorLabel);
+		target.add(queryErrorDialog);
 		target.add(queryResultPanel);
-		QueryResultPanel.appendTableJs(target);
+		QueryResultPanel.appendQeuryResultJs(target);
 	}
 
 	private final class CompletionChangeHelp implements CompletionChangeListener {

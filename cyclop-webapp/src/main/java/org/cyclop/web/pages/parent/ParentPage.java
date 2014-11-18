@@ -18,10 +18,10 @@ package org.cyclop.web.pages.parent;
 
 import static org.cyclop.web.resources.ScriptsRef.BOOTSTRAP;
 import static org.cyclop.web.resources.ScriptsRef.COMMON;
+import static org.cyclop.web.resources.ScriptsRef.FLOAT_THEAD;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_BROWSER;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_TOOLS;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_UI;
-import static org.cyclop.web.resources.ScriptsRef.RWD_TABLE;
 
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -42,6 +42,6 @@ public abstract class ParentPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(JQUERY_BROWSER));
 		response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
 		response.render(JavaScriptHeaderItem.forReference(COMMON));
-		response.render(JavaScriptHeaderItem.forReference(RWD_TABLE));
+		response.render(JavaScriptHeaderItem.forReference(FLOAT_THEAD));
 	}
 }

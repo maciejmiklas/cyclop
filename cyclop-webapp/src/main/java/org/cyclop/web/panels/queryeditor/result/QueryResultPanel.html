@@ -21,18 +21,30 @@
 		<div wicket:id="resultTable">
 			<div class="row">
 				<div class="col-lg-12 cq-resTable-nav">
-					<wicket:container wicket:id="rowsPager"/>
+					<wicket:container wicket:id="rowsPager" />
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-lg-12 table-responsive cq-resTable-parent">
+				<div class="col-lg-12 table-responsive cq-resTable-container">
 					<table class="cq-resTable-table table table-striped table-bordered table-hover">
-						<wicket:child/>
+						<wicket:child />
 					</table>
 				</div>
 			</div>
 		</div>
-		<div wicket:id="cqlResultText"></div>
+		<div wicket:id="cqlResultDialogRow" class="row">
+			<div class="col-lg-3" />
+			<div  wicket:id="cqlResultDialogCol" class="col-lg-6">
+				<div wicket:id="cqlResultTextPanel" class="panel panel-success">
+					<div class="panel-heading">
+						<h3 class="panel-title">Query Executed Successfully</h3>
+					</div>
+					<div class="panel-body" wicket:id="cqlResultText"></div>
+				</div>
+			</div>
+			<div class="col-lg-3" />
+		</div>
+
 	</wicket:panel>
 </body>
 

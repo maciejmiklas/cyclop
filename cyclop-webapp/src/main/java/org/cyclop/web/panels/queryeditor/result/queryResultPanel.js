@@ -14,15 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-function initRwdTable() {
-	$('.cq-resTable-parent').responsiveTable({
-		fixedNavbar : '.navbar-fixed-top',
-		addFocusBtn : false,
-		navButtons: 'cq-resTable-nav'
-	});
+function initQueryResult() {
+	initFloatingHead();
+	initDoubleScrollbars();
 }
 
 $(function() {
-	// TODO
-//	initRwdTable();
+	initQueryResult();
 });
+
+function initFloatingHead() {
+	var $table = $('.cq-resTable-table');
+	$table.floatThead({
+		zIndex : 99,
+		scrollingTop : function() {
+			return $(".navbar-fixed-top").height();
+		}
+	});
+}
+
+function initDoubleScrollbars() {
+	$tableCont = $('.cq-resTable-table');
+	// http://stackoverflow.com/questions/3934271/horizontal-scrollbar-on-top-and-bottom-of-table
+	//http://jsfiddle.net/TBnqw/1/
+}

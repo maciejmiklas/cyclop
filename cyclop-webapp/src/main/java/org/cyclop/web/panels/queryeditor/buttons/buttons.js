@@ -41,7 +41,7 @@ $(function () {
 
 	// cq-BookmarkButton
 	$(".cq-BookmarkButton").click(function () {
-			var $area = $(".cq-cqledit-props");
+			var $area = $(".cq-cqledit");
 			var text = $area.val();
 			if (text.isEmpty()) {
 				notify("CQL Editor is empty - there is nothing to bookmark ;)");

@@ -57,7 +57,7 @@ public class SwitchableQueryResultPanel extends Panel {
 		add(queryResultPanel);
 
 		target.add(this);
-		QueryResultPanel.appendTableJs(target);
+		QueryResultPanel.appendQeuryResultJs(target);
 	}
 
 	@Override

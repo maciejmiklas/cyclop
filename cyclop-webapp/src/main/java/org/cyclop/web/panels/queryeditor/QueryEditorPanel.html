@@ -28,17 +28,25 @@
 				</form>
 			</div>
 			<div wicket:id="cqlInfoHint" class="col-lg-3"></div>
-		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				<div wicket:id="queryError"></div>
+		</div>	
+		<div wicket:id="queryErrorDialogRow" class="row">
+			<div class="col-lg-3" />
+			<div  wicket:id="queryErrorDialogCol" class="col-lg-6">
+			<br/><br/>
+				<div wicket:id="queryErrorTextPanel" class="panel panel-danger">
+					<div class="panel-heading">
+						<h3 class="panel-title">Query Execution Error</h3>
+					</div>
+					<div class="panel-body" wicket:id="queryErrorText"></div>
+				</div>
 			</div>
-		</div>
+			<div class="col-lg-3" />
+		</div>				
 		<div class="row">
 			<div class="cq-clqHelp-expandSupportBody col-lg-9">
 				<div wicket:id="cqlHelp">CQL Help goes here</div>
 			</div>
-			<div class="col-lg-3"></div>
+			<div class="col-lg-3" />
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
@@ -46,13 +54,13 @@
 			</div>
 		</div>
 		<div class="row cq-queryProgressBar" style="display: none">
-			<div class="col-lg-4"></div>
+			<div class="col-lg-4" />
 			<div class="col-lg-4">
 				<div class="progress progress-striped active">
 					<div class="progress-bar" style="width: 100%"></div>
 				</div>
 			</div>
-			<div class="col-lg-4"></div>
+			<div class="col-lg-4" />
 		</div>
 
 		<div wicket:id="queryResultPanel"></div>

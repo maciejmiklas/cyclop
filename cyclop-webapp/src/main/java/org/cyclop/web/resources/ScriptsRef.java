@@ -30,12 +30,12 @@ public final class ScriptsRef {
 	public static final JavaScriptResourceReference JQUERY_BROWSER = new JavaScriptResourceReference(ScriptsRef.class,
 			"js/jquery.browser.js");
 
-	public static final JavaScriptResourceReference RWD_TABLE = new JavaScriptResourceReference(ScriptsRef.class,
-			"rwd-table/js/rwd-table.js");
-
 	public static final JavaScriptResourceReference BOOTSTRAP = new JavaScriptResourceReference(ScriptsRef.class,
 			"bootstrap/js/bootstrap.js");
 
 	public static final JavaScriptResourceReference JQUERY_UI = new JavaScriptResourceReference(ScriptsRef.class,
 			"jqueryui/js/jquery-ui.js");
+
+	public static final JavaScriptResourceReference FLOAT_THEAD = new JavaScriptResourceReference(ScriptsRef.class,
+			"js/jquery.floatThead.js");
 }
