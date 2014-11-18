@@ -34,7 +34,5 @@ function initFloatingHead() {
 }
 
 function initDoubleScrollbars() {
-	$tableCont = $('.cq-resTable-table');
-	// http://stackoverflow.com/questions/3934271/horizontal-scrollbar-on-top-and-bottom-of-table
-	//http://jsfiddle.net/TBnqw/1/
+   $('.cq-resTable-container').doubleScroll();
 }

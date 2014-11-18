@@ -93,6 +93,10 @@ ul.cq-resTable-collectionList {
 	width: auto;
 }
 
+.cq-resTable-nav>ul{
+	margin: 10px 0 0 0 !important;
+}
+
 /* #################################################################### */
 /* ### Query Results Table - Vertical Orientation ### */
 /* #################################################################### */

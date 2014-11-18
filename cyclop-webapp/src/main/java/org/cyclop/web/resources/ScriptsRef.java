@@ -38,4 +38,8 @@ public final class ScriptsRef {
 
 	public static final JavaScriptResourceReference FLOAT_THEAD = new JavaScriptResourceReference(ScriptsRef.class,
 			"js/jquery.floatThead.js");
+
+	public static final JavaScriptResourceReference DOUBLE_SCROLL = new JavaScriptResourceReference(ScriptsRef.class,
+			"js/jquery.doubleScroll.js");
+
 }
