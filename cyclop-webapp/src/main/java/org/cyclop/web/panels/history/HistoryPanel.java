@@ -259,8 +259,8 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 			filterValue = StringUtils.trimToNull(filterValue);
 			if (filterValue != null) {
 				String[] kwordsArr = filterValue.split(" ");
-				Optional<FilterResult<QueryEntry>> filterResult = searchService.filter(historyToUpdate,
-						FILTER_ACCESSOR, kwordsArr);
+				Optional<FilterResult<QueryEntry>> filterResult = searchService.filter(historyToUpdate, FILTER_ACCESSOR,
+						kwordsArr);
 				if (filterResult.isPresent()) {
 					FilterResult<QueryEntry> res = filterResult.get();
 					historyToUpdate = res.result;

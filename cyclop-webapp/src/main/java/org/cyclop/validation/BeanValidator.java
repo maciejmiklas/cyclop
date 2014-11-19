@@ -32,6 +32,7 @@ import javax.validation.metadata.ConstraintDescriptor;
 import org.cyclop.model.Synchronizable;
 import org.cyclop.model.exception.BeanValidationException;
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
 /** @author Maciej Miklas */
@@ -124,12 +125,27 @@ public final class BeanValidator {
 		}
 
 		@Override
+		public <U> U unwrap(Class<U> type) {
+			return null;
+		}
+
+		@Override
 		public Object getInvalidValue() {
 			return null;
 		}
 
 		@Override
 		public Object getLeafBean() {
+			return null;
+		}
+
+		@Override
+		public Object[] getExecutableParameters() {
+			return new Object[0];
+		}
+
+		@Override
+		public Object getExecutableReturnValue() {
 			return null;
 		}
 
@@ -163,5 +179,10 @@ public final class BeanValidator {
 			return message;
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return Objects.toStringHelper(this).add("objMap", objMap).toString();
 	}
 }
