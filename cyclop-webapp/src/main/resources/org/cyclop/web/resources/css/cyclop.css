@@ -48,13 +48,17 @@
 /* ### Navigation ### */
 /* #################################################################### */
 .cq-nav-bar {
-	padding-top: 1em;
+	padding-top: 0.4em;
 }
 
 /* Fix for position of log-out button, so that it keeps distance from right side of the screen. */
 .cq-navbar-right{
 	margin-right: 0 !important;
 }
+
+/* thinner nav bar */
+.navbar-nav > li > a {padding-top:8px !important; padding-bottom:8px !important;}
+.navbar {min-height:32px !important}
 
 /* #################################################################### */
 /* ### Query Hint ### */
