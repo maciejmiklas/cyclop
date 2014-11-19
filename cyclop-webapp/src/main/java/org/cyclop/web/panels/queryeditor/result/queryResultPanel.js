@@ -16,7 +16,6 @@
  */
 function initQueryResult() {
 	initFloatingHead();
-	initDoubleScrollbars();
 }
 
 $(function() {
@@ -31,8 +30,4 @@ function initFloatingHead() {
 			return $(".navbar-fixed-top").height();
 		}
 	});
-}
-
-function initDoubleScrollbars() {
-   $('.cq-resTable-container').doubleScroll();
 }

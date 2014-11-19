@@ -18,7 +18,6 @@ package org.cyclop.web.pages.parent;
 
 import static org.cyclop.web.resources.ScriptsRef.BOOTSTRAP;
 import static org.cyclop.web.resources.ScriptsRef.COMMON;
-import static org.cyclop.web.resources.ScriptsRef.DOUBLE_SCROLL;
 import static org.cyclop.web.resources.ScriptsRef.FLOAT_THEAD;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_BROWSER;
 import static org.cyclop.web.resources.ScriptsRef.JQUERY_TOOLS;
@@ -44,6 +43,5 @@ public abstract class ParentPage extends WebPage {
 		response.render(JavaScriptHeaderItem.forReference(BOOTSTRAP));
 		response.render(JavaScriptHeaderItem.forReference(COMMON));
 		response.render(JavaScriptHeaderItem.forReference(FLOAT_THEAD));
-		response.render(JavaScriptHeaderItem.forReference(DOUBLE_SCROLL));
 	}
 }
