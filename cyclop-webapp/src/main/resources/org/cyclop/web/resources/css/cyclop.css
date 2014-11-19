@@ -97,8 +97,8 @@ ul.cq-resTable-collectionList {
 	width: auto;
 }
 
-.cq-resTable-nav>ul{
-	margin: 10px 0 0 0 !important;
+.cq-resTable-pager>ul{
+	margin: 20px 0 5px 0 !important;
 }
 
 /* #################################################################### */
@@ -137,7 +137,26 @@ table.cq-resTable-table>tbody>tr>th {
 	left: 50%;
 }
 
+/* ### CQL Help ### */
+pre.cq-cqlHelp-sample,
+pre.cq-cqlHelp-syntax {
+	font-size: 90%;
+	padding: 1ex 1ex 1ex 4ex;
+	border: 1px solid #ada;
+}
+
+.cq-clqHelp-expandSupportBody>div {
+	font-size: 90%;
+	padding: 1em;
+	border: 1px solid #f5f5f5;
+	border-radius: 4px;
+	margin-top: 1em;
+}
+
+
 /* #################################################################### */
 /* ### General ### */
 /* #################################################################### */
-
+body {
+	font-size: 12px !important;
+}

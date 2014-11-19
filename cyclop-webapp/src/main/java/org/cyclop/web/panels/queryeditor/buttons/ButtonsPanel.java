@@ -65,8 +65,8 @@ public class ButtonsPanel extends Panel {
 	public ButtonsPanel withCompletion(final ButtonListener.CompletionChange buttonListener) {
 		UserPreferences preferences = userManager.readPreferences();
 		boolean completionEnabled = preferences.isShowCqlCompletionHint();
-		AjaxFallbackLink<Void> completion = new StateButton("completion", completionEnabled, "btn btn-sm btn-primary",
-				"btn btn-sm btn-primary active") {
+		AjaxFallbackLink<Void> completion = new StateButton("completion", completionEnabled, "btn btn-sm btn-info",
+				"btn btn-sm btn-info active") {
 			@Override
 			protected void onClick(AjaxRequestTarget target, boolean pressed) {
 				UserPreferences preferences = userManager.readPreferences();
