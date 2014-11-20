@@ -16,10 +16,8 @@
  */
 package org.cyclop.web.panels.history;
 
-import java.util.Optional;
-
-import javax.inject.Inject;
-
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang.StringUtils;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -54,8 +52,8 @@ import org.cyclop.web.components.pagination.BootstrapPagingNavigator;
 import org.cyclop.web.components.pagination.PagerConfigurator;
 import org.cyclop.web.pages.main.MainPage;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import javax.inject.Inject;
+import java.util.Optional;
 
 /** @author Maciej Miklas */
 public class HistoryPanel extends Panel implements AjaxReloadSupport {
@@ -67,7 +65,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private AbstractDefaultAjaxBehavior browserCallback;
 
-	private BootstrapPagingNavigator pager;
+	private BootstrapPagingNavigator historyPager;
 
 	@Inject
 	private HistoryService historyService;
@@ -78,7 +76,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 	@Inject
 	private SearchService<QueryEntry> searchService;
 
-	private PageableListView<QueryEntry> historyTable;
+	private PageableListView<QueryEntry> historyRows;
 
 	private ImmutableSet<String> filterKeywords;
 
@@ -86,7 +84,9 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private final static KeywordDecorator KEYWORD_DECORATOR = new KeywordDecorator();
 
-	private ImmutableListModel<QueryEntry> historyModel;
+	private WebMarkupContainer historyTable;
+
+	private final ImmutableListModel<QueryEntry> historyModel = new ImmutableListModel<>();
 
 	public HistoryPanel(String id) {
 		super(id);
@@ -96,10 +96,9 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 	protected void onInitialize() {
 		super.onInitialize();
 
-		WebMarkupContainer historyContainer = initHistoryContainer();
-		historyModel = initHistoryTable(historyContainer);
-		browserCallback = initBrowserCallback(historyContainer);
-		initFilter(historyContainer);
+		initHistoryTable();
+		initBrowserCallback();
+		initFilter();
 	}
 
 	private String decorateQueryWithFilter(QueryEntry entry) {
@@ -121,29 +120,27 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 		return ".cq-historyContainer";
 	}
 
-	private AbstractDefaultAjaxBehavior initBrowserCallback(final WebMarkupContainer historyContainer) {
-
-		AbstractDefaultAjaxBehavior browserCallback = new AbstractDefaultAjaxBehavior() {
+	private void initBrowserCallback() {
+		browserCallback = new AbstractDefaultAjaxBehavior() {
 
 			@Override
 			protected void respond(final AjaxRequestTarget target) {
 				ImmutableList<QueryEntry> historyList = historyService.read().copyAsList();
 				rebuildHistoryTable(historyList, null);
-
-				historyContainer.setVisible(true);
-				target.add(historyContainer);
+				historyTable.setVisible(true);
+				historyPager.setVisible(true);
+				target.add(historyTable, historyPager);
 			}
 		};
 		add(browserCallback);
-		return browserCallback;
 	}
 
-	private void initFilter(final WebMarkupContainer historyContainer) {
+	private void initFilter() {
 		final TextModel filterFieldModel = new TextModel();
 		final TextField<String> filterField = new TextField<>("filterField", filterFieldModel);
 		filterField.setOutputMarkupId(true);
 
-		filterField.add(new FilterBehaviour(filterFieldModel, historyContainer));
+		filterField.add(new FilterBehaviour(filterFieldModel));
 		add(filterField);
 
 		AjaxFallbackLink<Void> resetFilter = new AjaxFallbackLink<Void>("resetFilter") {
@@ -154,25 +151,18 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 				rebuildHistoryTable(historyToUpdate, null);
 				filterFieldModel.setObject("");
 				target.add(filterField);
-				target.add(historyContainer);
+				target.add(historyPager, historyTable);
 				target.appendJavaScript("initResetButton();");
 			}
 		};
 		add(resetFilter);
 	}
 
-	private WebMarkupContainer initHistoryContainer() {
-		WebMarkupContainer historyContainer = new WebMarkupContainer("historyContainer");
-		historyContainer.setOutputMarkupPlaceholderTag(true);
-		historyContainer.setVisible(false);
-		add(historyContainer);
-		return historyContainer;
-	}
-
-	private ImmutableListModel<QueryEntry> initHistoryTable(final WebMarkupContainer historyContainer) {
-		ImmutableListModel<QueryEntry> model = new ImmutableListModel<>();
-
-		historyTable = new PageableListView<QueryEntry>("historyRow", model, 1) {
+	private void initHistoryTable() {
+		historyTable = new WebMarkupContainer("historyTable");
+		historyTable.setOutputMarkupPlaceholderTag(true);
+		add(historyTable);
+		historyRows = new PageableListView<QueryEntry>("historyRow", historyModel, 1) {
 
 			@Override
 			protected void populateItem(ListItem<QueryEntry> item) {
@@ -183,8 +173,8 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 				populateQuery(item, entry);
 			}
 		};
-		historyContainer.add(historyTable);
-		pager = new BootstrapPagingNavigator("historyPager", historyTable, new PagerConfigurator() {
+		historyTable.add(historyRows);
+		historyPager = new BootstrapPagingNavigator("historyPager", historyRows, new PagerConfigurator() {
 
 			@Override
 			public void onItemsPerPageChanged(AjaxRequestTarget target, long newItemsPerPage) {
@@ -198,9 +188,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 				return um.readPreferences().getPagerHistoryItems();
 			}
 		});
-		historyContainer.add(pager);
-
-		return model;
+		add(historyPager);
 	}
 
 	private void populateExecutedOn(ListItem<QueryEntry> item, QueryEntry entry) {
@@ -228,8 +216,8 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 	private void rebuildHistoryTable(ImmutableList<QueryEntry> historyList, ImmutableSet<String> filterKeywords) {
 		historyModel.setObject(historyList);
-		historyTable.removeAll();
-		pager.reset();
+		historyRows.removeAll();
+		historyPager.reset();
 		this.filterKeywords = filterKeywords;
 	}
 
@@ -243,11 +231,8 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 		private final TextModel filterFieldModel;
 
-		private final WebMarkupContainer historyContainer;
-
-		public FilterBehaviour(TextModel filterFieldModel, WebMarkupContainer historyContainer) {
+		public FilterBehaviour(TextModel filterFieldModel) {
 			this.filterFieldModel = filterFieldModel;
-			this.historyContainer = historyContainer;
 		}
 
 		@Override
@@ -258,9 +243,9 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 			String filterValue = filterFieldModel.getObject();
 			filterValue = StringUtils.trimToNull(filterValue);
 			if (filterValue != null) {
-				String[] kwordsArr = filterValue.split(" ");
+				String[] kwdsArr = filterValue.split(" ");
 				Optional<FilterResult<QueryEntry>> filterResult = searchService.filter(historyToUpdate, FILTER_ACCESSOR,
-						kwordsArr);
+						kwdsArr);
 				if (filterResult.isPresent()) {
 					FilterResult<QueryEntry> res = filterResult.get();
 					historyToUpdate = res.result;
@@ -269,7 +254,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 			}
 
 			rebuildHistoryTable(historyToUpdate, kwds);
-			target.add(historyContainer);
+			target.add(historyPager, historyTable);
 		}
 
 	}
@@ -287,7 +272,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 
 		@Override
 		public String prefix() {
-			return "<span class='cq-import-filterKeyword'>";
+			return "<span class='cq-history-keyword'>";
 		}
 	}
 
