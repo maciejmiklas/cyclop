@@ -158,6 +158,8 @@ pre.cq-cqlHelp-syntax {
 /* #################################################################### */
 .cq-history-filterCont {
 	float: right;
+	margin: 20px 0 20px 0;
+	white-space: nowrap;
 }
 
 .cq-history-keyword {
