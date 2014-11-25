@@ -77,7 +77,6 @@ class ColumnValuePanel extends Panel {
 			fullContentLink = new AjaxFallbackLink<Object>("columnContentLink") {
 				@Override
 				public void onClick(AjaxRequestTarget target) {
-
 					String title = crateInfoDialogTitle(cqlPartitionKeyValue, cqlColumnValue.columnName);
 					infoDialog.open(target, this.getMarkupId(), title, convertedValueNotNull);
 				}

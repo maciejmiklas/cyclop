@@ -165,9 +165,43 @@ pre.cq-cqlHelp-syntax {
 .cq-history-keyword {
 	color: #AE0000;
 }
+
+/* #################################################################### */
+/* ### Import Page ### */
+/* #################################################################### */
+.cq-import-fileBtn input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	font-size: 999px;
+	text-align: right;
+	filter: alpha(opacity = 0);
+	opacity: 0;
+	outline: none;
+	background: white;
+	cursor: inherit;
+	display: block;
+}
+
 /* #################################################################### */
 /* ### General ### */
 /* #################################################################### */
 body {
 	font-size: 12px !important;
+}
+
+.cq-page-center {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -50px; /* this is half the height of your div*/
+	margin-left: -100px; /*this is half of width of your div*/
+}
+
+.cq-disableLink {
+	color: #444444;
+	pointer-events: none;
+	cursor: default;
 }

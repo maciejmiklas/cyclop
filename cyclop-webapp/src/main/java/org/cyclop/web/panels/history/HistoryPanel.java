@@ -188,6 +188,7 @@ public class HistoryPanel extends Panel implements AjaxReloadSupport {
 				return um.readPreferences().getPagerHistoryItems();
 			}
 		});
+		historyPager.setOutputMarkupPlaceholderTag(true); 
 		add(historyPager);
 	}
 
