@@ -16,9 +16,9 @@
  */
 package org.cyclop.service.cassandra;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -44,6 +44,7 @@ import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.datastax.driver.core.DataType;
@@ -98,7 +99,7 @@ public class TestQueryService extends AbstractTestCase {
 		ImmutableSortedSet<CqlTable> col = qs.findTableNames(Optional.of(new CqlKeySpace("cqldemo")));
 		vh.verifyContainsTableNamesCqlDemo(col, true);
 	}
-
+	@Ignore
 	@Test
 	public void testFindTableNames_SpaceSystem() {
 		ImmutableSortedSet<CqlTable> col = qs.findTableNames(Optional.of(new CqlKeySpace("system")));
@@ -150,6 +151,7 @@ public class TestQueryService extends AbstractTestCase {
 		vh.verifyContainsCompoundTestColumns(resp, false);
 	}
 
+	@Ignore
 	@Test
 	public void testFindAllColumnNames() {
 		ImmutableSortedSet<CqlColumnName> allColumnNames = qs.findAllColumnNames();

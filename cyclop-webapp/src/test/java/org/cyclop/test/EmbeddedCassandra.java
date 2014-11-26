@@ -16,7 +16,7 @@
  */
 package org.cyclop.test;
 
-import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.URL;
 import java.nio.charset.Charset;

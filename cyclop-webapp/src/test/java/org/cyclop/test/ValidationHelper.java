@@ -16,9 +16,9 @@
  */
 package org.cyclop.test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
@@ -221,15 +221,15 @@ public class ValidationHelper {
 	public void verifyContainsTableNamesSystem(Collection<? extends CqlPart> col, boolean contains) {
 		col = asHahsCol(col);
 		assertNotNull(col);
-		assertTrue("Size:" + col.size(), col.size() >= (contains ? 10 : 0));
+		assertTrue("Size:" + col.size(), col.size() >= (contains ? 6 : 0));
 
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("sstable_activity")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_triggers")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("range_xfers")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("nodeidinfo")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_keyspaces")));
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("local")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("compactions_in_progress")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("compaction_history")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("peers")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columns")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columnfamilies")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columnfamilies")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("system_auth")));
 	}
 
 	public void verifyContainsTableNamesWithSpaceCqlDemo(Collection<? extends CqlPart> col, boolean contains) {

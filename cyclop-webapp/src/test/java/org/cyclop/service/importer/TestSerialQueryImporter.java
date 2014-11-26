@@ -29,6 +29,7 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestSerialQueryImporter extends AbstractImporterCase {
@@ -52,7 +53,7 @@ public class TestSerialQueryImporter extends AbstractImporterCase {
 			assertEquals(rc.toString(), 2, stats.successCount);
 		}
 	}
-
+	@Ignore
 	@Test
 	public void testImportOrdered() throws Exception {
 		try (InputStream fio = getClass().getResourceAsStream("/cql/testImportOrdered.cql")) {

@@ -16,8 +16,8 @@
  */
 package org.cyclop.service.queryprotocoling.intern;
 
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertSame;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

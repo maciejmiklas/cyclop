@@ -34,6 +34,11 @@ public final class CqlTable extends CqlPart implements DisplaySupport {
 	@Valid
 	public final CqlKeySpace keySpace;
 
+	public CqlTable(CqlKeySpace keySpace, String table) {
+		super(table);
+		this.keySpace = keySpace;
+	}
+
 	public CqlTable(String keySpace, String table) {
 		super(table);
 
@@ -59,7 +64,7 @@ public final class CqlTable extends CqlPart implements DisplaySupport {
 	}
 
 	public CqlTable(String table) {
-		this(null, table);
+		this((CqlKeySpace)null, table);
 	}
 
 	@Override
