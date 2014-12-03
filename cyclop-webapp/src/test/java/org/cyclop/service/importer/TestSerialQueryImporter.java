@@ -53,7 +53,7 @@ public class TestSerialQueryImporter extends AbstractImporterCase {
 			assertEquals(rc.toString(), 2, stats.successCount);
 		}
 	}
-	@Ignore
+
 	@Test
 	public void testImportOrdered() throws Exception {
 		try (InputStream fio = getClass().getResourceAsStream("/cql/testImportOrdered.cql")) {
@@ -103,7 +103,7 @@ public class TestSerialQueryImporter extends AbstractImporterCase {
 				assertNotNull(rc.toString(), res);
 				assertTrue(res.toString(), res.getMessage().contains("Error executing CQL"));
 				assertTrue(res.toString(),
-						res.getMessage().contains("reason: line 1:45 mismatched character '<EOF>' expecting"));
+						res.getMessage().contains("reason: line"));
 			}
 
 			{

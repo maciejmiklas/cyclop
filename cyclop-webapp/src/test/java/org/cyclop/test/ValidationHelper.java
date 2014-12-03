@@ -206,7 +206,7 @@ public class ValidationHelper {
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("peer")));
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("token_bytes")));
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("rpc_address")));
-		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("replicate_on_write")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("column_aliases")));
 	}
 
 	public void verifyContainsTableNamesCqlDemo(Collection<? extends CqlPart> col, boolean contains) {
@@ -228,8 +228,8 @@ public class ValidationHelper {
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("peers")));
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columns")));
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columnfamilies")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columnfamilies")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("system_auth")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columns")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("compaction_history")));
 	}
 
 	public void verifyContainsTableNamesWithSpaceCqlDemo(Collection<? extends CqlPart> col, boolean contains) {

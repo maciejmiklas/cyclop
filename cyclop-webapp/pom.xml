@@ -41,6 +41,54 @@
 		<url>https://github.com/maciejmiklas/cyclop/issues</url>
 	</issueManagement>
 
+	<profiles>
+		<profile>
+			<id>cassandra-2.1</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<dependencyManagement>
+				 <dependencies>
+					 <dependency>
+						 <groupId>org.apache.cassandra</groupId>
+						 <artifactId>cassandra-all</artifactId>
+						 <version>2.1.2</version>
+					 </dependency>
+				 </dependencies>
+			</dependencyManagement>
+		</profile>
+		<profile>
+			<id>cassandra-2.0</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<dependencyManagement>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.cassandra</groupId>
+						<artifactId>cassandra-all</artifactId>
+						<version>2.1.2</version>
+					</dependency>
+				</dependencies>
+			</dependencyManagement>
+		</profile>
+		<profile>
+			<id>cassandra-1.2</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<dependencyManagement>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.cassandra</groupId>
+						<artifactId>cassandra-all</artifactId>
+						<version>1.2.19</version>
+					</dependency>
+				</dependencies>
+			</dependencyManagement>
+		</profile>
+	</profiles>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -53,11 +101,7 @@
 				<artifactId>guava</artifactId>
 				<version>18.0</version>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.cassandra</groupId>
-				<artifactId>cassandra-all</artifactId>
-				<version>2.1.2</version>
-			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -342,6 +386,7 @@
 			</resource>
 		</resources>
 	</build>
+	<!--
 	<reporting>
 		<plugins>
 			<plugin>
@@ -354,5 +399,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
-
+	    -->
 </project>

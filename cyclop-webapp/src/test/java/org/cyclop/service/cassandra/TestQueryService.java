@@ -99,7 +99,7 @@ public class TestQueryService extends AbstractTestCase {
 		ImmutableSortedSet<CqlTable> col = qs.findTableNames(Optional.of(new CqlKeySpace("cqldemo")));
 		vh.verifyContainsTableNamesCqlDemo(col, true);
 	}
-	@Ignore
+
 	@Test
 	public void testFindTableNames_SpaceSystem() {
 		ImmutableSortedSet<CqlTable> col = qs.findTableNames(Optional.of(new CqlKeySpace("system")));
@@ -151,7 +151,6 @@ public class TestQueryService extends AbstractTestCase {
 		vh.verifyContainsCompoundTestColumns(resp, false);
 	}
 
-	@Ignore
 	@Test
 	public void testFindAllColumnNames() {
 		ImmutableSortedSet<CqlColumnName> allColumnNames = qs.findAllColumnNames();
