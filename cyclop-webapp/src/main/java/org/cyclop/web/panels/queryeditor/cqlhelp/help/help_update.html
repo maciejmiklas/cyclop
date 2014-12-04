@@ -14,7 +14,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
 <pre class="cq-cqlHelp-syntax">
 &lt;update-stmt&gt; ::= <span class="cq-queryEl-keyword">UPDATE</span> &lt;<span class="cq-queryEl-table">tablename</span>&gt;
                   ( <span class="cq-queryEl-keyword">USING</span> &lt;option&gt; ( <span
@@ -38,8 +40,12 @@
 &lt;option&gt; ::= <span class="cq-queryEl-keyword">TIMESTAMP</span> &lt;integer&gt;
            | <span class="cq-queryEl-keyword">TTL</span> &lt;integer&gt;
 </pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample">
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
 <span class="cq-queryEl-keyword">UPDATE</span> <span class="cq-queryEl-table">NerdMovies</span> <span
 		class="cq-queryEl-keyword">USING TTL</span> 400
 <span class="cq-queryEl-keyword">SET</span> <span class="cq-queryEl-column">director</span> = 'Joss Whedon',
@@ -53,3 +59,5 @@
 		class="cq-queryEl-column">user</span> = B70DE1D0-9908-4AE3-BE34-5573E5B09F14 <span
 		class="cq-queryEl-keyword">AND</span> <span class="cq-queryEl-column">action</span> = 'click';
 </pre>
+</div>
+</div>

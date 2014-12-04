@@ -14,8 +14,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
-<pre class="cq-cqlHelp-syntax">&lt;insertStatement&gt; ::= <span class="cq-queryEl-keyword">INSERT INTO</span> &lt;<span
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
+&lt;insertStatement&gt; ::= <span class="cq-queryEl-keyword">INSERT INTO</span> &lt;<span
 		class="cq-queryEl-table">tablename</span>&gt;
                              '(' &lt;<span class="cq-queryEl-column">identifier</span>&gt; ( ',' &lt;<span
 			class="cq-queryEl-column">identifier</span>&gt; )* ')'
@@ -30,11 +33,18 @@
 &lt;option&gt; ::= <span class="cq-queryEl-keyword">TIMESTAMP</span> &lt;integer&gt;
            | TTL &lt;integer&gt;
 </pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample"><span class="cq-queryEl-keyword">INSERT INTO</span> <span
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
+<span class="cq-queryEl-keyword">INSERT INTO</span> <span
 		class="cq-queryEl-table">NerdMovies</span> (<span class="cq-queryEl-column">movie</span>, <span
 		class="cq-queryEl-column">director</span>, <span
 		class="cq-queryEl-column">main_actor</span>, <span class="cq-queryEl-column">year</span>)
                 <span class="cq-queryEl-keyword">VALUES</span> ('Serenity', 'Joss Whedon', 'Nathan Fillion', 2005)
 <span class="cq-queryEl-keyword">USING TTL</span> 86400;
 </pre>
+</div>
+</div>

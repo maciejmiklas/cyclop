@@ -20,6 +20,7 @@
 		<slf4j.version>1.7.7</slf4j.version>
 		<logback.version>1.1.2</logback.version>
 		<jackson.version>1.9.13</jackson.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<developers>
@@ -45,23 +46,11 @@
 		<profile>
 			<id>cassandra-2.1</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencyManagement>
-				 <dependencies>
-					 <dependency>
-						 <groupId>org.apache.cassandra</groupId>
-						 <artifactId>cassandra-all</artifactId>
-						 <version>2.1.2</version>
-					 </dependency>
-				 </dependencies>
-			</dependencyManagement>
-		</profile>
-		<profile>
-			<id>cassandra-2.0</id>
-			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			<properties>
+				<cassandra_yaml>cassandra_2.1.yaml</cassandra_yaml>
+			</properties>
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
@@ -73,10 +62,31 @@
 			</dependencyManagement>
 		</profile>
 		<profile>
+			<id>cassandra-2.0</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<cassandra_yaml>cassandra_2.0.yaml</cassandra_yaml>
+			</properties>
+			<dependencyManagement>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.cassandra</groupId>
+						<artifactId>cassandra-all</artifactId>
+						<version>2.0.11</version>
+					</dependency>
+				</dependencies>
+			</dependencyManagement>
+		</profile>
+		<profile>
 			<id>cassandra-1.2</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			<properties>
+				<cassandra_yaml>cassandra_1.2.yaml</cassandra_yaml>
+			</properties>
 			<dependencyManagement>
 				<dependencies>
 					<dependency>
@@ -385,19 +395,28 @@
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<cassandra_yaml>${cassandra_yaml}</cassandra_yaml>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
-	<!--
 	<reporting>
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>2.5.3</version>
 				<configuration>
 					<excludeFilterFile>src/misc/build/findbugs-exclude.xml</excludeFilterFile>
 				</configuration>
 			</plugin>
+
 		</plugins>
 	</reporting>
-	    -->
 </project>

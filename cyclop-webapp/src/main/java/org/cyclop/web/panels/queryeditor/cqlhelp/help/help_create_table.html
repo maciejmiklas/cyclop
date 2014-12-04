@@ -14,7 +14,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
 <pre class="cq-cqlHelp-syntax">
 &lt;create-table-stmt&gt; ::= <span class="cq-queryEl-keyword">CREATE</span> ( <span
 		class="cq-queryEl-keyword">TABLE</span> | <span class="cq-queryEl-keyword">COLUMNFAMILY</span> ) ( <span
@@ -40,8 +42,12 @@
            | <span class="cq-queryEl-keyword">COMPACT STORAGE</span>
            | <span class="cq-queryEl-keyword">CLUSTERING ORDER</span>
 </pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample">
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
 <span class="cq-queryEl-keyword">CREATE TABLE</span> <span class="cq-queryEl-table">monkeySpecies</span> (
     <span class="cq-queryEl-column">species</span> <span class="cq-queryEl-type">text</span> <span
 		class="cq-queryEl-keyword">PRIMARY KEY</span>,
@@ -61,6 +67,8 @@
 		class="cq-queryEl-column">posted_month</span>, <span class="cq-queryEl-column">posted_time</span>)
 ) <span class="cq-queryEl-keyword">WITH</span> <span class="cq-queryEl-column">compaction</span> = { 'class' : 'LeveledCompactionStrategy' };
 </pre>
+</div>
+</div>
 
 
 

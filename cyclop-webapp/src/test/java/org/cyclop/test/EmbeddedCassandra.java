@@ -45,8 +45,8 @@ public class EmbeddedCassandra {
 		if (running) {
 			return;
 		}
-
-		EmbeddedCassandraServerHelper.startEmbeddedCassandra("/cassandra_2.1.yaml");
+		String yamlName = System.getProperty("cassandra_yaml", "cassandra_2.0.yaml");
+		EmbeddedCassandraServerHelper.startEmbeddedCassandra("/" + yamlName);
 
 		cluster = Cluster.builder().addContactPoints("localhost").withPort(9042).build();
 		assertNotNull(cluster);

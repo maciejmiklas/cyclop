@@ -14,9 +14,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
 <pre class="cq-cqlHelp-syntax">
-
 &lt;alter-table-stmt&gt; ::= <span class="cq-queryEl-keyword">ALTER</span> (<span class="cq-queryEl-keyword">TABLE</span> | <span
 		class="cq-queryEl-keyword">COLUMNFAMILY</span>) &lt;<span class="cq-queryEl-table">tablename</span>&gt; &lt;instruction&gt;
 
@@ -30,9 +31,12 @@
 		class="cq-queryEl-keyword">AND</span> &lt;option&gt; )*
 
 </pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample">
-
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
 <span class="cq-queryEl-keyword">ALTER TABLE</span> <span class="cq-queryEl-table">addamsFamily</span>
 <span class="cq-queryEl-keyword">ALTER</span> <span class="cq-queryEl-table">lastKnownLocation</span> <span
 		class="cq-queryEl-keyword">TYPE</span> <span class="cq-queryEl-type">uuid</span>;
@@ -44,3 +48,5 @@
 <span class="cq-queryEl-keyword">WITH</span> <span class="cq-queryEl-column">comment</span> = 'A most excellent and useful column family'
 <span class="cq-queryEl-keyword">AND</span> <span class="cq-queryEl-column">read_repair_chance</span> = 0.2;
 </pre>
+</div>
+</div>

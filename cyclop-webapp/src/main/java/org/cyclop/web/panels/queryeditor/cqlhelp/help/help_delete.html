@@ -14,7 +14,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
 <pre class="cq-cqlHelp-syntax">
 &lt;delete-stmt&gt; ::= <span class="cq-queryEl-keyword">DELETE</span> ( &lt;selection&gt; ( ',' &lt;selection&gt; )* )?
                   <span class="cq-queryEl-keyword">FROM</span> &lt;<span class="cq-queryEl-table">tablename&gt</span>;
@@ -29,8 +31,12 @@
              | &lt;<span class="cq-queryEl-column">identifier</span>&gt; <span class="cq-queryEl-keyword">IN</span> '(' ( &lt;term&gt; ( ',' &lt;term&gt; )* )? ')'
              | &lt;<span class="cq-queryEl-column">identifier</span>&gt; <span class="cq-queryEl-keyword">IN</span> '?'
 </pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample">
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
 <span class="cq-queryEl-keyword">DELETE FROM</span> <span class="cq-queryEl-table">NerdMovies</span> <span
 		class="cq-queryEl-keyword">USING TIMESTAMP</span> 1240003134 <span class="cq-queryEl-keyword">WHERE</span> movie = 'Serenity';
 
@@ -39,3 +45,5 @@
 		class="cq-queryEl-keyword">WHERE</span> <span class="cq-queryEl-column">userid</span> <span
 		class="cq-queryEl-keyword">IN</span> (C73DE1D3-AF08-40F3-B124-3FF3E5109F22, B70DE1D0-9908-4AE3-BE34-5573E5B09F14);
 </pre>
+</div>
+</div>

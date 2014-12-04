@@ -14,8 +14,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
-<pre class="cq-cqlHelp-syntax">&lt;select-stmt&gt; ::= <span class="cq-queryEl-keyword">SELECT</span> &lt;select-clause&gt;
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
+&lt;select-stmt&gt; ::= <span class="cq-queryEl-keyword">SELECT</span> &lt;select-clause&gt;
                   <span class="cq-queryEl-keyword">FROM</span> &lt;<span class="cq-queryEl-table">tablename</span>&gt;
                   ( <span class="cq-queryEl-keyword">WHERE</span> &lt;where-clause&gt; )?
                   ( <span class="cq-queryEl-keyword">ORDER BY</span> &lt;order-by&gt; )?
@@ -46,9 +49,14 @@
 &lt;ordering&gt; ::= &lt;<span class="cq-queryEl-column">identifier</span>&gt; ( <span
 			class="cq-queryEl-keyword">ASC</span> | <span
 			class="cq-queryEl-keyword">DESC</span> )?
-</pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample"><span class="cq-queryEl-keyword">SELECT</span> <span class="cq-queryEl-column">name</span>, <span
+		</pre>
+	</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
+<span class="cq-queryEl-keyword">SELECT</span> <span class="cq-queryEl-column">name</span>, <span
 		class="cq-queryEl-column">occupation</span> <span class="cq-queryEl-keyword">FROM</span> users <span
 		class="cq-queryEl-keyword">WHERE</span> userid <span class="cq-queryEl-keyword">IN</span> (199, 200, 207);
 
@@ -68,4 +76,6 @@
 
 <span class="cq-queryEl-keyword">SELECT COUNT(*) AS</span> user_count <span class="cq-queryEl-keyword">FROM</span> <span
 			class="cq-queryEl-table">users</span>;
-</pre>
+		</pre>
+	</div>
+</div>	

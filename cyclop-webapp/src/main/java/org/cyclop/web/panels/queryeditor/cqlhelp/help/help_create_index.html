@@ -14,7 +14,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
 <pre class="cq-cqlHelp-syntax">
 &lt;create-index-stmt&gt; ::= <span class="cq-queryEl-keyword">CREATE</span> ( <span
 		class="cq-queryEl-keyword">CUSTOM</span> )? <span class="cq-queryEl-keyword">INDEX</span> ( <span
@@ -23,11 +25,17 @@
 		class="cq-queryEl-table">tablename</span>&gt; '(' &lt;<span class="cq-queryEl-column">identifier</span>&gt; ')'
                                         ( <span class="cq-queryEl-keyword">USING</span> &lt;string&gt; )?
 </pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample">
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
 <span class="cq-queryEl-keyword">CREATE INDEX</span> userIndex ON <span class="cq-queryEl-table">NerdMovies</span> (user);
 <span class="cq-queryEl-keyword">CREATE INDEX ON</span> <span class="cq-queryEl-table">Mutants</span> (<span
 		class="cq-queryEl-column">abilityId</span>);
 <span class="cq-queryEl-keyword">CREATE CUSTOM INDEX ON</span> <span class="cq-queryEl-table">users</span> (<span
 		class="cq-queryEl-column">email</span>) <span class="cq-queryEl-keyword">USING</span> 'path.to.the.IndexClass';
 </pre>
+</div>
+</div>

@@ -16,11 +16,11 @@
  */
 package org.cyclop.service.cassandra;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -44,7 +44,6 @@ import org.cyclop.model.exception.QueryException;
 import org.cyclop.service.queryprotocoling.HistoryService;
 import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.datastax.driver.core.DataType;

@@ -14,7 +14,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<i>Syntax:</i>
+<div class="panel panel-default">
+	<div class="panel-heading">Syntax</div>
+	<div class="panel-body"> 
 <pre class="cq-cqlHelp-syntax">
 &lt;batch-stmt&gt; ::= <span class="cq-queryEl-keyword">BEGIN BATCH</span>
                  ( <span class="cq-queryEl-keyword">USING</span> &lt;option&gt; ( <span
@@ -28,8 +30,12 @@
 
 &lt;option&gt; ::= <span class="cq-queryEl-keyword">TIMESTAMP</span> &lt;integer&gt;
 </pre>
-<i>Sample:</i>
-<pre class="cq-cqlHelp-sample">
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-heading">Sample</div>
+	<div class="panel-body"> 
+<pre class="cq-cqlHelp-syntax">
 <span class="cq-queryEl-keyword">BEGIN BATCH</span>
   <span class="cq-queryEl-keyword">INSERT INTO</span> <span class="cq-queryEl-table">users</span> (<span
 		class="cq-queryEl-column">userid</span>, <span class="cq-queryEl-column">password</span>, <span
@@ -44,3 +50,5 @@
 		class="cq-queryEl-keyword">WHERE</span> <span class="cq-queryEl-column">userid</span> = 'user1';
 <span class="cq-queryEl-keyword">APPLY BATCH</span>;
 </pre>
+</div>
+</div>

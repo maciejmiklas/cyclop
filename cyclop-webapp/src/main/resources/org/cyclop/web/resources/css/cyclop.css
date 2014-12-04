@@ -2,35 +2,35 @@
 /* ### Query Keywords ### */
 /* #################################################################### */
 .cq-queryEl-keyword {
-	color: #9933cc;
+	color: #EE5F5B;
 }
 
 .cq-queryEl-type {
-	color: #ba38cb;
+	color: #5BC0DE;
 }
 
 .cq-queryEl-column {
-	color: #3278b3;
+	color: #62C462;
 }
 
 .cq-queryEl-kyespace {
-	color: #1b5aff;
+	color: #8080ff;
 }
 
 .cq-queryEl-index {
-	color: #000fff;
+	color: #808040;
 }
 
 .cq-queryEl-notSupported {
-	color: #444444;
+	color: #7A8288;
 }
 
 .cq-queryEl-value {
-	color: #444444;
+	color: #7A8288;
 }
 
 .cq-queryEl-table {
-	color: #0a39b3;
+	color: #F89406;
 }
 
 /* #################################################################### */
@@ -52,13 +52,19 @@
 }
 
 /* Fix for position of log-out button, so that it keeps distance from right side of the screen. */
-.cq-navbar-right{
+.cq-navbar-right {
 	margin-right: 0 !important;
 }
 
 /* thinner nav bar */
-.navbar-nav > li > a {padding-top:8px !important; padding-bottom:8px !important;}
-.navbar {min-height:32px !important}
+.navbar-nav>li>a {
+	padding-top: 8px !important;
+	padding-bottom: 8px !important;
+}
+
+.navbar {
+	min-height: 32px !important
+}
 
 /* #################################################################### */
 /* ### Query Hint ### */
@@ -66,14 +72,15 @@
 .cq-queryHint-dialog {
 	position: absolute;
 	z-index: 2000;
+	margin-right: 15px;
 }
 
 .cq-queryHint-bodyA {
-	background-color: #008619;
+	background-image: linear-gradient(#484E55, #3A3F44 60%, #313539);
 }
 
 .cq-hint-bodyB {
-	background-color: #529749;
+	background-image: linear-gradient(#484E55, #3A3F44 60%, #313539);
 }
 
 /* #################################################################### */
@@ -97,7 +104,7 @@ ul.cq-resTable-collectionList {
 	width: auto;
 }
 
-.cq-resTable-pager>ul{
+.cq-resTable-pager>ul {
 	margin: 20px 0 5px 0 !important;
 }
 
@@ -138,19 +145,17 @@ table.cq-resTable-table>tbody>tr>th {
 }
 
 /* ### CQL Help ### */
-pre.cq-cqlHelp-sample,
-pre.cq-cqlHelp-syntax {
-	font-size: 90%;
-	padding: 1ex 1ex 1ex 4ex;
-	border: 1px solid #ada;
+.cq-clqHelp-expandSupportBody {
+	margin-top: 1em;
 }
 
-.cq-clqHelp-expandSupportBody>div {
+pre.cq-cqlHelp-syntax {
 	font-size: 90%;
-	padding: 1em;
-	border: 1px solid #f5f5f5;
-	border-radius: 4px;
-	margin-top: 1em;
+	background: transparent;
+	border: none;
+	color: inherit;
+	margin: 0;
+	padding-bottom: 0;
 }
 
 /* #################################################################### */
