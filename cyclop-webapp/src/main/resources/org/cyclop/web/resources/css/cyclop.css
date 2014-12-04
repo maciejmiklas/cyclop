@@ -71,7 +71,7 @@
 /* #################################################################### */
 .cq-queryHint-dialog {
 	position: absolute;
-	z-index: 2000;
+	z-index: 1020;
 	margin-right: 15px;
 }
 

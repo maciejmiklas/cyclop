@@ -32,8 +32,7 @@
 		<div wicket:id="queryErrorDialogRow" class="row">
 			<div class="col-lg-3" />
 			<div wicket:id="queryErrorDialogCol" class="col-lg-6">
-				<br />
-				<br />
+				<br /> <br />
 				<div wicket:id="queryErrorTextPanel" class="panel panel-danger">
 					<div class="panel-heading">
 						<h3 class="panel-title">Query Execution Error</h3>
@@ -44,14 +43,17 @@
 			<div class="col-lg-3" />
 		</div>
 		<div class="row">
-			<div wicket:id="cqlHelp" class="col-lg-9"></div>
+			<!--  this panel will be displayed and hidden by jquery in browser, so it can not be refresed by wicket,
+	that's the reason why it does not have wicket id -->
+			<div class="cq-clqHelp-expandSupportBody">
+				<div wicket:id="cqlHelp" class="col-lg-9"></div>
+			</div>
 			<div class="col-lg-3" />
 		</div>
 		<div class="row cq-queryProgressBar" style="display: none">
 			<div class="col-lg-4" />
 			<div class="col-lg-4">
-				<br>
-				<br>
+				<br> <br>
 				<div class="progress progress-striped active">
 					<div class="progress-bar progress-bar-info" style="width: 100%"></div>
 				</div>
