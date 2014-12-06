@@ -2,6 +2,7 @@
 Cassandra is one of the most popular open source NoSQL databases, but it's only few years old, and therefore tools support is still limited, especially when it comes to free open source software. 
 
 If you are working with Cassandra, sooner or later you will have to analyse its content on remote cluster. Most of the available tools are desktop applications  that connect to Cassandra over its protocol. Getting such access might be a hard task, because usually databases are installed in restricted networks in order to minimize data breach risk. Security policies are changing frequently to cover new findings, and the fact that you have access to your database today, does not actually mean that it will last long.
+
 Gaining access over SSH and command line interface should be easier, but I do not have to convince anyone that using terminal to query database content is painful, especially when it holds wide rows!
 
 But there is one solution, that is almost always available: web based applications! Every company knows how to secure them, how to run penetration tests, locate security leaks, and so on.... actually it does not matter what happens behind scenes, you - the end user has always access to such application - at least in the theory ;)
@@ -10,7 +11,7 @@ Here comes good news: Cyclop is 100% web based, and It's based on latest Wicket 
 
 There is also another cool thing: if your security experts will run penetration tests against Cyclop they will come
 up with findings like Database Script Injection. This will be the first time in your life when you can honestly say:
-"It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely no usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
+"It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely not a usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
 
 # User Management
 ![Login](/doc/img/login.png)
@@ -25,8 +26,7 @@ could reference credentials used to open Cassandra session, but it's a common us
 As you might noticed, the UUID is a solution to all our problems, and this time it worked too! Cyclop generates random cookie based on UUID and stores it in browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
 
 User Preferences cover things like amount of rows in result table, import settings or button state. Those are stored
-in browser as cookie in a json format. First of all there is no security issue,
-because it's not a sensitive data and additionally we can access it directly from Java Script.
+in browser as cookie in a json format. Firstly, there is no security issue, because it's not a sensitive data,  secondly we can access it directly from Java Script.
 
 # Query Editor
 #### Query Completion
@@ -96,8 +96,8 @@ Import has also few limitations:
 * import script does not support comments
 
 # Requirements
-* java 7
-* cassandra v1.2 or above (tested with 1.2 and 2.0)
+* Java 7
+* Cassandra v1.2 or above (tested with 1.2 and 2.0)
 * only CQL 3 is supported
 * CLI is NOT supported
 * Tomcat v7 or another v3.x web container
@@ -116,32 +116,22 @@ Import has also few limitations:
 * guava - v15.x (Cassandra 2.0 does not work with v16)
 
 # Installation
-1. Download last release: <code>https://github.com/maciejmiklas/cyclop/releases/latest</code>
-2. Edit property file: <code>cyclop/src/main/resources/cyclop.properties</code> and set connection settings for Cassandra
-``` properties
-cassandra.hosts: localhost
-cassandra.port: 9042
-cassandra.useSsl: false
-cassandra.timeoutMilis: 3600000
-```
-You can also overwrite each property from <code>cyclop.properties</code> by setting it as jvm parameter, for example
-to connect to different Cassandra host set:<code>-Dcassandra.hosts=server1,server2</code>. This gives you simple possibility
-to change properties after the war file has been assembled.
+1. Install Java 7 and Maven 3
+2. Download last release: `https://github.com/maciejmiklas/cyclop/releases/latest`
+3. Edit property file: `cyclop/src/main/resources/cyclop.properties` and set connection settings for
+Cassandra:
 
-4. Optionally change logger settings by editing <code>logback.xml</code>. By default it logs in into <code>/var/lib/tomcat7/logs/cyclop-${time}.log</code>
-5. Build war file: <code>mvn package</code>
-5. Drop war file into tomcat
+    ``` properties
+    cassandra.hosts: localhost
+    cassandra.port: 9042
+    cassandra.useSsl: false
+    cassandra.timeoutMilis: 3600000
+    ```
+    You can also overwrite each property from `cyclop.properties` by setting it as jvm parameter. For example to connect to different Cassandra host set:`-Dcassandra.hosts=server1,server2`. This gives you simple possibility to change properties after the war file has been assembled.
+    
+4. Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
+5. Build war file: `mvn package`
+6. Drop war file into tomcat
 
-The created war can connect only to one Cassandra cluster, in order to serve multiple clusters from one Tomcat
-you have to deploy few cyclop war archives, each one with different  <code>cassandra.hosts</code> value
-
-# Live Demo
-There is a demo deployment of Cyclop, so that you can get a first impression. I'm hosting it at home, so it can be down sometimes, because I have no static IP, and when it changes propagation takes some time.
-
-Different links below contain different queries. Clicking on link will open Cyclop and paste into its editor query from link. Try to edit those queries using Cyclop's editor to see how the code completion is working. Provided user has read only access, so only part of the functionality is available.
-* User: democasusr, Password: Cassandra123 written backwards (32...aC)
-* http://maciejmiklas.no-ip.biz/cyclop
-* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20*%20from%20cqldemo.mybooks
-* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20id%2Cauthors%2Cgenre%20from%20cqldemo.mybooks%20where%20pages%20%3D%20121
-* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20id%2Cauthors%20from%20cqldemo.mybooks%20where%20id%3D6ff12f41-cfb1-45ff-9e89-fb20f95ffc5d
-* http://maciejmiklas.no-ip.biz/cyclop/main/ced?cql=select%20*%20from%20system.schema_columnfamilies
+    The created war can connect only to one Cassandra cluster, in order to serve multiple clusters from one Tomcat
+you have to deploy few cyclop war archives, each one with different `cassandra.hosts` value
