@@ -307,7 +307,7 @@ function replaceSuggests(editorId, suggests) {
 				$.asuggestFocused = this;
 
 				// fire onchange on document in order to trigger ajax events
-				$area.change();
+				$area.trigger("inputchange");
 				return false;
 			}
 			return true;
