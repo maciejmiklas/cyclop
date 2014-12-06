@@ -10,6 +10,7 @@ import org.cyclop.model.UserIdentifier;
 import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.test.AbstractTestCase;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -70,6 +71,7 @@ public class TestFileStorage extends AbstractTestCase {
 		assertTrue(storage.checkSupported());
 	}
 
+	@Ignore
 	@Test
 	public void testSupported_OnReadOnlyFolder() {
 
