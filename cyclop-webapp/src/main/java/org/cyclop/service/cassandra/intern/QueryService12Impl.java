@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.inject.Named;
 
 import org.apache.commons.lang.StringUtils;
+import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlDataType;
@@ -40,12 +41,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 
-/** @author Maciej Miklas */
+/**
+ * Fallback for Cassandra 1.2
+ * @author Maciej Miklas
+ */
 @Named
-@CassandraVersionQualifier(CassandraVersion.VER_1_x)
-class QueryServiceFallbackImpl extends QueryServiceImpl {
+@CassandraVersionQualifier(CassandraVersion.VER_1_2)
+class QueryService12Impl extends QueryServiceImpl {
 
-	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceFallbackImpl.class);
+	private final static Logger LOG = LoggerFactory.getLogger(QueryService12Impl.class);
 
 	private ImmutableSet<String> findPartitionKeyNamesLc(CqlTable table) {
 

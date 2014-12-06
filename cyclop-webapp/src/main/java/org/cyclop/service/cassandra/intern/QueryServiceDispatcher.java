@@ -21,6 +21,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlIndex;
 import org.cyclop.model.CqlKeySpace;
@@ -38,11 +39,11 @@ import com.google.common.collect.ImmutableSortedSet;
 public class QueryServiceDispatcher implements QueryService {
 
 	@Inject
-	@CassandraVersionQualifier(CassandraVersion.VER_2_x)
+	@CassandraVersionQualifier(CassandraVersion.VER_2_0)
 	private QueryService defaultQs;
 
 	@Inject
-	@CassandraVersionQualifier(CassandraVersion.VER_1_x)
+	@CassandraVersionQualifier(CassandraVersion.VER_1_2)
 	private QueryService fallbackQs;
 
 	@Inject
@@ -50,7 +51,7 @@ public class QueryServiceDispatcher implements QueryService {
 
 	private QueryService get() {
 		CassandraVersion ver = session.getCassandraVersion();
-		QueryService instance = ver == CassandraVersion.VER_2_x ? defaultQs : fallbackQs;
+		QueryService instance = ver == CassandraVersion.VER_1_2 ? fallbackQs : defaultQs;
 		return instance;
 	}
 

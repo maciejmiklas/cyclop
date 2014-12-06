@@ -34,6 +34,7 @@ import javax.inject.Named;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 import org.cyclop.common.AppConfig;
+import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlDataType;
@@ -66,7 +67,7 @@ import com.google.common.collect.ImmutableSortedSet;
 /** @author Maciej Miklas */
 @EnableValidation
 @Named
-@CassandraVersionQualifier(CassandraVersion.VER_2_x)
+@CassandraVersionQualifier(CassandraVersion.VER_2_0)
 class QueryServiceImpl implements QueryService {
 
 	private final static Logger LOG = LoggerFactory.getLogger(QueryServiceImpl.class);

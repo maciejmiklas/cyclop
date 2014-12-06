@@ -16,6 +16,8 @@
  */
 package org.cyclop.service.cassandra.intern;
 
+import org.cyclop.model.CassandraVersion;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

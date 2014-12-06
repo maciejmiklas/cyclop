@@ -14,9 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cyclop.service.cassandra.intern;
+package org.cyclop.model;
 
 /** @author Maciej Miklas */
 public enum CassandraVersion {
-	VER_1_x, VER_2_x
+	VER_1_2(1.2), VER_2_0(2.0), VER_2_1(2.1);
+
+	double version;
+
+	private CassandraVersion(double version) {
+		this.version = version;
+	}
 }

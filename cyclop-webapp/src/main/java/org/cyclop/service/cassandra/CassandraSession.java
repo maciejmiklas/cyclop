@@ -19,6 +19,7 @@ package org.cyclop.service.cassandra;
 import javax.validation.constraints.NotNull;
 
 import com.datastax.driver.core.Session;
+import org.cyclop.model.CassandraVersion;
 
 /** @author Maciej Miklas */
 public interface CassandraSession extends AutoCloseable {
@@ -30,4 +31,6 @@ public interface CassandraSession extends AutoCloseable {
 	boolean isOpen();
 
 	Session getSession();
+
+	CassandraVersion getCassandraVersion();
 }

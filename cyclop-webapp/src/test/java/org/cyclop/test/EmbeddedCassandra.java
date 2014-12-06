@@ -35,6 +35,8 @@ import com.datastax.driver.core.Session;
 /** @author Maciej Miklas */
 public class EmbeddedCassandra {
 
+	public final static String YAML_NAME = System.getProperty("cassandra_yaml", "cassandra_2.0.yaml");
+
 	private Cluster cluster;
 
 	private Session session;
@@ -45,8 +47,8 @@ public class EmbeddedCassandra {
 		if (running) {
 			return;
 		}
-		String yamlName = System.getProperty("cassandra_yaml", "cassandra_2.0.yaml");
-		EmbeddedCassandraServerHelper.startEmbeddedCassandra("/" + yamlName);
+
+		EmbeddedCassandraServerHelper.startEmbeddedCassandra("/" + YAML_NAME);
 
 		cluster = Cluster.builder().addContactPoints("localhost").withPort(9042).build();
 		assertNotNull(cluster);

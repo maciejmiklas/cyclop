@@ -16,8 +16,10 @@
  */
 package org.cyclop.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,6 +38,7 @@ import org.cyclop.service.cassandra.CassandraSession;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -86,6 +89,35 @@ public abstract class AbstractTestCase {
 		INIT_EXECUTED = true;
 		setupHistory();
 		setupCassandra();
+	}
+
+	@Test
+	public void testCassandraVersion() {
+		switch (cassandraSession.getCassandraVersion()) {
+		case VER_1_2:
+			ensureCassandra_1_2();
+			break;
+		case VER_2_0:
+			ensureCassandra_2_0();
+			break;
+		case VER_2_1:
+			ensureCassandra_2_1();
+			break;
+		default:
+			fail("Unsupported Cassandra version");
+		}
+	}
+
+	private void ensureCassandra_1_2() {
+		assertEquals(EmbeddedCassandra.YAML_NAME, "cassandra_1.2.yaml");
+	}
+
+	private void ensureCassandra_2_0() {
+		assertEquals(EmbeddedCassandra.YAML_NAME, "cassandra_2.0.yaml");
+	}
+
+	private void ensureCassandra_2_1() {
+		assertEquals(EmbeddedCassandra.YAML_NAME, "cassandra_2.1.yaml");
 	}
 
 	public <T> T deserialize(byte[] serialized, Class<T> clazz) throws IOException, ClassNotFoundException {

@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 import net.jcip.annotations.NotThreadSafe;
 
 import org.cyclop.common.AppConfig;
+import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.exception.AuthenticationRequiredException;
 import org.cyclop.service.cassandra.CassandraSession;
 import org.cyclop.validation.EnableValidation;
@@ -98,18 +99,25 @@ public class CassandraSessionImpl implements CassandraSession {
 	}
 
 	private CassandraVersion determineVersion(Session session) {
-		CassandraVersion ver = CassandraVersion.VER_2_x;
+		CassandraVersion ver = CassandraVersion.VER_2_1;
 
 		// this way to check version sucks and works at the same time ....
 		try {
+			session.execute("select type_name from system.schema_usertypes");
+		} catch (InvalidQueryException e) {
+			ver = CassandraVersion.VER_2_0;
+		}
+
+		try {
 			session.execute("select type FROM system.schema_columns LIMIT 1 ALLOW FILTERING");
 		} catch (InvalidQueryException e) {
-			ver = CassandraVersion.VER_1_x;
+			ver = CassandraVersion.VER_1_2;
 		}
 		return ver;
 	}
 
-	protected CassandraVersion getCassandraVersion() {
+	@Override
+	public CassandraVersion getCassandraVersion() {
 		checkAuthenticated();
 		return cassandraVersion;
 	}
