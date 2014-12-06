@@ -14,7 +14,7 @@
 }
 
 .cq-queryEl-kyespace {
-	color: #8080ff;
+	color: #FAEDA2;
 }
 
 .cq-queryEl-index {
@@ -22,15 +22,15 @@
 }
 
 .cq-queryEl-notSupported {
-	color: #7A8288;
+	color: #6C676D;
 }
 
 .cq-queryEl-value {
-	color: #7A8288;
+	color: #7587A3;
 }
 
 .cq-queryEl-table {
-	color: #F89406;
+	color: #9C6F46;
 }
 
 /* #################################################################### */
