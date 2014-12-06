@@ -25,4 +25,8 @@ public enum CassandraVersion {
 	private CassandraVersion(double version) {
 		this.version = version;
 	}
+
+	public boolean after(CassandraVersion ver) {
+		return version > ver.version;
+	}
 }

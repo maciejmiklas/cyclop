@@ -16,6 +16,7 @@
  */
 package org.cyclop.service.cassandra;
 
+import static org.cyclop.model.CassandraVersion.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlDataType;
@@ -158,7 +160,9 @@ public class TestQueryService extends AbstractTestCase {
 
 		vh.verifyContainsMybooksColumns(allColumnNames, true);
 		vh.verifyContainsSystemColumns(allColumnNames, true);
-		vh.verifyContainsCompoundTestColumns(allColumnNames, true);
+		if(cassandraSession.getCassandraVersion().after(VER_1_2)) {
+			vh.verifyContainsCompoundTestColumns(allColumnNames, true);
+		}
 	}
 
 	@Test
@@ -177,14 +181,26 @@ public class TestQueryService extends AbstractTestCase {
 		assertEquals(4, rowMetadata.columns.size());
 
 		String comColsStr = rowMetadata.columns.toString();
-		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY,
-				CqlDataType.create(DataType.uuid()), "id")));
+		assertTrue(comColsStr, rowMetadata.columns.contains(
+				new CqlExtendedColumnName(CqlColumnType.PARTITION_KEY, CqlDataType.create(DataType.uuid()), "id")));
 
-		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY,
-				CqlDataType.create(DataType.cint()), "id2")));
+		if(cassandraSession.getCassandraVersion().after(VER_1_2)) {
 
-		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY,
-				CqlDataType.create(DataType.varchar()), "id3")));
+			assertTrue(comColsStr, rowMetadata.columns.contains(
+					new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.cint()), "id2")));
+
+			assertTrue(comColsStr, rowMetadata.columns.contains(
+					new CqlExtendedColumnName(CqlColumnType.CLUSTERING_KEY, CqlDataType.create(DataType.varchar()),
+							"id3")));
+		}else{
+			// TODO Cassandra 1.2 does not recognize clustering key
+			assertTrue(comColsStr, rowMetadata.columns.contains(
+					new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.cint()), "id2")));
+
+			assertTrue(comColsStr, rowMetadata.columns.contains(
+					new CqlExtendedColumnName(CqlColumnType.REGULAR, CqlDataType.create(DataType.varchar()),
+							"id3")));
+		}
 
 		assertTrue(comColsStr, rowMetadata.columns.contains(new CqlExtendedColumnName(CqlColumnType.REGULAR,
 				CqlDataType.create(DataType.varchar()), "deesc")));

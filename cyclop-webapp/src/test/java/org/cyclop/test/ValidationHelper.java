@@ -16,10 +16,11 @@
  */
 package org.cyclop.test;
 
+import static org.cyclop.model.CassandraVersion.VER_1_2;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.cyclop.model.ContextCqlCompletion;
@@ -36,6 +38,7 @@ import org.cyclop.model.CqlKeySpace;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlTable;
+import org.cyclop.service.cassandra.CassandraSession;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
@@ -43,6 +46,9 @@ import com.google.common.collect.ImmutableSortedSet;
 /** @author Maciej Miklas */
 @Named
 public class ValidationHelper {
+
+	@Inject
+	CassandraSession cs;
 
 	public Collection<? extends CqlPart> asHahsCol(Collection<? extends CqlPart> col) {
 		if (col == null) {
@@ -57,7 +63,7 @@ public class ValidationHelper {
 	}
 
 	public void verifyContainsAllKeyspacesAndTables(ContextCqlCompletion completion, boolean spaceCqlDemoOrSystem) {
-		int limt = spaceCqlDemoOrSystem ? 5 : 19;
+		int limt = spaceCqlDemoOrSystem ? 5 : (cs.getCassandraVersion().after(VER_1_2) ? 19 : 18);
 		verifyFullAndMinCompletionNotTheSame(completion, limt, limt);
 		verifyContainsAllColumns(completion, false);
 
@@ -117,7 +123,9 @@ public class ValidationHelper {
 
 		verifyContainsMybooksColumns(cmp, all);
 		verifyContainsSystemColumns(cmp, all);
-		verifyContainsCompoundTestColumns(cmp, all);
+		if (cs.getCassandraVersion().after(VER_1_2)) {
+			verifyContainsCompoundTestColumns(cmp, all);
+		}
 	}
 
 	public void verifyContainsCompoundTestColumns(Collection<? extends CqlPart> col, boolean contains) {
@@ -203,10 +211,13 @@ public class ValidationHelper {
 		assertNotNull(col);
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("truncated_at")));
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("tokens")));
-		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("peer")));
-		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("token_bytes")));
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("rpc_address")));
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("column_aliases")));
+
+		if (cs.getCassandraVersion().after(VER_1_2)) {
+			assertEquals(col.toString(), contains, col.contains(new CqlColumnName("peer")));
+			assertEquals(col.toString(), contains, col.contains(new CqlColumnName("token_bytes")));
+		}
 	}
 
 	public void verifyContainsTableNamesCqlDemo(Collection<? extends CqlPart> col, boolean contains) {
@@ -229,7 +240,9 @@ public class ValidationHelper {
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columns")));
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columnfamilies")));
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columns")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("compaction_history")));
+		if (cs.getCassandraVersion().after(VER_1_2)) {
+			assertEquals(col.toString(), contains, col.contains(new CqlTable("compaction_history")));
+		}
 	}
 
 	public void verifyContainsTableNamesWithSpaceCqlDemo(Collection<? extends CqlPart> col, boolean contains) {
