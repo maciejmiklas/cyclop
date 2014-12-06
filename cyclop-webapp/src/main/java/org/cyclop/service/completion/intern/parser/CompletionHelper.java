@@ -73,8 +73,10 @@ public final class CompletionHelper {
 		CqlCompletion.Builder builder = CqlCompletion.Builder.naturalOrder();
 
 		Optional<CqlKeySpace> activeKeySpace = queryScope.getActiveKeySpace();
-		ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(activeKeySpace);
-		builder.all(tables);
+		if(activeKeySpace.isPresent()) {
+			ImmutableSortedSet<CqlTable> tables = queryService.findTableNames(activeKeySpace);
+			builder.all(tables);
+		}
 
 		ImmutableSortedSet<CqlKeySpace> keyspaces = queryService.findAllKeySpaces();
 		for (CqlKeySpace ks : keyspaces) {
