@@ -17,6 +17,8 @@
 package org.cyclop.test;
 
 import static org.cyclop.model.CassandraVersion.VER_1_2;
+import static org.cyclop.model.CassandraVersion.VER_2_0;
+import static org.cyclop.model.CassandraVersion.VER_2_1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -213,10 +215,20 @@ public class ValidationHelper {
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("tokens")));
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("rpc_address")));
 		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("column_aliases")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("written_at")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("subcomparator")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("rpc_address")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("read_repair_chance")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("rack")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("parameters")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("host_id")));
+		assertEquals(col.toString(), contains, col.contains(new CqlColumnName("compaction_strategy_options")));
 
 		if (cs.getCassandraVersion().after(VER_1_2)) {
 			assertEquals(col.toString(), contains, col.contains(new CqlColumnName("peer")));
 			assertEquals(col.toString(), contains, col.contains(new CqlColumnName("token_bytes")));
+		} else {
+
 		}
 	}
 
@@ -239,9 +251,39 @@ public class ValidationHelper {
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("peers")));
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columns")));
 		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columnfamilies")));
-		assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_columns")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("batchlog")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("hints")));
+		assertEquals(col.toString(), contains, col.contains(new CqlTable("range_xfers")));
+
+		if (cs.getCassandraVersion() == VER_1_2) {
+			assertEquals(col.toString(), contains, col.contains(new CqlTable("HintsColumnFamily")));
+			assertEquals(col.toString(), contains, col.contains(new CqlTable("Migrations")));
+			assertEquals(col.toString(), contains, col.contains(new CqlTable("LocationInfo")));
+			assertEquals(col.toString(), contains, col.contains(new CqlTable("Schema")));
+
+		} else {
+			assertFalse(col.toString(), col.contains(new CqlTable("HintsColumnFamily")));
+			assertFalse(col.toString(), col.contains(new CqlTable("Migrations")));
+			assertFalse(col.toString(), col.contains(new CqlTable("LocationInfo")));
+			assertFalse(col.toString(), col.contains(new CqlTable("Schema")));
+		}
+
 		if (cs.getCassandraVersion().after(VER_1_2)) {
 			assertEquals(col.toString(), contains, col.contains(new CqlTable("compaction_history")));
+		} else {
+			assertFalse(col.toString(), col.contains(new CqlTable("compaction_history")));
+		}
+
+		if (cs.getCassandraVersion().before(VER_2_1)) {
+			assertEquals(col.toString(), contains, col.contains(new CqlTable("NodeIdInfo")));
+		} else {
+			assertFalse(col.toString(), col.contains(new CqlTable("NodeIdInfo")));
+		}
+
+		if (cs.getCassandraVersion() == VER_2_1) {
+			assertEquals(col.toString(), contains, col.contains(new CqlTable("schema_usertypes")));
+		} else {
+			assertFalse(col.toString(), col.contains(new CqlTable("schema_usertypes")));
 		}
 	}
 
