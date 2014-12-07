@@ -33,4 +33,20 @@ public enum CassandraVersion {
 	public boolean before(CassandraVersion ver) {
 		return version < ver.version;
 	}
+
+	public boolean included(CassandraVersion from, CassandraVersion to) {
+		verifyFromTo(from, to);
+		return version >= from.version && version <= to.version;
+	}
+
+	public boolean between(CassandraVersion from, CassandraVersion to) {
+		verifyFromTo(from, to);
+		return version > from.version && version < to.version;
+	}
+
+	private void verifyFromTo(CassandraVersion from, CassandraVersion to) {
+		if (from.version > to.version) {
+			throw new IllegalArgumentException("CassandraVersion -> from.version < to.version");
+		}
+	}
 }
