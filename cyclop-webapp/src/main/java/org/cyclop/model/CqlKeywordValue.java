@@ -31,11 +31,19 @@ public final class CqlKeywordValue extends CqlKeyword {
 			this.value = new CqlKeywordValue(value.toLowerCase());
 		}
 
+		private Def(String value, CassandraVersion validFrom, CassandraVersion validTo) {
+			this.value = new CqlKeywordValue(value.toLowerCase(), validFrom, validTo);
+		}
+
 		public CqlKeywordValue value;
 	}
 
 	protected CqlKeywordValue(String val) {
 		super(val);
+	}
+
+	protected CqlKeywordValue(String val, CassandraVersion validFrom, CassandraVersion validTo) {
+		super(val, validFrom, validTo);
 	}
 
 	@Override

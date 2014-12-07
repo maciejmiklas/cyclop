@@ -18,7 +18,7 @@ package org.cyclop.model;
 
 /** @author Maciej Miklas */
 public enum CassandraVersion {
-	VER_1_2(1.2), VER_2_0(2.0), VER_2_1(2.1);
+	VER_1_2(1.2), VER_2_0(2.0), VER_2_1(2.1), VER_MAX(Double.MAX_VALUE);
 
 	double version;
 

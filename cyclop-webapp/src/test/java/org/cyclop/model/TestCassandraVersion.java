@@ -3,6 +3,7 @@ package org.cyclop.model;
 import static org.cyclop.model.CassandraVersion.VER_1_2;
 import static org.cyclop.model.CassandraVersion.VER_2_0;
 import static org.cyclop.model.CassandraVersion.VER_2_1;
+import static org.cyclop.model.CassandraVersion.VER_MAX;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -37,6 +38,7 @@ public class TestCassandraVersion {
 		assertTrue(VER_1_2.included(VER_1_2, VER_1_2));
 		assertTrue(VER_1_2.included(VER_1_2, VER_2_0));
 		assertTrue(VER_1_2.included(VER_1_2, VER_2_1));
+		assertTrue(VER_1_2.included(VER_1_2, VER_MAX));
 
 		assertFalse(VER_1_2.included(VER_2_0, VER_2_0));
 		assertFalse(VER_1_2.included(VER_2_1, VER_2_1));
@@ -47,6 +49,7 @@ public class TestCassandraVersion {
 	public void testIncluded_2_0() {
 		assertTrue(VER_2_0.included(VER_1_2, VER_2_0));
 		assertTrue(VER_2_0.included(VER_1_2, VER_2_1));
+		assertTrue(VER_2_0.included(VER_1_2, VER_MAX));
 		assertTrue(VER_2_0.included(VER_2_0, VER_2_0));
 		assertTrue(VER_2_0.included(VER_2_0, VER_2_1));
 
@@ -58,6 +61,7 @@ public class TestCassandraVersion {
 	public void testIncluded_2_1() {
 		assertTrue(VER_2_1.included(VER_1_2, VER_2_1));
 		assertTrue(VER_2_1.included(VER_2_1, VER_2_1));
+		assertTrue(VER_2_1.included(VER_2_1, VER_MAX));
 
 		assertFalse(VER_2_1.included(VER_1_2, VER_1_2));
 		assertFalse(VER_2_1.included(VER_1_2, VER_2_0));
@@ -75,6 +79,7 @@ public class TestCassandraVersion {
 	@Test
 	public void testBetween_2_0() {
 		assertTrue(VER_2_0.between(VER_1_2, VER_2_1));
+		assertTrue(VER_2_0.between(VER_1_2, VER_MAX));
 
 		assertFalse(VER_2_0.between(VER_1_2, VER_2_0));
 		assertFalse(VER_2_0.between(VER_2_0, VER_2_0));
@@ -88,6 +93,7 @@ public class TestCassandraVersion {
 		assertFalse(VER_2_1.between(VER_1_2, VER_1_2));
 		assertFalse(VER_2_1.between(VER_2_0, VER_2_0));
 		assertFalse(VER_2_1.between(VER_2_1, VER_2_1));
+		assertFalse(VER_2_1.between(VER_2_1, VER_MAX));
 	}
 
 	@Test(expected = IllegalArgumentException.class)

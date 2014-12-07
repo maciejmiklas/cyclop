@@ -16,6 +16,11 @@
  */
 package org.cyclop.model;
 
+import static org.cyclop.model.CassandraVersion.VER_1_2;
+import static org.cyclop.model.CassandraVersion.VER_MAX;
+
+import javax.validation.constraints.NotNull;
+
 import net.jcip.annotations.Immutable;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -29,6 +34,11 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Immutable
 public class CqlKeyword extends CqlPart {
+	@NotNull
+	public final CassandraVersion validFrom;
+
+	@NotNull
+	public final CassandraVersion validTo;
 
 	@NotEmpty
 	public final String valueSp;
@@ -46,12 +56,22 @@ public class CqlKeyword extends CqlPart {
 			this.value = new CqlKeyword(value.toLowerCase());
 		}
 
+		private Def(String value, CassandraVersion validFrom, CassandraVersion validTo) {
+			this.value = new CqlKeyword(value.toLowerCase(), validFrom, validTo);
+		}
+
 		public CqlKeyword value;
 	}
 
 	protected CqlKeyword(String val) {
+		this(val, VER_1_2, VER_MAX);
+	}
+
+	protected CqlKeyword(String val, CassandraVersion validFrom, CassandraVersion validTo) {
 		super(val);
 		this.valueSp = val.toLowerCase() + " ";
+		this.validFrom = validFrom;
+		this.validTo = validTo;
 	}
 
 	@Override
