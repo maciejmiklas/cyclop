@@ -33,7 +33,7 @@ class AfterKeyspaceNameCompletion implements OffsetBasedCompletion {
 	@PostConstruct
 	public void init() {
 		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.WITH.value)
-				.all(CqlKeyword.Def.IF_NOT_EXISTS.value).build();
+				.all(CqlKeyword.Def20.IF_NOT_EXISTS.value).build();
 	}
 
 	@Override

@@ -17,20 +17,27 @@
 package org.cyclop.service.completion.intern;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import net.jcip.annotations.ThreadSafe;
 
+import org.cyclop.common.Gullectors;
 import org.cyclop.model.ContextCqlCompletion;
+import org.cyclop.model.CqlKeyword;
+import org.cyclop.model.CqlPart;
 import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
+import org.cyclop.service.cassandra.CassandraSession;
 import org.cyclop.service.completion.CompletionService;
 import org.cyclop.service.completion.intern.parser.CqlParser;
 import org.cyclop.validation.EnableValidation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Named
@@ -43,18 +50,23 @@ class CompletionServiceImpl implements CompletionService {
 	@Inject
 	private CqlParser parser;
 
+	@Inject
+	private CassandraSession cassandraSession;
+
 	@Override
 	public ContextCqlCompletion findInitialCompletion() {
 		ContextCqlCompletion compl = new ContextCqlCompletion(CqlQueryType.UNKNOWN, parser.findInitialCompletion());
 
 		LOG.debug("Found initial completion: {}", compl);
-		return compl;
+
+		ContextCqlCompletion filtered = filterCompletion(compl);
+		LOG.debug("Filtered completion: {}", filtered);
+		return filtered;
 	}
 
 	@Override
 	public ContextCqlCompletion findCompletion(CqlQuery cqlQuery) {
 		ContextCqlCompletion compl = findCompletion(cqlQuery, -1);
-		LOG.debug("Found completion for query {} - > {}", cqlQuery, compl);
 		return compl;
 	}
 
@@ -66,6 +78,36 @@ class CompletionServiceImpl implements CompletionService {
 		Optional<ContextCqlCompletion> fcomp = parser.findCompletion(cqlQuery, cursorPosition);
 		ContextCqlCompletion comp = fcomp.orElse(ContextCqlCompletion.EMPTY);
 		LOG.debug("Found completion for query {} -> {} - > {}", cqlQuery, cursorPosition, comp);
-		return comp;
+
+		ContextCqlCompletion filtered = filterCompletion(comp);
+		LOG.debug("Filtered completion: {}", filtered);
+		return filtered;
 	}
+
+	private ContextCqlCompletion filterCompletion(ContextCqlCompletion compl) {
+		if (compl.cqlCompletion.isEmpty()) {
+			return compl;
+		}
+
+		ImmutableSortedSet<? extends CqlPart> fullCompletion = filterVersion(compl.cqlCompletion.fullCompletion);
+		ImmutableSortedSet<? extends CqlPart> minCompletion = filterVersion(compl.cqlCompletion.minCompletion);
+		ContextCqlCompletion context = compl.copyFromCompletion(fullCompletion, minCompletion);
+		return context;
+	}
+
+	private ImmutableSortedSet<? extends CqlPart> filterVersion(ImmutableSortedSet<? extends CqlPart> compl) {
+		Predicate<CqlPart> casVerPred = q -> {
+			if (q instanceof CqlKeyword) {
+				CqlKeyword qw = (CqlKeyword) q;
+				return cassandraSession.getCassandraVersion().within(qw.validFrom, qw.validTo);
+			} else {
+				return true;
+			}
+		};
+
+		ImmutableSortedSet<? extends CqlPart> filtered = compl.stream().filter(casVerPred)
+				.collect(Gullectors.toNaturalImmutableSortedSet());
+		return filtered;
+	}
+
 }

@@ -58,7 +58,7 @@
 		<profile>
 			<id>cassandra-2.0</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<activeByDefault>false</activeByDefault>
 			</activation>
 			<properties>
 				<cassandra_yaml>cassandra_2.0.yaml</cassandra_yaml>

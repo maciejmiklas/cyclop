@@ -49,9 +49,7 @@ public class CqlParser {
 	public void init() {
 
 		CqlCompletion.Builder cb = CqlCompletion.Builder.naturalOrder();
-		for (DecisionListSupport cf : decisionListSupportDef) {
-			cb.all(cf.beginnsWith());
-		}
+		decisionListSupportDef.forEach(cf -> cb.all(cf.beginnsWith()));
 		initialCqlCompletion = cb.build();
 
 		LOG.debug("Initial completion {}", initialCqlCompletion);

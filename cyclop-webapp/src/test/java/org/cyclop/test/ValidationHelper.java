@@ -17,7 +17,6 @@
 package org.cyclop.test;
 
 import static org.cyclop.model.CassandraVersion.VER_1_2;
-import static org.cyclop.model.CassandraVersion.VER_2_0;
 import static org.cyclop.model.CassandraVersion.VER_2_1;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -25,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -166,12 +166,11 @@ public class ValidationHelper {
 
 	private void verifyContainsColumns(Collection<? extends CqlPart> col, List<String> columnNamesBasic,
 			boolean contains, String... prefixes) {
-		col = asHahsCol(col);
-		assertNotNull(col);
+		final Collection<? extends CqlPart> hcol = asHahsCol(col);
+		assertNotNull(hcol);
 
-		for (String colNam : columnNamesBasic) {
-			assertEquals(colNam + " not found in: " + col.toString(), contains, col.contains(new CqlColumnName(colNam)));
-		}
+		columnNamesBasic.forEach(colNam -> assertEquals(colNam + " not found in: " + hcol.toString(), contains,
+				col.contains(new CqlColumnName(colNam))));
 
 		for (String prefix : prefixes) {
 			for (String colNam : columnNamesBasic) {
@@ -180,32 +179,29 @@ public class ValidationHelper {
 						col.contains(new CqlPart(conNamFull)));
 			}
 		}
-
 	}
 
 	public void verifyContainsNoKeywords(Collection<? extends CqlPart> cmp) {
-		for (CqlPart part : cmp) {
-			if (part instanceof CqlKeyword) {
-				assertFalse(part + " FOUND in: " + cmp, true);
-			}
-		}
+		cmp.stream().filter(part -> (part instanceof CqlKeyword))
+				.forEach(part -> assertFalse(part + " FOUND in: " + cmp, true));
 	}
 
 	public void verifyContainsOnlyKeywords(Collection<? extends CqlPart> cmp, CqlKeyword... keywords) {
 		assertTrue(keywords.length > 0);
-		Set<CqlKeyword> keywordsSet = new HashSet<>();
+		Set<CqlKeyword> keywordsSet = new HashSet<>(Arrays.asList(keywords));
 
-		for (CqlKeyword def : keywords) {
-			assertTrue(def + " not found in: " + cmp, cmp.contains(def));
-			keywordsSet.add(def);
-		}
+		keywordsSet.stream().forEach(def -> assertTrue(def + " not found in: " + cmp, cmp.contains(def)));
 
-		for (CqlKeyword.Def def : CqlKeyword.Def.values()) {
-			if (keywordsSet.contains(def.value)) {
-				continue;
-			}
-			assertFalse(def.value + " FOUND in: " + cmp, cmp.contains(def.value));
-		}
+		keywordsSet.stream().filter(k -> (k instanceof CqlKeyword)).filter(k -> inDef((CqlKeyword) k))
+				.forEach(kw -> assertTrue("Unexpected: " + kw + " FOUND in: " + cmp, keywordsSet.contains(kw)));
+	}
+
+	private boolean inDef(CqlKeyword kw) {
+
+		return Arrays.asList(CqlKeyword.Def.values()).stream().filter(def -> !def.value.equals(kw)).findFirst()
+				.isPresent()
+				|| Arrays.asList(CqlKeyword.Def20.values()).stream().filter(def -> !def.value.equals(kw)).findFirst()
+						.isPresent();
 	}
 
 	public void verifyContainsSystemColumns(Collection<? extends CqlPart> col, boolean contains) {
@@ -228,7 +224,7 @@ public class ValidationHelper {
 			assertEquals(col.toString(), contains, col.contains(new CqlColumnName("peer")));
 			assertEquals(col.toString(), contains, col.contains(new CqlColumnName("token_bytes")));
 		} else {
-
+			// TODO
 		}
 	}
 
@@ -297,7 +293,6 @@ public class ValidationHelper {
 	}
 
 	public void verifyFullAndMinCompletionNotTheSame(ContextCqlCompletion completion, int minMinSize, int fullMinSize) {
-
 		assertNotNull(completion);
 		Collection<? extends CqlPart> fullCompletion = asHahsCol(completion.cqlCompletion.fullCompletion);
 		assertNotNull(fullCompletion);

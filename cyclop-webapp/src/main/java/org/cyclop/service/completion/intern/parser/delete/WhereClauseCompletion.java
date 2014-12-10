@@ -49,7 +49,8 @@ class WhereClauseCompletion extends MarkerBasedCompletion {
 	@PostConstruct
 	public void init() {
 		builderTemplate = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.AND.value)
-				.full(CqlKeyword.Def.IN_BL.value).min(CqlKeyword.Def.IN.value).template();
+				.all(CqlKeyword.Def20.IF.value).all(CqlKeyword.Def20.IF_EXISTS.value).full(CqlKeyword.Def.IN_BL.value)
+				.min(CqlKeyword.Def.IN.value).template();
 	}
 
 	@Override

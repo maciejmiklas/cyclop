@@ -33,8 +33,16 @@ public enum CassandraVersion {
 	public boolean before(CassandraVersion ver) {
 		return version < ver.version;
 	}
+	
+	public boolean min(CassandraVersion ver) {
+		return version >= ver.version;
+	}
 
-	public boolean included(CassandraVersion from, CassandraVersion to) {
+	public boolean max(CassandraVersion ver) {
+		return version <= ver.version;
+	}
+
+	public boolean within(CassandraVersion from, CassandraVersion to) {
 		verifyFromTo(from, to);
 		return version >= from.version && version <= to.version;
 	}

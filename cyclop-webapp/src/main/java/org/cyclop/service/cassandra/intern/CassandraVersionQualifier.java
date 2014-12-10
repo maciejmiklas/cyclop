@@ -16,14 +16,14 @@
  */
 package org.cyclop.service.cassandra.intern;
 
-import org.cyclop.model.CassandraVersion;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.inject.Qualifier;
+
+import org.cyclop.model.CassandraVersion;
 
 /** @author Maciej Miklas */
 @Target({ ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE })

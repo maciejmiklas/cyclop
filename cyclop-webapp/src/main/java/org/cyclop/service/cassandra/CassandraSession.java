@@ -18,8 +18,9 @@ package org.cyclop.service.cassandra;
 
 import javax.validation.constraints.NotNull;
 
-import com.datastax.driver.core.Session;
 import org.cyclop.model.CassandraVersion;
+
+import com.datastax.driver.core.Session;
 
 /** @author Maciej Miklas */
 public interface CassandraSession extends AutoCloseable {

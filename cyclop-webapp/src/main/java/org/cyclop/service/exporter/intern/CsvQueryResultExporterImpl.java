@@ -95,10 +95,10 @@ public class CsvQueryResultExporterImpl implements CsvQueryResultExporter {
 		out.append(conf.separatorRow);
 
 		// content
-		for (Row row : result) {
+		result.forEach(row -> {
 			appendRow(out, row, columns);
 			out.append(conf.separatorRow);
-		}
+		});
 
 		out.flush();
 		out.close();

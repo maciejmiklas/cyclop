@@ -25,8 +25,7 @@ import org.cyclop.model.CqlQuery;
 public interface CompletionService {
 
 	/**
-	 * @return cql markers are: "alter table", "select" or "create keyspace" -
-	 *         columnType of cql query
+	 * @return cql markers are: "alter table", "select" or "create keyspace" - columnType of cql query
 	 */
 	@NotNull
 	ContextCqlCompletion findInitialCompletion();

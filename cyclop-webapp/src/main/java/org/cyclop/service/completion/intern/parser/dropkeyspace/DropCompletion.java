@@ -40,7 +40,7 @@ class DropCompletion extends MarkerBasedCompletion {
 
 	@PostConstruct
 	public void init() {
-		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.IF_EXISTS.value).template();
+		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def20.IF_EXISTS.value).template();
 	}
 
 	public DropCompletion() {

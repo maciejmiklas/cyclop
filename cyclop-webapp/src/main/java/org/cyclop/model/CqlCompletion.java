@@ -28,6 +28,7 @@ import net.jcip.annotations.Immutable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
@@ -35,11 +36,10 @@ import com.google.common.collect.ImmutableSortedSet;
 public final class CqlCompletion implements Serializable {
 	private final static Logger LOG = LoggerFactory.getLogger(CqlCompletion.class);
 
-	private final static String[] VALUE_PREF = { "'", "(", ",", ":" };
+	private final static ImmutableList<String> VALUE_PREF = ImmutableList.of("'", "(", ",", ":");
 
 	/**
-	 * used during typing, contains all possible combinations that will be
-	 * suggested when pressing TAB
+	 * used during typing, contains all possible combinations that will be suggested when pressing TAB
 	 */
 	@NotNull
 	@Valid
@@ -50,7 +50,7 @@ public final class CqlCompletion implements Serializable {
 	@Valid
 	public final ImmutableSortedSet<? extends CqlPart> minCompletion;
 
-	private CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion,
+	CqlCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion,
 			ImmutableSortedSet<? extends CqlPart> minCompletion) {
 		this.fullCompletion = fullCompletion;
 		this.minCompletion = minCompletion;
@@ -134,9 +134,7 @@ public final class CqlCompletion implements Serializable {
 		}
 
 		public Builder prefix(CqlPart part) {
-			for (String pref : VALUE_PREF) {
-				prefix(pref, part);
-			}
+			VALUE_PREF.stream().forEach(pref -> prefix(pref, part));
 			return this;
 		}
 
@@ -150,16 +148,12 @@ public final class CqlCompletion implements Serializable {
 		}
 
 		private Builder prefix(String prefix, Collection<? extends CqlPart> col) {
-			for (CqlPart part : col) {
-				prefix(prefix, part);
-			}
+			col.stream().forEach(part -> prefix(prefix, part));
 			return this;
 		}
 
 		public Builder value(Collection<? extends CqlPart> col) {
-			for (String pref : VALUE_PREF) {
-				prefix(pref, col);
-			}
+			VALUE_PREF.stream().forEach(pref -> prefix(pref, col));
 			return this;
 		}
 

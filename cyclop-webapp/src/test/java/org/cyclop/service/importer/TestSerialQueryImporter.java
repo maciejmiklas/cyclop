@@ -29,7 +29,6 @@ import org.cyclop.model.CqlQuery;
 import org.cyclop.model.CqlQueryType;
 import org.cyclop.service.importer.model.ImportConfig;
 import org.cyclop.service.importer.model.ImportStats;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestSerialQueryImporter extends AbstractImporterCase {

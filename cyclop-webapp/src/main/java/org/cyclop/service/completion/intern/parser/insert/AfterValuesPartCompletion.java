@@ -38,7 +38,8 @@ class AfterValuesPartCompletion extends MarkerBasedCompletion {
 	@PostConstruct
 	public void init() {
 		completion = CqlCompletion.Builder.naturalOrder().all(CqlKeyword.Def.USING_TTL.value)
-				.all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.AND.value).build();
+				.all(CqlKeyword.Def.USING_TIMESTAMP.value).all(CqlKeyword.Def.AND.value)
+				.all(CqlKeyword.Def20.IF_NOT_EXISTS.value).build();
 	}
 
 	@Override

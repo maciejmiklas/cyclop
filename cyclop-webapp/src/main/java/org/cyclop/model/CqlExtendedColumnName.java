@@ -21,9 +21,9 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.google.common.base.MoreObjects;
-
 import net.jcip.annotations.Immutable;
+
+import com.google.common.base.MoreObjects;
 
 /**
  * Cql keyword

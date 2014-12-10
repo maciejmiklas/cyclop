@@ -18,8 +18,8 @@ package org.cyclop.service.cassandra.intern;
 
 import static org.cyclop.common.QueryHelper.extractTableName;
 
+import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.inject.Named;
 
@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableSortedSet;
 
 /**
  * Fallback for Cassandra 1.2
+ * 
  * @author Maciej Miklas
  */
 @Named
@@ -68,9 +69,7 @@ class QueryService12Impl extends QueryServiceImpl {
 			}
 
 			String aliasesPure = aliases.substring(2, aliases.length() - 2);
-			for (String alias : aliasesPure.split(",")) {
-				keys.add(alias.trim().toLowerCase());
-			}
+			Arrays.asList(aliasesPure.split(",")).forEach(alias -> keys.add(alias.trim().toLowerCase()));
 		}
 
 		ImmutableSet<String> res = keys.build();
@@ -84,10 +83,10 @@ class QueryService12Impl extends QueryServiceImpl {
 		if (!table.isPresent()) {
 			return;
 		}
-		ImmutableSet<String> partitionKeys = findPartitionKeyNamesLc(table.get());
-		for (String partitionKey : partitionKeys) {
-			cqlColumnNames.add(new CqlColumnName(CqlDataType.create(DataType.text()), partitionKey));
-		}
+		findPartitionKeyNamesLc(table.get())
+				.forEach(
+						partitionKey -> cqlColumnNames.add(new CqlColumnName(CqlDataType.create(DataType.text()),
+								partitionKey)));
 	}
 
 	protected ImmutableMap<String, CqlColumnType> createTypeMap(CqlQuery query) {
@@ -99,14 +98,10 @@ class QueryService12Impl extends QueryServiceImpl {
 		}
 
 		ImmutableMap.Builder<String, CqlColumnType> types = ImmutableMap.builder();
-		Set<String> partitionKeys = findPartitionKeyNamesLc(table.get());
-		for (String pk : partitionKeys) {
-			types.put(pk, CqlColumnType.PARTITION_KEY);
-		}
+		findPartitionKeyNamesLc(table.get()).forEach(pk -> types.put(pk, CqlColumnType.PARTITION_KEY));
 
 		ResultSet result = execute("select column_name from system.schema_columns where columnfamily_name='"
 				+ table.get().part + "' allow filtering");
-
 		for (Row row : result) {
 			String name = StringUtils.trimToNull(row.getString("column_name"));
 			if (name == null) {

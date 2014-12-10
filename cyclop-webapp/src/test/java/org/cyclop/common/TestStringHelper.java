@@ -16,7 +16,8 @@
  */
 package org.cyclop.common;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.net.InetAddress;
 import java.util.Optional;

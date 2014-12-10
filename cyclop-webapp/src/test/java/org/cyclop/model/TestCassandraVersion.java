@@ -21,6 +21,16 @@ public class TestCassandraVersion {
 		assertTrue(VER_2_0.after(VER_1_2));
 		assertTrue(VER_2_1.after(VER_1_2));
 	}
+	
+	@Test
+	public void testMin() {
+		assertFalse(VER_1_2.min(VER_2_0));
+		assertFalse(VER_1_2.min(VER_2_1));
+		
+		assertTrue(VER_1_2.min(VER_1_2));
+		assertTrue(VER_2_0.after(VER_1_2));
+		assertTrue(VER_2_1.after(VER_1_2));
+	}
 
 	@Test
 	public void testBefore() {
@@ -32,39 +42,49 @@ public class TestCassandraVersion {
 		assertFalse(VER_2_0.before(VER_1_2));
 		assertFalse(VER_2_1.before(VER_1_2));
 	}
-
+	
 	@Test
-	public void testIncluded_1_2() {
-		assertTrue(VER_1_2.included(VER_1_2, VER_1_2));
-		assertTrue(VER_1_2.included(VER_1_2, VER_2_0));
-		assertTrue(VER_1_2.included(VER_1_2, VER_2_1));
-		assertTrue(VER_1_2.included(VER_1_2, VER_MAX));
+	public void testMax() {
+		assertTrue(VER_1_2.max(VER_1_2));
+		assertTrue(VER_1_2.max(VER_2_0));
+		assertTrue(VER_1_2.max(VER_2_1));
 
-		assertFalse(VER_1_2.included(VER_2_0, VER_2_0));
-		assertFalse(VER_1_2.included(VER_2_1, VER_2_1));
-		assertFalse(VER_1_2.included(VER_2_0, VER_2_1));
+		assertFalse(VER_2_0.max(VER_1_2));
+		assertFalse(VER_2_1.max(VER_1_2));
 	}
 
 	@Test
-	public void testIncluded_2_0() {
-		assertTrue(VER_2_0.included(VER_1_2, VER_2_0));
-		assertTrue(VER_2_0.included(VER_1_2, VER_2_1));
-		assertTrue(VER_2_0.included(VER_1_2, VER_MAX));
-		assertTrue(VER_2_0.included(VER_2_0, VER_2_0));
-		assertTrue(VER_2_0.included(VER_2_0, VER_2_1));
+	public void testWithin_1_2() {
+		assertTrue(VER_1_2.within(VER_1_2, VER_1_2));
+		assertTrue(VER_1_2.within(VER_1_2, VER_2_0));
+		assertTrue(VER_1_2.within(VER_1_2, VER_2_1));
+		assertTrue(VER_1_2.within(VER_1_2, VER_MAX));
 
-		assertFalse(VER_2_0.included(VER_2_1, VER_2_1));
-		assertFalse(VER_2_0.included(VER_1_2, VER_1_2));
+		assertFalse(VER_1_2.within(VER_2_0, VER_2_0));
+		assertFalse(VER_1_2.within(VER_2_1, VER_2_1));
+		assertFalse(VER_1_2.within(VER_2_0, VER_2_1));
 	}
 
 	@Test
-	public void testIncluded_2_1() {
-		assertTrue(VER_2_1.included(VER_1_2, VER_2_1));
-		assertTrue(VER_2_1.included(VER_2_1, VER_2_1));
-		assertTrue(VER_2_1.included(VER_2_1, VER_MAX));
+	public void testWithin_2_0() {
+		assertTrue(VER_2_0.within(VER_1_2, VER_2_0));
+		assertTrue(VER_2_0.within(VER_1_2, VER_2_1));
+		assertTrue(VER_2_0.within(VER_1_2, VER_MAX));
+		assertTrue(VER_2_0.within(VER_2_0, VER_2_0));
+		assertTrue(VER_2_0.within(VER_2_0, VER_2_1));
 
-		assertFalse(VER_2_1.included(VER_1_2, VER_1_2));
-		assertFalse(VER_2_1.included(VER_1_2, VER_2_0));
+		assertFalse(VER_2_0.within(VER_2_1, VER_2_1));
+		assertFalse(VER_2_0.within(VER_1_2, VER_1_2));
+	}
+
+	@Test
+	public void testWithin_2_1() {
+		assertTrue(VER_2_1.within(VER_1_2, VER_2_1));
+		assertTrue(VER_2_1.within(VER_2_1, VER_2_1));
+		assertTrue(VER_2_1.within(VER_2_1, VER_MAX));
+
+		assertFalse(VER_2_1.within(VER_1_2, VER_1_2));
+		assertFalse(VER_2_1.within(VER_1_2, VER_2_0));
 	}
 
 	@Test
@@ -97,8 +117,8 @@ public class TestCassandraVersion {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testIncluded_FromAfterTo() {
-		VER_2_1.included(VER_2_1, VER_2_0);
+	public void testWithin_FromAfterTo() {
+		VER_2_1.within(VER_2_1, VER_2_0);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

@@ -39,8 +39,7 @@ class TabHelper {
 	 * Registers tab which content will be reloaded when user selects this tab.
 	 *
 	 * @param tabClikcLinkCssRef
-	 *            CSS class used by jquery to find link to register
-	 *            content-refresh-callback-ajax-request
+	 *            CSS class used by jquery to find link to register content-refresh-callback-ajax-request
 	 */
 	public void registerReloadableTab(AjaxReloadSupport tab, String tabClikcLinkCssRef) {
 		refreshTabs.add(new FullRefreshData(tab, tabClikcLinkCssRef));
@@ -51,22 +50,16 @@ class TabHelper {
 	 * Registers tab which content will not be reloaded when user selects it.
 	 *
 	 * @param tabClikcLinkCssClass
-	 *            this class will be used by jquery to register
-	 *            on-click-handler. It will remove content of all other tabs
-	 *            that support ajax reload.
+	 *            this class will be used by jquery to register on-click-handler. It will remove content of all other
+	 *            tabs that support ajax reload.
 	 */
 	public void registerSaticTab(String tabClikcLinkCssClass) {
 		staticTabLinkCssRefs.add(tabClikcLinkCssClass);
 	}
 
 	public void renderHead(IHeaderResponse response) {
-		for (FullRefreshData tab : refreshTabs) {
-			initReloadableTab(response, tab);
-		}
-
-		for (String tab : staticTabLinkCssRefs) {
-			initStaticTab(response, tab);
-		}
+		refreshTabs.forEach(tab -> initReloadableTab(response, tab));
+		staticTabLinkCssRefs.forEach(tab -> initStaticTab(response, tab));
 	}
 
 	private void initStaticTab(IHeaderResponse response, String staticTabLinkCssRef) {

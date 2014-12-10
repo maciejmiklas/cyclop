@@ -16,7 +16,7 @@
  */
 package org.cyclop.service.cassandra;
 
-import static org.cyclop.model.CassandraVersion.*;
+import static org.cyclop.model.CassandraVersion.VER_1_2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -28,7 +28,6 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlColumnType;
 import org.cyclop.model.CqlDataType;

@@ -17,6 +17,7 @@
 package org.cyclop.model;
 
 import static org.cyclop.model.CassandraVersion.VER_1_2;
+import static org.cyclop.model.CassandraVersion.VER_2_0;
 import static org.cyclop.model.CassandraVersion.VER_MAX;
 
 import javax.validation.constraints.NotNull;
@@ -26,9 +27,8 @@ import net.jcip.annotations.Immutable;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * cql keywords are: create keyspace, use, alter keyspace, drop keyspace, create
- * table, alter table, drop table, truncate, create index, drop index, insert,
- * update, delete, batch, select
+ * cql keywords are: create keyspace, use, alter keyspace, drop keyspace, create table, alter table, drop table,
+ * truncate, create index, drop index, insert, update, delete, batch, select
  *
  * @author Maciej Miklas
  */
@@ -58,6 +58,24 @@ public class CqlKeyword extends CqlPart {
 
 		private Def(String value, CassandraVersion validFrom, CassandraVersion validTo) {
 			this.value = new CqlKeyword(value.toLowerCase(), validFrom, validTo);
+		}
+
+		private Def(Def value, CassandraVersion validFrom, CassandraVersion validTo) {
+			this.value = new CqlKeyword(value.value.part, validFrom, validTo);
+		}
+
+		public CqlKeyword value;
+	}
+
+	public static enum Def20 {
+		IF_NOT_EXISTS(Def.IF_NOT_EXISTS), IF_EXISTS(Def.IF_EXISTS), IF("if");
+
+		private Def20(String value) {
+			this.value = new CqlKeyword(value.toLowerCase(), VER_2_0, VER_MAX);
+		}
+
+		private Def20(Def value) {
+			this.value = new CqlKeyword(value.value.part, VER_2_0, VER_MAX);
 		}
 
 		public CqlKeyword value;

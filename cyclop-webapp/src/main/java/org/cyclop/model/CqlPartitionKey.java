@@ -18,9 +18,9 @@ package org.cyclop.model;
 
 import java.util.Objects;
 
-import com.google.common.base.MoreObjects;
-
 import net.jcip.annotations.Immutable;
+
+import com.google.common.base.MoreObjects;
 
 /** @author Maciej Miklas */
 @Immutable

@@ -1,6 +1,7 @@
 package org.cyclop.service.security;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
 import java.net.InetAddress;

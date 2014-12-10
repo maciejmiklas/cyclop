@@ -98,13 +98,11 @@ public class CookieStorage {
 			if (cookies == null || cookies.isEmpty()) {
 				return Optional.empty();
 			}
-			for (Cookie cookie : cookies) {
-				if (name.name().equals(cookie.getName())) {
-					LOG.debug("Found cookie: {}", cookie);
-					return Optional.of(cookie);
-				}
-			}
-			return Optional.empty();
+
+			Optional<Cookie> result = cookies.stream().filter(cookie -> name.name().equals(cookie.getName()))
+					.findFirst();
+			LOG.debug("Found cookie: {}", result);
+			return result;
 		} catch (Exception e) {
 			LOG.warn("Error reading cookie {}, Reason: {}", name, e.getMessage());
 			LOG.debug(e.getMessage(), e);

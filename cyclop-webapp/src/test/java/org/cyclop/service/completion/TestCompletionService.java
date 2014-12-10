@@ -24,6 +24,7 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlKeyword;
 import org.cyclop.model.CqlKeywordValue;
@@ -34,7 +35,6 @@ import org.cyclop.model.exception.BeanValidationException;
 import org.cyclop.service.cassandra.QueryService;
 import org.cyclop.test.AbstractTestCase;
 import org.cyclop.test.ValidationHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableSortedSet;
@@ -337,10 +337,14 @@ public class TestCompletionService extends AbstractTestCase {
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.CREATE_KEYSPACE,
 				"create keyspace "));
 
-		vh.verifyFullAndMinCompletionTheSame(completion, 2);
-
 		ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
-		vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.WITH.value, CqlKeyword.Def.IF_NOT_EXISTS.value);
+		if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
+			vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.WITH.value, CqlKeyword.Def.IF_NOT_EXISTS.value);
+			vh.verifyFullAndMinCompletionTheSame(completion, 2);
+		} else {
+			vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.WITH.value);
+			vh.verifyFullAndMinCompletionTheSame(completion, 1);
+		}
 	}
 
 	@Test
@@ -424,10 +428,13 @@ public class TestCompletionService extends AbstractTestCase {
 				"delete abc from cqldemo.mybooks WHERE"));
 
 		vh.verifyFullAndMinCompletionNotTheSame(completion, 15, 15);
+		Collection<? extends CqlPart> mcmp = vh.asHahsCol(completion.cqlCompletion.minCompletion);
 
-		{
-			Collection<? extends CqlPart> mcmp = vh.asHahsCol(completion.cqlCompletion.minCompletion);
-			vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.IN.value, CqlKeyword.Def.AND.value);
+		if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
+			vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.AND.value, CqlKeyword.Def.IN.value,
+					CqlKeyword.Def20.IF_EXISTS.value, CqlKeyword.Def20.IF.value);
+		} else {
+			vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.AND.value, CqlKeyword.Def.IN.value);
 		}
 
 		{
@@ -436,7 +443,6 @@ public class TestCompletionService extends AbstractTestCase {
 			vh.verifyContainsAllKeyspaces(fcmp, false);
 			vh.verifyContainsTableNamesSystem(fcmp, false);
 			vh.verifyContainsCompoundTestColumns(fcmp, false);
-			vh.verifyContainsOnlyKeywords(fcmp, CqlKeyword.Def.IN_BL.value, CqlKeyword.Def.AND.value);
 		}
 	}
 
@@ -535,7 +541,12 @@ public class TestCompletionService extends AbstractTestCase {
 		{
 			Collection<? extends CqlPart> mcmp = vh.asHahsCol(completion.cqlCompletion.minCompletion);
 			vh.verifyContainsAllKeyspaces(mcmp, true);
-			vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.IF_EXISTS.value);
+			if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
+				vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.IF_EXISTS.value);
+			} else {
+				vh.verifyContainsNoKeywords(mcmp);
+			}
+
 			vh.verifyContainsTableNamesCqlDemo(mcmp, spaceCqlDemoOrSystem);
 			vh.verifyContainsTableNamesSystem(mcmp, !spaceCqlDemoOrSystem);
 			vh.verifyContainsIndexFromCqlDemo(mcmp, false);
@@ -544,7 +555,11 @@ public class TestCompletionService extends AbstractTestCase {
 		{
 			Collection<? extends CqlPart> fcmp = vh.asHahsCol(completion.cqlCompletion.fullCompletion);
 			vh.verifyContainsAllKeyspaces(fcmp, true, ".");
-			vh.verifyContainsOnlyKeywords(fcmp, CqlKeyword.Def.IF_EXISTS.value);
+			if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
+				vh.verifyContainsOnlyKeywords(fcmp, CqlKeyword.Def.IF_EXISTS.value);
+			} else {
+				vh.verifyContainsNoKeywords(fcmp);
+			}
 			vh.verifyContainsTableNamesCqlDemo(fcmp, spaceCqlDemoOrSystem);
 			vh.verifyContainsTableNamesSystem(fcmp, !spaceCqlDemoOrSystem);
 			vh.verifyContainsIndexFromCqlDemo(fcmp, false);
@@ -751,15 +766,25 @@ public class TestCompletionService extends AbstractTestCase {
 
 		ImmutableSortedSet<? extends CqlPart> cmp = completion.cqlCompletion.fullCompletion;
 		vh.verifyContainsIndexFromCqlDemo(cmp, true);
-		vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.IF_NOT_EXISTS.value);
+		if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
+			vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def20.IF_EXISTS.value);
+		} else {
+			vh.verifyContainsNoKeywords(cmp);
+		}
 	}
 
 	private void verifyDropKeyspaceAfterDrop(ContextCqlCompletion completion) {
-		vh.verifyFullAndMinCompletionTheSame(completion, 4);
+
 		Collection<? extends CqlPart> cmp = vh.asHahsCol(completion.cqlCompletion.fullCompletion);
 		vh.verifyContainsAllKeyspaces(cmp, true);
 		vh.verifyContainsAllColumns(completion, false);
-		vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.IF_EXISTS.value);
+		if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
+			vh.verifyContainsOnlyKeywords(cmp, CqlKeyword.Def.IF_EXISTS.value);
+			vh.verifyFullAndMinCompletionTheSame(completion, 4);
+		} else {
+			vh.verifyFullAndMinCompletionTheSame(completion, 3);
+			vh.verifyContainsNoKeywords(cmp);
+		}
 	}
 
 	private void verifyInitialCompletion(ContextCqlCompletion completion) {

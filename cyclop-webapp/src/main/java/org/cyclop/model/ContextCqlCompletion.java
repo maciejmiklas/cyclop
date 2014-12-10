@@ -22,9 +22,10 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.google.common.base.MoreObjects;
-
 import net.jcip.annotations.Immutable;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableSortedSet;
 
 /** @author Maciej Miklas */
 @Immutable
@@ -43,6 +44,18 @@ public final class ContextCqlCompletion implements Serializable {
 	public ContextCqlCompletion(CqlQueryType queryName, CqlCompletion cqlCompletion) {
 		this.queryName = queryName;
 		this.cqlCompletion = cqlCompletion;
+	}
+
+	public ContextCqlCompletion copyFromCompletion(ImmutableSortedSet<? extends CqlPart> fullCompletion,
+			ImmutableSortedSet<? extends CqlPart> minCompletion) {
+
+		CqlCompletion cqlCompletion = new CqlCompletion(fullCompletion, minCompletion);
+		ContextCqlCompletion context = new ContextCqlCompletion(queryName, cqlCompletion);
+		return context;
+	}
+
+	public boolean isEmpty() {
+		return cqlCompletion.isEmpty();
 	}
 
 	@Override
