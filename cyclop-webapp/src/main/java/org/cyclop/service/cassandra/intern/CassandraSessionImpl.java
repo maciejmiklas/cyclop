@@ -41,8 +41,6 @@ import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.exceptions.InvalidQueryException;
 
 /** @author Maciej Miklas */
-
-// TODO  java.io.NotSerializableException: org.cyclop.service.cassandra.impl.CassandraSessionImpl
 @NotThreadSafe
 @Named
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
@@ -50,14 +48,14 @@ import com.datastax.driver.core.exceptions.InvalidQueryException;
 public class CassandraSessionImpl implements CassandraSession {
 	private final static Logger LOG = LoggerFactory.getLogger(CassandraSessionImpl.class);
 
-	private Session session;
+	private transient Session session;
 
 	@Inject
 	private AppConfig appConfig;
 
 	private CassandraVersion cassandraVersion;
 
-	private Cluster cluster;
+	private transient Cluster cluster;
 
 	public synchronized void authenticate(@NotNull String userName, @NotNull String password) {
 		if (session != null) {

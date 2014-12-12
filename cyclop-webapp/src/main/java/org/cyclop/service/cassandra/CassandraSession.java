@@ -16,6 +16,8 @@
  */
 package org.cyclop.service.cassandra;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotNull;
 
 import org.cyclop.model.CassandraVersion;
@@ -23,10 +25,11 @@ import org.cyclop.model.CassandraVersion;
 import com.datastax.driver.core.Session;
 
 /** @author Maciej Miklas */
-public interface CassandraSession extends AutoCloseable {
+public interface CassandraSession extends AutoCloseable, Serializable {
 
 	void authenticate(@NotNull String userName, @NotNull String password);
 
+	@Override
 	void close();
 
 	boolean isOpen();

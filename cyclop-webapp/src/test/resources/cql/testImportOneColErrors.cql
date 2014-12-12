@@ -5,7 +5,7 @@ update CqlDemo.mybooks set impcol=impcol+{3} where id=44a2054c-f98b-43a7-833d-0e
 update CqlDemo.mybooks set impcol=impcol+{4} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{5} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{6} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
-update CqlDemo.mybooks set impcol=impcol+{7} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
+update CqlDemo.mybooks set impcol=impcol+{7} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;   
 update CqlDemo.mybooks set impcol=impcol+{8} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{9} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{10} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
@@ -14,7 +14,7 @@ update CqlDemo.mybooks set impcol=impcol+{12} where id=44a2054c-f98b-43a7-833d-0
 update CqlDemo.mybooks set impcol=impcol+{13} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{14} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{15} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
-update CqlDemo.mybooks set impcol=impcol+{16} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
+update CqlDemo.mybooks set impcol=impcol+{16} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;		
 update CqlDemo.mybooks set impcol=impcol+{17} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{18} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{19} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
@@ -32,7 +32,7 @@ update CqlDemo.mybooks set impcol=impcol+{30} where id=44a2054c-f98b-43a7-833d-0
 update CqlDemo.mybooks set impcol=impcol+{31} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{32} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{33} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
-update CqlDemo.mybooks set impcol=impcol+{34} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
+update CqlDemo.mybooks set impcol=impcol+{34} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;  
 update CqlDemo.mybooks set impcol=impcol+{35} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{36} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{37} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
@@ -48,7 +48,7 @@ update CqlDemo.mybooks set impcol=impcol+{49} where id=44a2054c-f98b-43a7-833d-0
 update CqlDemo.mybooks set impcol=impcol+{50,51} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{52} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcola+{52} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
-update CqlDemo.mybooks set impcol=impcol+{54} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
+update CqlDemo.mybooks set impcol=impcol+{54} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82; 
 update CqlDemo.mybooks set impcol=impcol+{55} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{56} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{57} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
@@ -109,7 +109,7 @@ update CqlDemo.mybooks set impcol=impcol+{116} where id=44a2054c-f98b-43a7-833d-
 update CqlDemo.mybooks set impcol=impcol+{117} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{117} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{117} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
-update CqlDemo.mybooks set impcol=impcol+{117} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
+update CqlDemo.mybooks set impcol=impcol+{117} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82; 
 update CqlDemo.mybooks set impcol=impcol+{117} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{117} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;
 update CqlDemo.mybooks set impcol=impcol+{118} where id=44a2054c-f98b-43a7-833d-0e1358fdaa82;

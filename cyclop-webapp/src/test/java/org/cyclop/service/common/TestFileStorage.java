@@ -89,15 +89,14 @@ public class TestFileStorage extends AbstractTestCase {
 
 	@Test
 	public void testSupported_OnReadOnlyFolder() {
-
 		if (!unixOs) {
 			return;
 		}
 		File histFolder = new File(config.fileStore.folder);
-		histFolder.setWritable(false);
-
-		assertTrue(storage.supported());
-		assertFalse(storage.checkSupported());
+		if (histFolder.setWritable(false)) {
+			assertTrue(storage.supported());
+			assertFalse(storage.checkSupported());
+		}
 	}
 
 	@Test
