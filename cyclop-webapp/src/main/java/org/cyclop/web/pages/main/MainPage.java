@@ -84,7 +84,7 @@ public class MainPage extends ParentPage {
 	private void initAboutTab(TabHelper tabSupport) {
 		AboutPanel panel = new AboutPanel("aboutPanel");
 		add(panel);
-		tabSupport.registerReloadableTab(panel, ".cq-tabAbout");
+		tabSupport.registerSaticTab(".cq-tabAbout");
 	}
 
 	private void initHistoryTab(TabHelper tabSupport) {

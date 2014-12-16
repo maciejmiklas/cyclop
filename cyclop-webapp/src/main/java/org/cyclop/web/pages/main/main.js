@@ -15,24 +15,46 @@
  * limitations under the License.
  */
 function initReloadableTab(tabLinkCssRef, reloacCallbackLink, removeContentArray) {
-	$(tabLinkCssRef).on("click", function () {
+	$(tabLinkCssRef).on("click", function() {
 		Wicket.Ajax.get({
-			"u": reloacCallbackLink
+			"u" : reloacCallbackLink
 		});
 		removeContent(removeContentArray);
 	});
 };
 
 function initStaticTab(tabLinkCssRef, removeContentArray) {
-	$(tabLinkCssRef).on("click", function () {
+	$(tabLinkCssRef).on("click", function() {
 		removeContent(removeContentArray);
 	});
 }
 
-function removeContent(removeContentArray) {
-	console.log("#removeContent");
-	removeContentArray.map(function (item) {
-		$(item).empty();
-		console.log("#item: "+item);
+function initJumpTop() {
+	$("a[href='#jumpTopIcon']").click(function() {
+		$("html, body").animate({
+			scrollTop : 0,
+			scrollLeft : 0
+		}, "fast");
+		return false;
 	});
 }
+
+function initGlobalKeyHandler() {
+	$(document).on("keypress", function(e) {
+		// CTRL+SHIFT+U
+		if (e.ctrlKey && (e.which === 85)) {
+			$("a[href='#jumpTopIcon']").trigger("click");
+		}
+	});
+}
+
+function removeContent(removeContentArray) {
+	removeContentArray.map(function(item) {
+		$(item).empty();
+	});
+}
+
+$(function() {
+	initJumpTop();
+	initGlobalKeyHandler();
+});
