@@ -42,6 +42,13 @@ public final class CompletionHelper {
 	@Inject
 	private QueryScope queryScope;
 
+	/**
+	 * @param kw
+	 *            the order is important - first matching keyword will be used to find keyspace. For example for query:
+	 *            "drop table if exists myspace.tablea" it we provide keywords: "drop table" and "if exists" it will
+	 *            result in space: "if exists myspace.", but it we provide keywords in reverse order: "if exists",
+	 *            "drop table" than "myspace." will be found.
+	 */
 	public CqlCompletion.Builder computeTableNameCompletion(CqlQuery query, CqlKeyword... kw) {
 		CqlCompletion.Builder completion = computeTableNameCompletionWithKeyspaceInQuery(query, kw).orElse(
 				computeTableNameCompletionWithoutKeyspaceInQuery());

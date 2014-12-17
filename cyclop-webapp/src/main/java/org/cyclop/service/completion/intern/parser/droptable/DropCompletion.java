@@ -39,7 +39,7 @@ class DropCompletion extends MarkerBasedCompletion {
 	@Override
 	public CqlCompletion getCompletion(CqlQuery query) {
 		CqlCompletion.Builder completion = completionHelper.computeTableNameCompletion(query,
-				CqlKeyword.Def.DROP_TABLE.value, CqlKeyword.Def.IF_EXISTS.value);
+				CqlKeyword.Def.IF_EXISTS.value, CqlKeyword.Def.DROP_TABLE.value);
 		completion.all(CqlKeyword.Def20.IF_EXISTS.value);
 		return completion.build();
 	}

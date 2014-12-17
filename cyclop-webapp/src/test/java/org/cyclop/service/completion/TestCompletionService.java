@@ -505,10 +505,24 @@ public class TestCompletionService extends AbstractTestCase {
 	}
 
 	@Test
+	public void testFindCompletion_DropTable_AfterDrop_ProvideSpace() {
+		ContextCqlCompletion completion = cs
+				.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table cqldemo."));
+		verifyDropTableAfterDrop(completion, true, false);
+	}
+
+	@Test
+	public void testFindCompletion_DropTable_AfterDrop_ProvideSpaceWithExists() {
+		ContextCqlCompletion completion = cs
+				.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table if exists cqldemo."));
+		verifyDropTableAfterDrop(completion, true, false);
+	}
+	
+	@Test
 	public void testFindCompletion_DropTable_AfterDrop_SpaceCqlDemo() {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table "));
-		verifyDropTableAfterDrop(completion, true);
+		verifyDropTableAfterDrop(completion, true, true);
 	}
 
 	@Test
@@ -516,14 +530,14 @@ public class TestCompletionService extends AbstractTestCase {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "use cqldemo"));
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE,
 				"drop table if exists a"));
-		verifyDropTableAfterDrop(completion, true);
+		verifyDropTableAfterDrop(completion, true, true);
 	}
 
 	@Test
 	public void testFindCompletion_DropTable_AfterDrop_SpaceSystem() {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE, "drop table "));
-		verifyDropTableAfterDrop(completion, false);
+		verifyDropTableAfterDrop(completion, false, true);
 	}
 
 	@Test
@@ -531,16 +545,19 @@ public class TestCompletionService extends AbstractTestCase {
 		qs.execute(new CqlQuery(CqlQueryType.USE, "use system"));
 		ContextCqlCompletion completion = cs.findCompletion(new CqlQuery(CqlQueryType.DROP_TABLE,
 				"drop table if exists"));
-		verifyDropTableAfterDrop(completion, false);
+		verifyDropTableAfterDrop(completion, false, true);
 	}
 
-	private void verifyDropTableAfterDrop(ContextCqlCompletion completion, boolean spaceCqlDemoOrSystem) {
-		vh.verifyFullAndMinCompletionNotTheSame(completion, 6, 6);
+	private void verifyDropTableAfterDrop(ContextCqlCompletion completion, boolean spaceCqlDemoOrSystem,
+			boolean containsKeyspaces) {
+
+		int ks = containsKeyspaces ? 6 : 4;
+		vh.verifyFullAndMinCompletionNotTheSame(completion, ks, ks);
 		vh.verifyContainsAllColumns(completion, false);
 
 		{
 			Collection<? extends CqlPart> mcmp = vh.asHahsCol(completion.cqlCompletion.minCompletion);
-			vh.verifyContainsAllKeyspaces(mcmp, true);
+			vh.verifyContainsAllKeyspaces(mcmp, containsKeyspaces);
 			if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
 				vh.verifyContainsOnlyKeywords(mcmp, CqlKeyword.Def.IF_EXISTS.value);
 			} else {
@@ -554,7 +571,7 @@ public class TestCompletionService extends AbstractTestCase {
 
 		{
 			Collection<? extends CqlPart> fcmp = vh.asHahsCol(completion.cqlCompletion.fullCompletion);
-			vh.verifyContainsAllKeyspaces(fcmp, true, ".");
+			vh.verifyContainsAllKeyspaces(fcmp, containsKeyspaces, ".");
 			if (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0)) {
 				vh.verifyContainsOnlyKeywords(fcmp, CqlKeyword.Def.IF_EXISTS.value);
 			} else {

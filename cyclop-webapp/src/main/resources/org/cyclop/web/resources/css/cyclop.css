@@ -100,7 +100,7 @@ ul.cq-resTable-collectionList {
 .cq-resTable-table th, .cq-resTable-table td {
 	word-break: break-all;
 	max-width: 50em;
-	min-width: 10em;
+	min-width: 15em;
 	width: auto;
 }
 
@@ -174,13 +174,18 @@ pre.cq-cqlHelp-syntax {
 /* #################################################################### */
 /* ### Import Page ### */
 /* #################################################################### */
+.cq-import-fileBtn {
+	position: relative;
+	overflow: hidden;
+}
+
 .cq-import-fileBtn input[type=file] {
 	position: absolute;
 	top: 0;
 	right: 0;
 	min-width: 100%;
 	min-height: 100%;
-	font-size: 999px;
+	font-size: 100px;
 	text-align: right;
 	filter: alpha(opacity = 0);
 	opacity: 0;
