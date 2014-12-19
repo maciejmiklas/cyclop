@@ -215,7 +215,7 @@ public final class AppConfig implements Serializable {
 		public final boolean captchaEnabled;
 
 		public final int blockDelayMs;
-		
+
 		@Min(1000)
 		public final int maxBlockMs;
 
@@ -257,7 +257,8 @@ public final class AppConfig implements Serializable {
 	@Named
 	@Immutable
 	public static class Common implements Serializable {
-
+		public final boolean debugOn = "development".equalsIgnoreCase(System.getProperties().getProperty(
+				"wicket.configuration", "deployment"));
 	}
 
 	@Named

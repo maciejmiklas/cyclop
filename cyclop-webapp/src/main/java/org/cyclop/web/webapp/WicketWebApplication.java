@@ -28,6 +28,7 @@ import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.settings.IRequestCycleSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.cyclop.common.AppConfig;
 import org.cyclop.web.pages.authenticate.AuthenticationPage;
 import org.cyclop.web.pages.error.ErrorPage;
 import org.cyclop.web.pages.main.MainPage;
@@ -35,7 +36,8 @@ import org.cyclop.web.pages.main.MainPage;
 /** @author Maciej Miklas */
 public class WicketWebApplication extends AuthenticatedWebApplication {
 
-	@Override
+	private AppConfig conf = AppConfig.get();
+
 	public Class<? extends Page> getHomePage() {
 		return MainPage.class;
 	}
@@ -50,6 +52,13 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 		setupSecurity();
 		setupExceptionHandler();
 		setupErrorPage();
+		setupDebug();
+	}
+
+	private void setupDebug() {
+		boolean debug = conf.common.debugOn;
+		getMarkupSettings().setStripComments(!debug);
+		getMarkupSettings().setStripWicketTags(!debug);
 	}
 
 	private void setupErrorPage() {
@@ -73,7 +82,6 @@ public class WicketWebApplication extends AuthenticatedWebApplication {
 	}
 
 	private void setupWicket() {
-		getMarkupSettings().setStripWicketTags(true);
 		getMarkupSettings().setDefaultMarkupEncoding("UTF-8");
 		getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
 		setPageManagerProvider(new NoSerializationPageManagerProvider(this));
