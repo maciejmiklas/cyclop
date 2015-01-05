@@ -551,7 +551,7 @@ public class TestCompletionService extends AbstractTestCase {
 	private void verifyDropTableAfterDrop(ContextCqlCompletion completion, boolean spaceCqlDemoOrSystem,
 			boolean containsKeyspaces) {
 
-		int ks = containsKeyspaces ? 6 : 4;
+		int ks = containsKeyspaces ? 6 : (cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0) ? 4:3);
 		vh.verifyFullAndMinCompletionNotTheSame(completion, ks, ks);
 		vh.verifyContainsAllColumns(completion, false);
 

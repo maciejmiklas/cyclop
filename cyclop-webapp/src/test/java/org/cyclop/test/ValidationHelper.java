@@ -33,6 +33,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.cyclop.model.CassandraVersion;
 import org.cyclop.model.ContextCqlCompletion;
 import org.cyclop.model.CqlColumnName;
 import org.cyclop.model.CqlIndex;
@@ -51,6 +52,9 @@ public class ValidationHelper {
 
 	@Inject
 	CassandraSession cs;
+
+	@Inject
+	CassandraSession cassandraSession;
 
 	public Collection<? extends CqlPart> asHahsCol(Collection<? extends CqlPart> col) {
 		if (col == null) {
@@ -140,7 +144,8 @@ public class ValidationHelper {
 	public void verifyContainsIndexFromCqlDemo(Collection<? extends CqlPart> col, boolean contains) {
 		col = asHahsCol(col);
 		assertNotNull(col);
-		assertTrue("Size:" + col.size(), col.size() >= 4);
+		assertTrue("Size:" + col.size(), col.size() >=
+				(cassandraSession.getCassandraVersion().min(CassandraVersion.VER_2_0) ? 4: 3));
 
 		assertEquals(col.toString(), contains, col.contains(new CqlIndex("mybooks_publishdate_idx")));
 		assertEquals(col.toString(), contains, col.contains(new CqlIndex("mybooks_pages_idx")));

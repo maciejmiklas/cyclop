@@ -105,7 +105,9 @@ class CompletionServiceImpl implements CompletionService {
 			}
 		};
 
-		ImmutableSortedSet<? extends CqlPart> filtered = compl.stream().filter(casVerPred)
+
+		ImmutableSortedSet<? extends CqlPart> filtered = ((ImmutableSortedSet<CqlPart>)compl).stream().filter
+				(casVerPred)
 				.collect(Gullectors.toNaturalImmutableSortedSet());
 		return filtered;
 	}
