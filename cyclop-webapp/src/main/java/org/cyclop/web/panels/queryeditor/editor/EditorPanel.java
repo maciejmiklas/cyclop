@@ -57,6 +57,7 @@ public class EditorPanel extends Panel {
 	private CompletionService completionService;
 
 	private ContextCqlCompletion currentCompletion;
+	private ContextCqlCompletion lastCompletion;
 
 	private final List<CompletionChangeListener> completionChangeListeners = new ArrayList<>();
 
@@ -84,16 +85,20 @@ public class EditorPanel extends Panel {
 	}
 
 	public void resetCompletion() {
+		if (currentCompletion != null) {
+			lastCompletion = currentCompletion;
+		}
 		currentCompletion = null;
 	}
 
 	public CqlQuery getEditorContent() {
 		String editorValue = editor.getDefaultModelObjectAsString();
 		editorValue = StringUtils.trimToNull(editorValue);
-		if (editorValue == null || currentCompletion == null) {
+		ContextCqlCompletion completion = currentCompletion == null ? lastCompletion : currentCompletion;
+		if (editorValue == null || completion == null) {
 			return null;
 		}
-		CqlQuery cq = new CqlQuery(currentCompletion.queryName, editorValue);
+		CqlQuery cq = new CqlQuery(completion.queryName, editorValue);
 		return cq;
 	}
 

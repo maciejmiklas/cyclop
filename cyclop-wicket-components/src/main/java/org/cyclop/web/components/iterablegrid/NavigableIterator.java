@@ -16,12 +16,12 @@
  */
 package org.cyclop.web.components.iterablegrid;
 
-import net.jcip.annotations.NotThreadSafe;
-
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import net.jcip.annotations.NotThreadSafe;
 
 /** @author Maciej Miklas */
 @NotThreadSafe
@@ -39,7 +39,7 @@ final class NavigableIterator<E> implements Iterator<E> {
 
 	private int count = 0;
 
-	private int limit;
+	private final int limit;
 
 	public NavigableIterator(Iterator<E> wrapped, int limit, List<E> cache) {
 		if (wrapped == null) {
@@ -60,8 +60,7 @@ final class NavigableIterator<E> implements Iterator<E> {
 	}
 
 	/**
-	 * @return true if there is more data to be cache for current setup done by
-	 *         {@link #prepare(int, int)}
+	 * @return true if there is more data to be cache for current setup done by {@link #prepare(int, int)}
 	 */
 	@Override
 	public boolean hasNext() {
@@ -88,9 +87,8 @@ final class NavigableIterator<E> implements Iterator<E> {
 				next = null;
 			} else {
 
-				// Call on NavigableIterator#prepare(...) could skipp some
-				// elements, this has to be reflected in
-				// iterator position on #wrapper
+				// Call on NavigableIterator#prepare(...) could skip some
+				// elements, this has to be reflected in iterator position on #wrapper
 				iterateToIndex(nextIndex);
 
 				next = wrapped.next();
@@ -127,6 +125,10 @@ final class NavigableIterator<E> implements Iterator<E> {
 			}
 		}
 		return index;
+	}
+
+	public int maxSize() {
+		return Math.max(read.size(), cache.size());
 	}
 
 	public int readSize() {

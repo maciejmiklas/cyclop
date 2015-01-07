@@ -16,11 +16,11 @@
  */
 package org.cyclop.web.components.iterablegrid;
 
-import org.apache.wicket.markup.repeater.data.IDataProvider;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.wicket.markup.repeater.data.IDataProvider;
 
 /** @author Maciej Miklas */
 public abstract class IterableDataProvider<E> implements IDataProvider<E> {
@@ -34,8 +34,7 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 	private long currentPage = 0;
 
 	/**
-	 * max amount of elements read from iterator. This prevents out of memory
-	 * for large iterators.
+	 * max amount of elements read from iterator. This prevents out of memory for large iterators.
 	 */
 	private int elementsLimit = Integer.MAX_VALUE;
 
@@ -52,22 +51,20 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 	public final long size() {
 		long size;
 
-		// uer goes back on pager, like now he is on page 5 and clicks on 3
+		// user goes back on pager, like now he is on page 5 and clicks on 3
 		// OR
 		// there is no more data to be read - we are on last page
 		if (lastPage > currentPage || !iterator.hasMoreData()) {
-			size = iterator.readSize();
+			size = iterator.maxSize();
 
 			// user is now on page 2 and clicks on next page - 3. Pager will show
 			// link for page 4, but not for
 			// page 5 - this will first happen when user clicks on page 4. In
 			// order to show link for only
 			// following page we have to calculate size right. This is the
-			// amount of elements up to
-			// current page (3) plus element that can be displayed on next page.
-			// If the current page is last page, the link for next page mus not
-			// be shown - this is handled by
-			// iterateToIndex(...) - it narrows calculated size to maximum
+			// amount of elements up to current page (3) plus element that can be displayed on next page.
+			// If the current page is last page, the link for next page must not
+			// be shown - this is handled by iterateToIndex(...) - it narrows calculated size to maximum
 			// allowed value.
 		} else {
 			size = iterator.readSize() + itemsPerPage + 1;
@@ -81,6 +78,7 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 		currentPage = 0;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void replaceModel() {
 		iterator = new NavigableIterator(iterator(), elementsLimit, createElementsCache());
 		reset();
@@ -109,9 +107,8 @@ public abstract class IterableDataProvider<E> implements IDataProvider<E> {
 	protected abstract Iterator<E> iterator();
 
 	/**
-	 * Use this method to replace iterator cache with something else. This can
-	 * be useful, it you need to display results of iterators containing large
-	 * data amounts (BigList, HugeCollections or BigCollections).
+	 * Use this method to replace iterator cache with something else. This can be useful, it you need to display results
+	 * of iterators containing large data amounts (BigList, HugeCollections or BigCollections).
 	 */
 	protected List<E> createElementsCache() {
 		return new ArrayList<>();
