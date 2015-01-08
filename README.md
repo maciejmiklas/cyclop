@@ -110,7 +110,7 @@ Import has also few limitations:
 * hibernate validator - v5.x
 * guava - v16.x (Cassandra 2.0 does not work with v17)
 
-# Installation 
+# Installation - Cyclop 2.x for Java 8 
 1. Install Java 8 and Maven 3
 2. Download last release: `https://github.com/maciejmiklas/cyclop/releases/latest`
 3. Edit property file: `cyclop/cyclop-webapp/src/main/resources/cyclop.properties` and set connection settings for
@@ -140,7 +140,7 @@ Cassandra:
 you have to deploy few cyclop war archives, each one with different `cassandra.hosts` value
 
 
-# Installation of Cyclop 1.4 for Java 7
+# Installation - Cyclop 1.x for Java 7
 1. Install Java 7 and Maven 3
 2. Download last release: `https://github.com/maciejmiklas/cyclop/releases/tag/v1.4.2`
 3. Edit property file: `cyclop/src/main/resources/cyclop.properties` and set connection settings for
