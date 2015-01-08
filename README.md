@@ -126,8 +126,8 @@ Cassandra:
     
 4. Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
 5. Build war file: 
-    ``` sh
-    cd cyclop
+    ``` zsh
+    	cd cyclop
 	cd cyclop-wicket-components
 	mvn install
 	cd ..
