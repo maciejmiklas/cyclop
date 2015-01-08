@@ -12,7 +12,7 @@ Here comes good news: Cyclop is 100% web based, and It's based on latest Wicket 
 There is also another cool thing: if your security experts will run penetration tests against Cyclop they will come up with findings like Database Script Injection. This will be the first time in your life when you can honestly say: "It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely not a usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
 
 # User Management
-![Login](/doc/img/login.png)
+![Login](/doc/img/login.png =250x)
 
 Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has been opened, it's being stored in HTTP session, and that's it. From now on, each query will be passed to Cassandra over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
 
@@ -56,7 +56,7 @@ matching Completion Hint colors
 * vertical layout is reversed when compared to traditional SQL editors - rows are displayed horizontally,
 and columns vertically. When scrolling page from left to right you will switch between rows. Scrolling from top to bottom
 shows follow up columns
-![Results Table](/doc/img/results_table_ver.png)
+![Results Table](/doc/img/results_table_vert.png)
 * table header for each row displays partition key, assuming that query returns it
 * long text is trimmed in order to fit into table cell. Such cell has a blue icon in the left top corner, clicking on it opens pop-up containing the whole text
 ![Large Content](/doc/img/large_content.png)
