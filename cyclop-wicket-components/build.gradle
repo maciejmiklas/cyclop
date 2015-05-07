@@ -1,0 +1,11 @@
+ext {
+	description = "General Wicket components used by Cyclop"
+	name = "Cyclop Wicket Components"
+}
+dependencies {
+	testCompile libs.test_all
+	provided libs.wicket
+	provided libs.common
+	provided libs.spring
+	provided libs.servlet
+}

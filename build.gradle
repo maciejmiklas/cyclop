@@ -1,0 +1,175 @@
+subprojects {
+    apply plugin: 'java'	
+	apply plugin: 'maven-publish'
+	defaultTasks 'build'
+	
+	version = '2.1.0-SNAPSHOT'
+	group = 'org.cyclop'
+		
+	sourceCompatibility = 1.8
+	compileJava.options.encoding = 'UTF-8'	
+	
+	ext {
+		spring_version = "4.1.2.RELEASE"
+		wicket_version = "6.18.0"
+		slf4j_version = "1.7.7"
+		logback_version = "1.1.2"
+		jackson_version = "1.9.13"
+		findbugs_version = "2.0.2"
+		guava_version = "16.0"
+		guavaTest_version = "16.0"
+		junit_version = "4.11"
+		cassandra_version = "2.1.2"
+		cassandraUnit_version = "2.0.2.2"
+		kaptcha_version = "0.0.9"
+		collections4_version = "4.0"
+		commonsLang_version = "2.4"
+		commonsLang3Version = "3.3.2"
+		inject_version = "1"
+		validation_version = "1.1.0.Final"
+		jsr250_version = "1.0"	
+		hibernateValidator_version = "5.1.3.Final"		
+		elAPI_version = "2.2.4"
+		tomcat_version = "7.0.22"
+	}
+	
+	ext.libs = [
+		servlet: [
+			"org.apache.tomcat:tomcat-servlet-api:$tomcat_version"
+		],
+		wicket: [
+			"org.apache.wicket:wicket-core:$wicket_version",
+			"org.apache.wicket:wicket-auth-roles:$wicket_version",
+			"org.apache.wicket:wicket-extensions:$wicket_version",
+			"org.apache.wicket:wicket-spring:$wicket_version"			
+		],
+		test_all: [
+			"junit:junit:$junit_version",
+			"org.springframework:spring-test:$spring_version",
+			"com.google.guava:guava-testlib:$guavaTest_version"			
+		],
+		test_cassandra: [
+			"org.apache.cassandra:cassandra-all:$cassandra_version",
+			"org.cassandraunit:cassandra-unit:$cassandraUnit_version"
+		],
+		cassandra_driver: [
+			"com.datastax.cassandra:cassandra-driver-core:$cassandra_version"
+		],
+		common: [
+			"com.google.code.findbugs:annotations:$findbugs_version",
+			"com.google.guava:guava:$guava_version",
+			"org.codehaus.jackson:jackson-mapper-asl:$jackson_version",
+			"org.codehaus.jackson:jackson-xc:$jackson_version",
+			"org.apache.commons:commons-collections4:$collections4_version",
+			"commons-lang:commons-lang:$commonsLang_version",// TODO there is lang3, why also 2?
+			"org.apache.commons:commons-lang3:$commonsLang3Version",
+			"javax.inject:javax.inject:$inject_version",
+			"javax.validation:validation-api:$validation_version",
+			"javax.annotation:jsr250-api:$jsr250_version",
+			"javax.el:javax.el-api:$elAPI_version",
+			"org.glassfish.web:javax.el:$elAPI_version",
+			"org.hibernate:hibernate-validator:$hibernateValidator_version" 
+		],
+		kaptcha: [
+			"com.github.axet:kaptcha:$kaptcha_version"
+		],
+		spring: [
+			"org.springframework:spring-aspects:$spring_version",
+			"org.springframework:spring-web:$spring_version",
+			"org.springframework:spring-webmvc:$spring_version",
+			"org.springframework:spring-core:$spring_version",
+			"org.springframework:spring-context:$spring_version",
+			"org.springframework:spring-beans:$spring_version"
+		],
+		logger: [
+			"org.slf4j:slf4j-api:$slf4j_version",
+			"org.slf4j:jcl-over-slf4j:$slf4j_version",
+			"org.slf4j:log4j-over-slf4j:$slf4j_version",
+			"ch.qos.logback:logback-core:$logback_version",
+			"ch.qos.logback:logback-classic:$logback_version"			
+		]
+	]
+		
+	configurations {
+		provided
+		all*.exclude group: 'log4j'
+		all*.exclude group: 'commons-logging'
+		all*.exclude group: 'org.mortbay.jetty'
+		all*.exclude group: 'javax.servlet'
+		all*.exclude group: 'it.unimi.dsi'		
+	}
+		
+	sourceSets {
+		main {
+			compileClasspath += configurations.provided
+			runtimeClasspath += configurations.provided
+		}
+		test {
+			compileClasspath += configurations.provided
+			runtimeClasspath += configurations.provided
+		}
+	}		
+	
+	ext.prj = [
+		name: "Default name....",
+		description: "Default description....",
+		url: "https://github.com/maciejmiklas/cyclop",
+		license: [
+			name: "The Apache Software License, Version 2.0",
+			url: "http://www.apache.org/license/LICENSE-2.0.txt"
+		],
+		developers: [
+			developer1: [ id:  "mmiklas",
+			              name: "Maciej Miklas",
+			              url: "http://maciej-miklas.blogspot.de",
+			              timezone: "-1",
+			              role: "developer"
+						]
+		]
+	]
+	
+	publishing {
+		repositories {
+			maven {
+				url "file://C:\\Daten-lokal\\Benutzer\\ml67\\.m2\\maven-repo"
+			}
+		}
+		publications {
+			maven(MavenPublication) {				
+				pom.withXml {
+					asNode().children().last() + {
+						resolveStrategy = Closure.DELEGATE_FIRST
+						name prj.name
+						description prj.description
+						url prj.url
+						licenses {
+							license {
+								name prj.license.name
+								url prj.license.url
+							}
+						}
+						developers {
+							developer {
+								id prj.developers.developer1.id
+								name prj.developers.developer1.name
+								url prj.developers.developer1.url
+								timezone prj.developers.developer1.timezone
+								roles {
+									role prj.developers.developer1.role
+								}
+							}
+						}
+					}						
+				}
+				from components.java
+			}						
+		}
+	}
+	
+	jar {
+		manifest {		
+			attributes 'Implementation-Title': project.name,
+					   'Implementation-Version': version				   
+		}
+	}	
+}

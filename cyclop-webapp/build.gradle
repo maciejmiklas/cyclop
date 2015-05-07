@@ -1,0 +1,11 @@
+apply plugin: 'war'
+
+description = "Cyclop - a web based editor for Cassandra Query Language"
+	
+dependencies {
+    compile project(':cyclop-wicket-components')
+}
+
+test {
+	maxHeapSize = "1024m"
+}
