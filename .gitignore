@@ -1,4 +1,7 @@
 *.iml
+build
+saved_caches
+.gradle
 .idea
 .classpath
 .project
