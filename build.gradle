@@ -32,6 +32,28 @@ subprojects {
 		elAPI_version = "2.2.4"
 		tomcat_version = "7.0.22"
 	}
+
+	ext.prj = [
+		name: "Default name....",
+		description: "Default description....",
+		url: "https://github.com/maciejmiklas/cyclop",
+		license: [
+			name: "The Apache Software License, Version 2.0",
+			url: "http://www.apache.org/license/LICENSE-2.0.txt"
+		],
+		developers: [
+			developer1: [ id:  "mmiklas",
+			              name: "Maciej Miklas",
+			              url: "http://maciej-miklas.blogspot.de",
+			              timezone: "-1",
+			              role: "developer"
+						]
+		],
+		issueManagement: [
+			system: "Githib",
+			url: "https://github.com/maciejmiklas/cyclop/issues"
+		]
+	]
 	
 	ext.libs = [
 		servlet: [
@@ -109,24 +131,7 @@ subprojects {
 			runtimeClasspath += configurations.provided
 		}
 	}		
-	
-	ext.prj = [
-		name: "Default name....",
-		description: "Default description....",
-		url: "https://github.com/maciejmiklas/cyclop",
-		license: [
-			name: "The Apache Software License, Version 2.0",
-			url: "http://www.apache.org/license/LICENSE-2.0.txt"
-		],
-		developers: [
-			developer1: [ id:  "mmiklas",
-			              name: "Maciej Miklas",
-			              url: "http://maciej-miklas.blogspot.de",
-			              timezone: "-1",
-			              role: "developer"
-						]
-		]
-	]
+
 	
 	publishing {
 		repositories {
@@ -136,31 +141,7 @@ subprojects {
 		}
 		publications {
 			maven(MavenPublication) {				
-				pom.withXml {
-					asNode().children().last() + {
-						resolveStrategy = Closure.DELEGATE_FIRST
-						name prj.name
-						description prj.description
-						url prj.url
-						licenses {
-							license {
-								name prj.license.name
-								url prj.license.url
-							}
-						}
-						developers {
-							developer {
-								id prj.developers.developer1.id
-								name prj.developers.developer1.name
-								url prj.developers.developer1.url
-								timezone prj.developers.developer1.timezone
-								roles {
-									role prj.developers.developer1.role
-								}
-							}
-						}
-					}						
-				}
+				preparePom(pom, prj)
 				from components.java
 			}						
 		}
@@ -171,5 +152,44 @@ subprojects {
 			attributes 'Implementation-Title': project.name,
 					   'Implementation-Version': version				   
 		}
+	}
+	test {
+		maxHeapSize = "1024m"
+	}	
+}
+
+def preparePom(pom, prj){
+	pom.withXml {
+		asNode().children().last() + {
+			resolveStrategy = Closure.DELEGATE_FIRST
+			name prj.name
+			description prj.description
+			url prj.url
+			licenses {
+				license {
+					name prj.license.name
+					url prj.license.url
+				}
+			}
+			developers {
+				developer {
+					id prj.developers.developer1.id
+					name prj.developers.developer1.name
+					url prj.developers.developer1.url
+					timezone prj.developers.developer1.timezone
+					roles {
+						role prj.developers.developer1.role
+					}
+				}
+			}
+			issueManagement {
+				system prj.issueManagement.system
+				url prj.issueManagement.url
+			}
+			properties {
+				"maven.compiler.target" "1.8"
+				"maven.compiler.source" "1.8"
+			}
+		}						
 	}	
 }

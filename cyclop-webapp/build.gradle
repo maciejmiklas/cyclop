@@ -1,11 +1,37 @@
 apply plugin: 'war'
 
-description = "Cyclop - a web based editor for Cassandra Query Language"
+prj.name = "Cyclop"
+prj.description = "Cyclop - a web based editor for Cassandra Query Language."
 	
 dependencies {
     compile project(':cyclop-wicket-components')
+	
+	testCompile libs.test_all
+	testCompile libs.test_cassandra
+	providedCompile libs.servlet
+	
+	compile libs.wicket
+	compile libs.common
+	compile libs.spring
+	compile libs.cassandra_driver
+	compile libs.kaptcha
+	compile libs.logger
 }
 
-test {
-	maxHeapSize = "1024m"
+publishing {
+	publications {
+		webApp(MavenPublication){	
+			preparePom(pom, prj)			 
+			from components.web
+		}
+	}
+}
+
+war {
+	webInf {
+		from('src/main/java') {
+	        exclude '**/*.java'
+	        into 'classes'
+	    }
+	}
 }

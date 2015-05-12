@@ -21,6 +21,7 @@ import static java.util.Comparator.comparingInt;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -31,71 +32,73 @@ import org.slf4j.LoggerFactory;
 
 /** @author Maciej Miklas */
 public class StringHelper {
-	private final static Logger LOG = LoggerFactory.getLogger(StringHelper.class);
+    private final static Logger LOG = LoggerFactory.getLogger(StringHelper.class);
 
-	public static String decorate(String toDecorate, StringDecorator decorator, String... keywordsLc) {
-		String prefix = decorator.prefix();
-		String postfix = decorator.postfix();
+    public static String decorate(String toDecorate, StringDecorator decorator, String... keywordsLc) {
+	String prefix = decorator.prefix();
+	String postfix = decorator.postfix();
 
-		int prefixLength = prefix.length();
-		StringBuilder buf = new StringBuilder(toDecorate);
-		for (String keyword : sortBySize(keywordsLc)) {
-			if (prefix.contains(keyword) || postfix.contains(keyword)) {
-				LOG.debug("Skipping keyword: {} because it's part of decoreator syntax", keyword);
-				continue;
-			}
-			String bufLc = buf.toString().toLowerCase();
-			int startSearch = 0;
-			int foundIdx = -1;
-			while ((foundIdx = bufLc.indexOf(keyword, startSearch)) >= 0) {
-				if (foundIdx > prefixLength) {
-					String kwWithPref = bufLc.substring(foundIdx - prefixLength, foundIdx);
-					if (prefix.equals(kwWithPref)) {
-						startSearch = foundIdx + kwWithPref.length() + keyword.length() + 1;
-						// word already replaced with longer one (better match)
-						continue;
-					}
-				}
-				int kwStart = foundIdx;
-				int kwEnd = foundIdx + keyword.length();
-				String orgKw = buf.substring(kwStart, kwEnd);
-				String decoratedKw = decorator.decorate(orgKw);
-				buf.replace(kwStart, kwEnd, decoratedKw);
-
-				bufLc = buf.toString().toLowerCase();
-				startSearch = foundIdx + decoratedKw.length() + 1;
-			}
+	int prefixLength = prefix.length();
+	StringBuilder buf = new StringBuilder(toDecorate);
+	for (String keyword : sortBySize(keywordsLc)) {
+	    if (prefix.contains(keyword) || postfix.contains(keyword)) {
+		LOG.debug("Skipping keyword: {} because it's part of decoreator syntax", keyword);
+		continue;
+	    }
+	    String bufLc = buf.toString().toLowerCase();
+	    int startSearch = 0;
+	    int foundIdx = -1;
+	    while ((foundIdx = bufLc.indexOf(keyword, startSearch)) >= 0) {
+		if (foundIdx > prefixLength) {
+		    String kwWithPref = bufLc.substring(foundIdx - prefixLength, foundIdx);
+		    if (prefix.equals(kwWithPref)) {
+			startSearch = foundIdx + kwWithPref.length() + keyword.length() + 1;
+			// word already replaced with longer one (better match)
+			continue;
+		    }
 		}
-		LOG.trace("Decorated {} to {}", toDecorate, buf);
-		return buf.toString();
+		int kwStart = foundIdx;
+		int kwEnd = foundIdx + keyword.length();
+		String orgKw = buf.substring(kwStart, kwEnd);
+		String decoratedKw = decorator.decorate(orgKw);
+		buf.replace(kwStart, kwEnd, decoratedKw);
+
+		bufLc = buf.toString().toLowerCase();
+		startSearch = foundIdx + decoratedKw.length() + 1;
+	    }
 	}
+	LOG.trace("Decorated {} to {}", toDecorate, buf);
+	return buf.toString();
+    }
 
-	private static Set<String> sortBySize(String... strArray) {
-		Set<String> sorted = new TreeSet<>(comparingInt(String::length).reversed().thenComparing(String::compareTo));
-		sorted.addAll(Arrays.asList(strArray));
-		return sorted;
+    private static Set<String> sortBySize(String... strArray) {
+	Comparator<String> stringComp = String::compareTo;
+	Set<String> sorted = new TreeSet<>(comparingInt(String::length).reversed().thenComparing(stringComp));
+	sorted.addAll(Arrays.asList(strArray));
+	return sorted;
+    }
+
+    public static Optional<InetAddress> toInetAddress(String ip) {
+	ip = StringUtils.trimToNull(ip);
+	if (ip == null) {
+	    return Optional.empty();
 	}
-
-	public static Optional<InetAddress> toInetAddress(String ip) {
-		ip = StringUtils.trimToNull(ip);
-		if (ip == null) {
-			return Optional.empty();
-		}
-		InetAddress addr = null;
-		try {
-			addr = InetAddress.getByName(ip);
-		} catch (UnknownHostException | SecurityException e) {
-			LOG.warn("Cannot convert: " + ip + " to valid IP: " + e.getMessage());
-			LOG.debug(e.getMessage(), e);
-		}
-		return Optional.ofNullable(addr);
+	InetAddress addr = null;
+	try {
+	    addr = InetAddress.getByName(ip);
 	}
-
-	public static interface StringDecorator {
-		String decorate(String in);
-
-		String prefix();
-
-		String postfix();
+	catch (UnknownHostException | SecurityException e) {
+	    LOG.warn("Cannot convert: " + ip + " to valid IP: " + e.getMessage());
+	    LOG.debug(e.getMessage(), e);
 	}
+	return Optional.ofNullable(addr);
+    }
+
+    public static interface StringDecorator {
+	String decorate(String in);
+
+	String prefix();
+
+	String postfix();
+    }
 }

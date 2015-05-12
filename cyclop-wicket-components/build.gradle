@@ -1,7 +1,6 @@
-ext {
-	description = "General Wicket components used by Cyclop"
-	name = "Cyclop Wicket Components"
-}
+prj.name = "Cyclop Wicket Components"
+prj.description = "General Wicket components used by Cyclop."
+	
 dependencies {
 	testCompile libs.test_all
 	provided libs.wicket
