@@ -3,23 +3,23 @@ subprojects {
 	apply plugin: 'maven-publish'
 	defaultTasks 'build'
 	
-	version = '2.1.0-SNAPSHOT'
 	group = 'org.cyclop'
 		
 	sourceCompatibility = 1.8
 	compileJava.options.encoding = 'UTF-8'	
 	
 	ext {
+		cassandra_version = "2.0.11"
+		guava_version = "15.0"
+		cassandraDriver_version = "2.1.2"
 		spring_version = "4.1.2.RELEASE"
 		wicket_version = "6.18.0"
 		slf4j_version = "1.7.7"
 		logback_version = "1.1.2"
 		jackson_version = "1.9.13"
 		findbugs_version = "2.0.2"
-		guava_version = "16.0"
 		guavaTest_version = "16.0"
 		junit_version = "4.11"
-		cassandra_version = "2.1.2"
 		cassandraUnit_version = "2.0.2.2"
 		kaptcha_version = "0.0.9"
 		collections4_version = "4.0"
@@ -72,10 +72,14 @@ subprojects {
 		],
 		test_cassandra: [
 			"org.apache.cassandra:cassandra-all:$cassandra_version",
-			"org.cassandraunit:cassandra-unit:$cassandraUnit_version"
+			dependencies.create('org.cassandraunit:cassandra-unit:' + cassandraUnit_version){
+				exclude group: 'com.datastax.cassandra'
+				exclude group: 'org.apache.cassandra'
+				exclude group: 'org.hectorclient'
+		},
 		],
 		cassandra_driver: [
-			"com.datastax.cassandra:cassandra-driver-core:$cassandra_version"
+			"com.datastax.cassandra:cassandra-driver-core:$cassandraDriver_version"
 		],
 		common: [
 			"com.google.code.findbugs:annotations:$findbugs_version",
@@ -114,6 +118,7 @@ subprojects {
 		
 	configurations {
 		provided
+		all*.exclude module: 'slf4j-log4j12'
 		all*.exclude group: 'log4j'
 		all*.exclude group: 'commons-logging'
 		all*.exclude group: 'org.mortbay.jetty'
@@ -134,11 +139,6 @@ subprojects {
 
 	
 	publishing {
-		repositories {
-			maven {
-				url "file://C:\\Daten-lokal\\Benutzer\\ml67\\.m2\\maven-repo"
-			}
-		}
 		publications {
 			maven(MavenPublication) {				
 				preparePom(pom, prj)

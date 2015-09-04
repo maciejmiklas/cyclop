@@ -1,3 +1,5 @@
+import java.sql.DriverManager
+
 apply plugin: 'war'
 
 prj.name = "Cyclop"
@@ -34,4 +36,45 @@ war {
 	        into 'classes'
 	    }
 	}
+}
+
+test {
+	systemProperties =[
+			"cassandra_yaml":"cassandra_2.0.yaml"
+	]
+	maxHeapSize = "1024m"
+}
+
+task test20(type: Test)
+test20.doFirst {
+	println "AAAAAAAAAAA"
+
+	cassandra_version = "2.0.11"
+	guava_version = "15.0"
+
+	println cassandra_version
+	println guava_version
+
+	description = "Executes Unit Test on Cassandra 2.0"
+	systemProperties = [
+			"cassandra_yaml":"cassandra_2.0.yaml"
+	]
+	maxHeapSize = "1024m"
+
+}
+
+task test21(type: Test)
+test21.doFirst {
+	println "cccccc"
+	cassandra_version = "2.1.2"
+	guava_version = "16.0"
+
+	println cassandra_version
+	println guava_version
+
+	description = "Executes Unit Test on Cassandra 2.1"
+	systemProperties = [
+			"cassandra_yaml":"cassandra_2.1.yaml"
+	]
+	maxHeapSize = "1024m"
 }

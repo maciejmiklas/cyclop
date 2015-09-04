@@ -3,8 +3,8 @@ prj.description = "General Wicket components used by Cyclop."
 	
 dependencies {
 	testCompile libs.test_all
-	provided libs.wicket
-	provided libs.common
-	provided libs.spring
+	compile libs.wicket
+	compile libs.common
+	compile libs.spring
 	provided libs.servlet
 }
