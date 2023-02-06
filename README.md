@@ -1,44 +1,42 @@
 # Overview
-Cassandra is one of the most popular open source NoSQL databases, but it's only few years old, and therefore tools support is still limited, especially when it comes to free open source software. 
+Cassandra is one of the most popular open-source NoSQL databases, but it's only a few years old, and therefore tools support still needs to be improved, especially when it comes to free, open-source software. 
 
-If you are working with Cassandra, sooner or later you will have to analyse its content on remote cluster. Most of the available tools are desktop applications that connect to Cassandra over its protocol. Getting such access might be a hard task, because usually databases are installed in restricted networks in order to minimize data breach risk. Security policies are changing frequently to cover new findings, and the fact that you have access to your database today, does not actually mean that it will last long.
+If you are working with Cassandra, you will have to analyze its content on a remote cluster sooner or later. Most available tools are desktop applications that connect to Cassandra over its protocol. Getting such access might be challenging because databases are usually installed in restricted networks to minimize data breach risk. Security policies are frequently changing to cover new findings, and the fact that you have access to your database today does not mean that it will only last for a while.
 
-Gaining access over SSH and command line interface should be easier, but I do not have to convince anyone that using terminal to query database content is painful, especially when it holds wide rows!
+Gaining access over SSH and the command line interface should be more accessible. Still, I do not have to convince anyone that using a terminal to query database content is painful, especially when it holds wide rows!
 
-But there is one solution, that is almost always available: web based applications! Every company knows how to secure them, how to run penetration tests, locate security leaks, and so on.... actually it does not matter what happens behind scenes, you - the end user has always access to such application - at least in the theory ;)
+But there is one solution that is almost always available: web-based applications! Every company knows how to secure them, run penetration tests, locate security leaks, and so on. It does not matter what happens behind the scenes; the end user always has access to such applications - at least in theory ;)
 
-Here comes good news: Cyclop is 100% web based, and It's based on latest Wicket release! Once you managed to install it, you can query your database from a web browser and still enjoy native application feeling (it's almost fully based on AJAX, so page reloads are rare).
-
-There is also another cool thing: if your security experts will run penetration tests against Cyclop they will come up with findings like Database Script Injection. This will be the first time in your life when you can honestly say: "It's not a bug, it's a future!". Anyway .... I would suggest  to restrict access to Cyclop to some trusted networks. It's definitely not a usual web application, but once you have managed to deploy it, you can enjoy simple access to you data over CQL.
+Here comes the good news: Cyclop is 100% web-based! Once installed, you can query your database from a web browser and still enjoy a native application feeling (it's almost entirely based on AJAX, so page reloads are rare).
 
 # User Management
   ![Login](/doc/img/login.png)
 
-Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once Cassandra session has been opened, it's being stored in HTTP session, and that's it. From now on, each query will be passed to Cassandra over its active session, and the result is successful or not - based on access rights defined in Cassandra for this particular user.
+Cyclop does not manage users - it passes authorization and authentication to Cassandra. Once the Cassandra session has been opened, it's stored in the HTTP session, and that's it. From now on, each query will be passed to Cassandra over its active session, and the result will be successful or not - based on access rights defined in Cassandra for this particular user.
 
-Providing support for persistent data like query history gets a bit tricky, if there is no such thing as user.  We could reference credentials used to open Cassandra session, but it's a common use case, that many users share them - like "read only user for IT on third floor".
+Providing support for persistent data like query history gets tricky if there is no such thing as a user.
 
-As you might noticed, the UUID is a solution to all our problems, and this time it helped too! Cyclop generates random cookie based on UUID and stores it in a browser. This is the replacement solution for missing user management. We do not recognize user itself, but the browser. Of curse valid Cassandra session is always required, so it's not possible that unauthorized user could access restricted data (like query history) only because he has access to the browser, or "knows" the cookie value, he would have to login in the first place.  
+As you might notice, the UUID is a solution to all our problems; this time, it helped too! Cyclop generates random cookie based on UUID and stores it in a browser.. We do not recognize the user itself but the browser. Of curse, a valid Cassandra session is always required, so it's not possible that an unauthorized user could access restricted data (like query history) only because he has access to the browser or "knows" the cookie value; he would have to login in the first place.  
 
-User Preferences cover things like amount of rows in result table, import settings or button state. Those are stored in browser as cookie in a json format. Firstly, there is no security issue, because it's not a sensitive data,  secondly we can access it directly from Java Script.
+User Preferences cover the number of rows in the result table, import settings, or button state. Those are stored in the browser as a cookie in JSON format. Firstly, there is no security issue because it's not sensitive data. Secondly, we can access it directly from Java Script.
 
-Login form contain two security futures that should prevent brute force attacks: 
-* after each failed login, login page blocks for some time before next login is possible. Also each failed attempt increases blocking time - until defined maximal value is reached. We are blocking not only this particular browser/client, but all login requests - it's a global lock. This opens Cyclop for DOS attacks, but at the same time increases brute force resistance. This is not a big issue if Cyclop stops responding, because it's not meant to be used by large number of customers
-* login form supports Captcha, but it's not always active - first failed login activates it for a few minutes
+The login form contains two security features that should prevent brute force attacks: 
+* after each failed login, the login page blocks for some time before the next login is possible. Also, each failed attempt increases blocking time - until a defined maximal value is reached. We are blocking not only this particular browser/client, but all login requests - it's a global lock. It opens Cyclop for DOS attacks but simultaneously increases brute force resistance. It is not a big issue if Cyclop stops responding because it's not meant to be used by a large number of customers
+* login form supports Captcha, but it's not always active - the first failed login activates it for a few minutes
 
 # Query Editor
 #### Query Completion
-* completion is supported for almost whole CQL 3 syntax
-* Completion Hint shows all possible keywords, that are valid for actual query position. Tables, keyspaces and columns are grouped together, and sorted. Groups are also highlighted with different font color
+* completion is supported for almost the whole CQL 3 syntax
+* Completion Hint shows all possible valid keywords for the actual query position. Tables, keyspaces, and columns are grouped and sorted. Groups are also highlighted with different font color
 ![CQL Completion](/doc/img/cmp_colors.png)
-* if the keyspace has been set in previous query ("use cqldemo" in screen shot below), the completion for the following queries
-will be narrowed to tables from this keyspace, assuming that keyspace is not explicitly provided in query
+* if the keyspace has been set in the previous query ("use cqldemo" in the screenshot below), the completion for the following queries
+will be narrowed to tables from this keyspace, assuming that keyspace is not explicitly provided in a query
 ![CQL Completion](/doc/img/cmp_tables_from_global_keyspace.png)
-* completion contains only tables that belong to keyspace that has been provided in current query
+* completion contains only tables that belong to the keyspace that has been provided in the current query
 ![CQL Completion](/doc/img/cmp_cqldemo_tables.png)
-* completion contains only columns of a table that has been provided in current query
+* completion contains only columns of a table that has been provided in the current query
 ![CQL Completion](/doc/img/cmp_table_columns.png)
-* query syntax help has been copied from Cassandra documentation. It is decorated with color highlighting
+* query syntax help has been copied from Cassandra's documentation. It is decorated with color highlighting
 matching Completion Hint colors
 ![CQL Syntax Help](/doc/img/cql_syntax_help.png)
 
@@ -53,45 +51,45 @@ matching Completion Hint colors
 * results table supports two layouts: horizontal and vertical
 * horizontal layout is known from traditional databases
 ![Results Table](/doc/img/results_table_hor.png)
-* vertical layout is reversed when compared to traditional SQL editors - rows are displayed horizontally,
-and columns vertically. When scrolling page from left to right you will switch between rows. Scrolling from top to bottom
-shows follow up columns
+* vertical layout is reversed compared to traditional SQL editors - rows are displayed horizontally,
+and columns vertically. You will switch between rows when scrolling the page from left to right. Scrolling from top to bottom
+shows follow-up columns
 ![Results Table](/doc/img/results_table_vert.png)
-* table header for each row displays partition key, assuming that query returns it
-* long text is trimmed in order to fit into table cell. Such cell has a blue icon in the left top corner, clicking on it opens pop-up containing the whole text
+* table header for each row displays the partition key, assuming that the query returns it
+* long text is trimmed to fit into a table cell. Such a cell has a blue icon in the top left corner. Clicking on it opens a pop-up containing the whole text
 ![Large Content](/doc/img/large_content.png)
 
 # Query History
 ![Query History Full](/doc/img/history_full.png)
-* history contains last 500 queries that has been successfully executed from this particular browser (we recognize users based on persistent cookie)
-* each entry in history contains the query itself, the runtime and response size
-* next to the query there is a blue icon, clicking on it will trigger redirect to editor and paste query into it, so you can execute it again
+* history contains the last 500 queries that have been successfully executed from this particular browser (we recognize users based on a persistent cookie)
+* Each entry in history contains the query itself, the runtime, and the response size
+* next to the query, there is a blue icon. Clicking on it will trigger a redirect to the editor, and paste the query into it so that you can execute it again
 
 #### History Filtering
-* filter supports live update - you get results while typing. Just remember that words shorter than three characters will be ignored
-* multiple keywords are joined by OR, this means that filter result will contain queries with at least one keyword
-* you can specify multiple keywords in the filter. Is such case the top of the filtered history will contain queries with most hits. This builds groups, like queries with four hits, than three, and on the end with single hit. The queries within those groups are sorted by execution time
+* filter supports live updates - you get results while typing. Just remember that words shorter than three characters will be ignored
+* multiple keywords are joined by OR. It means that the filter result will contain queries with at least one keyword
+* you can specify multiple keywords in the filter. Is this case, the top of the filtered history will contain queries with the most hits. It builds groups, like queries with four hits, then three, and at the end with a single hit. The queries within those groups are sorted by execution time
 ![Query History Filter](/doc/img/history_filter.png)
-* pressing Enter resets filter, you can also click on "clean" icon
+* pressing Enter resets filter, you can also click on the "clean" icon
 
 #### Data on the Server
-The history itself is stored on server in file: [fileStore.folder]\QueryHistory-[User-UUID].json.  The file itself contains serialized history in json form. The solution is also secure, so you can use Cyclop from any computer without restrictions. Random cookie is the only information stored in browser - but this does not matter, because history can be viewed only by authenticated users.
+The history is stored on a server in a file: [fileStore.folder]\QueryHistory-[User-UUID].json. The file itself contains serialized history in JSON form. The solution is also secure so you can use Cyclop from any computer without restrictions. A random cookie is the only information stored in the browser - but this does not matter because history can be viewed only by authenticated users.
 
 # CSV Export
-Query result can be exported to CSV file. You can influence its format trough configuration file.
+The query result can be exported to a CSV file. You can alter its format through a configuration file.
 
 # Import
 ![Query Bookmark](/doc/img/import.png)
-It's meant to import files containing CQL queries separated by ;\n. Single query can spread over multiple lines. Results of the import are displayed in table, which contains each single query, runtime and eventually an error - in this case row is highlighted in red. You can also specify few options, so that script execution will break (or not) after first error, or executed queries can be included in query history, or parallel import. The last option will divide import file into chunks and execute each one in separated thread - by default 6. Be aware that queries will be executed in unspecified order.
+It's meant to import files containing CQL queries separated by ;\n. A single query can be spread over multiple lines. The import results are displayed in a table containing every single query, runtime, and eventually an error - in this case, the row is highlighted in red. You can also specify a few options, so that script execution will break (or not) after the first error, or executed queries can be included in query history or parallel import. The last option will divide the import file into chunks and run each in a separate thread - by default six. Be aware that queries will be executed in an unspecified order.
 
-Import has also few limitations:
+Import also has a few limitations:
 * import script and results table have to fit into memory
-* each query will be executed as separate Cassandra call, so that we can precisely point out errors, and measure execution time, on the other hand side it causes latencies
+* each query will be executed as a separate Cassandra call so that we can precisely point out errors and measure execution time. On the other hand, side it causes latencies
 * import script does not support comments
 
 # Requirements
 * Java 8
-* Cassandra v1.2 or above (tested with 1.2 and 2.0 and 2.1)
+* Cassandra v1.2 or above (tested with 1.2 and 2.0, and 2.1)
 * only CQL 3 is supported
 * CLI is NOT supported
 * Tomcat v7 or another v3.x web container
@@ -122,9 +120,9 @@ Cassandra:
     cassandra.useSsl: false
     cassandra.timeoutMilis: 3600000
     ```
-    You can also overwrite each property from `cyclop.properties` by setting it as jvm parameter. For example to connect to different Cassandra host set:`-Dcassandra.hosts=server1,server2`. This gives you simple possibility to change properties after the war file has been assembled.
+    You can also overwrite each property from `cyclop.properties` by setting it as a jvm parameter. For example, to connect to different Cassandra host set:`-Dcassandra.hosts=server1,server2`. It gives you a simple possibility to change properties after the war file has been assembled.
     
-4. Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
+4. Optionally change logger settings by editing `logback.xml`. By default, it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
 5. Build war file: 
     
     ``` sh
@@ -143,7 +141,7 @@ you have to deploy few cyclop war archives, each one with different `cassandra.h
 
 # Installation - Cyclop 1.x for Java 7
 1. Install Java 7 and Maven 3
-2. Download last release: `https://github.com/maciejmiklas/cyclop/releases/tag/v1.4.2`
+2. Download the last release: `https://github.com/maciejmiklas/cyclop/releases/tag/v1.4.2`
 3. Edit property file: `cyclop/src/main/resources/cyclop.properties` and set connection settings for
 Cassandra:
 
@@ -153,7 +151,7 @@ Cassandra:
     cassandra.useSsl: false
     cassandra.timeoutMilis: 3600000
     ```
-    You can also overwrite each property from `cyclop.properties` by setting it as jvm parameter. For example to connect to different Cassandra host set:`-Dcassandra.hosts=server1,server2`. This gives you simple possibility to change properties after the war file has been assembled.
+    You can also overwrite each property from `cyclop.properties` by setting it as jvm parameter. For example, to connect to different Cassandra host set:`-Dcassandra.hosts=server1,server2`. This gives you simple possibility to change properties after the war file has been assembled.
     
 4. Optionally change logger settings by editing `logback.xml`. By default it logs in into `/var/lib/tomcat7/logs/cyclop-${time}.log`
 5. Build war file: `mvn package`
